@@ -43,6 +43,7 @@ namespace Staffinfo.ViewModel
             ////}
 
             SimpleIoc.Default.Register<StartViewModel>();
+            SimpleIoc.Default.Register<EmployeeViewModel>();
         }
 
         public StartViewModel Main
@@ -53,6 +54,14 @@ namespace Staffinfo.ViewModel
             }
         }
         
+        public EmployeeViewModel Employee
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<EmployeeViewModel>();
+            }
+        }
+
         public static void Cleanup()
         {
             // TODO Clear the ViewModels

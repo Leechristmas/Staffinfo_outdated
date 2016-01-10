@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Staffinfo.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,11 +8,9 @@ using System.Threading.Tasks;
 namespace Staffinfo.Data
 {
     public class Data
-    {
-        
+    {        
         private Data()
         {
-
         }
 
         private static Data _instance;
@@ -26,8 +25,13 @@ namespace Staffinfo.Data
         public DataBaseConnection DataBaseConnection
         {
             get { return _dataBaseConnection ?? (_dataBaseConnection = new DataBaseConnection()); }
-        } 
+        }
 
+        private IEnumerable<EmployeeModel> _employeeList;
 
+        public IEnumerable<EmployeeModel> EmployeeList
+        {
+            get { return _employeeList ?? (_employeeList = new List<EmployeeModel>()); }
+        }
     }
 }

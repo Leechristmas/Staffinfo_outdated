@@ -30,6 +30,8 @@ namespace Staffinfo.ViewModel
             ////{
             ////    // Code runs "for real"
             ////}
+            var data = Data.Data.Instance.DataBaseConnection;
+            data.GetEmployee();
         }
     }
 }

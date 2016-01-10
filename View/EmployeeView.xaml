@@ -5,8 +5,47 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Staffinfo.View"
         mc:Ignorable="d"
-        Title="EmployeeView" Height="300" Width="300">
+        Title="EmployeeView" Height="400" Width="140"
+        DataContext="{Binding Source={StaticResource Locator}, Path=Employee}">
     <Grid>
-        
+        <StackPanel>
+           <TextBox
+            Width="100"
+            Text="{Binding Id}"/>
+            <TextBox
+            Width="100"
+            Text="{Binding FirstName}"/>
+            <TextBox
+            Width="100"
+            Text="{Binding MiddleName}"/>
+            <TextBox
+            Width="100"
+            Text="{Binding LastName}"/>
+            <TextBox
+            Width="100"
+            Text="{Binding PersonalNumber}"/>
+            <TextBox
+            Width="100"
+            Text="{Binding Post}"/>
+            <TextBox
+            Width="100"
+            Text="{Binding Rank}"/>
+            <TextBox
+            Width="100"
+            Text="{Binding BornDate}"/>
+            <TextBox
+            Width="100"
+            Text="{Binding JobStartDate}"/>
+            <TextBox
+            Width="100"
+            Text="{Binding Address}"/>
+            <TextBox
+            Width="100"
+            Text="{Binding Pasport}"/>
+            <TextBox
+            Width="100"
+            Text="{Binding MobilePhoneNumber}"/>
+            
+        </StackPanel>
     </Grid>
 </Window>

@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace Staffinfo.Model
 {
+    /// <summary>
+    /// Набор полей, описывающих служащго
+    /// P.S. вряд ли можно назвать "моделью" =)
+    /// </summary>
     public class EmployeeModel
     {
         #region Constructor
@@ -36,16 +40,13 @@ namespace Staffinfo.Model
             string middleName,
             string lastName,
             string personalNumber,
-            string post,
-            string rank,
+            long? post,
+            long? rank,
             DateTime? bornDate,
             DateTime? jobStartDate,
-            string service,
-            string totalExpTimeByYear,
             string address,
             string pasport,
-            string mobilePhoneNumber,
-            string homePhoneNumber)
+            string mobilePhoneNumber)
         {
             Id = id;
             FirstName = firstName;
@@ -56,12 +57,9 @@ namespace Staffinfo.Model
             Rank = rank;
             BornDate = bornDate;
             JobStartDate = jobStartDate;
-            Service = service;
-            TotalExpirienceTimeByYear = totalExpTimeByYear;
             Address = address;
             Pasport = pasport;
             MobilePhoneNumber = mobilePhoneNumber;
-            HomePhoneNumber = homePhoneNumber;
         }
         #endregion
 
@@ -92,12 +90,12 @@ namespace Staffinfo.Model
         /// <summary>
         /// Должность служащего
         /// </summary>
-        public string Post { get; set; }
+        public long? Post { get; set; }
 
         /// <summary>
         /// Звание служащего
         /// </summary>
-        public string Rank { get; set; }
+        public long? Rank { get; set; }
 
         /// <summary>
         /// Служба
