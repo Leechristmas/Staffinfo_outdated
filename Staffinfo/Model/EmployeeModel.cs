@@ -26,8 +26,6 @@ namespace Staffinfo.Model
         /// <param name="bornDate">Дата рождения</param>
         /// <param name="jobStartDate">Дата начала работы в МЧС</param>
         /// <param name="service">Службы</param>
-        /// <param name="totalExpTimeByYear">Выслуга лет</param>
-        /// <param name="expBeforeSafetyService">Выслуга лет до МЧС</param>
         /// <param name="address">Адрес</param>
         /// <param name="pasport">Паспортные данные</param>
         /// <param name="mobilePhoneNumber">Мобильный телефон</param>
