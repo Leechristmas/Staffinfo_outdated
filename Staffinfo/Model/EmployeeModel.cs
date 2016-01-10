@@ -89,7 +89,7 @@ namespace Staffinfo.Model
         /// <summary>
         /// Фамилия служащего
         /// </summary>
-        public string LastName { get { return "test"; } }
+        public string LastName { get; set; }
 
         /// <summary>
         /// Должность служащего
