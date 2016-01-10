@@ -6,7 +6,8 @@
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:local="clr-namespace:Staffinfo"
         mc:Ignorable="d"
-        Title="Главное меню" Height="350" Width="525">
+        Title="Главное меню" Height="350" Width="525"
+        DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
     <Grid>
         <StackPanel
             Width="120"

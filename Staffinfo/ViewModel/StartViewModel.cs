@@ -1,4 +1,5 @@
 using GalaSoft.MvvmLight;
+using Staffinfo.Data;
 
 namespace Staffinfo.ViewModel
 {

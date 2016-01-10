@@ -8,19 +8,25 @@ namespace Staffinfo.Data
 {
     public class Data
     {
-        private static Data _instance;
-
+        
         private Data()
         {
 
         }
+
+        private static Data _instance;
 
         public static Data Instance
         {
             get { return _instance ?? (_instance = new Data()); }
         }
 
+        private DataBaseConnection _dataBaseConnection;
 
+        public DataBaseConnection DataBaseConnection
+        {
+            get { return _dataBaseConnection ?? (_dataBaseConnection = new DataBaseConnection()); }
+        } 
 
 
     }
