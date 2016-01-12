@@ -2,23 +2,34 @@
 using Staffinfo.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace Staffinfo.ViewModel
 {
     public class EmployeeViewModel: ViewModelBase
     {
-        public EmployeeViewModel()
+        public EmployeeViewModel(EmployeeModel employeeModel)
         {
-            var data = Data.Data.Instance.DataBaseConnection;
-            data.GetEmployee();
-            empModel = Data.Data.Instance.EmployeeList.ToList()[0];
+            empModel = employeeModel;
         }
 
         EmployeeModel empModel;
         
+        public BitmapImage Photo
+        {
+            get
+            {
+                return empModel.Photo ??
+                    (empModel.Photo = new BitmapImage(new Uri(System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources/Images/empty_avatar_150x100.png"))));
+            }
+            set { empModel.Photo = value; }
+        }
+
         public string LastName
         {
             get { return empModel.LastName; }
@@ -90,17 +101,5 @@ namespace Staffinfo.ViewModel
             get { return empModel.MobilePhoneNumber; }
             set { empModel.MobilePhoneNumber = value; }
         }
-
-        //<!--string firstName,
-        //   string middleName,
-        //   string lastName,
-        //   string personalNumber,
-        //   long? post,
-        //   long? rank,
-        //   DateTime? bornDate,
-        //   DateTime? jobStartDate,
-        //   string address,
-        //   string pasport,
-        //   string mobilePhoneNumber-->
     }
 }

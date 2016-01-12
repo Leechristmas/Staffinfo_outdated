@@ -1,9 +1,11 @@
 ﻿using Staffinfo.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Staffinfo.ViewModel;
 
 namespace Staffinfo.Data
 {
@@ -27,11 +29,11 @@ namespace Staffinfo.Data
             get { return _dataBaseConnection ?? (_dataBaseConnection = new DataBaseConnection()); }
         }
 
-        private IEnumerable<EmployeeModel> _employeeList;
+        private ObservableCollection<EmployeeViewModel> _employeeList;
 
-        public IEnumerable<EmployeeModel> EmployeeList
+        public ObservableCollection<EmployeeViewModel> EmployeeList
         {
-            get { return _employeeList ?? (_employeeList = new List<EmployeeModel>()); }
+            get { return _employeeList ?? (_employeeList = new ObservableCollection<EmployeeViewModel>()); }
         }
     }
 }

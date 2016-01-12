@@ -1,10 +1,12 @@
 ﻿using Staffinfo.Model;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Staffinfo.ViewModel;
 
 namespace Staffinfo.Data
 {
@@ -24,13 +26,14 @@ namespace Staffinfo.Data
         /// </summary>
         public void GetEmployee()
         {
-            var cmd = new SqlCommand("SELECT * FROM TB_EMPLOYEE", _sqlConnection);
+            var cmd = new SqlCommand("SELECT * FROM EMPLOYEE", _sqlConnection);
             
             SqlDataReader reader = cmd.ExecuteReader();
                         
             while (reader.Read())
             {
-                ((List<EmployeeModel>)Data.Instance.EmployeeList).Add(new EmployeeModel(
+                Data.Instance.EmployeeList.Add(new EmployeeViewModel(
+                    new EmployeeModel(
                     Int64.Parse(reader["ID"].ToString()),
                     reader["EMPLOYEE_FIRSTNAME"].ToString(),
                     reader["EMPLOYEE_MIDDLENAME"].ToString(),
@@ -42,7 +45,7 @@ namespace Staffinfo.Data
                     DateTime.Parse(reader["JOB_START_DATE"].ToString()),
                     reader["ADDRESS"].ToString(),
                     reader["PASPORT"].ToString(),
-                    reader["PHONE_NUMBER"].ToString()));
+                    reader["PHONE_NUMBER"].ToString()))); 
             }
         }
 

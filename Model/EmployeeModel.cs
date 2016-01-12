@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media.Imaging;
 
 namespace Staffinfo.Model
 {
@@ -141,6 +142,11 @@ namespace Staffinfo.Model
         /// Номер домашнего телефона
         /// </summary>
         public string HomePhoneNumber { get; set; }
+
+        /// <summary>
+        /// Фотография служащего
+        /// </summary>
+        public BitmapImage Photo { get; set; }
                 
         #endregion
 

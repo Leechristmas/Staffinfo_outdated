@@ -11,13 +11,14 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using MahApps.Metro.Controls;
 
 namespace Staffinfo.View
 {
     /// <summary>
     /// Interaction logic for EmployeeListView.xaml
     /// </summary>
-    public partial class EmployeeListView : Window
+    public partial class EmployeeListView : MetroWindow
     {
         public EmployeeListView()
         {
