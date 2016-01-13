@@ -6,33 +6,66 @@
         xmlns:local="clr-namespace:Staffinfo.View"
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d"
-        Title="Служащие" Height="900" Width="900"
+        Title="Служащие" Height="700" Width="900"
         DataContext="{Binding Source={StaticResource Locator}, Path=Employees}">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="150"/>
+        </Grid.ColumnDefinitions>
+    <Grid Grid.Column="0">
      <!--Пробное представление-->
+        <GroupBox Margin="0">
         <StackPanel>
-            <ListView ItemsSource="{Binding EmployeeList}">
+                <ListView ItemsSource="{Binding EmployeeList}" ScrollViewer.CanContentScroll="true" 
+                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                    ScrollViewer.HorizontalScrollBarVisibility="Auto" BorderThickness="0">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <Border BorderBrush="DodgerBlue" BorderThickness="1" Margin="10">
+                        <Border BorderBrush="DodgerBlue" BorderThickness="2" Margin="1" >
                             <StackPanel
                                 Orientation="Horizontal">
-                                <StackPanel>
-                                    <Image
-                                    Height="100"
-                                    Width="50"
-                                    Source="{Binding Photo}"/>
+                                    <StackPanel>
+                                        <Border BorderBrush="Black" BorderThickness="1" Margin="0,0,10,0">
+                                            <Image
+                                                Height="50"
+                                                Width="50"
+                                                Source="{Binding Photo}"/>
+                                        </Border>
+                                    </StackPanel>
+                                <StackPanel
+                                    Orientation="Horizontal">
+                                    <TextBlock Text="{Binding LastName}" FontWeight="Bold" FontSize="16" Margin="5" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding FirstName}" FontWeight="Bold" FontSize="16" Margin="5" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding MiddleName}" FontWeight="Bold" FontSize="16" Margin="5" VerticalAlignment="Center"/>
                                 </StackPanel>
-                                <StackPanel>
-                                    <TextBlock Text="{Binding LastName}"/>
-                                    <TextBlock Text="{Binding FirstName}"/>
-                                    <TextBlock Text="{Binding MiddleName}"/>
-                                </StackPanel>
-                            </StackPanel>
-                        </Border>
+                            </StackPanel></Border>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
         </StackPanel>
+            </GroupBox>
+        </Grid>
+        <Grid Grid.Column="1">
+                <GroupBox Margin="0">
+                    <Grid>
+                        <StackPanel>
+                        <Button Content="Добавить" Foreground="White" 
+                                Background="{StaticResource AccentColorBrush2}"
+                                MinHeight="20" Margin="0"/>
+                        <Button Content="Удалить" Foreground="White" 
+                                Background="{StaticResource AccentColorBrush2}"
+                                MinHeight="20" Margin="0"/>
+                        <Button Content="Найти" Foreground="White" 
+                                Background="{StaticResource AccentColorBrush2}"
+                                MinHeight="20" Margin="0" />    
+                        </StackPanel>
+                        <Button Content="Закрыть" VerticalAlignment="Bottom"
+                                Foreground="White"
+                                Background="{StaticResource AccentColorBrush2}"
+                                MinHeight="20"/>
+                    </Grid>
+                </GroupBox>
+        </Grid>
     </Grid>
 </controls:MetroWindow>
