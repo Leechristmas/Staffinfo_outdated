@@ -1,0 +1,84 @@
+﻿<controls:MetroWindow x:Class="Staffinfo.Desktop.View.EmployeeListView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Staffinfo.Desktop.View"
+        xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+        mc:Ignorable="d"
+        Title="Служащие" Height="700" Width="900"
+        DataContext="{Binding Source={StaticResource Locator}, Path=Employees}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="150"/>
+        </Grid.ColumnDefinitions>
+    <Grid Grid.Column="0">
+     <!--Пробное представление-->
+        <GroupBox Margin="0">
+        <StackPanel>
+                <ListView ItemsSource="{Binding EmployeeList}" 
+                          ScrollViewer.CanContentScroll="true"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                          ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+                          BorderThickness="0"
+                          ItemContainerStyle="{StaticResource ListViewItemStyle}">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderBrush="DodgerBlue" BorderThickness="2" Margin="1" >
+                            <StackPanel
+                                Orientation="Horizontal"
+                                Height="50">
+                                    <StackPanel>
+                                        <Border BorderBrush="Black" BorderThickness="1" Margin="0,0,10,0">
+                                            <Image
+                                                Height="50"
+                                                Width="50"
+                                                Source="{Binding Photo}"/>
+                                        </Border>
+                                    </StackPanel>
+                                <StackPanel
+                                    Orientation="Horizontal">
+                                    <TextBlock Text="{Binding LastName}" FontWeight="Bold" FontSize="16" Margin="5" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding FirstName}" FontWeight="Bold" FontSize="16" Margin="5" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding MiddleName}" FontWeight="Bold" FontSize="16" Margin="5" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackPanel>
+            </GroupBox>
+        </Grid>
+        <Grid Grid.Column="1">
+                <GroupBox Margin="0">
+                    <Grid>
+                        <StackPanel>
+                        <Button Name="AddEmployeeBtn"
+                                FontSize="16"
+                                Content="Добавить" 
+                                Style="{DynamicResource ChromelessButtonStyle}"
+                                MinHeight="20" Margin="0"/>
+                        <Button Name="RemoveEmployeeBtn"
+                                FontSize="16"
+                                Content="Удалить" 
+                                Style="{DynamicResource ChromelessButtonStyle}"
+                                MinHeight="20" Margin="0"/>
+                        <Button Name="FindEmployeeBtn"
+                                FontSize="16"
+                                Content="Найти" 
+                                Style="{DynamicResource ChromelessButtonStyle}"
+                                MinHeight="20" Margin="0"/>    
+                        </StackPanel>
+                        <Button Name="CloseBtn"
+                                FontSize="16"
+                                Content="Закрыть" 
+                                VerticalAlignment="Bottom"
+                                Style="{DynamicResource ChromelessButtonStyle}"
+                                MinHeight="20" Margin="0"/>
+                    </Grid>
+                </GroupBox>
+        </Grid>
+    </Grid>
+</controls:MetroWindow>
