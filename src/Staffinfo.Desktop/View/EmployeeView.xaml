@@ -1,0 +1,568 @@
+﻿<controls:MetroWindow x:Class="Staffinfo.Desktop.View.EmployeeView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Staffinfo.Desktop.View"
+        xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+        mc:Ignorable="d"
+        Title="EmployeeView" MinWidth="600" MinHeight="700" Height="700" Width="600"
+        DataContext="{Binding Source={StaticResource Locator}, Path=Employee}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition MinWidth="150" Width="150"/>
+        </Grid.ColumnDefinitions>
+        <Grid>
+            <controls:MetroAnimatedTabControl>
+                <!--Общая информация-->
+                <controls:MetroTabItem Header="Общее">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition MinHeight="200" Height="210"/>
+                            <RowDefinition MinHeight="80" Height="140"/>
+                            <RowDefinition MinHeight="200" Height="*"/>
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal">
+                            <Border BorderBrush="Black">
+                                <Image Height="200" Width="200"/>
+                            </Border>
+                            <StackPanel Orientation="Vertical">
+                                <TextBox 
+                                    Name="LastNameTBox" 
+                                    MinWidth="200" 
+                                    Margin="20,4"
+                                    controls:TextBoxHelper.Watermark="Фамилия"
+                                    controls:TextBoxHelper.ClearTextButton="True"
+                                    FontSize="14"/>
+                                <TextBox 
+                                    Name="FirstNameTBox"
+                                    MinWidth="200"
+                                    Margin="20,4"
+                                    controls:TextBoxHelper.Watermark="Имя"
+                                    controls:TextBoxHelper.ClearTextButton="True"
+                                    FontSize="14"/>
+                                <TextBox 
+                                    Name="MiddleNameTBox" MinWidth="200" 
+                                    Margin="20,4"
+                                    controls:TextBoxHelper.Watermark="Отчество"
+                                    controls:TextBoxHelper.ClearTextButton="True"
+                                    FontSize="14"/>
+                                <ComboBox 
+                                    Name="ServiceCBox" 
+                                    MinWidth="200" 
+                                    Margin="20,4"
+                                    controls:TextBoxHelper.Watermark="--Служба--"
+                                    controls:TextBoxHelper.ClearTextButton="True"
+                                    FontSize="14"/>
+                                <ComboBox 
+                                    Name="PostCBox" 
+                                    MinWidth="200" 
+                                    Margin="20,4"
+                                    controls:TextBoxHelper.Watermark="--Должность--"
+                                    controls:TextBoxHelper.ClearTextButton="True"
+                                    FontSize="14"/>
+                                <ComboBox 
+                                    Name="RankCBox" 
+                                    MinWidth="200" 
+                                    Margin="20,4"
+                                    controls:TextBoxHelper.Watermark="--Звание--"
+                                    controls:TextBoxHelper.ClearTextButton="True"
+                                    FontSize="14"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Orientation="Horizontal">
+                            <StackPanel Orientation="Vertical" Margin="10,20">
+                                <TextBlock 
+                                    Text="Дата рождения" 
+                                    FontSize="16"
+                                    Margin="0,6"/>
+                                <TextBlock 
+                                    Text="Дата начала службы в МЧС" 
+                                    FontSize="16"
+                                    Margin="0,6"/>
+                                <TextBlock 
+                                    Text="Личный номер" 
+                                    FontSize="16"
+                                    Margin="0,6"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical" Margin="0,20">
+                                <DatePicker 
+                                    Name="BornDatePicker"
+                                    MinWidth="200"
+                                    controls:TextBoxHelper.Watermark="Дата рождения"
+                                    FontSize="14"
+                                    Margin="0,4"/>
+                                <DatePicker 
+                                    Name="JobStartDatePicker"
+                                    MinWidth="200"
+                                    controls:TextBoxHelper.Watermark="Начало службы"
+                                    FontSize="14"
+                                    Margin="0,4"/>
+                                <TextBox 
+                                    Name="PersonalNumber"
+                                    MinWidth="200"
+                                    controls:TextBoxHelper.Watermark="Личный номер"
+                                    controls:TextBoxHelper.ClearTextButton="True"
+                                    FontSize="14"
+                                    Margin="0,4"/>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Grid.Row="2" Orientation="Horizontal">
+                            <StackPanel Orientation="Vertical" Margin="4,0,0,0">
+                                <Expander
+                                    Header="Домашний адрес"
+                                    MinWidth="210">
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBox 
+                                            Name="CityTBox"
+                                            controls:TextBoxHelper.Watermark="Город"
+                                            controls:TextBoxHelper.ClearTextButton="True"
+                                            FontSize="14"
+                                            Margin="1,2"/>
+                                        <TextBox
+                                            Name="StreetTBox"
+                                            controls:TextBoxHelper.Watermark="Улица"
+                                            controls:TextBoxHelper.ClearTextButton="True"
+                                            FontSize="14"
+                                            Margin="1,2"/>
+                                        <TextBox
+                                            Name="HouseTBox"
+                                            controls:TextBoxHelper.Watermark="Дом"
+                                            controls:TextBoxHelper.ClearTextButton="True"
+                                            FontSize="14"
+                                            Margin="1,2"/>
+                                        <TextBox
+                                            Name="FlatTBox"
+                                            controls:TextBoxHelper.Watermark="Квартира"
+                                            controls:TextBoxHelper.ClearTextButton="True"
+                                            FontSize="14"
+                                            Margin="1,2"/>
+                                    </StackPanel>
+                                </Expander>
+                                <Expander
+                                    Header="Телефон"
+                                    MinWidth="210">
+                                    <StackPanel>
+                                        <TextBox
+                                            Name="HomePhoneNumberTBox"
+                                            controls:TextBoxHelper.Watermark="Домашний телефон"
+                                            controls:TextBoxHelper.ClearTextButton="True"
+                                            FontSize="14"
+                                            Margin="1,2"/>
+                                        <TextBox
+                                            Name="MobilePhoneNumberTBox"
+                                            controls:TextBoxHelper.Watermark="Мобильный телефон"
+                                            controls:TextBoxHelper.ClearTextButton="True"
+                                            FontSize="14"
+                                            Margin="1,2"/>
+                                    </StackPanel>
+                                </Expander>
+                            </StackPanel>
+                            <StackPanel>
+                                <Expander
+                                    Header="Паспорт"
+                                    MinWidth="210">
+                                    <StackPanel>
+                                        <ComboBox
+                                            Name="PasportOragnizationCBox"
+                                            controls:TextBoxHelper.Watermark="Организация"
+                                            controls:TextBoxHelper.ClearTextButton="True"
+                                            ToolTip="Организация, выдавшая паспорт"
+                                            FontSize="14"
+                                            Margin="1,2"/>
+                                        <ComboBox
+                                            Name="PasportSeriesCBox"
+                                            controls:TextBoxHelper.Watermark="Серия"
+                                            controls:TextBoxHelper.ClearTextButton="True"
+                                            FontSize="14"
+                                            Margin="1,2"/>
+                                        <TextBox
+                                            Name="PasportNumberTBox"
+                                            controls:TextBoxHelper.Watermark="Номер паспорта"
+                                            controls:TextBoxHelper.ClearTextButton="True"
+                                            FontSize="14"
+                                            Margin="1,2"/>
+                                    </StackPanel>
+                                </Expander>
+                                <Expander
+                                    Header="Выслуга"
+                                    MinWidth="210">
+                                    <StackPanel>
+                                        <TextBlock
+                                            Name="ServiceLengthTBlock"
+                                            FontSize="14"
+                                            Margin="1,2"
+                                            Text="ХХ лет ХХ месяцев ХХ дней"/>
+                                    </StackPanel>
+                                </Expander>
+                            </StackPanel>
+                        </StackPanel>
+                    </Grid>
+                </controls:MetroTabItem>
+                <!--Дополнительная информация-->
+                <controls:MetroTabItem 
+                    Name="AddationalInfoTab"
+                    Header="Дополнительно">
+                    <controls:MetroTabControl>
+                        <StackPanel Margin="5,0">
+                            <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+                                <!--Определяет страницу редактирования доп. информ-ции о служащем-->
+                                <ComboBox
+                                    Name="InformationModeCBox" 
+                                    MinWidth="200"
+                                    Width="200"
+                                    HorizontalAlignment="Left"
+                                    FontSize="16"
+                                    ItemsSource="{Binding ElementName=AdditionalInfoTabControl, Path=Items}"
+                                    SelectedIndex="{Binding ElementName=AdditionalInfoTabControl, Path=SelectedIndex}"
+                                    DisplayMemberPath="Header"
+                                    controls:TextBoxHelper.Watermark="Укажите тип данных"/>
+                                <Button 
+                                    Name="ToAddFormBtn"
+                                    MinWidth="100"
+                                    Content="Добавить"
+                                    Style="{DynamicResource ChromelessButtonStyle}"
+                                    FontSize="16"/>
+                                <Button 
+                                    Name="ToBackFormBtn"
+                                    MinWidth="100"
+                                    Content="Назад"
+                                    Style="{DynamicResource ChromelessButtonStyle}"
+                                    FontSize="16"/>
+                            </StackPanel>
+
+                            <controls:MetroTabControl Name="DataGridTabControl">
+                                <controls:MetroTabItem
+                                    Name="DataGridTab">
+                                    <DataGrid
+                                        Name="EmployeesDataGrid"
+                                        AutoGenerateColumns="False"
+                                        IsReadOnly="True"
+                                        CanUserAddRows="False"
+                                        Style="{DynamicResource AzureDataGrid}"
+                                        ScrollViewer.CanContentScroll="True"
+                                        ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                        ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                        GridLinesVisibility="All">
+                                    </DataGrid>
+                                </controls:MetroTabItem>
+                                <controls:MetroTabItem>
+                                    <!--Страницы редактирования доп. информ-ции-->
+                                    <controls:MetroAnimatedTabControl   Name="AdditionalInfoTabControl">
+                                        <TabControl.ItemContainerStyle>
+                                            <Style TargetType="{x:Type TabItem}">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </Style>
+                                        </TabControl.ItemContainerStyle>
+
+                                        <!--Аттестация-->
+                                        <controls:MetroTabItem  Name="SertificationTab"
+                                                                Header="Аттестация">
+                                            <StackPanel Orientation="Vertical"
+                                                        Margin="10"
+                                                        MinWidth="200"
+                                                        Width="200"
+                                                        HorizontalAlignment="Left">
+                                                <DatePicker Name="SertificationDatePicker"  
+                                                            MinWidth="150"
+                                                            Margin="0,1"
+                                                            FontSize="16"
+                                                            controls:TextBoxHelper.Watermark="Укажите дату"/>
+                                                <TextBox    Name="SertificationDescriptionTBox" 
+                                                            Margin="0,1"
+                                                            FontSize="16"
+                                                            MinWidth="150"
+                                                            controls:TextBoxHelper.ClearTextButton="True"
+                                                            controls:TextBoxHelper.Watermark="Описание"/>
+                                            </StackPanel>
+                                        </controls:MetroTabItem>
+
+                                        <!--Благодарности-->
+                                        <controls:MetroTabItem  Name="GratitudeTab"
+                                                                Header="Благодарности">
+                                            <StackPanel 
+                                                Orientation="Vertical"
+                                                Margin="10"
+                                                MinWidth="200"
+                                                Width="200"
+                                                HorizontalAlignment="Left">
+                                                <DatePicker 
+                                                    Name="GratitudeDatePicker"  
+                                                    MinWidth="150"
+                                                    Margin="0,1"
+                                                    FontSize="16"
+                                                    controls:TextBoxHelper.Watermark="Укажите дату"/>
+                                                <TextBox Name="GratitudeDescriptionTBox" 
+                                                         Margin="0,1"
+                                                         FontSize="16"
+                                                         MinWidth="150"
+                                                         controls:TextBoxHelper.ClearTextButton="True"
+                                                         controls:TextBoxHelper.Watermark="Описание"/>
+                                            </StackPanel>
+                                        </controls:MetroTabItem>
+
+                                        <!--Больничные-->
+                                        <controls:MetroTabItem  Name="HospitalTimeTab"
+                                                                Header="Больничные">
+                                            <StackPanel Orientation="Vertical"
+                                                        Margin="10"
+                                                        MinWidth="200"
+                                                        Width="200"
+                                                        HorizontalAlignment="Left">
+                                                <DatePicker Name="StartHospitalTimeDatePicker"  
+                                                            MinWidth="150"
+                                                            Margin="0,1"
+                                                            FontSize="16"
+                                                            controls:TextBoxHelper.Watermark="Дата открытия"/>
+                                                <DatePicker Name="FinishHospitalTimeDatePicker"  
+                                                            MinWidth="150"
+                                                            Margin="0,1"
+                                                            FontSize="16"
+                                                            controls:TextBoxHelper.Watermark="Дата закрытия"/>
+                                                <TextBox Name="HospitalDescriptionTBox"
+                                                         Margin="0,2"
+                                                         FontSize="16"
+                                                         MinWidth="150"
+                                                         controls:TextBoxHelper.ClearTextButton="True"
+                                                         controls:TextBoxHelper.Watermark="Описание"/>
+                                            </StackPanel>
+                                        </controls:MetroTabItem>
+
+                                        <!--Взыскания-->
+                                        <controls:MetroTabItem  Name="ReprimandTab"
+                                                                Header="Взыскания">
+                                            <StackPanel Orientation="Vertical"
+                                                        Margin="10"
+                                                        MinWidth="200"
+                                                        Width="200"
+                                                        HorizontalAlignment="Left">
+                                                <DatePicker Name="ReprimandDatePicker"  
+                                                            MinWidth="150"
+                                                            Margin="0,1"
+                                                            FontSize="16"
+                                                            controls:TextBoxHelper.Watermark="Дата открытия"/>
+                                                <TextBox Name="ReprimandSumTBox"  
+                                                         MinWidth="150"
+                                                         Margin="0,1"
+                                                         FontSize="16"
+                                                         controls:TextBoxHelper.ClearTextButton="True"
+                                                         controls:TextBoxHelper.Watermark="Дата закрытия"/>
+                                                <TextBox Name="ReprimandDescriptionTBox" 
+                                                         Margin="0,2"
+                                                         FontSize="16"
+                                                         MinWidth="150"
+                                                         controls:TextBoxHelper.ClearTextButton="True"
+                                                         controls:TextBoxHelper.Watermark="Описание"/>
+                                            </StackPanel>
+                                        </controls:MetroTabItem>
+
+                                        <!--Воинская служба-->
+                                        <controls:MetroTabItem  Name="MilitaryServiceTab"
+                                                                Header="Воинская служба">
+                                            <StackPanel Orientation="Vertical"
+                                                        Margin="10"
+                                                        MinWidth="200"
+                                                        Width="200"
+                                                        HorizontalAlignment="Left">
+                                                <DatePicker Name="MilitaryServiceStartDatePicker"  
+                                                            MinWidth="150"
+                                                            Margin="0,1"
+                                                            FontSize="16"
+                                                            controls:TextBoxHelper.Watermark="Дата начала"/>
+                                                <DatePicker Name="MilitaryServiceFinishDatePicker"  
+                                                            MinWidth="150"
+                                                            Margin="0,2"
+                                                            FontSize="16"
+                                                            controls:TextBoxHelper.Watermark="Дата окончания"/>
+                                                <ComboBox Name="MilitaryServiceUnitCBox"                                                  
+                                                          MinWidth="150"
+                                                          Margin="0,2"
+                                                          FontSize="16"
+                                                          controls:TextBoxHelper.ClearTextButton="True"
+                                                          controls:TextBoxHelper.Watermark="--Воинская часть--"/>
+                                                <TextBox Name="MilitaryServiceDescriptionTBox" 
+                                                         Margin="0,2"
+                                                         FontSize="16"
+                                                         MinWidth="150"
+                                                         controls:TextBoxHelper.ClearTextButton="True"
+                                                         controls:TextBoxHelper.Watermark="Описание"/>
+                                            </StackPanel>
+                                        </controls:MetroTabItem>
+
+                                        <!--Классность-->
+                                        <controls:MetroTabItem  Name="ClasinessTab"
+                                                                Header="Классность">
+                                            <StackPanel Orientation="Horizontal"
+                                                        Margin="10"
+                                                        MinWidth="400"
+                                                        Width="200"
+                                                        HorizontalAlignment="Left">
+                                                <StackPanel Orientation="Vertical">
+                                                    <DatePicker Name="ClasinessDatePicker"  
+                                                                MinWidth="150"
+                                                                Margin="0,1"
+                                                                FontSize="16"
+                                                                controls:TextBoxHelper.Watermark="Дата начала"/>
+                                                    <TextBox Name="ClasinessDescriptionTBox"
+                                                             Margin="0,2"
+                                                             FontSize="16"
+                                                             MinWidth="150"
+                                                             controls:TextBoxHelper.ClearTextButton="True"
+                                                             controls:TextBoxHelper.Watermark="Описание"/>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Vertical"
+                                                            Margin="5,0">
+                                                    <controls:NumericUpDown Name="ClasinessOrderNumberUpDown"
+                                                                            MinWidth="150"
+                                                                            Margin="0,1"
+                                                                            FontSize="16"
+                                                                            Minimum="0"
+                                                                            controls:TextBoxHelper.Watermark="№ приказа"/>
+                                                    <controls:NumericUpDown Name="ClasinessGradeUpDown"
+                                                                            MinWidth="150"
+                                                                            Margin="0,1"
+                                                                            FontSize="16"
+                                                                            Minimum="0"
+                                                                            controls:TextBoxHelper.Watermark="Классность"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </controls:MetroTabItem>
+
+                                        <!--Контракты-->
+                                        <controls:MetroTabItem  Name="ContractTab"
+                                                                Header="Контракты">
+                                            <StackPanel Orientation="Vertical"
+                                                        MinWidth="200"
+                                                        Width="200"
+                                                        HorizontalAlignment="Left"
+                                                        Margin="10,0">
+                                                <DatePicker Name="ContractStartDatePicker"
+                                                            MinWidth="150"
+                                                            FontSize="16"
+                                                            Margin="0,1"
+                                                            controls:TextBoxHelper.Watermark="Дата начала"/>
+                                                <DatePicker Name="ContractFinishDatePicker"
+                                                            MinWidth="150"
+                                                            Margin="0,2"
+                                                            FontSize="16"
+                                                            controls:TextBoxHelper.Watermark="Дата окончания"/>
+                                                <TextBox Name="ContractDescriptionTBox" 
+                                                         Margin="0,1"
+                                                         FontSize="16"
+                                                         MinWidth="150"
+                                                         controls:TextBoxHelper.ClearTextButton="True"
+                                                         controls:TextBoxHelper.Watermark="Описание"/>
+                                            </StackPanel>
+                                        </controls:MetroTabItem>
+
+                                        <!--Нарушения-->
+                                        <controls:MetroTabItem  Name="ViolationTab"
+                                                        Header="Нарушения">
+                                            <StackPanel Orientation="Vertical"
+                                                        MinWidth="200"
+                                                        Width="200"
+                                                        HorizontalAlignment="Left"
+                                                        Margin="10,0">
+                                                <DatePicker Name="ViolationStartDatePicker"
+                                                            MinWidth="150"
+                                                            FontSize="16"
+                                                            Margin="0,1"
+                                                            controls:TextBoxHelper.Watermark="Дата"/>
+                                                <TextBox Name="ViolationDescriptionTBox" 
+                                                         Margin="0,1"
+                                                         FontSize="16"
+                                                         MinWidth="150"
+                                                         controls:TextBoxHelper.ClearTextButton="True"
+                                                         controls:TextBoxHelper.Watermark="Описание"/>
+                                            </StackPanel>
+                                        </controls:MetroTabItem>
+
+                                        <!--Образование-->
+                                        <controls:MetroTabItem  Name="EducationProcessTab"
+                                                                Header="Образование">
+                                            <StackPanel Orientation="Horizontal"
+                                                        MinWidth="400"
+                                                        Width="400"
+                                                        HorizontalAlignment="Left"
+                                                        Margin="10,0">
+                                                <StackPanel Orientation="Vertical">
+                                                    <DatePicker Name="EducationProcessStartDatePicker"
+                                                                MinWidth="150"
+                                                                Height="15"
+                                                                FontSize="16"
+                                                                controls:TextBoxHelper.Watermark="Дата начала"/>
+                                                    <DatePicker Name="EducationProcessDatePicker"
+                                                                MinWidth="150"
+                                                                Margin="0,2,0,0"
+                                                                Height="15"
+                                                                FontSize="16"
+                                                                controls:TextBoxHelper.Watermark="Дата окончания"/>
+                                                    <TextBox Name="EducationProcessDescriptionTBox"
+                                                             Margin="0,2,0,0"
+                                                             Height="15"
+                                                             FontSize="16"
+                                                             MinWidth="150"
+                                                             controls:TextBoxHelper.ClearTextButton="True"
+                                                             controls:TextBoxHelper.Watermark="Описание"/>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Vertical"
+                                                            Margin="10,0">
+                                                    <ComboBox   Name="EducationLevelCBox"
+                                                                MinWidth="150"
+                                                                FontSize="16"
+                                                                controls:TextBoxHelper.Watermark="--Уровень--"/>
+                                                    <ComboBox   Name="InstitutionCBox"
+                                                                MinWidth="150"
+                                                                FontSize="16"
+                                                                Margin="0,2,0,0"
+                                                                controls:TextBoxHelper.Watermark="--Учебное заведение--"/>
+                                                    <ComboBox   Name="SpecialityCBox"
+                                                                MinWidth="150"
+                                                                FontSize="16"                                                        
+                                                                Margin="0,2,0,0"
+                                                                controls:TextBoxHelper.Watermark="--Специальность--"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </controls:MetroTabItem>
+
+                                        <!--Отпуска-->
+                                        <controls:MetroTabItem  Name="HolidayTimeTab"
+                                                                Header="Отпуска">
+                                        </controls:MetroTabItem>
+
+                                        <!--Присвоение должностей-->
+                                        <controls:MetroTabItem  Name="PostAssignTab"
+                                                                Header="Присвоение должностей">
+                                        </controls:MetroTabItem>
+
+                                        <!--Присвоение званий-->
+                                        <controls:MetroTabItem  Name="RankAssignTab"
+                                                                Header="Присвоение званий">
+                                        </controls:MetroTabItem>
+
+                                        <!--Родственники-->
+                                        <controls:MetroTabItem  Name="RelativeTab"
+                                                                Header="Родствениики">
+                                        </controls:MetroTabItem>
+                                    </controls:MetroAnimatedTabControl>
+                                </controls:MetroTabItem>
+                            </controls:MetroTabControl>
+                        </StackPanel>
+                    </controls:MetroTabControl>
+                </controls:MetroTabItem>
+            </controls:MetroAnimatedTabControl>
+        </Grid>
+        <StackPanel     Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Orientation="Horizontal"
+                        Height="20"
+                        VerticalAlignment="Bottom"
+                        Background="DodgerBlue">
+            <Label  Name="ErrorText"
+                        HorizontalAlignment="Right"
+                        FontWeight="Bold"
+                        Foreground="Red"/>
+        </StackPanel>
+    </Grid>
+</controls:MetroWindow>
