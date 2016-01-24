@@ -44,7 +44,7 @@ namespace Staffinfo.Desktop.ViewModel
 
             SimpleIoc.Default.Register<StartViewModel>();
             SimpleIoc.Default.Register<EmployeeViewModel>();
-            SimpleIoc.Default.Register<EmployeesViewModel>();
+            SimpleIoc.Default.Register<AllEmployeesViewModel>();
             SimpleIoc.Default.Register<AddNewEmployeeViewModel>();
         }
 
@@ -64,11 +64,11 @@ namespace Staffinfo.Desktop.ViewModel
             }
         }
 
-        public EmployeesViewModel Employees
+        public AllEmployeesViewModel Employees
         {
             get
             {
-                return ServiceLocator.Current.GetInstance<EmployeesViewModel>();
+                return ServiceLocator.Current.GetInstance<AllEmployeesViewModel>();
                 
             }
         }

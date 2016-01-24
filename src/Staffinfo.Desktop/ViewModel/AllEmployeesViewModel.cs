@@ -3,9 +3,9 @@ using GalaSoft.MvvmLight;
 
 namespace Staffinfo.Desktop.ViewModel
 {
-    public class EmployeesViewModel: ViewModelBase
+    public class AllEmployeesViewModel: ViewModelBase
     {
-        public EmployeesViewModel()
+        public AllEmployeesViewModel()
         {
             //var data = Data.Data.Instance.DataBaseConnection;
             //data.GetEmployee();

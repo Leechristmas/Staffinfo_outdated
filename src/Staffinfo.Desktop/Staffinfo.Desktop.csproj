@@ -79,10 +79,31 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Data\DatabaseConnector.cs" />
+    <Compile Include="Data\DataSingleton.cs" />
+    <Compile Include="Model\ClasinessModel.cs" />
+    <Compile Include="Model\ContractModel.cs" />
+    <Compile Include="Model\EducationalInstituitionModel.cs" />
+    <Compile Include="Model\EducationTimeModel.cs" />
     <Compile Include="Model\EmployeeModel.cs" />
+    <Compile Include="Model\GratitudeModel.cs" />
+    <Compile Include="Model\HolidayTimeModel.cs" />
+    <Compile Include="Model\HospitalTimeModel.cs" />
+    <Compile Include="Model\MilitaryProcessModel.cs" />
+    <Compile Include="Model\MilitaryUnitModel.cs" />
+    <Compile Include="Model\PostAssignmentModel.cs" />
+    <Compile Include="Model\PostModel.cs" />
+    <Compile Include="Model\RankAssignmentModel.cs" />
     <Compile Include="Model\RankModel.cs" />
+    <Compile Include="Model\RelativeModel.cs" />
+    <Compile Include="Model\RelativeTypeModel.cs" />
+    <Compile Include="Model\ReprimandModel.cs" />
+    <Compile Include="Model\SertificationModel.cs" />
+    <Compile Include="Model\ServiceModel.cs" />
+    <Compile Include="Model\SpecialityModel.cs" />
+    <Compile Include="Model\ViolationModel.cs" />
     <Compile Include="ViewModel\AddNewEmployeeViewModel.cs" />
-    <Compile Include="ViewModel\EmployeesViewModel.cs" />
+    <Compile Include="ViewModel\AllEmployeesViewModel.cs" />
     <Compile Include="ViewModel\EmployeeViewModel.cs" />
     <Compile Include="ViewModel\ListViewModel.cs" />
     <Compile Include="ViewModel\StartViewModel.cs" />
@@ -94,8 +115,8 @@
     <Compile Include="View\AddNewEmployeeView.xaml.cs">
       <DependentUpon>AddNewEmployeeView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\EmployeeListView.xaml.cs">
-      <DependentUpon>EmployeeListView.xaml</DependentUpon>
+    <Compile Include="View\AllEmployeesView.xaml.cs">
+      <DependentUpon>AllEmployeesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\EmployeeView.xaml.cs">
       <DependentUpon>EmployeeView.xaml</DependentUpon>
@@ -149,7 +170,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\EmployeeListView.xaml">
+    <Page Include="View\AllEmployeesView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

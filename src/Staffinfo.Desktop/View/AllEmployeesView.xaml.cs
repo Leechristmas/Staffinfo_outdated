@@ -18,9 +18,9 @@ namespace Staffinfo.Desktop.View
     /// <summary>
     /// Interaction logic for EmployeeListView.xaml
     /// </summary>
-    public partial class EmployeeListView : MetroWindow
+    public partial class AllEmployeesView : MetroWindow
     {
-        public EmployeeListView()
+        public AllEmployeesView()
         {
             InitializeComponent();
         }

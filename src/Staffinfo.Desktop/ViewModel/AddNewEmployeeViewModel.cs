@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using GalaSoft.MvvmLight;
-using Staffinfo.Model;
+using Staffinfo.Desktop.Model;
 
 namespace Staffinfo.Desktop.ViewModel
 {
@@ -28,6 +28,8 @@ namespace Staffinfo.Desktop.ViewModel
                 RaisePropertyChanged("PersonalNumber");
             }
         }
+
+        
 
         public ListViewModel<RankModel> RankList
         {

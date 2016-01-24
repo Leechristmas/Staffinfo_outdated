@@ -15,7 +15,8 @@
             <Button Name="EmployeeListButton"
                     Content="Служащие"
                     VerticalAlignment="Center"
-                    Style="{StaticResource ButtonStyle}"/>
+                    Style="{StaticResource ButtonStyle}"
+                    Command="{Binding GoToAllEmployeesView}"/>
             <Button Name="OldEmployeeListButton"
                     Content="Пенсионеры"
                     VerticalAlignment="Center"

@@ -1,14 +1,9 @@
 ﻿using GalaSoft.MvvmLight;
-using Staffinfo.Model;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Media.Imaging;
 using GalaSoft.MvvmLight.Ioc;
+using Staffinfo.Desktop.Model;
 
 namespace Staffinfo.Desktop.ViewModel
 {
@@ -69,14 +64,14 @@ namespace Staffinfo.Desktop.ViewModel
         
         public long? Post
         {
-            get { return empModel.Post; }
-            set { empModel.Post = value; }
+            get { return empModel.PostId; }
+            set { empModel.PostId = value; }
         }
         
         public long? Rank
         {
-            get { return empModel.Rank; }
-            set { empModel.Rank = value; }
+            get { return empModel.RankId; }
+            set { empModel.RankId = value; }
         }
         
         public DateTime? BornDate
