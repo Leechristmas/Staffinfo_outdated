@@ -35,13 +35,7 @@ namespace Staffinfo.Desktop.ViewModel
         #region GoToAllEmployeesView command
         private RelayCommand _goToAllEmployeesView;
 
-        public RelayCommand GoToAllEmployeesView
-        {
-            get
-            {
-                return _goToAllEmployeesView ?? (_goToAllEmployeesView = new RelayCommand(GoToAllEmployeesViewExecute));
-            }
-        }
+        public RelayCommand GoToAllEmployeesView => _goToAllEmployeesView ?? (_goToAllEmployeesView = new RelayCommand(GoToAllEmployeesViewExecute));
 
         private void GoToAllEmployeesViewExecute()
         {

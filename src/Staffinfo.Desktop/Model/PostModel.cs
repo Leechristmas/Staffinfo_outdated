@@ -3,7 +3,7 @@
     /// <summary>
     /// Модель должности
     /// </summary>
-    public class PostModel
+    public class PostModel: BaseModel
     {
         public PostModel()
         {
@@ -12,7 +12,6 @@
 
         #region Properties
 
-        public long Id { get; set; }
         public long ServiceId { get; set; }
         public string PostTitle { get; set; }
 

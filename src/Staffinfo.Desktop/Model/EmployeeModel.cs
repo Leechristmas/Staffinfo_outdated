@@ -7,7 +7,7 @@ namespace Staffinfo.Desktop.Model
     /// Набор полей, описывающих служащго
     /// P.S. вряд ли можно назвать "моделью" =)
     /// </summary>
-    public class EmployeeModel
+    public class EmployeeModel: BaseModel
     {
         #region Constructor
         public EmployeeModel()
