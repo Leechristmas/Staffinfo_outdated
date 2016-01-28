@@ -50,7 +50,7 @@ namespace Staffinfo.Desktop.ViewModel
             set { empModel.FirstName = value; }
         }
         
-        public long Id
+        public long? Id
         {
             get { return empModel.Id; }
             set { empModel.Id = value; }

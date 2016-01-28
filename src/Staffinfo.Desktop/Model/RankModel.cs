@@ -3,7 +3,7 @@
     /// <summary>
     /// Модель звания
     /// </summary>
-    public class RankModel
+    public class RankModel: BaseModel
     {
         public RankModel()
         {

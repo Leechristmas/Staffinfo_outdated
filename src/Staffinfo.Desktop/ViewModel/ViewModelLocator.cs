@@ -1,7 +1,7 @@
 /*
   In App.xaml:
   <Application.Resources>
-      <vm:ViewModelLocator xmlns:vm="clr-namespace:Staffinfo"
+      <vm:ViewModelLocator xmlns:vm="clr-namespace:Staffinfo.Desktop"
                            x:Key="Locator" />
   </Application.Resources>
   
@@ -43,12 +43,9 @@ namespace Staffinfo.Desktop.ViewModel
             ////}
 
             SimpleIoc.Default.Register<StartViewModel>();
-            SimpleIoc.Default.Register<EmployeeViewModel>();
-            SimpleIoc.Default.Register<AllEmployeesViewModel>();
-            SimpleIoc.Default.Register<AddNewEmployeeViewModel>();
         }
 
-        public StartViewModel Main
+        public StartViewModel Start
         {
             get
             {
@@ -56,28 +53,6 @@ namespace Staffinfo.Desktop.ViewModel
             }
         }
         
-        public EmployeeViewModel Employee
-        {
-            get
-            {
-                return ServiceLocator.Current.GetInstance<EmployeeViewModel>();
-            }
-        }
-
-        public AllEmployeesViewModel Employees
-        {
-            get
-            {
-                return ServiceLocator.Current.GetInstance<AllEmployeesViewModel>();
-                
-            }
-        }
-
-        public AddNewEmployeeViewModel AddEmployee
-        {
-            get { return ServiceLocator.Current.GetInstance<AddNewEmployeeViewModel>(); }
-        }
-
         public static void Cleanup()
         {
             // TODO Clear the ViewModels

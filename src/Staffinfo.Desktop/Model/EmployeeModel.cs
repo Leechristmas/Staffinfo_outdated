@@ -16,9 +16,7 @@ namespace Staffinfo.Desktop.Model
         #endregion
 
         #region Properties
-
-        public long Id { get; set; }
-        
+                
         /// <summary>
         /// Имя служащего
         /// </summary>

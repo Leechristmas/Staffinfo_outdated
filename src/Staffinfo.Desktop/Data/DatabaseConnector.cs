@@ -12,7 +12,7 @@ namespace Staffinfo.Desktop.Data
         /// <summary>
         /// строка соединения
         /// </summary>
-        private const string UrlDataBase = @"Data Source=DESKTOP-QV3R6NU\SQLEXPRESS; Initial Catalog = staffinfo; Integrated Security=SSPI;";
+        private const string UrlDataBase = @"Data Source=DESKTOP-84584PI\SQLEXPRESS; Initial Catalog = staffinfo_tests; Integrated Security=SSPI;";
 
         private readonly SqlConnection _sqlConnection;
 
