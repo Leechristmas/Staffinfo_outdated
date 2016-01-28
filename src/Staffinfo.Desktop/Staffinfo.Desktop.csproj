@@ -81,6 +81,7 @@
     </ApplicationDefinition>
     <Compile Include="Data\DatabaseConnector.cs" />
     <Compile Include="Data\DataSingleton.cs" />
+    <Compile Include="Data\DataTableProviders\ClasinessTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\EmployeeTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\ITableProvider.cs" />
     <Compile Include="Data\DataTableProviders\PostTableProvider.cs" />

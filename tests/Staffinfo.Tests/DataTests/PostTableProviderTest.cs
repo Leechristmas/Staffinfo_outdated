@@ -21,7 +21,7 @@ namespace Staffinfo.Tests
         }
 
         [TestMethod]
-        public void GetElementById()
+        public void GetPostById()
         {
             using (var pPrvdr = new PostTableProvider())
             {
@@ -34,7 +34,7 @@ namespace Staffinfo.Tests
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void GetElementById_ThrowsArgumentNullException()
+        public void GetPostById_ThrowsArgumentNullException()
         {
             using (var pPrvdr = new PostTableProvider())
             {
@@ -43,7 +43,7 @@ namespace Staffinfo.Tests
         }
 
         [TestMethod]
-        public void GetAllElements_HasElements()
+        public void GetAllPosts_HasElements()
         {
             using (var pPrvdr = new PostTableProvider())
             {
@@ -55,7 +55,7 @@ namespace Staffinfo.Tests
         }
 
         [TestMethod]
-        public void UpdateElement()
+        public void UpdatePost()
         {
             using (var pPrvdr = new PostTableProvider())
             {

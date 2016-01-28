@@ -24,7 +24,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             var cmd =
                 new SqlCommand($"INSERT INTO EMPLOYEE VALUES('{employeeModel.FirstName}', '{employeeModel.MiddleName}', '{employeeModel.LastName}'," + 
                 $"'{employeeModel.PersonalNumber}', {employeeModel.PostId}, {employeeModel.RankId}, '{employeeModel.BornDate.Value}'," + 
-                $"'{employeeModel.JobStartDate.Value}', {employeeModel.Address}, {employeeModel.Pasport}, {employeeModel.MobilePhoneNumber}, {employeeModel.HomePhoneNumber}, {employeeModel.IsPensioner});"+
+                $"'{employeeModel.JobStartDate.Value}', '{employeeModel.Address}', '{employeeModel.Pasport}', '{employeeModel.MobilePhoneNumber}', '{employeeModel.HomePhoneNumber}', '{employeeModel.IsPensioner}'); "+
                 "SELECT MAX(ID) FROM POST;");
 
             try
@@ -50,20 +50,31 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"SELECT * FROM POST WHERE ID={id};");
+            var cmd = new SqlCommand($@"SELECT * FROM EMPLOYEE WHERE ID={id};");
 
-            PostModel postModel = null;
+            EmployeeModel employeeModel = null;
 
             try
             {
                 var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
                 sqlDataReader.Read();
 
-                postModel = new PostModel
+                employeeModel = new EmployeeModel
                 {
                     Id = Int64.Parse(sqlDataReader[0].ToString()),
-                    PostTitle = sqlDataReader[1].ToString(),
-                    ServiceId = Int64.Parse(sqlDataReader[2].ToString())
+                    FirstName = sqlDataReader["EMPLOYEE_FIRSTNAME"].ToString(),
+                    LastName = sqlDataReader["EMPLOYEE_LASTNAME"].ToString(),
+                    MiddleName = sqlDataReader["EMPLOYEE_MIDDLENAME"].ToString(),
+                    PersonalNumber = sqlDataReader["PERSONAL_KEY"].ToString(),
+                    PostId = Int64.Parse(sqlDataReader["POST_ID"].ToString()),
+                    RankId = Int64.Parse(sqlDataReader["RANK_ID"].ToString()),
+                    BornDate = DateTime.Parse(sqlDataReader["BORN_DATE"].ToString()),
+                    JobStartDate = DateTime.Parse(sqlDataReader["JOB_START_DATE"].ToString()),
+                    Address = sqlDataReader["ADDRESS"].ToString(),
+                    Pasport = sqlDataReader["PASPORT"].ToString(),
+                    MobilePhoneNumber = sqlDataReader["MOBILE_PHONE_NUMBER"].ToString(),
+                    HomePhoneNumber = sqlDataReader["HOME_PHONE_NUMBER"].ToString(),
+                    IsPensioner = bool.Parse(sqlDataReader["IS_PENSIONER"].ToString())
                 };
                 sqlDataReader.Close();
 
@@ -75,29 +86,42 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 return null;
             }
 
-            return postModel;
+            return employeeModel;
         }
 
         public ObservableCollection<BaseModel> GetAllElements()
         {
-            var postList = new ObservableCollection<BaseModel>();
+            var employeeList = new ObservableCollection<BaseModel>();
 
-            var cmd = new SqlCommand("SELECT * FROM POST");
+            var cmd = new SqlCommand("SELECT * FROM EMPLOYEE");
 
             try
             {
                 var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
 
+                
+
                 while (sqlDataReader.Read())
                 {
-                    var postModel = new PostModel()
+                    var employeeModel = new EmployeeModel
                     {
                         Id = Int64.Parse(sqlDataReader[0].ToString()),
-                        PostTitle = sqlDataReader[1].ToString(),
-                        ServiceId = Int64.Parse(sqlDataReader[2].ToString())
+                        FirstName = sqlDataReader["EMPLOYEE_FIRSTNAME"].ToString(),
+                        LastName = sqlDataReader["EMPLOYEE_LASTNAME"].ToString(),
+                        MiddleName = sqlDataReader["EMPLOYEE_MIDDLENAME"].ToString(),
+                        PersonalNumber = sqlDataReader["PERSONAL_KEY"].ToString(),
+                        PostId = Int64.Parse(sqlDataReader["POST_ID"].ToString()),
+                        RankId = Int64.Parse(sqlDataReader["RANK_ID"].ToString()),
+                        BornDate = DateTime.Parse(sqlDataReader["BORN_DATE"].ToString()),
+                        JobStartDate = DateTime.Parse(sqlDataReader["JOB_START_DATE"].ToString()),
+                        Address = sqlDataReader["ADDRESS"].ToString(),
+                        Pasport = sqlDataReader["PASPORT"].ToString(),
+                        MobilePhoneNumber = sqlDataReader["MOBILE_PHONE_NUMBER"].ToString(),
+                        HomePhoneNumber = sqlDataReader["HOME_PHONE_NUMBER"].ToString(),
+                        IsPensioner = bool.Parse(sqlDataReader["IS_PENSIONER"].ToString())
                     };
 
-                    postList.Add(postModel);
+                    employeeList.Add(employeeModel);
                 }
                 sqlDataReader.Close();
 
@@ -108,16 +132,21 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;
                 return null;
             }
-            return postList;
+            return employeeList;
         }
 
-        public bool Update(BaseModel post)
+        public bool Update(BaseModel employee)
         {
-            if (post == null) throw new ArgumentNullException(nameof(post), Resources.DatabaseConnector_parameter_cannot_be_null);
+            if (employee == null) throw new ArgumentNullException(nameof(employee), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var postModel = post as PostModel;
+            var employeeModel = employee as EmployeeModel;
 
-            var cmd = new SqlCommand($@"UPDATE POST SET POST_TITLE='{postModel.PostTitle}', SERVICE_ID={postModel.ServiceId} WHERE ID={postModel.Id};");
+            var cmd = new SqlCommand($@"UPDATE EMPLOYEE SET EMPLOYEE_FIRSTNAME='{employeeModel.FirstName}', EMPLOYEE_MIDDLENAME='{employeeModel.MiddleName}'," + 
+                $"EMPLOYEE_LASTNAME='{employeeModel.LastName}', PERSONAL_KEY='{employeeModel.PersonalNumber}', POST_ID={employeeModel.PostId}," +
+                $"RANK_ID={employeeModel.RankId}, BORN_DATE='{employeeModel.BornDate.Value}', JOB_START_DATE='{employeeModel.JobStartDate.Value}'," +
+                $"ADDRESS='{employeeModel.Address}', PASPORT='{employeeModel.Pasport}', MOBILE_PHONE_NUMBER='{employeeModel.MobilePhoneNumber}'," +
+                $"HOME_PHONE_NUMBER='{employeeModel.HomePhoneNumber}', IS_PENSIONER='{employeeModel.IsPensioner}' " +
+                $"WHERE ID={employeeModel.Id};");
 
             try
             {
@@ -137,7 +166,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"DELETE FROM POST WHERE ID = '{id}'");
+            var cmd = new SqlCommand($@"DELETE FROM EMPLOYEE WHERE ID = '{id}'");
             try
             {
                 DataSingleton.Instance.DatabaseConnector.Execute(cmd);
