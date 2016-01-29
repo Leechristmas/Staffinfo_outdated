@@ -55,6 +55,7 @@
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -82,6 +83,9 @@
     <Compile Include="Data\DatabaseConnector.cs" />
     <Compile Include="Data\DataSingleton.cs" />
     <Compile Include="Data\DataTableProviders\ClasinessTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\ContractTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\EducationalInstitutonTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\EducationTimeTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\EmployeeTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\ITableProvider.cs" />
     <Compile Include="Data\DataTableProviders\PostTableProvider.cs" />
@@ -89,7 +93,7 @@
     <Compile Include="Model\BaseModel.cs" />
     <Compile Include="Model\ClasinessModel.cs" />
     <Compile Include="Model\ContractModel.cs" />
-    <Compile Include="Model\EducationalInstituitionModel.cs" />
+    <Compile Include="Model\EducationalInstitutionModel.cs" />
     <Compile Include="Model\EducationTimeModel.cs" />
     <Compile Include="Model\EmployeeModel.cs" />
     <Compile Include="Model\GratitudeModel.cs" />

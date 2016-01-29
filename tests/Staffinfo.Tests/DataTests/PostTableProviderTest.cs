@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Staffinfo.Desktop.Data.DataTableProviders;
 using Staffinfo.Desktop.Model;
 
-namespace Staffinfo.Tests
+namespace Staffinfo.Tests.DataTests
 {
     [TestClass]
     public class PostTableProviderTest

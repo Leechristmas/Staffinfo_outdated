@@ -7,27 +7,27 @@ using Staffinfo.Desktop.Properties;
 namespace Staffinfo.Desktop.Data.DataTableProviders
 {
     /// <summary>
-    /// Класс для работы с таблицей классности
+    /// Класс для таблицы Contract
     /// </summary>
-    public class ClasinessTableProvider : ITableProvider, IDisposable
+    public class ContractTableProvider: ITableProvider, IDisposable
     {
         #region ITableProvider implementation
 
-        public BaseModel AddNewElement(BaseModel clasiness)
+        public BaseModel AddNewElement(BaseModel contract)
         {
-            if (clasiness == null) throw new ArgumentNullException(nameof(clasiness), Resources.DatabaseConnector_parameter_cannot_be_null);
+            if (contract == null) throw new ArgumentNullException(nameof(contract), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var clasinessModel = clasiness as ClasinessModel;
+            var contractModel = contract as ContractModel;
 
             var cmd =
-                new SqlCommand($@"INSERT INTO CLASINESS VALUES({clasinessModel.EmployeeId}, {clasinessModel.OrderNumber}, '{clasinessModel.ClasinessDate}', {clasinessModel.ClasinessLevel}, '{clasinessModel.Description}'); SELECT MAX(ID) FROM CLASINESS;");
+                new SqlCommand($@"INSERT INTO CONTRACT VALUES({contractModel.EmployeeId}, '{contractModel.StartDate}', '{contractModel.FinishDate}', '{contractModel.Description}'); SELECT MAX(ID) FROM CONTRACT;");
 
             try
             {
                 var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
 
                 sqlDataReader.Read();
-                clasinessModel.Id = Int64.Parse(sqlDataReader[0].ToString());
+                contractModel.Id = Int64.Parse(sqlDataReader[0].ToString());
                 sqlDataReader.Close();
 
                 ErrorInfo = null;
@@ -38,7 +38,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 return null;
             }
 
-            return clasinessModel;
+            return contractModel;
         }
 
         public string ErrorInfo { get; set; }
@@ -47,23 +47,22 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"SELECT * FROM CLASINESS WHERE ID={id};");
+            var cmd = new SqlCommand($@"SELECT * FROM CONTRACT WHERE ID={id};");
 
-            ClasinessModel clasinessModel = null;
+            ContractModel contractModel = null;
 
             try
             {
                 var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
                 sqlDataReader.Read();
 
-                clasinessModel = new ClasinessModel
+                contractModel = new ContractModel
                 {
                     Id = Int64.Parse(sqlDataReader[0].ToString()),
                     EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
-                    OrderNumber = UInt16.Parse(sqlDataReader[2].ToString()),
-                    ClasinessDate = DateTime.Parse(sqlDataReader[3].ToString()),
-                    ClasinessLevel = Byte.Parse(sqlDataReader[4].ToString()),
-                    Description = sqlDataReader[5].ToString()
+                    StartDate = DateTime.Parse(sqlDataReader[2].ToString()),
+                    FinishDate = DateTime.Parse(sqlDataReader[3].ToString()),
+                    Description = sqlDataReader[4].ToString()
                 };
                 sqlDataReader.Close();
 
@@ -75,14 +74,14 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 return null;
             }
 
-            return clasinessModel;
+            return contractModel;
         }
 
         public ObservableCollection<BaseModel> GetAllElements()
         {
-            var clasinessList = new ObservableCollection<BaseModel>();
+            var contractList = new ObservableCollection<BaseModel>();
 
-            var cmd = new SqlCommand("SELECT * FROM CLASINESS");
+            var cmd = new SqlCommand("SELECT * FROM CONTRACT");
 
             try
             {
@@ -90,17 +89,16 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
                 while (sqlDataReader.Read())
                 {
-                    var clasinessModel = new ClasinessModel
+                    var contractModel = new ContractModel
                     {
                         Id = Int64.Parse(sqlDataReader[0].ToString()),
                         EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
-                        OrderNumber = UInt16.Parse(sqlDataReader[2].ToString()),
-                        ClasinessDate = DateTime.Parse(sqlDataReader[3].ToString()),
-                        ClasinessLevel = Byte.Parse(sqlDataReader[4].ToString()),
-                        Description = sqlDataReader[5].ToString()
+                        StartDate = DateTime.Parse(sqlDataReader[2].ToString()),
+                        FinishDate = DateTime.Parse(sqlDataReader[3].ToString()),
+                        Description = sqlDataReader[4].ToString()
                     };
 
-                    clasinessList.Add(clasinessModel);
+                    contractList.Add(contractModel);
                 }
                 sqlDataReader.Close();
 
@@ -111,16 +109,16 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;
                 return null;
             }
-            return clasinessList;
+            return contractList;
         }
 
-        public bool Update(BaseModel clasiness)
+        public bool Update(BaseModel contract)
         {
-            if (clasiness == null) throw new ArgumentNullException(nameof(clasiness), Resources.DatabaseConnector_parameter_cannot_be_null);
+            if (contract == null) throw new ArgumentNullException(nameof(contract), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var clasinessModel = clasiness as ClasinessModel;
+            var contractModel = contract as ContractModel;
 
-            var cmd = new SqlCommand($@"UPDATE CLASINESS SET EMPLOYEE_ID={clasinessModel.EmployeeId}, ORDER_NUMBER={clasinessModel.OrderNumber}, CLASINESS_DATE='{clasinessModel.ClasinessDate}', CLASINESS_LEVEL={clasinessModel.ClasinessLevel}, DESCRIPTION='{clasinessModel.Description}' WHERE ID={clasinessModel.Id};");
+            var cmd = new SqlCommand($@"UPDATE CONTRACT SET EMPLOYEE_ID={contractModel.EmployeeId}, START_DATE='{contractModel.StartDate}', FINISH_DATE='{contractModel.FinishDate}', DESCRIPTION='{contractModel.Description}' WHERE ID={contractModel.Id};");
 
             try
             {
@@ -140,7 +138,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"DELETE FROM CLASINESS WHERE ID = '{id}'");
+            var cmd = new SqlCommand($@"DELETE FROM CONTRACT WHERE ID = '{id}'");
             try
             {
                 DataSingleton.Instance.DatabaseConnector.Execute(cmd);

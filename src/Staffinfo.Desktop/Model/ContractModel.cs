@@ -5,7 +5,7 @@ namespace Staffinfo.Desktop.Model
     /// <summary>
     /// Модель контракта
     /// </summary>
-    public class ContractModel
+    public class ContractModel: BaseModel
     {
         public ContractModel()
         {
@@ -13,8 +13,7 @@ namespace Staffinfo.Desktop.Model
         }
 
         #region Properties
-
-        public long Id { get; set; }
+        
         public long EmployeeId { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime FinishDate { get; set; }
