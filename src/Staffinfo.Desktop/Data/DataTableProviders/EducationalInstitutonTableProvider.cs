@@ -114,7 +114,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
             var educationalInstitutionModel = educationalInstitution as EducationalInstitutionModel;
 
-            var cmd = new SqlCommand($@"UPDATE EDUCATIONAL_INSTITUTION SET INSTITUTION_TITLE='{educationalInstitutionModel.InstituitionTitle}', INSTITUTION_TYPE='{educationalInstitutionModel.InstituitionType}' WHERE ID={educationalInstitutionModel.Id};");
+            var cmd = new SqlCommand($@"UPDATE EDUCATIONAL_INSTITUTION SET INST_TITLE='{educationalInstitutionModel.InstituitionTitle}', INST_TYPE='{educationalInstitutionModel.InstituitionType}' WHERE ID={educationalInstitutionModel.Id};");
 
             try
             {

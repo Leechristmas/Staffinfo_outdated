@@ -8,7 +8,7 @@ namespace Staffinfo.Desktop.ViewModel
     public class WindowViewModelBase : ViewModelBase
     {
         /// <summary>
-        /// Если свойство меняется, закрывается окно
+        /// true - закрыть окно
         /// </summary>
         private bool _windowsClosed;
 

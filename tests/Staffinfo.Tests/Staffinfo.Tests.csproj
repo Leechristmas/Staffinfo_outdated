@@ -52,10 +52,12 @@
   <ItemGroup>
     <Compile Include="DataTests\ClasinessTableProviderTests.cs" />
     <Compile Include="DataTests\ContractTableProviderTests.cs" />
+    <Compile Include="DataTests\EducationalInstitutionTableProviderTests.cs" />
     <Compile Include="DataTests\EducationTimeTableProviderTests.cs" />
     <Compile Include="DataTests\EmployeeTableProviderTests.cs" />
     <Compile Include="DataTests\PostTableProviderTest.cs" />
     <Compile Include="DataTests\RankTableProviderTests.cs" />
+    <Compile Include="DataTests\ServiceTableProviderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -3,6 +3,10 @@ using GalaSoft.MvvmLight;
 
 namespace Staffinfo.Desktop.ViewModel
 {
+    /// <summary>
+    /// Класс-коллекция для списков моделей
+    /// </summary>
+    /// <typeparam name="T">тип модели</typeparam>
     public class ListViewModel<T>: ViewModelBase where T : new()
     {
         public ListViewModel(List<T> modelList)
