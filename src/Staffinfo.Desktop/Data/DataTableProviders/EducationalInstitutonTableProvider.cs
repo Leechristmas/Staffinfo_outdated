@@ -6,6 +6,9 @@ using Staffinfo.Desktop.Properties;
 
 namespace Staffinfo.Desktop.Data.DataTableProviders
 {
+    /// <summary>
+    /// Класс для таблицы EDUCATIONAL_INSTITUTION
+    /// </summary>
     public class EducationalInstitutonTableProvider: ITableProvider, IDisposable
     {
         public string ErrorInfo { get; private set; }
@@ -111,7 +114,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
             var educationalInstitutionModel = educationalInstitution as EducationalInstitutionModel;
 
-            var cmd = new SqlCommand($@"UPDATE EDUCATIONAL_INSTITUTION SET POST_TITLE='{postModel.PostTitle}', SERVICE_ID={postModel.ServiceId} WHERE ID={postModel.Id};");
+            var cmd = new SqlCommand($@"UPDATE EDUCATIONAL_INSTITUTION SET INSTITUTION_TITLE='{educationalInstitutionModel.InstituitionTitle}', INSTITUTION_TYPE='{educationalInstitutionModel.InstituitionType}' WHERE ID={educationalInstitutionModel.Id};");
 
             try
             {
@@ -131,7 +134,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"DELETE FROM POST WHERE ID = '{id}'");
+            var cmd = new SqlCommand($@"DELETE FROM EDUCATIONAL_INSTITUTION WHERE ID = '{id}'");
             try
             {
                 DataSingleton.Instance.DatabaseConnector.Execute(cmd);

@@ -42,14 +42,14 @@ namespace Staffinfo.Desktop.ViewModel
             ////    SimpleIoc.Default.Register<IDataService, DataService>();
             ////}
 
-            SimpleIoc.Default.Register<StartViewModel>();
+            SimpleIoc.Default.Register<MainViewModel>();
         }
 
-        public StartViewModel Start
+        public MainViewModel Main
         {
             get
             {
-                return ServiceLocator.Current.GetInstance<StartViewModel>();
+                return ServiceLocator.Current.GetInstance<MainViewModel>();
             }
         }
         
