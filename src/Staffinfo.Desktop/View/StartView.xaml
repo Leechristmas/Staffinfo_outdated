@@ -5,9 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:local="clr-namespace:Staffinfo.Desktop"
+        xmlns:helpers="clr-namespace:Staffinfo.Desktop.Helpers"
         mc:Ignorable="d"
         Title="Главное меню" Height="350" Width="525"
-        DataContext="{Binding Source={StaticResource Locator}, Path=Main}">
+        DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
+        helpers:WindowCloseHelper.WindowsClose="{Binding WindowsClosed}">   
     <Grid>
         <StackPanel Width="130"
                     Orientation="Vertical"
@@ -37,7 +39,8 @@
             <Button Name="CloseButton"
                     Content="Закрыть"
                     VerticalAlignment="Bottom"
-                    Style="{StaticResource ButtonStyle}"/>
+                    Style="{StaticResource ButtonStyle}"
+                    Command="{Binding CloseWindowCommand}"/>
         </StackPanel>
     </Grid>
 </Controls:MetroWindow>

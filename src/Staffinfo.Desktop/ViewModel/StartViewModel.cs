@@ -20,7 +20,7 @@ namespace Staffinfo.Desktop.ViewModel
     /// See http://www.galasoft.ch/mvvm
     /// </para>
     /// </summary>
-    public class StartViewModel : ViewModelBase
+    public class StartViewModel : WindowViewModelBase
     {
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
@@ -44,6 +44,10 @@ namespace Staffinfo.Desktop.ViewModel
                 MessageBox.Show("Ошибка при загрузке данных!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        /// <summary>
+        /// Переход к окну, где отображаются все служащие
+        /// </summary>
         #region GoToAllEmployeesView command
         private RelayCommand _goToAllEmployeesView;
 
@@ -57,20 +61,20 @@ namespace Staffinfo.Desktop.ViewModel
         #endregion
 
         /// <summary>
-        /// TODO: нужно использовать DialogCloser
+        ///  Команда закрытия окна
         /// </summary>
-        #region CloseApp command
+        #region CloseCommand
 
-        private RelayCommand _closeApp;
+        private RelayCommand _closeWindowCommand;
 
-        public RelayCommand CloseApp
+        public RelayCommand CloseWindowCommand
         {
-            get { return _closeApp ?? (_closeApp = new RelayCommand(CloseAppExecute)); }
+            get { return _closeWindowCommand ?? (_closeWindowCommand = new RelayCommand(CloseWindow)); }
         }
 
-        private void CloseAppExecute()
+        private void CloseWindow()
         {
-
+            WindowsClosed = true;
         }
 
         #endregion

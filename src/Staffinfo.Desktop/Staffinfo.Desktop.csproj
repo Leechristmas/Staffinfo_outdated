@@ -107,6 +107,7 @@
     <Compile Include="Data\DataTableProviders\PostTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\RankTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\ServiceTableProvider.cs" />
+    <Compile Include="Helpers\WindowCloseHelper.cs" />
     <Compile Include="Model\BaseModel.cs" />
     <Compile Include="Model\ClasinessModel.cs" />
     <Compile Include="Model\ContractModel.cs" />
@@ -140,6 +141,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ViewModel\WindowViewModelBase.cs" />
     <Compile Include="View\AddNewEmployeeView.xaml.cs">
       <DependentUpon>AddNewEmployeeView.xaml</DependentUpon>
     </Compile>
@@ -232,6 +234,7 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
