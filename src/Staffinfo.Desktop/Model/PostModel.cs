@@ -9,7 +9,7 @@
         {
                 
         }
-
+        
         #region Properties
 
         public long ServiceId { get; set; }

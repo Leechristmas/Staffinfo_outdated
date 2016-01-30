@@ -1,6 +1,10 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using Staffinfo.Desktop.Data;
+using Staffinfo.Desktop.Data.DataTableProviders;
 using Staffinfo.Desktop.View;
+using System;
+using System.Windows;
 
 namespace Staffinfo.Desktop.ViewModel
 {
@@ -31,6 +35,14 @@ namespace Staffinfo.Desktop.ViewModel
             ////{
             ////    // Code runs "for real"
             ////}
+            try
+            {
+                DataSingleton.Instance.DataInitialize();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("Ошибка при загрузке данных!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
         #region GoToAllEmployeesView command
         private RelayCommand _goToAllEmployeesView;
@@ -40,11 +52,13 @@ namespace Staffinfo.Desktop.ViewModel
         private void GoToAllEmployeesViewExecute()
         {
             var allEmployeesView = new AllEmployeesView();
-            allEmployeesView.DataContext = new AllEmployeesViewModel();
             allEmployeesView.Show();
         }
         #endregion
 
+        /// <summary>
+        /// TODO: нужно использовать DialogCloser
+        /// </summary>
         #region CloseApp command
 
         private RelayCommand _closeApp;

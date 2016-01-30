@@ -5,9 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:local="clr-namespace:Staffinfo.Desktop.View"
+        xmlns:converters="clr-namespace:Staffinfo.Desktop.Converters"
         mc:Ignorable="d"
         Title="Добавление служащего" MinWidth="520" Width="520" Height="510" MinHeight="510"
-                     DataContext="{Binding Source={StaticResource Locator}, Path=AddEmployee}">
+                     DataContext="{Binding Source={StaticResource Locator}, Path=AddNewEmploye}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition MinHeight="135"/>
@@ -68,9 +69,24 @@
                         Margin="0,1"
                         MinWidth="150"
                         Name="PostCBox"
-                        SelectedItem="{Binding RankList.SelectedItem}"
-                        ItemsSource="{Binding RankList.ModelList}"
-                        DisplayMemberPath="RankTitle"/>
+                        SelectedItem="{Binding PostList.SelectedItem}"
+                        ItemsSource="{Binding PostList.ModelList}"
+                        DisplayMemberPath="PostTitle">
+                        <!--<ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <TextBlock Text="{Binding PostTitle}"/>
+                                    <Grid.Visibility>
+                                        <Binding Path="SelectedItem" ElementName="ServiceCBox">
+                                            <Binding.Converter>
+                                                <converters:NewConverters Param="{Binding}"/>
+                                            </Binding.Converter>
+                                        </Binding>
+                                    </Grid.Visibility>
+                                </Grid>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>-->
+                        </ComboBox>
                     <ComboBox
                         Controls:TextBoxHelper.Watermark="--Звание--"
                         Controls:TextBoxHelper.ClearTextButton="True"
@@ -78,7 +94,10 @@
                         HorizontalAlignment="Left"
                         Margin="0,1"
                         MinWidth="150"
-                        Name="RankCBox"/>
+                        Name="RankCBox"
+                        SelectedItem="{Binding RankList.SelectedItem}"
+                        ItemsSource="{Binding RankList.ModelList}"
+                        DisplayMemberPath="RankTitle"/>
                     <ComboBox
                         Controls:TextBoxHelper.Watermark="--Служба--"
                         Controls:TextBoxHelper.ClearTextButton="True"
@@ -86,7 +105,10 @@
                         HorizontalAlignment="Left"
                         Margin="0,1"
                         MinWidth="150"
-                        Name="ServiceCBox"/>
+                        Name="ServiceCBox"
+                        SelectedItem="{Binding ServiceList.SelectedItem}"
+                        ItemsSource="{Binding ServiceList.ModelList}"
+                        DisplayMemberPath="ServiceTitle"/>
                 </StackPanel>
                 <StackPanel
                     Orientation="Vertical"

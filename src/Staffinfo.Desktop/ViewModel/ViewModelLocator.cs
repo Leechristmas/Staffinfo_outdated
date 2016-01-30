@@ -42,15 +42,24 @@ namespace Staffinfo.Desktop.ViewModel
             ////    SimpleIoc.Default.Register<IDataService, DataService>();
             ////}
 
-            SimpleIoc.Default.Register<MainViewModel>();
+            SimpleIoc.Default.Register<StartViewModel>();
+            SimpleIoc.Default.Register<AllEmployeesViewModel>();
+            SimpleIoc.Default.Register<AddNewEmployeeViewModel>();
         }
 
-        public MainViewModel Main
+        public AddNewEmployeeViewModel AddNewEmploye 
         {
-            get
-            {
-                return ServiceLocator.Current.GetInstance<MainViewModel>();
-            }
+            get { return ServiceLocator.Current.GetInstance<AddNewEmployeeViewModel>(); }
+        }
+
+        public AllEmployeesViewModel AllEmployee
+        {
+            get { return ServiceLocator.Current.GetInstance<AllEmployeesViewModel>(); }
+        }
+
+        public StartViewModel Main
+        {
+            get { return ServiceLocator.Current.GetInstance<StartViewModel>(); }
         }
         
         public static void Cleanup()

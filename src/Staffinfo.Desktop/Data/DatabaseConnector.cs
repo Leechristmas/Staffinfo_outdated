@@ -10,9 +10,14 @@ namespace Staffinfo.Desktop.Data
     public class DatabaseConnector: IDisposable
     {
         /// <summary>
-        /// строка соединения
+        /// строка соединения (notebook)
         /// </summary>
-        private const string UrlDataBase = @"Data Source=DESKTOP-84584PI\SQLEXPRESS; Initial Catalog = staffinfo_tests; Integrated Security=SSPI;";
+        //private const string UrlDataBase = @"Data Source=DESKTOP-84584PI\SQLEXPRESS; Initial Catalog = staffinfo_tests; Integrated Security=SSPI;";
+        
+        /// <summary>
+        /// строка соединения (PC)
+        private const string UrlDataBase = @"Data Source=DESKTOP-2B54QFI\SQLEXPRESS; Initial Catalog = staffinfo_tests; Integrated Security=SSPI;";
+
 
         private readonly SqlConnection _sqlConnection;
 

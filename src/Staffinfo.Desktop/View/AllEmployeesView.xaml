@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Staffinfo.Desktop.View"
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d"
-        Title="Служащие" Height="700" Width="900">
+        Title="Служащие" Height="700" Width="900" DataContext="{Binding Source={StaticResource Locator}, Path=AllEmployee}">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -58,7 +58,8 @@
                                 FontSize="16"
                                 Content="Добавить" 
                                 Style="{DynamicResource ChromelessButtonStyle}"
-                                MinHeight="20" Margin="0"/>
+                                MinHeight="20" Margin="0"
+                                Command="{Binding GoToAddingNewEmployee}"/>
                         <Button Name="RemoveEmployeeBtn"
                                 FontSize="16"
                                 Content="Удалить" 
