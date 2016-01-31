@@ -18,13 +18,14 @@
      <!--Пробное представление-->
         <GroupBox Margin="0">
         <StackPanel>
-                <ListView ItemsSource="{Binding EmployeeList}" 
+                <ListBox ItemsSource="{Binding EmployeeList.ModelCollection}"
+                          SelectedIndex="{Binding EmployeeList.SelectedIndex}"
                           ScrollViewer.CanContentScroll="true"
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
                           ScrollViewer.HorizontalScrollBarVisibility="Auto" 
                           BorderThickness="0"
                           ItemContainerStyle="{StaticResource ListViewItemStyle}">
-                <ListView.ItemTemplate>
+                <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Border BorderBrush="DodgerBlue" BorderThickness="2" Margin="1" >
                             <StackPanel
@@ -47,8 +48,8 @@
                             </StackPanel>
                         </Border>
                     </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </StackPanel>
             </GroupBox>
         </Grid>
@@ -66,7 +67,8 @@
                                 FontSize="16"
                                 Content="Удалить" 
                                 Style="{DynamicResource ChromelessButtonStyle}"
-                                MinHeight="20" Margin="0"/>
+                                MinHeight="20" Margin="0"
+                                Command="{Binding RemoveEmployee}"/>
                         <Button Name="FindEmployeeBtn"
                                 FontSize="16"
                                 Content="Найти" 

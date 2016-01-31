@@ -1,6 +1,9 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
+using System.Windows;
 using Staffinfo.Desktop.Data;
 using GalaSoft.MvvmLight.Command;
+using Staffinfo.Desktop.Data.DataTableProviders;
 using Staffinfo.Desktop.View;
 
 namespace Staffinfo.Desktop.ViewModel
@@ -14,7 +17,7 @@ namespace Staffinfo.Desktop.ViewModel
 
         public AllEmployeesViewModel()
         {
-            EmployeeList = DataSingleton.Instance.EmployeeList;
+            EmployeeList = new ObservableCollectionViewModel<EmployeeViewModel>(DataSingleton.Instance.EmployeeList);
         }
 
         #endregion
@@ -24,7 +27,7 @@ namespace Staffinfo.Desktop.ViewModel
         /// <summary>
         /// Служащие
         /// </summary>
-        public ObservableCollection<EmployeeViewModel> EmployeeList { get; set; }
+        public ObservableCollectionViewModel<EmployeeViewModel> EmployeeList { get; set; }
 
         #endregion
 
@@ -55,6 +58,35 @@ namespace Staffinfo.Desktop.ViewModel
         public void CloseWindowCommandExecute()
         {
             WindowsClosed = true;
+        }
+
+        /// <summary>
+        /// Удалить служащего
+        /// </summary>
+        private RelayCommand _removeEmployee;
+
+        public RelayCommand RemoveEmployee
+            => _removeEmployee ?? (_removeEmployee = new RelayCommand(RemoveEmployeeExecute));
+
+        public void RemoveEmployeeExecute()
+        {
+            var remove = MessageBox.Show("Будет удалена вся ниформация о служащем. Вы уверены?", "Удаление", MessageBoxButton.YesNo,
+                MessageBoxImage.Question, MessageBoxResult.No);
+
+            if (remove == MessageBoxResult.No) return;
+
+            var index = EmployeeList.SelectedIndex;
+            var item = EmployeeList.ModelCollection[index];
+
+            using (var prvdr = new EmployeeTableProvider())
+            {
+                if (!prvdr.DeleteById(item.Id))
+                {
+                    MessageBox.Show("Ошибка удаления!" + prvdr.ErrorInfo, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                EmployeeList.ModelCollection.RemoveAt(index);
+            }
         }
         #endregion
     }

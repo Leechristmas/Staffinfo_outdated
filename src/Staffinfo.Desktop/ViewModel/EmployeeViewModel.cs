@@ -48,7 +48,11 @@ namespace Staffinfo.Desktop.ViewModel
                                new Uri(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
                                    "Resources/Images/empty_avatar_150x100.png"))));
             }
-            set { _empModel.Photo = value; }
+            set
+            {
+                _empModel.Photo = value; 
+                RaisePropertyChanged("Photo");
+            }
         }
 
         /// <summary>
@@ -57,7 +61,11 @@ namespace Staffinfo.Desktop.ViewModel
         public string LastName
         {
             get { return _empModel.LastName; }
-            set { _empModel.LastName = value; }
+            set
+            {
+                _empModel.LastName = value; 
+                RaisePropertyChanged("LastName");
+            }
         }
 
         /// <summary>
@@ -66,7 +74,11 @@ namespace Staffinfo.Desktop.ViewModel
         public string MiddleName
         {
             get { return _empModel.MiddleName; }
-            set { _empModel.MiddleName = value; }
+            set
+            {
+                _empModel.MiddleName = value; 
+                RaisePropertyChanged("MiddleName");
+            }
         }
 
         /// <summary>
@@ -75,7 +87,11 @@ namespace Staffinfo.Desktop.ViewModel
         public string FirstName
         {
             get { return _empModel.FirstName; }
-            set { _empModel.FirstName = value; }
+            set
+            {
+                _empModel.FirstName = value; 
+                RaisePropertyChanged("FirstName");
+            }
         }
 
         /// <summary>
@@ -84,7 +100,11 @@ namespace Staffinfo.Desktop.ViewModel
         public long? Id
         {
             get { return _empModel.Id; }
-            set { _empModel.Id = value; }
+            set
+            {
+                _empModel.Id = value; 
+                RaisePropertyChanged("Id");
+            }
         }
 
         /// <summary>
@@ -93,7 +113,11 @@ namespace Staffinfo.Desktop.ViewModel
         public string PersonalNumber
         {
             get { return _empModel.PersonalNumber; }
-            set { _empModel.PersonalNumber = value; }
+            set
+            {
+                _empModel.PersonalNumber = value; 
+                RaisePropertyChanged("PersonalNumber");
+            }
         }
 
         /// <summary>
@@ -102,7 +126,11 @@ namespace Staffinfo.Desktop.ViewModel
         public long? Post
         {
             get { return _empModel.PostId; }
-            set { _empModel.PostId = value; }
+            set
+            {
+                _empModel.PostId = value; 
+                RaisePropertyChanged("Post");
+            }
         }
 
         /// <summary>
@@ -111,7 +139,11 @@ namespace Staffinfo.Desktop.ViewModel
         public long? Rank
         {
             get { return _empModel.RankId; }
-            set { _empModel.RankId = value; }
+            set
+            {
+                _empModel.RankId = value; 
+                RaisePropertyChanged("Rank");
+            }
         }
 
         /// <summary>
@@ -120,7 +152,11 @@ namespace Staffinfo.Desktop.ViewModel
         public DateTime? BornDate
         {
             get { return _empModel.BornDate; }
-            set { _empModel.BornDate = value; }
+            set
+            {
+                _empModel.BornDate = value; 
+                RaisePropertyChanged("BornDate");
+            }
         }
 
         /// <summary>
@@ -129,7 +165,11 @@ namespace Staffinfo.Desktop.ViewModel
         public DateTime? JobStartDate
         {
             get { return _empModel.JobStartDate; }
-            set { _empModel.JobStartDate = value; }
+            set
+            {
+                _empModel.JobStartDate = value; 
+                RaisePropertyChanged("JobStartDate");
+            }
         }
 
         /// <summary>
@@ -138,7 +178,11 @@ namespace Staffinfo.Desktop.ViewModel
         public string Address
         {
             get { return _empModel.Address; }
-            set { _empModel.Address = value; }
+            set
+            {
+                _empModel.Address = value; 
+                RaisePropertyChanged("Address");
+            }
         }
 
         /// <summary>
@@ -147,7 +191,11 @@ namespace Staffinfo.Desktop.ViewModel
         public string Pasport
         {
             get { return _empModel.Pasport; }
-            set { _empModel.Pasport = value; }
+            set
+            {
+                _empModel.Pasport = value; 
+                RaisePropertyChanged("Pasport");
+            }
         }
 
         /// <summary>
@@ -156,7 +204,11 @@ namespace Staffinfo.Desktop.ViewModel
         public string MobilePhoneNumber
         {
             get { return _empModel.MobilePhoneNumber; }
-            set { _empModel.MobilePhoneNumber = value; }
+            set
+            {
+                _empModel.MobilePhoneNumber = value; 
+                RaisePropertyChanged("MobilePhoneNumber");
+            }
         }
 
         /// <summary>
@@ -165,7 +217,11 @@ namespace Staffinfo.Desktop.ViewModel
         public string HomePhoneNumber
         {
             get { return _empModel.HomePhoneNumber; }
-            set { _empModel.HomePhoneNumber = value; }
+            set
+            {
+                _empModel.HomePhoneNumber = value; 
+                RaisePropertyChanged("HomePhoneNumber");
+            }
         }
 
 
