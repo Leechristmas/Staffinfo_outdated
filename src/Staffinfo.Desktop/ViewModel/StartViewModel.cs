@@ -67,10 +67,8 @@ namespace Staffinfo.Desktop.ViewModel
 
         private RelayCommand _closeWindowCommand;
 
-        public RelayCommand CloseWindowCommand
-        {
-            get { return _closeWindowCommand ?? (_closeWindowCommand = new RelayCommand(CloseWindow)); }
-        }
+        public RelayCommand CloseWindowCommand 
+            => _closeWindowCommand ?? (_closeWindowCommand = new RelayCommand(CloseWindow));
 
         private void CloseWindow()
         {

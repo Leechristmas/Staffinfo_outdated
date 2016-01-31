@@ -5,8 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Staffinfo.Desktop.View"
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:helpers="clr-namespace:Staffinfo.Desktop.Helpers"
         mc:Ignorable="d"
-        Title="Служащие" Height="700" Width="900" DataContext="{Binding Source={StaticResource Locator}, Path=AllEmployee}">
+        Title="Служащие" Height="700" Width="900" DataContext="{Binding Source={StaticResource Locator}, Path=AllEmployee}"
+        helpers:WindowCloseHelper.WindowsClose="{Binding WindowsClosed}">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -76,7 +78,8 @@
                                 Content="Закрыть" 
                                 VerticalAlignment="Bottom"
                                 Style="{DynamicResource ChromelessButtonStyle}"
-                                MinHeight="20" Margin="0"/>
+                                MinHeight="20" Margin="0"
+                                Command="{Binding CloseWindowCommand}"/>
                     </Grid>
                 </GroupBox>
         </Grid>
