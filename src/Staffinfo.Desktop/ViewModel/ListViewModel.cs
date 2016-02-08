@@ -17,6 +17,22 @@ namespace Staffinfo.Desktop.ViewModel
         public List<T> ModelList { get; private set; }
 
         #region SelectedItem
+        
+        //private const string SelectedIndexPropertyName = "SelectedIndex";
+        //private int? _selectedIndex = -1;
+        ///// <summary>
+        ///// Нужен был для selected item
+        ///// </summary>
+        //public int? SelectedIndex
+        //{
+        //    get { return _selectedIndex; }
+
+        //    set
+        //    {
+        //        _selectedIndex = value;
+        //        RaisePropertyChanged(SelectedIndexPropertyName);
+        //    }
+        //}
 
         private const string SelectedItemPropertyName = "SelectedItem";
 
@@ -25,10 +41,10 @@ namespace Staffinfo.Desktop.ViewModel
         public T SelectedItem
         {
             get { return _selectedItem; }
-
+            //get { return ModelList[_selectedIndex.Value]; }
             set
             {
-                _selectedItem = SelectedItem;
+                _selectedItem = value;
                 RaisePropertyChanged(SelectedItemPropertyName);
             }
         }

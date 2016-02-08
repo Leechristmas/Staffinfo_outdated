@@ -39,7 +39,7 @@ namespace Staffinfo.Desktop.ViewModel
 
             set
             {
-                _selectedItem = SelectedItem;
+                _selectedItem = value;
                 RaisePropertyChanged(SelectedItemPropertyName);
             }
         }

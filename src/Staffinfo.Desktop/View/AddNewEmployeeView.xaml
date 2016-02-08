@@ -37,21 +37,24 @@
                              HorizontalAlignment="Left"
                              Margin="0,1"
                              MinWidth="150"
-                             Name="LastNameTBox"/>
+                             Name="LastNameTBox"
+                             Text ="{Binding LastName}"/>
                     <TextBox Controls:TextBoxHelper.Watermark="Имя"
                              Controls:TextBoxHelper.ClearTextButton="True"
                              VerticalAlignment="Top"
                              HorizontalAlignment="Left"
                              Margin="0,1"
                              MinWidth="150"
-                             Name="FirstNameTBox"/>
+                             Name="FirstNameTBox"
+                             Text="{Binding FirstName}"/>
                     <TextBox Controls:TextBoxHelper.Watermark="Отчество"
                              Controls:TextBoxHelper.ClearTextButton="True"
                              VerticalAlignment="Top"
                              HorizontalAlignment="Left"
                              Margin="0,1"
                              MinWidth="150"
-                             Name="MiddleNameTBox"/>
+                             Name="MiddleNameTBox"
+                             Text="{Binding MiddleName}"/>
                 </StackPanel>
                 <StackPanel Orientation="Vertical"
                             HorizontalAlignment="Left"
@@ -110,20 +113,23 @@
                                 HorizontalAlignment="Left"
                                 Margin="0,1"
                                 MinWidth="150"
-                                Name="BornDatePicker"/>
+                                Name="BornDatePicker"
+                                SelectedDate="{Binding BornDate}"/>
                     <DatePicker Controls:TextBoxHelper.Watermark="Начало службы"
                                 VerticalAlignment="Top"
                                 HorizontalAlignment="Left"
                                 Margin="0,1"
                                 MinWidth="150"
-                                Name="JobStartDatePicker"/>
+                                Name="JobStartDatePicker"
+                                SelectedDate="{Binding JobStartDate}"/>
                     <TextBox Controls:TextBoxHelper.Watermark="Личный номер"
                              Controls:TextBoxHelper.ClearTextButton="True"
                              VerticalAlignment="Top"
                              HorizontalAlignment="Left"
                              Margin="0,1"
                              MinWidth="150"
-                             Name="PersonalNumberTBox"/>
+                             Name="PersonalNumberTBox"
+                             Text="{Binding PersonalNumber}"/>
                 </StackPanel>
             </StackPanel>
         </GroupBox>
@@ -140,14 +146,16 @@
                              HorizontalAlignment="Left"
                              Margin="0,1"
                              MinWidth="150"
-                             Name="CityTBox"/>
+                             Name="CityTBox"
+                             Text="{Binding City}"/>
                     <TextBox Controls:TextBoxHelper.Watermark="Улица"
                              Controls:TextBoxHelper.ClearTextButton="True"
                              VerticalAlignment="Top"
                              HorizontalAlignment="Left"
                              Margin="0,1"
                              MinWidth="150"
-                             Name="StreetTBox"/>
+                             Name="StreetTBox"
+                             Text="{Binding Street}"/>
                 </StackPanel>
                 <StackPanel Margin="5,0">
                     <TextBox Controls:TextBoxHelper.Watermark="Дом"
@@ -156,14 +164,16 @@
                              HorizontalAlignment="Left"
                              Margin="0,1"
                              MinWidth="150"
-                             Name="HouseTBox"/>
+                             Name="HouseTBox"
+                             Text="{Binding House}"/>
                     <TextBox Controls:TextBoxHelper.ClearTextButton="True"
                              Controls:TextBoxHelper.Watermark="Квартира"
                              VerticalAlignment="Top"
                              HorizontalAlignment="Left"
                              Margin="0,1"
                              MinWidth="150"
-                             Name="FlatTBox"/>
+                             Name="FlatTBox"
+                             Text="{Binding Flat}"/>
                 </StackPanel>
             </StackPanel>
         </GroupBox>
@@ -174,23 +184,31 @@
             <StackPanel Orientation="Horizontal"
                         Margin="5,0">
                 <StackPanel>
+                    <!--указать на item-->
                     <ComboBox MinWidth="150"
                               Name="PasportSeriesCBox"
                               Controls:TextBoxHelper.Watermark="--Серия--"
                               Controls:TextBoxHelper.ClearTextButton="True"
-                              Margin="0,1"/>
+                              Margin="0,1"
+                              Text="{Binding PasportSeries}">
+                        <ComboBoxItem Content="HB"/>
+                    </ComboBox>
                     <ComboBox MinWidth="150"
                               Name="PasportOrganizationCBox"
                               Controls:TextBoxHelper.Watermark="--Организация--"
                               Controls:TextBoxHelper.ClearTextButton="True"
-                              Margin="0,1"/>
+                              Margin="0,1"
+                              Text="{Binding PasportOrganizationUnit}">
+                        <ComboBoxItem Content="Гомельский РОВД"/>
+                    </ComboBox>
                 </StackPanel>
                 <StackPanel Margin="5,0">
                     <TextBox MinWidth="150"
                              Name="PasportNumberTBox"
                              Controls:TextBoxHelper.Watermark="--Номер паспорта--"
                              Controls:TextBoxHelper.ClearTextButton="True"
-                             Margin="0,1"/>
+                             Margin="0,1"
+                             Text="{Binding PasportNumber}"/>
                 </StackPanel>
             </StackPanel>
         </GroupBox>
@@ -229,7 +247,8 @@
                         BorderThickness="0"
                         Name="AddEmployeeBtn"
                         Margin="5,0"
-                        Style="{StaticResource ButtonStyle}"/>
+                        Style="{StaticResource ButtonStyle}"
+                        Command="{Binding AddNewEmployeeCommand}"/>
                 <Button Content="Очистить" 
                         Background="Transparent"
                         BorderThickness="0"

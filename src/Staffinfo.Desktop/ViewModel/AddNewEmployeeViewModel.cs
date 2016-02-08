@@ -1,5 +1,7 @@
-﻿using GalaSoft.MvvmLight.Command;
+﻿using System;
+using GalaSoft.MvvmLight.Command;
 using Staffinfo.Desktop.Data;
+using Staffinfo.Desktop.Data.DataTableProviders;
 using Staffinfo.Desktop.Model;
 
 namespace Staffinfo.Desktop.ViewModel
@@ -13,6 +15,9 @@ namespace Staffinfo.Desktop.ViewModel
 
         public AddNewEmployeeViewModel()
         {
+            BornDate = DateTime.Now;
+            JobStartDate = DateTime.Now;
+
             _rankList = new ListViewModel<RankModel>(DataSingleton.Instance.RankList);
             _postList = new ListViewModel<PostModel>(DataSingleton.Instance.PostList);
             _serviceList = new ListViewModel<ServiceModel>(DataSingleton.Instance.ServiceList);
@@ -40,7 +45,91 @@ namespace Staffinfo.Desktop.ViewModel
         /// Личный номер
         /// </summary>
         private string _personalNumber;
+        
+        /// <summary>
+        /// Фамилия
+        /// </summary>
+        private string _lastName;
 
+        /// <summary>
+        /// Имя
+        /// </summary>
+        private string _firstName;
+
+        /// <summary>
+        /// Отчество
+        /// </summary>
+        private string _middleName;
+
+        /// <summary>
+        /// Индекс должности(selectedIndex в combobox'e)
+        /// </summary>
+        private int _postIndex;
+
+        /// <summary>
+        /// Индекс звания(selectedIndex в combobox'e)
+        /// </summary>
+        private int _rankIndex;
+
+        /// <summary>
+        /// Индекс службы(selectedIndex в combobox'e)
+        /// </summary>
+        private int _serviceIndex;
+
+        /// <summary>
+        /// Дата рождения
+        /// </summary>
+        private DateTime _bornDate;
+
+        /// <summary>
+        /// Дата начала службы в МЧС
+        /// </summary>
+        private DateTime _jobStartDate;
+
+        /// <summary>
+        /// Город
+        /// </summary>
+        private string _city;
+
+        /// <summary>
+        /// Улица
+        /// </summary>
+        private string _street;
+
+        /// <summary>
+        /// Дом
+        /// </summary>
+        private string _house;
+
+        /// <summary>
+        /// Квартира
+        /// </summary>
+        private string _flat;
+
+        /// <summary>
+        /// Серия паспорта
+        /// </summary>
+        private string _pasportSeries;
+
+        /// <summary>
+        /// Организация, выдавшая паспорт
+        /// </summary>
+        private string _pasportOrganizationUnit;
+
+        /// <summary>
+        /// Номер паспорта
+        /// </summary>
+        private string _pasportNumber;
+
+        /// <summary>
+        /// Номер мобильного телефона
+        /// </summary>
+        private string _mobilePhoneNumber;
+
+        /// <summary>
+        /// Номер домашнего телефона
+        /// </summary>
+        private string _homePhoneNumber;
         #endregion
 
         #region Properties
@@ -54,6 +143,227 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 _personalNumber = value;
                 RaisePropertyChanged("PersonalNumber");
+            }
+        }
+
+        /// <summary>
+        /// Фамилия
+        /// </summary>
+        public string LastName
+        {
+            get { return _lastName; }
+            set
+            {
+                _lastName = value;
+                RaisePropertyChanged("LastName");
+            }
+        }
+
+        /// <summary>
+        /// Имя
+        /// </summary>
+        public string FirstName
+        {
+            get { return _firstName; }
+            set
+            {
+                _firstName = value;
+                RaisePropertyChanged("FirstName");
+            }
+        }
+
+        /// <summary>
+        /// Отчество
+        /// </summary>
+        public string MiddleName
+        {
+            get { return _middleName; }
+            set
+            {
+                _middleName = value;
+                RaisePropertyChanged("MiddleName");
+            }
+        }
+
+        /// <summary>
+        /// Индекс должности
+        /// </summary>
+        public int PostIndex
+        {
+            get { return _postIndex; }
+            set
+            {
+                _postIndex = value;
+                RaisePropertyChanged("PostIndex");
+            }
+        }
+
+        /// <summary>
+        /// Индекс звания
+        /// </summary>
+        public int RankIndex
+        {
+            get { return _rankIndex; }
+            set
+            {
+                _rankIndex = value;
+                RaisePropertyChanged("RankIndex");
+            }
+        }
+
+        /// <summary>
+        /// Индекс службы
+        /// </summary>
+        public int ServiceIndex
+        {
+            get { return _serviceIndex; }
+            set
+            {
+                _serviceIndex = value;
+                RaisePropertyChanged("ServiceIndex");
+            }
+        }
+
+        /// <summary>
+        /// Дата рождения
+        /// </summary>
+        public DateTime BornDate
+        {
+            get { return _bornDate; }
+            set
+            {
+                _bornDate = value;
+                RaisePropertyChanged("BornDate");
+            }
+        }
+
+        /// <summary>
+        /// Дата начала работы
+        /// </summary>
+        public DateTime JobStartDate
+        {
+            get { return _jobStartDate; }
+            set
+            {
+                _jobStartDate = value;
+                RaisePropertyChanged("JobStartDate");
+            }
+        }
+
+        /// <summary>
+        /// Город
+        /// </summary>
+        public string City
+        {
+            get { return _city; }
+            set
+            {
+                _city = value;
+                RaisePropertyChanged("City");
+            }
+        }
+
+        /// <summary>
+        /// Улица
+        /// </summary>
+        public string Street
+        {
+            get { return _street; }
+            set
+            {
+                _street = value;
+                RaisePropertyChanged("Street");
+            }
+        }
+
+        /// <summary>
+        /// Дом
+        /// </summary>
+        public string House
+        {
+            get { return _house; }
+            set
+            {
+                _house = value;
+                RaisePropertyChanged("House");
+            }
+        }
+
+        /// <summary>
+        /// Квартира
+        /// </summary>
+        public string Flat
+        {
+            get { return _flat; }
+            set
+            {
+                _flat = value;
+                RaisePropertyChanged("Flat");
+            }
+        }
+
+        /// <summary>
+        /// Серия паспорта
+        /// </summary>
+        public string PasportSeries
+        {
+            get { return _pasportSeries; }
+            set
+            {
+                _pasportSeries = value;
+                RaisePropertyChanged("PasportSeries");
+            }
+        }
+
+        /// <summary>
+        /// Организация, выдавшая паспорт
+        /// </summary>
+        public string PasportOrganizationUnit
+        {
+            get { return _pasportOrganizationUnit; }
+            set
+            {
+                _pasportOrganizationUnit = value;
+                RaisePropertyChanged("PasportOrganizationUnit");
+            }
+        }
+
+        /// <summary>
+        /// Номер паспорта
+        /// </summary>
+        public string PasportNumber
+        {
+            get { return _pasportNumber; }
+            set
+            {
+                _pasportNumber = value;
+                RaisePropertyChanged("PasportNumber");
+            }
+        }
+
+        /// <summary>
+        /// Номер мобильного телефона
+        /// </summary>
+        public string MobilePhoneNumber
+        {
+            get { return _mobilePhoneNumber; }
+            set
+            {
+                _mobilePhoneNumber = value;
+                RaisePropertyChanged("MobilePhoneNumber");
+            }
+        }
+
+        /// <summary>
+        /// Номер домашнего телефона
+        /// </summary>
+        public string HomePhoneNumber
+        {
+            get { return _homePhoneNumber; }
+            set
+            {
+                _homePhoneNumber = value;
+                RaisePropertyChanged("HomePhoneNumber");
             }
         }
 
@@ -84,6 +394,40 @@ namespace Staffinfo.Desktop.ViewModel
         private void CloseWindowExecute()
         {
             WindowsClosed = true;
+        }
+
+
+        private RelayCommand _addNewEmployeeCommand;
+
+        public RelayCommand AddNewEmployeeCommand
+            => _addNewEmployeeCommand ?? (_addNewEmployeeCommand = new RelayCommand(AddNewEmployeeExecute));
+
+        private void AddNewEmployeeExecute()
+        {
+            using (var prvdr = new EmployeeTableProvider())
+            {
+                var post = PostList.SelectedItem;
+                var rank = RankList.SelectedItem;
+
+                var employee = new EmployeeModel
+                {
+                    LastName = LastName,
+                    FirstName = FirstName,
+                    MiddleName = MiddleName,
+                    PersonalNumber = PersonalNumber,
+                    PostId = post.Id,
+                    RankId = rank.Id,
+                    BornDate = BornDate,
+                    JobStartDate = JobStartDate,
+                    Address = City + '#' + Street + '#' + House + '#' + Flat,
+                    Pasport = PasportOrganizationUnit + '#' + PasportSeries + '#' + PasportNumber,
+                    MobilePhoneNumber = MobilePhoneNumber,
+                    HomePhoneNumber = HomePhoneNumber
+                };
+
+                employee = prvdr.AddNewElement(employee) as EmployeeModel;
+                DataSingleton.Instance.EmployeeList.Add(new EmployeeViewModel(employee));
+            }    
         }
 
         #endregion

@@ -19,7 +19,7 @@
         <GroupBox Margin="0">
         <StackPanel>
                 <ListBox ItemsSource="{Binding EmployeeList.ModelCollection}"
-                          SelectedIndex="{Binding EmployeeList.SelectedIndex}"
+                          SelectedItem="{Binding EmployeeList.SelectedItem}"
                           ScrollViewer.CanContentScroll="true"
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
                           ScrollViewer.HorizontalScrollBarVisibility="Auto" 

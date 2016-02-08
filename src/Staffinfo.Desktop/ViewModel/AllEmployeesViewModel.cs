@@ -75,9 +75,9 @@ namespace Staffinfo.Desktop.ViewModel
 
             if (remove == MessageBoxResult.No) return;
 
-            var index = EmployeeList.SelectedIndex;
-            var item = EmployeeList.ModelCollection[index];
-
+            //var index = EmployeeList.SelectedIndex;
+            var item = EmployeeList.SelectedItem;//ModelCollection[index];
+            
             using (var prvdr = new EmployeeTableProvider())
             {
                 if (!prvdr.DeleteById(item.Id))
@@ -85,7 +85,7 @@ namespace Staffinfo.Desktop.ViewModel
                     MessageBox.Show("Ошибка удаления!" + prvdr.ErrorInfo, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-                EmployeeList.ModelCollection.RemoveAt(index);
+                EmployeeList.ModelCollection.Remove(item);
             }
         }
         #endregion

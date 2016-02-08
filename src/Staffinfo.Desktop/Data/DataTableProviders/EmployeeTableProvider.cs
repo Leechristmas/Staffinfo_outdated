@@ -25,7 +25,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 new SqlCommand($"INSERT INTO EMPLOYEE VALUES('{employeeModel.FirstName}', '{employeeModel.MiddleName}', '{employeeModel.LastName}'," + 
                 $"'{employeeModel.PersonalNumber}', {employeeModel.PostId}, {employeeModel.RankId}, '{employeeModel.BornDate.Value}'," + 
                 $"'{employeeModel.JobStartDate.Value}', '{employeeModel.Address}', '{employeeModel.Pasport}', '{employeeModel.MobilePhoneNumber}', '{employeeModel.HomePhoneNumber}', '{employeeModel.IsPensioner}'); "+
-                "SELECT MAX(ID) FROM POST;");
+                "SELECT MAX(ID) FROM EMPLOYEE;");
 
             try
             {
