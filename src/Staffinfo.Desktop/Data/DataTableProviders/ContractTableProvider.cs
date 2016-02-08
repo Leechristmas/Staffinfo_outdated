@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
+using Staffinfo.Desktop.Data.DataTableContracts;
 using Staffinfo.Desktop.Model;
 using Staffinfo.Desktop.Properties;
 
@@ -9,25 +10,30 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
     /// <summary>
     /// Класс для таблицы Contract
     /// </summary>
-    public class ContractTableProvider: ITableProvider, IDisposable
+    public class ContractTableProvider: IWritableTableContract<ContractModel>, IDisposable
     {
+        public string ErrorInfo { get; set; }
+
         #region ITableProvider implementation
 
-        public BaseModel AddNewElement(BaseModel contract)
+        /// <summary>
+        /// Сохранить запись о контракте в БД
+        /// </summary>
+        /// <param name="contract">Контракт</param>
+        /// <returns></returns>
+        public ContractModel Save(ContractModel contract)
         {
             if (contract == null) throw new ArgumentNullException(nameof(contract), Resources.DatabaseConnector_parameter_cannot_be_null);
-
-            var contractModel = contract as ContractModel;
-
+            
             var cmd =
-                new SqlCommand($@"INSERT INTO CONTRACT VALUES({contractModel.EmployeeId}, '{contractModel.StartDate}', '{contractModel.FinishDate}', '{contractModel.Description}'); SELECT MAX(ID) FROM CONTRACT;");
+                new SqlCommand($@"INSERT INTO CONTRACT VALUES({contract.EmployeeId}, '{contract.StartDate}', '{contract.FinishDate}', '{contract.Description}'); SELECT MAX(ID) FROM CONTRACT;");
 
             try
             {
                 var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
 
                 sqlDataReader.Read();
-                contractModel.Id = Int64.Parse(sqlDataReader[0].ToString());
+                contract.Id = Int64.Parse(sqlDataReader[0].ToString());
                 sqlDataReader.Close();
 
                 ErrorInfo = null;
@@ -38,12 +44,15 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 return null;
             }
 
-            return contractModel;
+            return contract;
         }
 
-        public string ErrorInfo { get; set; }
-
-        public BaseModel GetElementById(long? id)
+        /// <summary>
+        /// Возвращает контракт по id
+        /// </summary>
+        /// <param name="id">id контракта</param>
+        /// <returns></returns>
+        public ContractModel Select(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
@@ -77,9 +86,13 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             return contractModel;
         }
 
-        public ObservableCollection<BaseModel> GetAllElements()
+        /// <summary>
+        /// Возвращает список контрактов
+        /// </summary>
+        /// <returns></returns>
+        public ObservableCollection<ContractModel> Select()
         {
-            var contractList = new ObservableCollection<BaseModel>();
+            var contractList = new ObservableCollection<ContractModel>();
 
             var cmd = new SqlCommand("SELECT * FROM CONTRACT");
 
@@ -112,13 +125,16 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             return contractList;
         }
 
-        public bool Update(BaseModel contract)
+        /// <summary>
+        /// Обновить запись о контракте
+        /// </summary>
+        /// <param name="contract">Контракт</param>
+        /// <returns></returns>
+        public bool Update(ContractModel contract)
         {
             if (contract == null) throw new ArgumentNullException(nameof(contract), Resources.DatabaseConnector_parameter_cannot_be_null);
-
-            var contractModel = contract as ContractModel;
-
-            var cmd = new SqlCommand($@"UPDATE CONTRACT SET EMPLOYEE_ID={contractModel.EmployeeId}, START_DATE='{contractModel.StartDate}', FINISH_DATE='{contractModel.FinishDate}', DESCRIPTION='{contractModel.Description}' WHERE ID={contractModel.Id};");
+            
+            var cmd = new SqlCommand($@"UPDATE CONTRACT SET EMPLOYEE_ID={contract.EmployeeId}, START_DATE='{contract.StartDate}', FINISH_DATE='{contract.FinishDate}', DESCRIPTION='{contract.Description}' WHERE ID={contract.Id};");
 
             try
             {
@@ -134,6 +150,11 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             return true;
         }
 
+        /// <summary>
+        /// Удалить контракт по id
+        /// </summary>
+        /// <param name="id">id контракта</param>
+        /// <returns></returns>
         public bool DeleteById(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);

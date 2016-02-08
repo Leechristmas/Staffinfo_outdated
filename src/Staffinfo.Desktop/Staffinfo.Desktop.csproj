@@ -98,12 +98,14 @@
     <Compile Include="Converters\NewConverters.cs" />
     <Compile Include="Data\DatabaseConnector.cs" />
     <Compile Include="Data\DataSingleton.cs" />
+    <Compile Include="Data\DataTableContracts\IReadOnlyTableContract.cs" />
+    <Compile Include="Data\DataTableContracts\IWritableTableContract.cs" />
     <Compile Include="Data\DataTableProviders\ClasinessTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\ContractTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\EducationalInstitutonTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\EducationTimeTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\EmployeeTableProvider.cs" />
-    <Compile Include="Data\DataTableProviders\ITableProvider.cs" />
+    <Compile Include="Data\DataTableContracts\ITableProvider.cs" />
     <Compile Include="Data\DataTableProviders\PostTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\RankTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\ServiceTableProvider.cs" />

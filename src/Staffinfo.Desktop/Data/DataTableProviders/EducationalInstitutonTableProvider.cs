@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
+using Staffinfo.Desktop.Data.DataTableContracts;
 using Staffinfo.Desktop.Model;
 using Staffinfo.Desktop.Properties;
 
@@ -9,18 +10,16 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
     /// <summary>
     /// Класс для таблицы EDUCATIONAL_INSTITUTION
     /// </summary>
-    public class EducationalInstitutonTableProvider: ITableProvider, IDisposable
+    public class EducationalInstitutonTableProvider: IWritableTableContract<EducationalInstitutionModel>, IDisposable
     {
         public string ErrorInfo { get; private set; }
 
         #region ITableProvider implementation
 
-        public BaseModel AddNewElement(BaseModel educationalInstitutionModel)
+        public EducationalInstitutionModel Save(EducationalInstitutionModel educationalInstitution)
         {
-            if (educationalInstitutionModel == null) throw new ArgumentNullException(nameof(educationalInstitutionModel), Resources.DatabaseConnector_parameter_cannot_be_null);
-
-            var educationalInstitution = educationalInstitutionModel as EducationalInstitutionModel;
-
+            if (educationalInstitution == null) throw new ArgumentNullException(nameof(educationalInstitution), Resources.DatabaseConnector_parameter_cannot_be_null);
+            
             var cmd =
                 new SqlCommand($@"INSERT INTO EDUCATIONAL_INSTITUTION VALUES('{educationalInstitution.InstituitionTitle}','{educationalInstitution.Description}', '{educationalInstitution.InstituitionType}'); SELECT MAX(ID) FROM EDUCATIONAL_INSTITUTION;");
 
@@ -29,7 +28,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
 
                 sqlDataReader.Read();
-                educationalInstitutionModel.Id = Int64.Parse(sqlDataReader[0].ToString());
+                educationalInstitution.Id = Int64.Parse(sqlDataReader[0].ToString());
                 sqlDataReader.Close();
 
                 ErrorInfo = null;
@@ -40,10 +39,10 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 return null;
             }
 
-            return educationalInstitutionModel;
+            return educationalInstitution;
         }
 
-        public BaseModel GetElementById(long? id)
+        public EducationalInstitutionModel Select(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
@@ -75,9 +74,9 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             return educationalInstitutionModel;
         }
 
-        public ObservableCollection<BaseModel> GetAllElements()
+        public ObservableCollection<EducationalInstitutionModel> Select()
         {
-            var educationalInstitutionList = new ObservableCollection<BaseModel>();
+            var educationalInstitutionList = new ObservableCollection<EducationalInstitutionModel>();
 
             var cmd = new SqlCommand("SELECT * FROM EDUCATIONAL_INSTITUTION");
 
@@ -108,13 +107,11 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             return educationalInstitutionList;
         }
 
-        public bool Update(BaseModel educationalInstitution)
+        public bool Update(EducationalInstitutionModel educationalInstitution)
         {
             if (educationalInstitution == null) throw new ArgumentNullException(nameof(educationalInstitution), Resources.DatabaseConnector_parameter_cannot_be_null);
-
-            var educationalInstitutionModel = educationalInstitution as EducationalInstitutionModel;
-
-            var cmd = new SqlCommand($@"UPDATE EDUCATIONAL_INSTITUTION SET INST_TITLE='{educationalInstitutionModel.InstituitionTitle}', INST_TYPE='{educationalInstitutionModel.InstituitionType}' WHERE ID={educationalInstitutionModel.Id};");
+            
+            var cmd = new SqlCommand($@"UPDATE EDUCATIONAL_INSTITUTION SET INST_TITLE='{educationalInstitution.InstituitionTitle}', INST_TYPE='{educationalInstitution.InstituitionType}' WHERE ID={educationalInstitution.Id};");
 
             try
             {

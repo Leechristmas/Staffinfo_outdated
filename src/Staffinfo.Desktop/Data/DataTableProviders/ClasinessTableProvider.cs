@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
+using Staffinfo.Desktop.Data.DataTableContracts;
 using Staffinfo.Desktop.Model;
 using Staffinfo.Desktop.Properties;
 
@@ -9,25 +10,30 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
     /// <summary>
     /// Класс для работы с таблицей классности
     /// </summary>
-    public class ClasinessTableProvider : ITableProvider, IDisposable
+    public class ClasinessTableProvider : IWritableTableContract<ClasinessModel>, IDisposable
     {
+        public string ErrorInfo { get; set; }
+
         #region ITableProvider implementation
 
-        public BaseModel AddNewElement(BaseModel clasiness)
+        /// <summary>
+        /// Сохранить запись в БД
+        /// </summary>
+        /// <param name="clasiness">Классность</param>
+        /// <returns></returns>
+        public ClasinessModel Save(ClasinessModel clasiness)
         {
             if (clasiness == null) throw new ArgumentNullException(nameof(clasiness), Resources.DatabaseConnector_parameter_cannot_be_null);
-
-            var clasinessModel = clasiness as ClasinessModel;
-
+            
             var cmd =
-                new SqlCommand($@"INSERT INTO CLASINESS VALUES({clasinessModel.EmployeeId}, {clasinessModel.OrderNumber}, '{clasinessModel.ClasinessDate}', {clasinessModel.ClasinessLevel}, '{clasinessModel.Description}'); SELECT MAX(ID) FROM CLASINESS;");
+                new SqlCommand($@"INSERT INTO CLASINESS VALUES({clasiness.EmployeeId}, {clasiness.OrderNumber}, '{clasiness.ClasinessDate}', {clasiness.ClasinessLevel}, '{clasiness.Description}'); SELECT MAX(ID) FROM CLASINESS;");
 
             try
             {
                 var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
 
                 sqlDataReader.Read();
-                clasinessModel.Id = Int64.Parse(sqlDataReader[0].ToString());
+                clasiness.Id = Int64.Parse(sqlDataReader[0].ToString());
                 sqlDataReader.Close();
 
                 ErrorInfo = null;
@@ -38,12 +44,15 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 return null;
             }
 
-            return clasinessModel;
+            return clasiness;
         }
 
-        public string ErrorInfo { get; set; }
-
-        public BaseModel GetElementById(long? id)
+        /// <summary>
+        /// Возвращает классность по id
+        /// </summary>
+        /// <param name="id">id</param>
+        /// <returns></returns>
+        public ClasinessModel Select(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
@@ -78,9 +87,13 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             return clasinessModel;
         }
 
-        public ObservableCollection<BaseModel> GetAllElements()
+        /// <summary>
+        /// Возвращает записи о классности
+        /// </summary>
+        /// <returns></returns>
+        public ObservableCollection<ClasinessModel> Select()
         {
-            var clasinessList = new ObservableCollection<BaseModel>();
+            var clasinessList = new ObservableCollection<ClasinessModel>();
 
             var cmd = new SqlCommand("SELECT * FROM CLASINESS");
 
@@ -114,13 +127,16 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             return clasinessList;
         }
 
-        public bool Update(BaseModel clasiness)
+        /// <summary>
+        /// Обновляет запись классности
+        /// </summary>
+        /// <param name="clasiness">Классность</param>
+        /// <returns></returns>
+        public bool Update(ClasinessModel clasiness)
         {
             if (clasiness == null) throw new ArgumentNullException(nameof(clasiness), Resources.DatabaseConnector_parameter_cannot_be_null);
-
-            var clasinessModel = clasiness as ClasinessModel;
-
-            var cmd = new SqlCommand($@"UPDATE CLASINESS SET EMPLOYEE_ID={clasinessModel.EmployeeId}, ORDER_NUMBER={clasinessModel.OrderNumber}, CLASINESS_DATE='{clasinessModel.ClasinessDate}', CLASINESS_LEVEL={clasinessModel.ClasinessLevel}, DESCRIPTION='{clasinessModel.Description}' WHERE ID={clasinessModel.Id};");
+            
+            var cmd = new SqlCommand($@"UPDATE CLASINESS SET EMPLOYEE_ID={clasiness.EmployeeId}, ORDER_NUMBER={clasiness.OrderNumber}, CLASINESS_DATE='{clasiness.ClasinessDate}', CLASINESS_LEVEL={clasiness.ClasinessLevel}, DESCRIPTION='{clasiness.Description}' WHERE ID={clasiness.Id};");
 
             try
             {
@@ -135,7 +151,12 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
             return true;
         }
-
+        
+        /// <summary>
+        /// Удалить запись классности по id
+        /// </summary>
+        /// <param name="id">id записи</param>
+        /// <returns></returns>
         public bool DeleteById(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
