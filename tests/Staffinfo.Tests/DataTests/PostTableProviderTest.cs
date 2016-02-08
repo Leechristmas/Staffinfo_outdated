@@ -9,23 +9,11 @@ namespace Staffinfo.Tests.DataTests
     public class PostTableProviderTest
     {
         [TestMethod]
-        public void AddNewPostIntoDatabaseIsSucces()
-        {
-            using (var pPrvdr = new PostTableProvider())
-            {
-                var post = pPrvdr.AddNewElement(new PostModel() {Id = null, PostTitle = "Лейтенант", ServiceId = 1});
-
-                Assert.IsNotNull(post.Id);
-                Assert.IsTrue(pPrvdr.DeleteById(post.Id));
-            }
-        }
-
-        [TestMethod]
         public void GetPostById()
         {
             using (var pPrvdr = new PostTableProvider())
             {
-                var postModel = pPrvdr.GetElementById(1) as PostModel;
+                var postModel = pPrvdr.Select(1);
 
                 Assert.IsNotNull(postModel);
                 Assert.IsTrue(postModel.GetType() == typeof(PostModel));
@@ -38,7 +26,7 @@ namespace Staffinfo.Tests.DataTests
         {
             using (var pPrvdr = new PostTableProvider())
             {
-                var postModel = pPrvdr.GetElementById(null) as PostModel;
+                var postModel = pPrvdr.Select(null);
             }
         }
 
@@ -47,22 +35,11 @@ namespace Staffinfo.Tests.DataTests
         {
             using (var pPrvdr = new PostTableProvider())
             {
-                var postList = pPrvdr.GetAllElements();
+                var postList = pPrvdr.Select();
 
                 Assert.IsNotNull(postList);
                 Assert.IsTrue(postList.Count > 0);
             }
         }
-
-        [TestMethod]
-        public void UpdatePost()
-        {
-            using (var pPrvdr = new PostTableProvider())
-            {
-                Assert.IsTrue(pPrvdr.Update(new PostModel {Id = 1, PostTitle = "изменен", ServiceId = 1}));
-            }
-        }
-
-
     }
 }

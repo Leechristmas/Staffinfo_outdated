@@ -12,10 +12,15 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
     /// </summary>
     public class EducationalInstitutonTableProvider: IWritableTableContract<EducationalInstitutionModel>, IDisposable
     {
-        public string ErrorInfo { get; private set; }
+        public string ErrorInfo { get; set; }
 
-        #region ITableProvider implementation
+        #region IWritableTableContract implementation
 
+        /// <summary>
+        /// Сохранить запись учреждение образования в БД
+        /// </summary>
+        /// <param name="educationalInstitution"></param>
+        /// <returns></returns>
         public EducationalInstitutionModel Save(EducationalInstitutionModel educationalInstitution)
         {
             if (educationalInstitution == null) throw new ArgumentNullException(nameof(educationalInstitution), Resources.DatabaseConnector_parameter_cannot_be_null);
@@ -42,6 +47,11 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             return educationalInstitution;
         }
 
+        /// <summary>
+        /// Возвращает учреждение образования по id
+        /// </summary>
+        /// <param name="id">id учреждения образования</param>
+        /// <returns></returns>
         public EducationalInstitutionModel Select(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
@@ -74,6 +84,10 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             return educationalInstitutionModel;
         }
 
+        /// <summary>
+        /// Возвращает список учреждений образования
+        /// </summary>
+        /// <returns></returns>
         public ObservableCollection<EducationalInstitutionModel> Select()
         {
             var educationalInstitutionList = new ObservableCollection<EducationalInstitutionModel>();
@@ -107,6 +121,11 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             return educationalInstitutionList;
         }
 
+        /// <summary>
+        /// Обновить запись об учебном заведении
+        /// </summary>
+        /// <param name="educationalInstitution">учебное заведение</param>
+        /// <returns></returns>
         public bool Update(EducationalInstitutionModel educationalInstitution)
         {
             if (educationalInstitution == null) throw new ArgumentNullException(nameof(educationalInstitution), Resources.DatabaseConnector_parameter_cannot_be_null);
@@ -127,6 +146,11 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             return true;
         }
 
+        /// <summary>
+        /// Удалить учебное заведение по id
+        /// </summary>
+        /// <param name="id">id учебного заведения</param>
+        /// <returns></returns>
         public bool DeleteById(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);

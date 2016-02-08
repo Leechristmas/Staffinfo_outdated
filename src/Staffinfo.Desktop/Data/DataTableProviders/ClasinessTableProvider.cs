@@ -14,7 +14,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
     {
         public string ErrorInfo { get; set; }
 
-        #region ITableProvider implementation
+        #region IWritableTableContract implementation
 
         /// <summary>
         /// Сохранить запись в БД

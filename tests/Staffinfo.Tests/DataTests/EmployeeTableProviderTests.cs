@@ -13,7 +13,7 @@ using Staffinfo.Desktop.Model;
         {
             using (var prvdr = new EmployeeTableProvider())
             {
-                var employee = prvdr.AddNewElement(new EmployeeModel
+                var employee = prvdr.Save(new EmployeeModel
                 {
                     LastName = "Петров",
                     FirstName = "Иван",
@@ -41,7 +41,7 @@ using Staffinfo.Desktop.Model;
         {
             using (var prvdr = new EmployeeTableProvider())
             {
-                var employeeModel = prvdr.GetElementById(1) as EmployeeModel;
+                var employeeModel = prvdr.Select(1);
 
                 Assert.IsNotNull(employeeModel);
                 Assert.IsTrue(employeeModel.GetType() == typeof(EmployeeModel));
@@ -53,7 +53,7 @@ using Staffinfo.Desktop.Model;
         {
             using (var prvdr = new EmployeeTableProvider())
             {
-                var employeeList = prvdr.GetAllElements();
+                var employeeList = prvdr.Select();
 
                 Assert.IsNotNull(employeeList);
                 Assert.IsTrue(employeeList.Count > 0);

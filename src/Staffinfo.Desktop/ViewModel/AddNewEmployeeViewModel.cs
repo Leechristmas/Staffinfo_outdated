@@ -425,7 +425,7 @@ namespace Staffinfo.Desktop.ViewModel
                     HomePhoneNumber = HomePhoneNumber
                 };
 
-                employee = prvdr.AddNewElement(employee) as EmployeeModel;
+                employee = prvdr.Save(employee);
                 DataSingleton.Instance.EmployeeList.Add(new EmployeeViewModel(employee));
             }    
         }

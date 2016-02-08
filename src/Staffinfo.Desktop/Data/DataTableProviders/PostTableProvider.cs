@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
+using Staffinfo.Desktop.Data.DataTableContracts;
 using Staffinfo.Desktop.Model;
 using Staffinfo.Desktop.Properties;
 
@@ -9,41 +10,18 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
     /// <summary>
     /// Класс для работы с таблицей должностей
     /// </summary>
-    public class PostTableProvider: ITableProvider, IDisposable
+    public class PostTableProvider: IReadOnlyTableContract<PostModel>, IDisposable
     {
-        public string ErrorInfo { get; private set; }
+        public string ErrorInfo { get; set; }
 
-        #region ITableProvider implementation
+        #region IReadOnlyTableContract implementation
 
-        public BaseModel AddNewElement(BaseModel postModel)
-        {
-            if(postModel == null) throw new ArgumentNullException(nameof(postModel), Resources.DatabaseConnector_parameter_cannot_be_null);
-
-            var post = postModel as PostModel;
-
-            var cmd = 
-                new SqlCommand($@"INSERT INTO POST VALUES('{post.PostTitle}',{post.ServiceId}); SELECT MAX(ID) FROM POST;");
-
-            try
-            {
-                var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
-
-                sqlDataReader.Read();
-                post.Id = Int64.Parse(sqlDataReader[0].ToString());
-                sqlDataReader.Close();
-
-                ErrorInfo = null;
-            }
-            catch (Exception ex)
-            {
-                ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;
-                return null;
-            }
-
-            return post;
-        }
-
-        public BaseModel GetElementById(long? id)
+        /// <summary>
+        /// Возвращает должность по id
+        /// </summary>
+        /// <param name="id">id должности</param>
+        /// <returns></returns>
+        public PostModel Select(long? id)
         {
             if(!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
@@ -75,9 +53,13 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             return postModel;
         }
 
-        public ObservableCollection<BaseModel> GetAllElements()
+        /// <summary>
+        /// Возвращает все должности
+        /// </summary>
+        /// <returns></returns>
+        public ObservableCollection<PostModel> Select()
         {
-            var postList = new ObservableCollection<BaseModel>();
+            var postList = new ObservableCollection<PostModel>();
 
             var cmd = new SqlCommand("SELECT * FROM POST");
 
@@ -107,47 +89,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             }
             return postList;
         }
-
-        public bool Update(BaseModel post)
-        {
-            if(post == null) throw new ArgumentNullException(nameof(post), Resources.DatabaseConnector_parameter_cannot_be_null);
-
-            var postModel = post as PostModel;
-
-            var cmd = new SqlCommand($@"UPDATE POST SET POST_TITLE='{postModel.PostTitle}', SERVICE_ID={postModel.ServiceId} WHERE ID={postModel.Id};");
-
-            try
-            {
-                DataSingleton.Instance.DatabaseConnector.Execute(cmd);
-                ErrorInfo = null;
-            }
-            catch (Exception ex)
-            {
-                ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;
-                return false;
-            }
-
-            return true;
-        }
-
-        public bool DeleteById(long? id)
-        {
-            if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
-
-            var cmd = new SqlCommand($@"DELETE FROM POST WHERE ID = '{id}'");
-            try
-            {
-                DataSingleton.Instance.DatabaseConnector.Execute(cmd);
-                ErrorInfo = null;
-            }
-            catch (Exception ex)
-            {
-                ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;
-                return false;
-            }
-            return true;
-        }
-
+        
         #endregion
 
         #region IDisposable implementation

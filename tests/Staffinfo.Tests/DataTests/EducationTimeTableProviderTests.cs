@@ -13,7 +13,7 @@ namespace Staffinfo.Tests.DataTests
         {
             using (var prvdr = new EducationTimeTableProvider())
             {
-                var educationTimeModel = prvdr.AddNewElement(
+                var educationTimeModel = prvdr.Save(
                     new EducationTimeModel
                     {
                         Id = null,
@@ -37,7 +37,7 @@ namespace Staffinfo.Tests.DataTests
         {
             using (var prvdr = new EducationTimeTableProvider())
             {
-                var educationTime = prvdr.GetElementById(1);
+                var educationTime = prvdr.Select(1);
 
                 Assert.IsNotNull(educationTime, prvdr.ErrorInfo);
             }
@@ -48,7 +48,7 @@ namespace Staffinfo.Tests.DataTests
         {
             using (var prvdr = new EducationTimeTableProvider())
             {
-                var educationTimeList = prvdr.GetAllElements();
+                var educationTimeList = prvdr.Select( );
 
                 Assert.IsNotNull(educationTimeList, "educationTimeList != null");
                 Assert.IsTrue(educationTimeList.Count > 0, "educationTimeList.Count > 0");

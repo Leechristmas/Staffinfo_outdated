@@ -8,41 +8,11 @@ namespace Staffinfo.Tests.DataTests
     public class ServiceTableProviderTests
     {
         [TestMethod]
-        public void AddNewServiceIntoDatabase()
-        {
-            using (var prvdr = new ServiceTableProvider())
-            {
-                var service = new ServiceModel
-                {
-                    ServiceTitle = "тестовая служба"
-                };
-
-                Assert.IsNotNull(service = prvdr.AddNewElement(service) as ServiceModel);
-                Assert.IsNotNull(service.Id);
-                Assert.IsTrue(prvdr.DeleteById(service.Id));
-            }
-        }
-
-        [TestMethod]
-        public void UpdateService()
-        {
-            using (var prvdr = new ServiceTableProvider())
-            {
-                var service = new ServiceModel
-                {
-                    ServiceTitle = "тестовая служба 2"
-                };
-
-                Assert.IsTrue(prvdr.Update(service));
-            }
-        }
-
-        [TestMethod]
         public void GetAllServices_HasElements()
         {
             using (var prvdr = new ServiceTableProvider())
             {
-                var serviceList = prvdr.GetAllElements();
+                var serviceList = prvdr.Select();
 
                 Assert.IsNotNull(serviceList);
                 Assert.IsTrue(serviceList.Count > 0);
@@ -54,7 +24,7 @@ namespace Staffinfo.Tests.DataTests
         {
             using (var prvdr = new RankTableProvider())
             {
-                Assert.IsNotNull(prvdr.GetElementById(2));
+                Assert.IsNotNull(prvdr.Select(2));
             }
         }
     }

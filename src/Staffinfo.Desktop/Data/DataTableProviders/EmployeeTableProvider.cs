@@ -1,30 +1,34 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
+using Staffinfo.Desktop.Data.DataTableContracts;
 using Staffinfo.Desktop.Model;
 using Staffinfo.Desktop.Properties;
 
 namespace Staffinfo.Desktop.Data.DataTableProviders
 {
     /// <summary>
-    /// 
+    /// Компонент для доступа к таблице Employee
     /// </summary>
-    public class EmployeeTableProvider: IDisposable, ITableProvider
+    public class EmployeeTableProvider: IDisposable, IWritableTableContract<EmployeeModel>
     {
-        public string ErrorInfo { get; private set; }
+        public string ErrorInfo { get; set; }
 
-        #region ITableProvider implementation
+        #region IWritableTableContract implementation
 
-        public BaseModel AddNewElement(BaseModel employee)
+        /// <summary>
+        /// Сохраняет служащего в БД
+        /// </summary>
+        /// <param name="employee">Служащий</param>
+        /// <returns></returns>
+        public EmployeeModel Save(EmployeeModel employee)
         {
             if (employee == null) throw new ArgumentNullException(nameof(employee), Resources.DatabaseConnector_parameter_cannot_be_null);
-
-            var employeeModel = employee as EmployeeModel;
-
+            
             var cmd =
-                new SqlCommand($"INSERT INTO EMPLOYEE VALUES('{employeeModel.FirstName}', '{employeeModel.MiddleName}', '{employeeModel.LastName}'," + 
-                $"'{employeeModel.PersonalNumber}', {employeeModel.PostId}, {employeeModel.RankId}, '{employeeModel.BornDate.Value}'," + 
-                $"'{employeeModel.JobStartDate.Value}', '{employeeModel.Address}', '{employeeModel.Pasport}', '{employeeModel.MobilePhoneNumber}', '{employeeModel.HomePhoneNumber}', '{employeeModel.IsPensioner}'); "+
+                new SqlCommand($"INSERT INTO EMPLOYEE VALUES('{employee.FirstName}', '{employee.MiddleName}', '{employee.LastName}'," + 
+                $"'{employee.PersonalNumber}', {employee.PostId}, {employee.RankId}, '{employee.BornDate.Value}'," + 
+                $"'{employee.JobStartDate.Value}', '{employee.Address}', '{employee.Pasport}', '{employee.MobilePhoneNumber}', '{employee.HomePhoneNumber}', '{employee.IsPensioner}'); "+
                 "SELECT MAX(ID) FROM EMPLOYEE;");
 
             try
@@ -32,7 +36,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
 
                 sqlDataReader.Read();
-                employeeModel.Id = Int64.Parse(sqlDataReader[0].ToString());
+                employee.Id = Int64.Parse(sqlDataReader[0].ToString());
                 sqlDataReader.Close();
 
                 ErrorInfo = null;
@@ -43,10 +47,15 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 return null;
             }
 
-            return employeeModel;
+            return employee;
         }
 
-        public BaseModel GetElementById(long? id)
+        /// <summary>
+        /// Возвращает служащего по id
+        /// </summary>
+        /// <param name="id">id служащего</param>
+        /// <returns></returns>
+        public EmployeeModel Select(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
@@ -89,9 +98,13 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             return employeeModel;
         }
 
-        public ObservableCollection<BaseModel> GetAllElements()
+        /// <summary>
+        /// Возвращает всех служащих
+        /// </summary>
+        /// <returns></returns>
+        public ObservableCollection<EmployeeModel> Select()
         {
-            var employeeList = new ObservableCollection<BaseModel>();
+            var employeeList = new ObservableCollection<EmployeeModel>();
 
             var cmd = new SqlCommand("SELECT * FROM EMPLOYEE");
 
@@ -135,18 +148,21 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             return employeeList;
         }
 
-        public bool Update(BaseModel employee)
+        /// <summary>
+        /// Обновляет служащего
+        /// </summary>
+        /// <param name="employee">Служащий</param>
+        /// <returns></returns>
+        public bool Update(EmployeeModel employee)
         {
             if (employee == null) throw new ArgumentNullException(nameof(employee), Resources.DatabaseConnector_parameter_cannot_be_null);
-
-            var employeeModel = employee as EmployeeModel;
-
-            var cmd = new SqlCommand($@"UPDATE EMPLOYEE SET EMPLOYEE_FIRSTNAME='{employeeModel.FirstName}', EMPLOYEE_MIDDLENAME='{employeeModel.MiddleName}'," + 
-                $"EMPLOYEE_LASTNAME='{employeeModel.LastName}', PERSONAL_KEY='{employeeModel.PersonalNumber}', POST_ID={employeeModel.PostId}," +
-                $"RANK_ID={employeeModel.RankId}, BORN_DATE='{employeeModel.BornDate.Value}', JOB_START_DATE='{employeeModel.JobStartDate.Value}'," +
-                $"ADDRESS='{employeeModel.Address}', PASPORT='{employeeModel.Pasport}', MOBILE_PHONE_NUMBER='{employeeModel.MobilePhoneNumber}'," +
-                $"HOME_PHONE_NUMBER='{employeeModel.HomePhoneNumber}', IS_PENSIONER='{employeeModel.IsPensioner}' " +
-                $"WHERE ID={employeeModel.Id};");
+            
+            var cmd = new SqlCommand($@"UPDATE EMPLOYEE SET EMPLOYEE_FIRSTNAME='{employee.FirstName}', EMPLOYEE_MIDDLENAME='{employee.MiddleName}'," + 
+                $"EMPLOYEE_LASTNAME='{employee.LastName}', PERSONAL_KEY='{employee.PersonalNumber}', POST_ID={employee.PostId}," +
+                $"RANK_ID={employee.RankId}, BORN_DATE='{employee.BornDate.Value}', JOB_START_DATE='{employee.JobStartDate.Value}'," +
+                $"ADDRESS='{employee.Address}', PASPORT='{employee.Pasport}', MOBILE_PHONE_NUMBER='{employee.MobilePhoneNumber}'," +
+                $"HOME_PHONE_NUMBER='{employee.HomePhoneNumber}', IS_PENSIONER='{employee.IsPensioner}' " +
+                $"WHERE ID={employee.Id};");
 
             try
             {
@@ -162,6 +178,11 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             return true;
         }
 
+        /// <summary>
+        /// Удалить служащего по id
+        /// </summary>
+        /// <param name="id">id служащего</param>
+        /// <returns></returns>
         public bool DeleteById(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);

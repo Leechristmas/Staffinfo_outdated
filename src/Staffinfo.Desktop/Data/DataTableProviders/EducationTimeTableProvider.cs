@@ -1,32 +1,39 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Data.SqlClient;
+using Staffinfo.Desktop.Data.DataTableContracts;
 using Staffinfo.Desktop.Model;
 using Staffinfo.Desktop.Properties;
 
 namespace Staffinfo.Desktop.Data.DataTableProviders
 {
-    public class EducationTimeTableProvider: ITableProvider, IDisposable
+    /// <summary>
+    /// Компонент доступа к таблице EducationTime
+    /// </summary>
+    public class EducationTimeTableProvider: IWritableTableContract<EducationTimeModel>, IDisposable
     {
         public string ErrorInfo { get; set; }
-     
-        #region ITableProvider implementation
 
-        public BaseModel AddNewElement(BaseModel eductionTime)
+        #region IWritableTableContract implementation
+
+        /// <summary>
+        /// Сохранить обучение в БД
+        /// </summary>
+        /// <param name="eductionTime">процесс обучения</param>
+        /// <returns></returns>
+        public EducationTimeModel Save(EducationTimeModel eductionTime)
         {
             if (eductionTime == null) throw new ArgumentNullException(nameof(eductionTime), Resources.DatabaseConnector_parameter_cannot_be_null);
-
-            var educationTimeModel = eductionTime as EducationTimeModel;
-
+            
             var cmd =
-                new SqlCommand($@"INSERT INTO EDUCATION_TIME VALUES({educationTimeModel.EmployeeId}, '{educationTimeModel.StartDate}', '{educationTimeModel.FinishDate}', {educationTimeModel.SpecialityId}, {educationTimeModel.InstitutionId}, '{educationTimeModel.Description}'); SELECT MAX(ID) FROM EDUCATION_TIME;");
+                new SqlCommand($@"INSERT INTO EDUCATION_TIME VALUES({eductionTime.EmployeeId}, '{eductionTime.StartDate}', '{eductionTime.FinishDate}', {eductionTime.SpecialityId}, {eductionTime.InstitutionId}, '{eductionTime.Description}'); SELECT MAX(ID) FROM EDUCATION_TIME;");
 
             try
             {
                 var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
 
                 sqlDataReader.Read();
-                educationTimeModel.Id = Int64.Parse(sqlDataReader[0].ToString());
+                eductionTime.Id = Int64.Parse(sqlDataReader[0].ToString());
                 sqlDataReader.Close();
 
                 ErrorInfo = null;
@@ -37,10 +44,15 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 return null;
             }
 
-            return educationTimeModel;
+            return eductionTime;
         }
         
-        public BaseModel GetElementById(long? id)
+        /// <summary>
+        /// Возвращает процесс обучения по id
+        /// </summary>
+        /// <param name="id">id процесса обучения</param>
+        /// <returns></returns>
+        public EducationTimeModel Select(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
@@ -76,9 +88,13 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             return educationTimeModel;
         }
 
-        public ObservableCollection<BaseModel> GetAllElements()
+        /// <summary>
+        /// Возвращает все процессы обучения
+        /// </summary>
+        /// <returns></returns>
+        public ObservableCollection<EducationTimeModel> Select()
         {
-            var educationTimeList = new ObservableCollection<BaseModel>();
+            var educationTimeList = new ObservableCollection<EducationTimeModel>();
 
             var cmd = new SqlCommand("SELECT * FROM EDUCATION_TIME");
 
@@ -113,13 +129,16 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             return educationTimeList;
         }
 
-        public bool Update(BaseModel educationTime)
+        /// <summary>
+        /// Обновляет процесс обучения
+        /// </summary>
+        /// <param name="educationTime">процесс обучения</param>
+        /// <returns></returns>
+        public bool Update(EducationTimeModel educationTime)
         {
             if (educationTime == null) throw new ArgumentNullException(nameof(educationTime), Resources.DatabaseConnector_parameter_cannot_be_null);
-
-            var educationTimeModel = educationTime as EducationTimeModel;
-
-            var cmd = new SqlCommand($@"UPDATE EDUCATION_TIME SET EMPLOYEE_ID={educationTimeModel.EmployeeId}, START_DATE='{educationTimeModel.StartDate}', FINISH_DATE='{educationTimeModel.FinishDate}', SPECIALITY_ID={educationTimeModel.SpecialityId}, INSTITUTION_ID={educationTimeModel.InstitutionId}, DESCRIPTION='{educationTimeModel.Description}' WHERE ID={educationTimeModel.Id};");
+            
+            var cmd = new SqlCommand($@"UPDATE EDUCATION_TIME SET EMPLOYEE_ID={educationTime.EmployeeId}, START_DATE='{educationTime.StartDate}', FINISH_DATE='{educationTime.FinishDate}', SPECIALITY_ID={educationTime.SpecialityId}, INSTITUTION_ID={educationTime.InstitutionId}, DESCRIPTION='{educationTime.Description}' WHERE ID={educationTime.Id};");
 
             try
             {
@@ -135,6 +154,11 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             return true;
         }
 
+        /// <summary>
+        /// Удалить процесс обучения по id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public bool DeleteById(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);

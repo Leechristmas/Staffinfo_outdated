@@ -13,7 +13,7 @@ namespace Staffinfo.Tests.DataTests
         {
             using (var prvdr = new  ContractTableProvider())
             {
-                var contract = prvdr.AddNewElement(
+                var contract = prvdr.Save(
                     new ContractModel
                     {
                         Id = null,
@@ -35,7 +35,7 @@ namespace Staffinfo.Tests.DataTests
         {
             using (var prvdr = new ContractTableProvider())
             {
-                var contract = prvdr.GetElementById(1);
+                var contract = prvdr.Select(1);
 
                 Assert.IsNotNull(contract, "contract != null");
             }
@@ -46,7 +46,7 @@ namespace Staffinfo.Tests.DataTests
         {
             using (var prvdr = new ContractTableProvider())
             {
-                var contractList = prvdr.GetAllElements();
+                var contractList = prvdr.Select();
 
                 Assert.IsNotNull(contractList, "contractList != null");
                 Assert.IsTrue(contractList.Count > 0,"contractList.Count > 0");

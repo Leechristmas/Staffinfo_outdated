@@ -13,7 +13,7 @@ namespace Staffinfo.Tests.DataTests
         {
             using (var prvdr = new ClasinessTableProvider())
             {
-                var clasiness = prvdr.AddNewElement(new ClasinessModel
+                var clasiness = prvdr.Save(new ClasinessModel
                 {
                     EmployeeId = 1,
                     OrderNumber = 1,
@@ -34,7 +34,7 @@ namespace Staffinfo.Tests.DataTests
         {
             using (var prvdr = new ClasinessTableProvider())
             {
-                var clasiness = prvdr.GetElementById(1);
+                var clasiness = prvdr.Select(1);
 
                 Assert.IsNotNull(clasiness);
             }
@@ -45,7 +45,7 @@ namespace Staffinfo.Tests.DataTests
         {
             using (var prvdr = new ClasinessTableProvider())
             {
-                var clasinessList = prvdr.GetAllElements();
+                var clasinessList = prvdr.Select();
 
                 Assert.IsNotNull(clasinessList);
                 Assert.IsTrue(clasinessList.Count > 0);

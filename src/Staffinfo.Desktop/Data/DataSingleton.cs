@@ -75,25 +75,25 @@ namespace Staffinfo.Desktop.Data
             // Служащие
             using(var prvdr = new EmployeeTableProvider())
             {
-                _instance._employeeList = new ObservableCollection<EmployeeViewModel>(prvdr.GetAllElements().Select(p => new EmployeeViewModel(p as EmployeeModel)));
+                _instance._employeeList = new ObservableCollection<EmployeeViewModel>(prvdr.Select().Select(p => new EmployeeViewModel(p)));
             }
 
             //Должности
             using (var prvdr = new PostTableProvider())
             {
-                _instance._postList = prvdr.GetAllElements().Select(p => p as PostModel).ToList();
+                _instance._postList = prvdr.Select().ToList();
             }
 
             //Звания
             using (var prvdr = new RankTableProvider())
             {
-                _instance._rankList = prvdr.GetAllElements().Select(p => p as RankModel).ToList();
+                _instance._rankList = prvdr.Select().ToList();
             }
             
             //Службы
             using (var prvdr = new ServiceTableProvider())
             {
-                _instance._serviceList = prvdr.GetAllElements().Select(p => p as ServiceModel).ToList();
+                _instance._serviceList = prvdr.Select().ToList();
             } 
         }
     }
