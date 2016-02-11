@@ -99,6 +99,7 @@
     <Compile Include="Data\DatabaseConnector.cs" />
     <Compile Include="Data\DataSingleton.cs" />
     <Compile Include="Data\DataTableContracts\IReadOnlyTableContract.cs" />
+    <Compile Include="Data\DataTableContracts\IWritableDirectoryTableContract.cs" />
     <Compile Include="Data\DataTableContracts\IWritableTableContract.cs" />
     <Compile Include="Data\DataTableProviders\ClasinessTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\ContractTableProvider.cs" />

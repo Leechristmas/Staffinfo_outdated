@@ -10,7 +10,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
     /// <summary>
     /// Класс для таблицы Contract
     /// </summary>
-    public class ContractTableProvider: IWritableTableContract<ContractModel>, IDisposable
+    public class ContractTableProvider: IWritableDirectoryTableContract<ContractModel>, IDisposable
     {
         public string ErrorInfo { get; set; }
 
@@ -195,5 +195,10 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         }
 
         #endregion
+
+        public IObservable<ContractModel> SelectByEmployeeId(long id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
