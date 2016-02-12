@@ -120,6 +120,7 @@
     <Compile Include="Data\DataTableProviders\SertificationTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\ServiceTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\SpecialityTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\ViolationTableProvider.cs" />
     <Compile Include="Helpers\WindowCloseHelper.cs" />
     <Compile Include="Model\BaseModel.cs" />
     <Compile Include="Model\ClasinessModel.cs" />

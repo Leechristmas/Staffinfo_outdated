@@ -7,11 +7,6 @@ namespace Staffinfo.Desktop.Model
     /// </summary>
     public class ViolationModel
     {
-        public ViolationModel()
-        {
-                
-        }
-
         #region Properties
 
         public long Id { get; set; }
