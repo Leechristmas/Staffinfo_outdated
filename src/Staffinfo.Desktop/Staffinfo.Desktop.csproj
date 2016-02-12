@@ -117,6 +117,7 @@
     <Compile Include="Data\DataTableProviders\RelativeTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\RelativeTypeTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\ReprimandTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\SertificationTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\ServiceTableProvider.cs" />
     <Compile Include="Helpers\WindowCloseHelper.cs" />
     <Compile Include="Model\BaseModel.cs" />

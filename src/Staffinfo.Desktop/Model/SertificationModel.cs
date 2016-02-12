@@ -7,11 +7,6 @@ namespace Staffinfo.Desktop.Model
     /// </summary>
     public class SertificationModel
     {
-        public SertificationModel()
-        {
-                
-        }
-
         #region Properties
 
         public long Id { get; set; }
