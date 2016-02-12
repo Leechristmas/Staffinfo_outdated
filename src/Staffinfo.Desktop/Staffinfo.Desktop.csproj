@@ -112,6 +112,7 @@
     <Compile Include="Data\DataTableProviders\MilitaryProcessTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\PostAssignmentTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\PostTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\RankAssignmentTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\RankTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\ServiceTableProvider.cs" />
     <Compile Include="Helpers\WindowCloseHelper.cs" />

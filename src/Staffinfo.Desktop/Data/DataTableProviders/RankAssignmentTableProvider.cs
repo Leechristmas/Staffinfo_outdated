@@ -8,32 +8,32 @@ using Staffinfo.Desktop.Properties;
 namespace Staffinfo.Desktop.Data.DataTableProviders
 {
     /// <summary>
-    /// Компонент доступа к таблице POST_ASSIGNMENT
+    /// Компонент доступа к таблице RANK_ASSIGNMENT
     /// </summary>
-    public class PostAssignmentTableProvider: IWritableDirectoryTableContract<PostAssignmentModel>, IDisposable
+    public class RankAssignmentTableProvider:IWritableDirectoryTableContract<RankAssignmentModel>, IDisposable
     {
         public string ErrorInfo { get; set; }
 
         #region IWritableDirectoryTableContract
 
         /// <summary>
-        /// Сохранить запись о присвоении должности
+        /// Сохранить запись о присвоении звания
         /// </summary>
-        /// <param name="postAssignmentModel">присвоение звания</param>
+        /// <param name="rankAssignmentModel">присвоение звания</param>
         /// <returns></returns>
-        public PostAssignmentModel Save(PostAssignmentModel postAssignmentModel)
+        public RankAssignmentModel Save(RankAssignmentModel rankAssignmentModel)
         {
-            if (postAssignmentModel == null) throw new ArgumentNullException(nameof(postAssignmentModel), Resources.DatabaseConnector_parameter_cannot_be_null);
+            if (rankAssignmentModel == null) throw new ArgumentNullException(nameof(rankAssignmentModel), Resources.DatabaseConnector_parameter_cannot_be_null);
 
             var cmd =
-                new SqlCommand($@"INSERT INTO POST_ASSIGNMENT VALUES({postAssignmentModel.EmployeeId}, '{postAssignmentModel.Description}', '{postAssignmentModel.AssignmentDate}', {postAssignmentModel.PreviousPostId}, {postAssignmentModel.NewPostId}, {postAssignmentModel.OrderNumber}); SELECT MAX(ID) FROM POST_ASSIGNMENT;");
+                new SqlCommand($@"INSERT INTO RANK_ASSIGNMENT VALUES({rankAssignmentModel.EmployeeId}, '{rankAssignmentModel.Description}', '{rankAssignmentModel.AssignmentDate}', {rankAssignmentModel.PreviousRankId}, {rankAssignmentModel.NewRankId}, {rankAssignmentModel.OrderNumber}); SELECT MAX(ID) FROM RANK_ASSIGNMENT;");
 
             try
             {
                 var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
 
                 sqlDataReader.Read();
-                postAssignmentModel.Id = Int64.Parse(sqlDataReader[0].ToString());
+                rankAssignmentModel.Id = Int64.Parse(sqlDataReader[0].ToString());
                 sqlDataReader.Close();
 
                 ErrorInfo = null;
@@ -44,35 +44,35 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 return null;
             }
 
-            return postAssignmentModel;
+            return rankAssignmentModel;
         }
 
         /// <summary>
-        /// Возвращает присвоение должности по id
+        /// Возвращает присвоение звания по id
         /// </summary>
         /// <param name="id">id присвоения звания</param>
         /// <returns></returns>
-        public PostAssignmentModel Select(long? id)
+        public RankAssignmentModel Select(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"SELECT * FROM POST_ASSIGNMENT WHERE ID={id};");
+            var cmd = new SqlCommand($@"SELECT * FROM RANK_ASSIGNMENT WHERE ID={id};");
 
-            PostAssignmentModel postAssignmentModel = null;
+            RankAssignmentModel rankAssignmentModel = null;
 
             try
             {
                 var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
                 sqlDataReader.Read();
 
-                postAssignmentModel = new PostAssignmentModel
+                rankAssignmentModel = new RankAssignmentModel
                 {
                     Id = Int64.Parse(sqlDataReader[0].ToString()),
                     EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
                     Description = sqlDataReader[2].ToString(),
                     AssignmentDate = DateTime.Parse(sqlDataReader[3].ToString()),
-                    PreviousPostId = int.Parse(sqlDataReader[4].ToString()),
-                    NewPostId = int.Parse(sqlDataReader[5].ToString()),
+                    PreviousRankId = int.Parse(sqlDataReader[4].ToString()),
+                    NewRankId = int.Parse(sqlDataReader[5].ToString()),
                     OrderNumber = int.Parse(sqlDataReader[6].ToString())
                 };
                 sqlDataReader.Close();
@@ -85,18 +85,18 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 return null;
             }
 
-            return postAssignmentModel;
+            return rankAssignmentModel;
         }
 
         /// <summary>
-        /// Возвращает список всех присвоений должности
+        /// Возвращает список всех присвоений званий
         /// </summary>
         /// <returns></returns>
-        public ObservableCollection<PostAssignmentModel> Select()
+        public ObservableCollection<RankAssignmentModel> Select()
         {
-            var postAssignmentList = new ObservableCollection<PostAssignmentModel>();
+            var rankAssignmentList = new ObservableCollection<RankAssignmentModel>();
 
-            var cmd = new SqlCommand("SELECT * FROM POST_ASSIGNMENT");
+            var cmd = new SqlCommand("SELECT * FROM RANK_ASSIGNMENT");
 
             try
             {
@@ -104,18 +104,18 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
                 while (sqlDataReader.Read())
                 {
-                    var postAssignmentModel = new PostAssignmentModel
+                    var rankAssignmentModel = new RankAssignmentModel
                     {
                         Id = Int64.Parse(sqlDataReader[0].ToString()),
                         EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
                         Description = sqlDataReader[2].ToString(),
                         AssignmentDate = DateTime.Parse(sqlDataReader[3].ToString()),
-                        PreviousPostId = int.Parse(sqlDataReader[4].ToString()),
-                        NewPostId = int.Parse(sqlDataReader[5].ToString()),
+                        PreviousRankId = int.Parse(sqlDataReader[4].ToString()),
+                        NewRankId = int.Parse(sqlDataReader[5].ToString()),
                         OrderNumber = int.Parse(sqlDataReader[6].ToString())
                     };
 
-                    postAssignmentList.Add(postAssignmentModel);
+                    rankAssignmentList.Add(rankAssignmentModel);
                 }
                 sqlDataReader.Close();
 
@@ -126,19 +126,19 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;
                 return null;
             }
-            return postAssignmentList;
+            return rankAssignmentList;
         }
 
         /// <summary>
-        /// Обновить запись о присвоении должности
+        /// Обновить запись о присвоении звания
         /// </summary>
-        /// <param name="postAssignmentModel">присвоение звания</param>
+        /// <param name="rankAssignmentModel">присвоение звания</param>
         /// <returns></returns>
-        public bool Update(PostAssignmentModel postAssignmentModel)
+        public bool Update(RankAssignmentModel rankAssignmentModel)
         {
-            if (postAssignmentModel == null) throw new ArgumentNullException(nameof(postAssignmentModel), Resources.DatabaseConnector_parameter_cannot_be_null);
+            if (rankAssignmentModel == null) throw new ArgumentNullException(nameof(rankAssignmentModel), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"UPDATE POST_ASSIGNMENT SET EMPLOYEE_ID={postAssignmentModel.EmployeeId}, DESCRIPTION='{postAssignmentModel.Description}', ASSIGNMENT_DATE='{postAssignmentModel.AssignmentDate}', PREV_POST_ID={postAssignmentModel.PreviousPostId}, NEW_POST_ID={postAssignmentModel.NewPostId}, ORDER_NUMBER={postAssignmentModel.OrderNumber} WHERE ID={postAssignmentModel.Id};");
+            var cmd = new SqlCommand($@"UPDATE RANK_ASSIGNMENT SET EMPLOYEE_ID={rankAssignmentModel.EmployeeId}, DESCRIPTION='{rankAssignmentModel.Description}', ASSIGNMENT_DATE='{rankAssignmentModel.AssignmentDate}', PREV_RANK_ID={rankAssignmentModel.PreviousRankId}, NEW_RANK_ID={rankAssignmentModel.NewRankId}, ORDER_NUMBER={rankAssignmentModel.OrderNumber} WHERE ID={rankAssignmentModel.Id};");
 
             try
             {
@@ -155,15 +155,15 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         }
 
         /// <summary>
-        /// Удалить присвоение должности по id
+        /// Удалить присвоение звания по id
         /// </summary>
-        /// <param name="id">id присвоения должности</param>
+        /// <param name="id">id присвоения звания</param>
         /// <returns></returns>
         public bool DeleteById(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"DELETE FROM POST_ASSIGNMENT WHERE ID = '{id}'");
+            var cmd = new SqlCommand($@"DELETE FROM RANK_ASSIGNMENT WHERE ID = '{id}'");
             try
             {
                 DataSingleton.Instance.DatabaseConnector.Execute(cmd);
@@ -178,17 +178,17 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         }
 
         /// <summary>
-        /// Возвращает список присвоений должности по id служащего
+        /// Возвращает список присвоений званий по id служащего
         /// </summary>
         /// <param name="id">id служащего</param>
         /// <returns></returns>
-        public ObservableCollection<PostAssignmentModel> SelectByEmployeeId(long? id)
+        public ObservableCollection<RankAssignmentModel> SelectByEmployeeId(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var postAssignmentList = new ObservableCollection<PostAssignmentModel>();
+            var rankAssignmentList = new ObservableCollection<RankAssignmentModel>();
 
-            var cmd = new SqlCommand($"SELECT * FROM POST_ASSIGNMENT WHERE EMPLOYEE_ID = {id}");
+            var cmd = new SqlCommand($"SELECT * FROM RANK_ASSIGNMENT WHERE EMPLOYEE_ID = {id}");
 
             try
             {
@@ -196,18 +196,18 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
                 while (sqlDataReader.Read())
                 {
-                    var postAssignment = new PostAssignmentModel
+                    var rankAssignment = new RankAssignmentModel
                     {
                         Id = Int64.Parse(sqlDataReader[0].ToString()),
                         EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
                         Description = sqlDataReader[2].ToString(),
                         AssignmentDate = DateTime.Parse(sqlDataReader[3].ToString()),
-                        PreviousPostId = int.Parse(sqlDataReader[4].ToString()),
-                        NewPostId = int.Parse(sqlDataReader[5].ToString()),
+                        PreviousRankId = int.Parse(sqlDataReader[4].ToString()),
+                        NewRankId = int.Parse(sqlDataReader[5].ToString()),
                         OrderNumber = int.Parse(sqlDataReader[6].ToString())
                     };
 
-                    postAssignmentList.Add(postAssignment);
+                    rankAssignmentList.Add(rankAssignment);
                 }
                 sqlDataReader.Close();
 
@@ -218,7 +218,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;
                 return null;
             }
-            return postAssignmentList;
+            return rankAssignmentList;
         }
         #endregion
 
@@ -240,7 +240,6 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
             _disposed = true;
         }
-
-        #endregion 
+        #endregion
     }
 }
