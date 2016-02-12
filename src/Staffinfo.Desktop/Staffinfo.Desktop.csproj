@@ -106,6 +106,7 @@
     <Compile Include="Data\DataTableProviders\EducationalInstitutonTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\EducationTimeTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\EmployeeTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\GratitudeTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\PostTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\RankTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\ServiceTableProvider.cs" />

@@ -8,32 +8,32 @@ using Staffinfo.Desktop.Properties;
 namespace Staffinfo.Desktop.Data.DataTableProviders
 {
     /// <summary>
-    /// Класс для работы с таблицей классности
+    /// Компонент доступа к таблице Gratitude
     /// </summary>
-    public class ClasinessTableProvider : IWritableDirectoryTableContract<ClasinessModel>, IDisposable
+    public class GratitudeTableProvider: IWritableDirectoryTableContract<GratitudeModel>, IDisposable
     {
         public string ErrorInfo { get; set; }
 
-        #region IWritableDirectoryTableContract implementation
+        #region IWritableDirectoryTableContract
 
         /// <summary>
-        /// Сохранить запись в БД
+        /// Сохранить запись о вынесении благодарности в БД
         /// </summary>
-        /// <param name="clasiness">Классность</param>
+        /// <param name="gratitude">Вынесение благодарности</param>
         /// <returns></returns>
-        public ClasinessModel Save(ClasinessModel clasiness)
+        public GratitudeModel Save(GratitudeModel gratitude)
         {
-            if (clasiness == null) throw new ArgumentNullException(nameof(clasiness), Resources.DatabaseConnector_parameter_cannot_be_null);
-            
+            if (gratitude == null) throw new ArgumentNullException(nameof(gratitude), Resources.DatabaseConnector_parameter_cannot_be_null);
+
             var cmd =
-                new SqlCommand($@"INSERT INTO CLASINESS VALUES({clasiness.EmployeeId}, {clasiness.OrderNumber}, '{clasiness.ClasinessDate}', {clasiness.ClasinessLevel}, '{clasiness.Description}'); SELECT MAX(ID) FROM CLASINESS;");
+                new SqlCommand($@"INSERT INTO GRATITUDE VALUES({gratitude.EmployeeId}, '{gratitude.Description}', '{gratitude.GratitudeDate}'); SELECT MAX(ID) FROM GRATITUDE;");
 
             try
             {
                 var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
 
                 sqlDataReader.Read();
-                clasiness.Id = Int64.Parse(sqlDataReader[0].ToString());
+                gratitude.Id = Int64.Parse(sqlDataReader[0].ToString());
                 sqlDataReader.Close();
 
                 ErrorInfo = null;
@@ -44,35 +44,33 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 return null;
             }
 
-            return clasiness;
+            return gratitude;
         }
 
         /// <summary>
-        /// Возвращает классность по id
+        /// Возвращает благодарность по id
         /// </summary>
-        /// <param name="id">id</param>
+        /// <param name="id">id контракта</param>
         /// <returns></returns>
-        public ClasinessModel Select(long? id)
+        public GratitudeModel Select(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"SELECT * FROM CLASINESS WHERE ID={id};");
+            var cmd = new SqlCommand($@"SELECT * FROM GRATITUDE WHERE ID={id};");
 
-            ClasinessModel clasinessModel = null;
+            GratitudeModel gratitudeModel = null;
 
             try
             {
                 var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
                 sqlDataReader.Read();
 
-                clasinessModel = new ClasinessModel
+                gratitudeModel = new GratitudeModel
                 {
                     Id = Int64.Parse(sqlDataReader[0].ToString()),
                     EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
-                    OrderNumber = UInt16.Parse(sqlDataReader[2].ToString()),
-                    ClasinessDate = DateTime.Parse(sqlDataReader[3].ToString()),
-                    ClasinessLevel = Byte.Parse(sqlDataReader[4].ToString()),
-                    Description = sqlDataReader[5].ToString()
+                    Description = sqlDataReader[2].ToString(),
+                    GratitudeDate = DateTime.Parse(sqlDataReader[3].ToString())
                 };
                 sqlDataReader.Close();
 
@@ -84,18 +82,18 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 return null;
             }
 
-            return clasinessModel;
+            return gratitudeModel;
         }
 
         /// <summary>
-        /// Возвращает записи о классности
+        /// Возвращает список благодарностей
         /// </summary>
         /// <returns></returns>
-        public ObservableCollection<ClasinessModel> Select()
+        public ObservableCollection<GratitudeModel> Select()
         {
-            var clasinessList = new ObservableCollection<ClasinessModel>();
+            var gratitudeList = new ObservableCollection<GratitudeModel>();
 
-            var cmd = new SqlCommand("SELECT * FROM CLASINESS");
+            var cmd = new SqlCommand("SELECT * FROM GRATITUDE");
 
             try
             {
@@ -103,17 +101,15 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
                 while (sqlDataReader.Read())
                 {
-                    var clasinessModel = new ClasinessModel
+                    var gratitudeModel = new GratitudeModel
                     {
                         Id = Int64.Parse(sqlDataReader[0].ToString()),
                         EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
-                        OrderNumber = UInt16.Parse(sqlDataReader[2].ToString()),
-                        ClasinessDate = DateTime.Parse(sqlDataReader[3].ToString()),
-                        ClasinessLevel = Byte.Parse(sqlDataReader[4].ToString()),
-                        Description = sqlDataReader[5].ToString()
+                        Description = sqlDataReader[2].ToString(),
+                        GratitudeDate = DateTime.Parse(sqlDataReader[3].ToString())
                     };
 
-                    clasinessList.Add(clasinessModel);
+                    gratitudeList.Add(gratitudeModel);
                 }
                 sqlDataReader.Close();
 
@@ -124,19 +120,19 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;
                 return null;
             }
-            return clasinessList;
+            return gratitudeList;
         }
 
         /// <summary>
-        /// Обновляет запись классности
+        /// Обновить запись о благодарности
         /// </summary>
-        /// <param name="clasiness">Классность</param>
+        /// <param name="gratitude">Благодарность</param>
         /// <returns></returns>
-        public bool Update(ClasinessModel clasiness)
+        public bool Update(GratitudeModel gratitude)
         {
-            if (clasiness == null) throw new ArgumentNullException(nameof(clasiness), Resources.DatabaseConnector_parameter_cannot_be_null);
-            
-            var cmd = new SqlCommand($@"UPDATE CLASINESS SET EMPLOYEE_ID={clasiness.EmployeeId}, ORDER_NUMBER={clasiness.OrderNumber}, CLASINESS_DATE='{clasiness.ClasinessDate}', CLASINESS_LEVEL={clasiness.ClasinessLevel}, DESCRIPTION='{clasiness.Description}' WHERE ID={clasiness.Id};");
+            if (gratitude == null) throw new ArgumentNullException(nameof(gratitude), Resources.DatabaseConnector_parameter_cannot_be_null);
+
+            var cmd = new SqlCommand($@"UPDATE GRATITUDE SET EMPLOYEE_ID={gratitude.EmployeeId}, GRATITUDE_DATE='{gratitude.GratitudeDate}', DESCRIPTION='{gratitude.Description}' WHERE ID={gratitude.Id};");
 
             try
             {
@@ -151,17 +147,17 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
             return true;
         }
-        
+
         /// <summary>
-        /// Удалить запись классности по id
+        /// Удалить благодарность по id
         /// </summary>
-        /// <param name="id">id записи</param>
+        /// <param name="id">id контракта</param>
         /// <returns></returns>
         public bool DeleteById(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"DELETE FROM CLASINESS WHERE ID = '{id}'");
+            var cmd = new SqlCommand($@"DELETE FROM GRATITUDE WHERE ID = '{id}'");
             try
             {
                 DataSingleton.Instance.DatabaseConnector.Execute(cmd);
@@ -176,15 +172,17 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         }
 
         /// <summary>
-        /// Возвращает список подтверждений классности по id служащего
+        /// Возвращает список благодарностей по id служащего
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">id служащего</param>
         /// <returns></returns>
-        public ObservableCollection<ClasinessModel> SelectByEmployeeId(long? id)
+        public ObservableCollection<GratitudeModel> SelectByEmployeeId(long? id)
         {
-            var clasinessList = new ObservableCollection<ClasinessModel>();
+            if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($"SELECT * FROM CLASINESS WHERE EMPLOYEE_ID={id}");
+            var gratitudeList = new ObservableCollection<GratitudeModel>();
+
+            var cmd = new SqlCommand($"SELECT * FROM GRATITUDE WHERE EMPLOYEE_ID = {id}");
 
             try
             {
@@ -192,17 +190,15 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
                 while (sqlDataReader.Read())
                 {
-                    var clasinessModel = new ClasinessModel
+                    var gratitudeModel = new GratitudeModel
                     {
                         Id = Int64.Parse(sqlDataReader[0].ToString()),
                         EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
-                        OrderNumber = UInt16.Parse(sqlDataReader[2].ToString()),
-                        ClasinessDate = DateTime.Parse(sqlDataReader[3].ToString()),
-                        ClasinessLevel = Byte.Parse(sqlDataReader[4].ToString()),
-                        Description = sqlDataReader[5].ToString()
+                        Description = sqlDataReader[2].ToString(),
+                        GratitudeDate = DateTime.Parse(sqlDataReader[3].ToString())
                     };
 
-                    clasinessList.Add(clasinessModel);
+                    gratitudeList.Add(gratitudeModel);
                 }
                 sqlDataReader.Close();
 
@@ -213,9 +209,10 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;
                 return null;
             }
-            return clasinessList;
-        } 
-        
+            return gratitudeList;
+        }
+
+
         #endregion
 
         #region IDisposable implementation
@@ -238,5 +235,6 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         }
 
         #endregion
+
     }
 }

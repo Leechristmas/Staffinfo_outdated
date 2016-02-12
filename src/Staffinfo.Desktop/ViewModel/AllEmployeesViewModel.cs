@@ -42,8 +42,7 @@ namespace Staffinfo.Desktop.ViewModel
 
         public void GoToAddingNewEmployeeExecute()
         {
-            var addNewEmployeeView = new AddNewEmployeeView();
-            addNewEmployeeView.DataContext = new AddNewEmployeeViewModel();
+            var addNewEmployeeView = new AddNewEmployeeView {DataContext = new AddNewEmployeeViewModel()};
             addNewEmployeeView.ShowDialog();
         }
 

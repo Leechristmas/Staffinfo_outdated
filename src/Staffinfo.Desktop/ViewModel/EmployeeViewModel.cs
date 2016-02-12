@@ -28,12 +28,12 @@ namespace Staffinfo.Desktop.ViewModel
 
         #endregion
 
+        #region Properties
+
         /// <summary>
         /// Выбранный служащий
         /// </summary>
         readonly EmployeeModel _empModel;
-
-        #region Properties
 
         /// <summary>
         /// Фото служащего

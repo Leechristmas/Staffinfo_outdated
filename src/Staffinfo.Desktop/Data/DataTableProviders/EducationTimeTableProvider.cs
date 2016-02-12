@@ -10,11 +10,11 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
     /// <summary>
     /// Компонент доступа к таблице EducationTime
     /// </summary>
-    public class EducationTimeTableProvider: IWritableTableContract<EducationTimeModel>, IDisposable
+    public class EducationTimeTableProvider: IWritableDirectoryTableContract<EducationTimeModel>, IDisposable
     {
         public string ErrorInfo { get; set; }
 
-        #region IWritableTableContract implementation
+        #region IWritableDirectoryTableContract implementation
 
         /// <summary>
         /// Сохранить обучение в БД
@@ -177,6 +177,50 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             return true;
         }
 
+        /// <summary>
+        /// Возвращает список периодов обучения по id служащего
+        /// </summary>
+        /// <param name="id">id служащего</param>
+        /// <returns></returns>
+        public ObservableCollection<EducationTimeModel> SelectByEmployeeId(long? id)
+        {
+            if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
+
+            var educationTimeList = new ObservableCollection<EducationTimeModel>();
+
+            var cmd = new SqlCommand($"SELECT * FROM EDUCATION_TIME WHERE EMPLOYEE_ID = {id}");
+
+            try
+            {
+                var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
+
+                while (sqlDataReader.Read())
+                {
+                    var educationTimeModel = new EducationTimeModel
+                    {
+                        Id = Int64.Parse(sqlDataReader[0].ToString()),
+                        EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
+                        StartDate = DateTime.Parse(sqlDataReader[2].ToString()),
+                        FinishDate = DateTime.Parse(sqlDataReader[3].ToString()),
+                        SpecialityId = Int64.Parse(sqlDataReader[4].ToString()),
+                        InstitutionId = Int64.Parse(sqlDataReader[5].ToString()),
+                        Description = sqlDataReader[6].ToString()
+                    };
+
+                    educationTimeList.Add(educationTimeModel);
+                }
+                sqlDataReader.Close();
+
+                ErrorInfo = null;
+            }
+            catch (Exception ex)
+            {
+                ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;
+                return null;
+            }
+            return educationTimeList;
+        }
+        
         #endregion
 
         #region IDisposable implementation
@@ -199,6 +243,6 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         }
 
         #endregion
-
+        
     }
 }

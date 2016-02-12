@@ -14,7 +14,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
     {
         public string ErrorInfo { get; set; }
 
-        #region IWritableTableContract implementation
+        #region IWritableDirectoryTableContract implementation
 
         /// <summary>
         /// Сохранить запись о контракте в БД
@@ -173,6 +173,48 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             return true;
         }
 
+        /// <summary>
+        /// Возвращает список контрактов по id служащего
+        /// </summary>
+        /// <param name="id">id служащего</param>
+        /// <returns></returns>
+        public ObservableCollection<ContractModel> SelectByEmployeeId(long? id)
+        {
+            if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
+
+            var contractList = new ObservableCollection<ContractModel>();
+
+            var cmd = new SqlCommand($"SELECT * FROM CONTRACT WHERE EMPLOYEE_ID = {id}");
+
+            try
+            {
+                var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
+
+                while (sqlDataReader.Read())
+                {
+                    var contractModel = new ContractModel
+                    {
+                        Id = Int64.Parse(sqlDataReader[0].ToString()),
+                        EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
+                        StartDate = DateTime.Parse(sqlDataReader[2].ToString()),
+                        FinishDate = DateTime.Parse(sqlDataReader[3].ToString()),
+                        Description = sqlDataReader[4].ToString()
+                    };
+
+                    contractList.Add(contractModel);
+                }
+                sqlDataReader.Close();
+
+                ErrorInfo = null;
+            }
+            catch (Exception ex)
+            {
+                ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;
+                return null;
+            }
+            return contractList;
+        }
+
         #endregion
 
         #region IDisposable implementation
@@ -195,10 +237,6 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         }
 
         #endregion
-
-        public IObservable<ContractModel> SelectByEmployeeId(long id)
-        {
-            throw new NotImplementedException();
-        }
+        
     }
 }

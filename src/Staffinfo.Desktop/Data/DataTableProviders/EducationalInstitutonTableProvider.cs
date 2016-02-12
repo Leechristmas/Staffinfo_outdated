@@ -10,11 +10,11 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
     /// <summary>
     /// Класс для таблицы EDUCATIONAL_INSTITUTION
     /// </summary>
-    public class EducationalInstitutonTableProvider: IWritableTableContract<EducationalInstitutionModel>, IDisposable
+    public class EducationalInstitutonTableProvider: IWritableDirectoryTableContract<EducationalInstitutionModel>, IDisposable
     {
         public string ErrorInfo { get; set; }
 
-        #region IWritableTableContract implementation
+        #region IWritableDirectoryTableContract implementation
 
         /// <summary>
         /// Сохранить запись учреждение образования в БД
@@ -168,6 +168,44 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             }
             return true;
         }
+
+        /// <summary>
+        /// Возвращает список учебных заведений по id служащего
+        /// </summary>
+        /// <param name="id">id служащего</param>
+        /// <returns></returns>
+        public ObservableCollection<EducationalInstitutionModel> SelectByEmployeeId(long? id)
+        {
+            var educationalInstitutionList = new ObservableCollection<EducationalInstitutionModel>();
+
+            var cmd = new SqlCommand($"SELECT * FROM EDUCATIONAL_INSTITUTION WHERE EMPLOYEE_ID={id}");
+
+            try
+            {
+                var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
+
+                while (sqlDataReader.Read())
+                {
+                    var educationalInstitutionModel = new EducationalInstitutionModel
+                    {
+                        Id = Int64.Parse(sqlDataReader[0].ToString()),
+                        InstituitionTitle = sqlDataReader[1].ToString(),
+                        InstituitionType = sqlDataReader[2].ToString()
+                    };
+
+                    educationalInstitutionList.Add(educationalInstitutionModel);
+                }
+                sqlDataReader.Close();
+
+                ErrorInfo = null;
+            }
+            catch (Exception ex)
+            {
+                ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;
+                return null;
+            }
+            return educationalInstitutionList;
+        } 
 
         #endregion
 

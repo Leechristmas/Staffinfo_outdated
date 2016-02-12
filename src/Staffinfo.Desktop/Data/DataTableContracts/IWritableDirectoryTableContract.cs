@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 
 namespace Staffinfo.Desktop.Data.DataTableContracts
 {
@@ -13,6 +14,6 @@ namespace Staffinfo.Desktop.Data.DataTableContracts
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        IObservable<T> SelectByEmployeeId(long id);
+        ObservableCollection<T> SelectByEmployeeId(long? id);
     }
 }
