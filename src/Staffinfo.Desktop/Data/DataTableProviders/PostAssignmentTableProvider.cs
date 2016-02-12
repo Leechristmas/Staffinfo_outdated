@@ -8,32 +8,32 @@ using Staffinfo.Desktop.Properties;
 namespace Staffinfo.Desktop.Data.DataTableProviders
 {
     /// <summary>
-    /// Компонент доступа к таблице GRATITUDE
+    /// Компонент доступа к таблице POST_ASSIGNMENT
     /// </summary>
-    public class GratitudeTableProvider: IWritableDirectoryTableContract<GratitudeModel>, IDisposable
+    public class PostAssignmentTableProvider: IWritableDirectoryTableContract<PostAssignmentModel>, IDisposable
     {
         public string ErrorInfo { get; set; }
 
         #region IWritableDirectoryTableContract
 
         /// <summary>
-        /// Сохранить запись о вынесении благодарности в БД
+        /// Сохранить запись о присвоении звания
         /// </summary>
-        /// <param name="gratitude">Вынесение благодарности</param>
+        /// <param name="postAssignmentModel">присвоение звания</param>
         /// <returns></returns>
-        public GratitudeModel Save(GratitudeModel gratitude)
+        public PostAssignmentModel Save(PostAssignmentModel postAssignmentModel)
         {
-            if (gratitude == null) throw new ArgumentNullException(nameof(gratitude), Resources.DatabaseConnector_parameter_cannot_be_null);
+            if (postAssignmentModel == null) throw new ArgumentNullException(nameof(postAssignmentModel), Resources.DatabaseConnector_parameter_cannot_be_null);
 
             var cmd =
-                new SqlCommand($@"INSERT INTO GRATITUDE VALUES({gratitude.EmployeeId}, '{gratitude.Description}', '{gratitude.GratitudeDate}'); SELECT MAX(ID) FROM GRATITUDE;");
+                new SqlCommand($@"INSERT INTO POST_ASSIGNMENT VALUES({postAssignmentModel.EmployeeId}, '{postAssignmentModel.Description}', '{postAssignmentModel.AssignmentDate}', {postAssignmentModel.PreviousPostId}, {postAssignmentModel.NewPostId}, {postAssignmentModel.OrderNumber}); SELECT MAX(ID) FROM POST_ASSIGNMENT;");
 
             try
             {
                 var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
 
                 sqlDataReader.Read();
-                gratitude.Id = Int64.Parse(sqlDataReader[0].ToString());
+                postAssignmentModel.Id = Int64.Parse(sqlDataReader[0].ToString());
                 sqlDataReader.Close();
 
                 ErrorInfo = null;
@@ -44,33 +44,32 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 return null;
             }
 
-            return gratitude;
+            return postAssignmentModel;
         }
 
         /// <summary>
-        /// Возвращает благодарность по id
+        /// Возвращает присвоение звания по id
         /// </summary>
-        /// <param name="id">id контракта</param>
+        /// <param name="id">id присвоения звания</param>
         /// <returns></returns>
-        public GratitudeModel Select(long? id)
+        public PostAssignmentModel Select(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"SELECT * FROM GRATITUDE WHERE ID={id};");
+            var cmd = new SqlCommand($@"SELECT * FROM POST_ASSIGNMENT WHERE ID={id};");
 
-            GratitudeModel gratitudeModel = null;
+            PostAssignmentModel postAssignmentModel = null;
 
             try
             {
                 var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
                 sqlDataReader.Read();
 
-                gratitudeModel = new GratitudeModel
+                postAssignmentModel = new PostAssignmentModel
                 {
                     Id = Int64.Parse(sqlDataReader[0].ToString()),
                     EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
                     Description = sqlDataReader[2].ToString(),
-                    GratitudeDate = DateTime.Parse(sqlDataReader[3].ToString())
                 };
                 sqlDataReader.Close();
 
@@ -82,18 +81,18 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 return null;
             }
 
-            return gratitudeModel;
+            return postAssignmentModel;
         }
 
         /// <summary>
-        /// Возвращает список благодарностей
+        /// Возвращает список всех присвоений званий
         /// </summary>
         /// <returns></returns>
-        public ObservableCollection<GratitudeModel> Select()
+        public ObservableCollection<PostAssignmentModel> Select()
         {
-            var gratitudeList = new ObservableCollection<GratitudeModel>();
+            var postAssignmentList = new ObservableCollection<PostAssignmentModel>();
 
-            var cmd = new SqlCommand("SELECT * FROM GRATITUDE");
+            var cmd = new SqlCommand("SELECT * FROM POST_ASSIGNMENT");
 
             try
             {
@@ -101,15 +100,18 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
                 while (sqlDataReader.Read())
                 {
-                    var gratitudeModel = new GratitudeModel
+                    var postAssignmentModel = new PostAssignmentModel
                     {
                         Id = Int64.Parse(sqlDataReader[0].ToString()),
                         EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
                         Description = sqlDataReader[2].ToString(),
-                        GratitudeDate = DateTime.Parse(sqlDataReader[3].ToString())
+                        AssignmentDate = DateTime.Parse(sqlDataReader[3].ToString()),
+                        PreviousPostId = int.Parse(sqlDataReader[4].ToString()),
+                        NewPostId = int.Parse(sqlDataReader[5].ToString()),
+                        OrderNumber = int.Parse(sqlDataReader[6].ToString())
                     };
 
-                    gratitudeList.Add(gratitudeModel);
+                    postAssignmentList.Add(postAssignmentModel);
                 }
                 sqlDataReader.Close();
 
@@ -120,19 +122,19 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;
                 return null;
             }
-            return gratitudeList;
+            return postAssignmentList;
         }
 
         /// <summary>
-        /// Обновить запись о благодарности
+        /// Обновить запись о присвоении звания
         /// </summary>
-        /// <param name="gratitude">Благодарность</param>
+        /// <param name="postAssignmentModel">присвоение звания</param>
         /// <returns></returns>
-        public bool Update(GratitudeModel gratitude)
+        public bool Update(PostAssignmentModel postAssignmentModel)
         {
-            if (gratitude == null) throw new ArgumentNullException(nameof(gratitude), Resources.DatabaseConnector_parameter_cannot_be_null);
+            if (postAssignmentModel == null) throw new ArgumentNullException(nameof(postAssignmentModel), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"UPDATE GRATITUDE SET EMPLOYEE_ID={gratitude.EmployeeId}, GRATITUDE_DATE='{gratitude.GratitudeDate}', DESCRIPTION='{gratitude.Description}' WHERE ID={gratitude.Id};");
+            var cmd = new SqlCommand($@"UPDATE POST_ASSIGNMENT SET EMPLOYEE_ID={postAssignmentModel.EmployeeId}, DESCRIPTION='{postAssignmentModel.Description}', ASSIGNMENT_DATE='{postAssignmentModel.AssignmentDate}', PREV_POST_ID={postAssignmentModel.PreviousPostId}, NEW_POST_ID={postAssignmentModel.NewPostId}, ORDER_NUMBER={postAssignmentModel.OrderNumber} WHERE ID={postAssignmentModel.Id};");
 
             try
             {
@@ -149,15 +151,15 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         }
 
         /// <summary>
-        /// Удалить благодарность по id
+        /// Удалить присвоение звания по id
         /// </summary>
-        /// <param name="id">id контракта</param>
+        /// <param name="id">id присвоения звания</param>
         /// <returns></returns>
         public bool DeleteById(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"DELETE FROM GRATITUDE WHERE ID = '{id}'");
+            var cmd = new SqlCommand($@"DELETE FROM POST_ASSIGNMENT WHERE ID = '{id}'");
             try
             {
                 DataSingleton.Instance.DatabaseConnector.Execute(cmd);
@@ -172,17 +174,17 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         }
 
         /// <summary>
-        /// Возвращает список благодарностей по id служащего
+        /// Возвращает список присвоений званий по id служащего
         /// </summary>
         /// <param name="id">id служащего</param>
         /// <returns></returns>
-        public ObservableCollection<GratitudeModel> SelectByEmployeeId(long? id)
+        public ObservableCollection<PostAssignmentModel> SelectByEmployeeId(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var gratitudeList = new ObservableCollection<GratitudeModel>();
+            var postAssignmentList = new ObservableCollection<PostAssignmentModel>();
 
-            var cmd = new SqlCommand($"SELECT * FROM GRATITUDE WHERE EMPLOYEE_ID = {id}");
+            var cmd = new SqlCommand($"SELECT * FROM POST_ASSIGNMENT WHERE EMPLOYEE_ID = {id}");
 
             try
             {
@@ -190,15 +192,18 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
                 while (sqlDataReader.Read())
                 {
-                    var gratitudeModel = new GratitudeModel
+                    var postAssignment = new PostAssignmentModel
                     {
                         Id = Int64.Parse(sqlDataReader[0].ToString()),
                         EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
                         Description = sqlDataReader[2].ToString(),
-                        GratitudeDate = DateTime.Parse(sqlDataReader[3].ToString())
+                        AssignmentDate = DateTime.Parse(sqlDataReader[3].ToString()),
+                        PreviousPostId = int.Parse(sqlDataReader[4].ToString()),
+                        NewPostId = int.Parse(sqlDataReader[5].ToString()),
+                        OrderNumber = int.Parse(sqlDataReader[6].ToString())
                     };
 
-                    gratitudeList.Add(gratitudeModel);
+                    postAssignmentList.Add(postAssignment);
                 }
                 sqlDataReader.Close();
 
@@ -209,10 +214,8 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;
                 return null;
             }
-            return gratitudeList;
+            return postAssignmentList;
         }
-
-
         #endregion
 
         #region IDisposable implementation
@@ -234,7 +237,6 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             _disposed = true;
         }
 
-        #endregion
-
+        #endregion 
     }
 }

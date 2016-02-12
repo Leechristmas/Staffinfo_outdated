@@ -7,16 +7,11 @@ namespace Staffinfo.Desktop.Model
     /// </summary>
     public class MilitaryProcessModel
     {
-        public MilitaryProcessModel()
-        {
-                
-        }
-
         #region Properties
 
         public long Id { get; set; }
         public long EmployeeId { get; set; }
-        public string Descripion { get; set; }
+        public string Description { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime FinishDate { get; set; }
         public long MilitaryUnitId { get; set; }

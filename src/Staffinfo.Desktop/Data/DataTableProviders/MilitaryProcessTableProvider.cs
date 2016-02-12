@@ -8,32 +8,32 @@ using Staffinfo.Desktop.Properties;
 namespace Staffinfo.Desktop.Data.DataTableProviders
 {
     /// <summary>
-    /// Компонент доступа к таблице GRATITUDE
+    /// Компонент доступа к таблице MILITARY_PROCESS
     /// </summary>
-    public class GratitudeTableProvider: IWritableDirectoryTableContract<GratitudeModel>, IDisposable
+    public class MilitaryProcessTableProvider: IWritableDirectoryTableContract<MilitaryProcessModel>, IDisposable
     {
         public string ErrorInfo { get; set; }
 
         #region IWritableDirectoryTableContract
 
         /// <summary>
-        /// Сохранить запись о вынесении благодарности в БД
+        /// Сохранить запись о прохождении службы
         /// </summary>
-        /// <param name="gratitude">Вынесение благодарности</param>
+        /// <param name="militaryProcess">прохождение службы</param>
         /// <returns></returns>
-        public GratitudeModel Save(GratitudeModel gratitude)
+        public MilitaryProcessModel Save(MilitaryProcessModel militaryProcess)
         {
-            if (gratitude == null) throw new ArgumentNullException(nameof(gratitude), Resources.DatabaseConnector_parameter_cannot_be_null);
+            if (militaryProcess == null) throw new ArgumentNullException(nameof(militaryProcess), Resources.DatabaseConnector_parameter_cannot_be_null);
 
             var cmd =
-                new SqlCommand($@"INSERT INTO GRATITUDE VALUES({gratitude.EmployeeId}, '{gratitude.Description}', '{gratitude.GratitudeDate}'); SELECT MAX(ID) FROM GRATITUDE;");
+                new SqlCommand($@"INSERT INTO MILITARY_PROCESS VALUES({militaryProcess.EmployeeId}, '{militaryProcess.Description}', '{militaryProcess.StartDate}', '{militaryProcess.FinishDate}', {militaryProcess.MilitaryUnitId}); SELECT MAX(ID) FROM MILITARY_UNIT_ID;");
 
             try
             {
                 var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
 
                 sqlDataReader.Read();
-                gratitude.Id = Int64.Parse(sqlDataReader[0].ToString());
+                militaryProcess.Id = Int64.Parse(sqlDataReader[0].ToString());
                 sqlDataReader.Close();
 
                 ErrorInfo = null;
@@ -44,33 +44,35 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 return null;
             }
 
-            return gratitude;
+            return militaryProcess;
         }
 
         /// <summary>
-        /// Возвращает благодарность по id
+        /// Возвращает прохождение службы по id
         /// </summary>
-        /// <param name="id">id контракта</param>
+        /// <param name="id">id прохождения службы</param>
         /// <returns></returns>
-        public GratitudeModel Select(long? id)
+        public MilitaryProcessModel Select(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"SELECT * FROM GRATITUDE WHERE ID={id};");
+            var cmd = new SqlCommand($@"SELECT * FROM MILITARY_PROCESS WHERE ID={id};");
 
-            GratitudeModel gratitudeModel = null;
+            MilitaryProcessModel militaryProcessModel = null;
 
             try
             {
                 var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
                 sqlDataReader.Read();
 
-                gratitudeModel = new GratitudeModel
+                militaryProcessModel = new MilitaryProcessModel
                 {
                     Id = Int64.Parse(sqlDataReader[0].ToString()),
                     EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
                     Description = sqlDataReader[2].ToString(),
-                    GratitudeDate = DateTime.Parse(sqlDataReader[3].ToString())
+                    StartDate = DateTime.Parse(sqlDataReader[3].ToString()),
+                    FinishDate = DateTime.Parse(sqlDataReader[4].ToString()),
+                    MilitaryUnitId = int.Parse(sqlDataReader[5].ToString())
                 };
                 sqlDataReader.Close();
 
@@ -82,18 +84,18 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 return null;
             }
 
-            return gratitudeModel;
+            return militaryProcessModel;
         }
 
         /// <summary>
-        /// Возвращает список благодарностей
+        /// Возвращает список всех прохождений службы
         /// </summary>
         /// <returns></returns>
-        public ObservableCollection<GratitudeModel> Select()
+        public ObservableCollection<MilitaryProcessModel> Select()
         {
-            var gratitudeList = new ObservableCollection<GratitudeModel>();
+            var militaryProcessList = new ObservableCollection<MilitaryProcessModel>();
 
-            var cmd = new SqlCommand("SELECT * FROM GRATITUDE");
+            var cmd = new SqlCommand("SELECT * FROM MILITARY_PROCESS");
 
             try
             {
@@ -101,15 +103,16 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
                 while (sqlDataReader.Read())
                 {
-                    var gratitudeModel = new GratitudeModel
+                    var militaryProcessModel = new MilitaryProcessModel
                     {
                         Id = Int64.Parse(sqlDataReader[0].ToString()),
                         EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
                         Description = sqlDataReader[2].ToString(),
-                        GratitudeDate = DateTime.Parse(sqlDataReader[3].ToString())
+                        StartDate = DateTime.Parse(sqlDataReader[3].ToString()),
+                        FinishDate = DateTime.Parse(sqlDataReader[4].ToString())
                     };
 
-                    gratitudeList.Add(gratitudeModel);
+                    militaryProcessList.Add(militaryProcessModel);
                 }
                 sqlDataReader.Close();
 
@@ -120,19 +123,19 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;
                 return null;
             }
-            return gratitudeList;
+            return militaryProcessList;
         }
 
         /// <summary>
-        /// Обновить запись о благодарности
+        /// Обновить запись о прохождении службы
         /// </summary>
-        /// <param name="gratitude">Благодарность</param>
+        /// <param name="militaryProcessModel">прохождение службы</param>
         /// <returns></returns>
-        public bool Update(GratitudeModel gratitude)
+        public bool Update(MilitaryProcessModel militaryProcessModel)
         {
-            if (gratitude == null) throw new ArgumentNullException(nameof(gratitude), Resources.DatabaseConnector_parameter_cannot_be_null);
+            if (militaryProcessModel == null) throw new ArgumentNullException(nameof(militaryProcessModel), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"UPDATE GRATITUDE SET EMPLOYEE_ID={gratitude.EmployeeId}, GRATITUDE_DATE='{gratitude.GratitudeDate}', DESCRIPTION='{gratitude.Description}' WHERE ID={gratitude.Id};");
+            var cmd = new SqlCommand($@"UPDATE MILITARY_PROCESS SET EMPLOYEE_ID={militaryProcessModel.EmployeeId}, DESCRIPTION='{militaryProcessModel.Description}', START_DATE='{militaryProcessModel.StartDate}', FINISH_DATE='{militaryProcessModel.FinishDate}', MILITARY_UNIT_ID = {militaryProcessModel.MilitaryUnitId} WHERE ID={militaryProcessModel.Id};");
 
             try
             {
@@ -149,15 +152,15 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         }
 
         /// <summary>
-        /// Удалить благодарность по id
+        /// Удалить прохождение службы по id
         /// </summary>
-        /// <param name="id">id контракта</param>
+        /// <param name="id">id прохождения службы</param>
         /// <returns></returns>
         public bool DeleteById(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"DELETE FROM GRATITUDE WHERE ID = '{id}'");
+            var cmd = new SqlCommand($@"DELETE FROM MILITARY_PROCESS WHERE ID = '{id}'");
             try
             {
                 DataSingleton.Instance.DatabaseConnector.Execute(cmd);
@@ -172,17 +175,17 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         }
 
         /// <summary>
-        /// Возвращает список благодарностей по id служащего
+        /// Возвращает список прохождений службы по id служащего
         /// </summary>
         /// <param name="id">id служащего</param>
         /// <returns></returns>
-        public ObservableCollection<GratitudeModel> SelectByEmployeeId(long? id)
+        public ObservableCollection<MilitaryProcessModel> SelectByEmployeeId(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var gratitudeList = new ObservableCollection<GratitudeModel>();
+            var militaryProcessList = new ObservableCollection<MilitaryProcessModel>();
 
-            var cmd = new SqlCommand($"SELECT * FROM GRATITUDE WHERE EMPLOYEE_ID = {id}");
+            var cmd = new SqlCommand($"SELECT * FROM MILITARY_PROCESS WHERE EMPLOYEE_ID = {id}");
 
             try
             {
@@ -190,15 +193,16 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
                 while (sqlDataReader.Read())
                 {
-                    var gratitudeModel = new GratitudeModel
+                    var militaryProcess = new MilitaryProcessModel
                     {
                         Id = Int64.Parse(sqlDataReader[0].ToString()),
                         EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
                         Description = sqlDataReader[2].ToString(),
-                        GratitudeDate = DateTime.Parse(sqlDataReader[3].ToString())
+                        StartDate = DateTime.Parse(sqlDataReader[3].ToString()),
+                        FinishDate = DateTime.Parse(sqlDataReader[4].ToString())
                     };
 
-                    gratitudeList.Add(gratitudeModel);
+                    militaryProcessList.Add(militaryProcess);
                 }
                 sqlDataReader.Close();
 
@@ -209,10 +213,8 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;
                 return null;
             }
-            return gratitudeList;
+            return militaryProcessList;
         }
-
-
         #endregion
 
         #region IDisposable implementation
@@ -234,7 +236,6 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             _disposed = true;
         }
 
-        #endregion
-
+        #endregion 
     }
 }

@@ -8,32 +8,32 @@ using Staffinfo.Desktop.Properties;
 namespace Staffinfo.Desktop.Data.DataTableProviders
 {
     /// <summary>
-    /// Компонент доступа к таблице GRATITUDE
+    /// Компонент доступа к таблице HOOLIDAY_TIME
     /// </summary>
-    public class GratitudeTableProvider: IWritableDirectoryTableContract<GratitudeModel>, IDisposable
+    public class HolidayTimeTableProvider: IWritableDirectoryTableContract<HolidayTimeModel>, IDisposable
     {
         public string ErrorInfo { get; set; }
 
         #region IWritableDirectoryTableContract
 
         /// <summary>
-        /// Сохранить запись о вынесении благодарности в БД
+        /// Сохранить запись об отпуске
         /// </summary>
-        /// <param name="gratitude">Вынесение благодарности</param>
+        /// <param name="holidayTime">отпуск</param>
         /// <returns></returns>
-        public GratitudeModel Save(GratitudeModel gratitude)
+        public HolidayTimeModel Save(HolidayTimeModel holidayTime)
         {
-            if (gratitude == null) throw new ArgumentNullException(nameof(gratitude), Resources.DatabaseConnector_parameter_cannot_be_null);
+            if (holidayTime == null) throw new ArgumentNullException(nameof(holidayTime), Resources.DatabaseConnector_parameter_cannot_be_null);
 
             var cmd =
-                new SqlCommand($@"INSERT INTO GRATITUDE VALUES({gratitude.EmployeeId}, '{gratitude.Description}', '{gratitude.GratitudeDate}'); SELECT MAX(ID) FROM GRATITUDE;");
+                new SqlCommand($@"INSERT INTO HOLIDAY_TIME VALUES({holidayTime.EmployeeId}, '{holidayTime.Description}', '{holidayTime.StartDate}', '{holidayTime.FinishDate}'); SELECT MAX(ID) FROM HOLIDAY_TIME;");
 
             try
             {
                 var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
 
                 sqlDataReader.Read();
-                gratitude.Id = Int64.Parse(sqlDataReader[0].ToString());
+                holidayTime.Id = Int64.Parse(sqlDataReader[0].ToString());
                 sqlDataReader.Close();
 
                 ErrorInfo = null;
@@ -44,33 +44,34 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 return null;
             }
 
-            return gratitude;
+            return holidayTime;
         }
 
         /// <summary>
-        /// Возвращает благодарность по id
+        /// Возвращает отпуск по id
         /// </summary>
-        /// <param name="id">id контракта</param>
+        /// <param name="id">id отпуска</param>
         /// <returns></returns>
-        public GratitudeModel Select(long? id)
+        public HolidayTimeModel Select(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"SELECT * FROM GRATITUDE WHERE ID={id};");
+            var cmd = new SqlCommand($@"SELECT * FROM HOLIDAY_TIME WHERE ID={id};");
 
-            GratitudeModel gratitudeModel = null;
+            HolidayTimeModel holidayTimeModel = null;
 
             try
             {
                 var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
                 sqlDataReader.Read();
 
-                gratitudeModel = new GratitudeModel
+                holidayTimeModel = new HolidayTimeModel
                 {
                     Id = Int64.Parse(sqlDataReader[0].ToString()),
                     EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
                     Description = sqlDataReader[2].ToString(),
-                    GratitudeDate = DateTime.Parse(sqlDataReader[3].ToString())
+                    StartDate = DateTime.Parse(sqlDataReader[3].ToString()),
+                    FinishDate = DateTime.Parse(sqlDataReader[4].ToString())
                 };
                 sqlDataReader.Close();
 
@@ -82,18 +83,18 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 return null;
             }
 
-            return gratitudeModel;
+            return holidayTimeModel;
         }
 
         /// <summary>
-        /// Возвращает список благодарностей
+        /// Возвращает список отпусков
         /// </summary>
         /// <returns></returns>
-        public ObservableCollection<GratitudeModel> Select()
+        public ObservableCollection<HolidayTimeModel> Select()
         {
-            var gratitudeList = new ObservableCollection<GratitudeModel>();
+            var holidayTimeList = new ObservableCollection<HolidayTimeModel>();
 
-            var cmd = new SqlCommand("SELECT * FROM GRATITUDE");
+            var cmd = new SqlCommand("SELECT * FROM HOLIDAY_TIME");
 
             try
             {
@@ -101,15 +102,16 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
                 while (sqlDataReader.Read())
                 {
-                    var gratitudeModel = new GratitudeModel
+                    var holidayTimeModel = new HolidayTimeModel
                     {
                         Id = Int64.Parse(sqlDataReader[0].ToString()),
                         EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
                         Description = sqlDataReader[2].ToString(),
-                        GratitudeDate = DateTime.Parse(sqlDataReader[3].ToString())
+                        StartDate = DateTime.Parse(sqlDataReader[3].ToString()),
+                        FinishDate = DateTime.Parse(sqlDataReader[4].ToString())
                     };
 
-                    gratitudeList.Add(gratitudeModel);
+                    holidayTimeList.Add(holidayTimeModel);
                 }
                 sqlDataReader.Close();
 
@@ -120,19 +122,19 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;
                 return null;
             }
-            return gratitudeList;
+            return holidayTimeList;
         }
 
         /// <summary>
-        /// Обновить запись о благодарности
+        /// Обновить запись об отпуске
         /// </summary>
-        /// <param name="gratitude">Благодарность</param>
+        /// <param name="holidayTimeModel">отпуск</param>
         /// <returns></returns>
-        public bool Update(GratitudeModel gratitude)
+        public bool Update(HolidayTimeModel holidayTimeModel)
         {
-            if (gratitude == null) throw new ArgumentNullException(nameof(gratitude), Resources.DatabaseConnector_parameter_cannot_be_null);
+            if (holidayTimeModel == null) throw new ArgumentNullException(nameof(holidayTimeModel), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"UPDATE GRATITUDE SET EMPLOYEE_ID={gratitude.EmployeeId}, GRATITUDE_DATE='{gratitude.GratitudeDate}', DESCRIPTION='{gratitude.Description}' WHERE ID={gratitude.Id};");
+            var cmd = new SqlCommand($@"UPDATE HOLIDAY_TIME SET EMPLOYEE_ID={holidayTimeModel.EmployeeId}, DESCRIPTION='{holidayTimeModel.Description}', START_HOLIDAY_DATE='{holidayTimeModel.StartDate}', FINISH_HOLIDAY_DATE='{holidayTimeModel.FinishDate}' WHERE ID={holidayTimeModel.Id};");
 
             try
             {
@@ -149,15 +151,15 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         }
 
         /// <summary>
-        /// Удалить благодарность по id
+        /// Удалить отпуск по id
         /// </summary>
-        /// <param name="id">id контракта</param>
+        /// <param name="id">id отпуска</param>
         /// <returns></returns>
         public bool DeleteById(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"DELETE FROM GRATITUDE WHERE ID = '{id}'");
+            var cmd = new SqlCommand($@"DELETE FROM HOLIDAY_TIME WHERE ID = '{id}'");
             try
             {
                 DataSingleton.Instance.DatabaseConnector.Execute(cmd);
@@ -172,17 +174,17 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         }
 
         /// <summary>
-        /// Возвращает список благодарностей по id служащего
+        /// Возвращает список отпусков по id служащего
         /// </summary>
         /// <param name="id">id служащего</param>
         /// <returns></returns>
-        public ObservableCollection<GratitudeModel> SelectByEmployeeId(long? id)
+        public ObservableCollection<HolidayTimeModel> SelectByEmployeeId(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var gratitudeList = new ObservableCollection<GratitudeModel>();
+            var holidayTimeList = new ObservableCollection<HolidayTimeModel>();
 
-            var cmd = new SqlCommand($"SELECT * FROM GRATITUDE WHERE EMPLOYEE_ID = {id}");
+            var cmd = new SqlCommand($"SELECT * FROM HOLIDAY_TIME WHERE EMPLOYEE_ID = {id}");
 
             try
             {
@@ -190,15 +192,16 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
                 while (sqlDataReader.Read())
                 {
-                    var gratitudeModel = new GratitudeModel
+                    var holidayTime = new HolidayTimeModel
                     {
                         Id = Int64.Parse(sqlDataReader[0].ToString()),
                         EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
                         Description = sqlDataReader[2].ToString(),
-                        GratitudeDate = DateTime.Parse(sqlDataReader[3].ToString())
+                        StartDate = DateTime.Parse(sqlDataReader[3].ToString()),
+                        FinishDate = DateTime.Parse(sqlDataReader[4].ToString())
                     };
 
-                    gratitudeList.Add(gratitudeModel);
+                    holidayTimeList.Add(holidayTime);
                 }
                 sqlDataReader.Close();
 
@@ -209,7 +212,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;
                 return null;
             }
-            return gratitudeList;
+            return holidayTimeList;
         }
 
 
@@ -234,7 +237,6 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             _disposed = true;
         }
 
-        #endregion
-
+        #endregion    
     }
 }
