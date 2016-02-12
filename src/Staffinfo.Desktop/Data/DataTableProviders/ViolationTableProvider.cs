@@ -8,32 +8,32 @@ using Staffinfo.Desktop.Properties;
 namespace Staffinfo.Desktop.Data.DataTableProviders
 {
     /// <summary>
-    /// Компонент доступа к таблице POST_ASSIGNMENT
+    /// Компонент доступа к таблице VIOLATION
     /// </summary>
-    public class PostAssignmentTableProvider: IWritableDirectoryTableContract<PostAssignmentModel>, IDisposable
+    public class ViolationTableProvider: IWritableDirectoryTableContract<ViolationModel>, IDisposable
     {
         public string ErrorInfo { get; set; }
 
-        #region IWritableDirectoryTableContract
+        #region IWritableDirectoryTableContract implementation
 
         /// <summary>
-        /// Сохранить запись о присвоении должности
+        /// Сохранить нарушение
         /// </summary>
-        /// <param name="postAssignmentModel">присвоение звания</param>
+        /// <param name="violation">нарушение</param>
         /// <returns></returns>
-        public PostAssignmentModel Save(PostAssignmentModel postAssignmentModel)
+        public ViolationModel Save(ViolationModel violation)
         {
-            if (postAssignmentModel == null) throw new ArgumentNullException(nameof(postAssignmentModel), Resources.DatabaseConnector_parameter_cannot_be_null);
+            if (violation == null) throw new ArgumentNullException(nameof(violation), Resources.DatabaseConnector_parameter_cannot_be_null);
 
             var cmd =
-                new SqlCommand($@"INSERT INTO POST_ASSIGNMENT VALUES({postAssignmentModel.EmployeeId}, '{postAssignmentModel.Description}', '{postAssignmentModel.AssignmentDate}', {postAssignmentModel.PreviousPostId}, {postAssignmentModel.NewPostId}, {postAssignmentModel.OrderNumber}); SELECT MAX(ID) FROM POST_ASSIGNMENT;");
+                new SqlCommand($@"INSERT INTO VIOLATION VALUES({violation.EmployeeId}, '{violation.Description}', '{violation.ViolationDate}'); SELECT MAX(ID) FROM VIOLATION;");
 
             try
             {
                 var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
 
                 sqlDataReader.Read();
-                postAssignmentModel.Id = Int64.Parse(sqlDataReader[0].ToString());
+                violation.Id = Int64.Parse(sqlDataReader[0].ToString());
                 sqlDataReader.Close();
 
                 ErrorInfo = null;
@@ -44,36 +44,33 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 return null;
             }
 
-            return postAssignmentModel;
+            return violation;
         }
 
         /// <summary>
-        /// Возвращает присвоение должности по id
+        /// Возвращает нарушение по id
         /// </summary>
-        /// <param name="id">id присвоения звания</param>
+        /// <param name="id">id нарушения</param>
         /// <returns></returns>
-        public PostAssignmentModel Select(long? id)
+        public ViolationModel Select(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"SELECT * FROM POST_ASSIGNMENT WHERE ID={id};");
+            var cmd = new SqlCommand($@"SELECT * FROM VIOLATION WHERE ID={id};");
 
-            PostAssignmentModel postAssignmentModel = null;
+            ViolationModel violationModelModel = null;
 
             try
             {
                 var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
                 sqlDataReader.Read();
 
-                postAssignmentModel = new PostAssignmentModel
+                violationModelModel = new ViolationModel
                 {
                     Id = Int64.Parse(sqlDataReader[0].ToString()),
                     EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
                     Description = sqlDataReader[2].ToString(),
-                    AssignmentDate = DateTime.Parse(sqlDataReader[3].ToString()),
-                    PreviousPostId = int.Parse(sqlDataReader[4].ToString()),
-                    NewPostId = int.Parse(sqlDataReader[5].ToString()),
-                    OrderNumber = int.Parse(sqlDataReader[6].ToString())
+                    ViolationDate = DateTime.Parse(sqlDataReader[3].ToString())
                 };
                 sqlDataReader.Close();
 
@@ -85,18 +82,18 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 return null;
             }
 
-            return postAssignmentModel;
+            return violationModelModel;
         }
 
         /// <summary>
-        /// Возвращает список всех присвоений должности
+        /// Возвращает список нарушений
         /// </summary>
         /// <returns></returns>
-        public ObservableCollection<PostAssignmentModel> Select()
+        public ObservableCollection<ViolationModel> Select()
         {
-            var postAssignmentList = new ObservableCollection<PostAssignmentModel>();
+            var violationList = new ObservableCollection<ViolationModel>();
 
-            var cmd = new SqlCommand("SELECT * FROM POST_ASSIGNMENT");
+            var cmd = new SqlCommand("SELECT * FROM VIOLATION");
 
             try
             {
@@ -104,18 +101,15 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
                 while (sqlDataReader.Read())
                 {
-                    var postAssignmentModel = new PostAssignmentModel
+                    var violation = new ViolationModel
                     {
                         Id = Int64.Parse(sqlDataReader[0].ToString()),
                         EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
                         Description = sqlDataReader[2].ToString(),
-                        AssignmentDate = DateTime.Parse(sqlDataReader[3].ToString()),
-                        PreviousPostId = int.Parse(sqlDataReader[4].ToString()),
-                        NewPostId = int.Parse(sqlDataReader[5].ToString()),
-                        OrderNumber = int.Parse(sqlDataReader[6].ToString())
+                        ViolationDate = DateTime.Parse(sqlDataReader[3].ToString())
                     };
 
-                    postAssignmentList.Add(postAssignmentModel);
+                    violationList.Add(violation);
                 }
                 sqlDataReader.Close();
 
@@ -126,19 +120,19 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;
                 return null;
             }
-            return postAssignmentList;
+            return violationList;
         }
 
         /// <summary>
-        /// Обновить запись о присвоении должности
+        /// Обновить запись о нарушении
         /// </summary>
-        /// <param name="postAssignmentModel">присвоение звания</param>
+        /// <param name="violation">нарушение</param>
         /// <returns></returns>
-        public bool Update(PostAssignmentModel postAssignmentModel)
+        public bool Update(ViolationModel violation)
         {
-            if (postAssignmentModel == null) throw new ArgumentNullException(nameof(postAssignmentModel), Resources.DatabaseConnector_parameter_cannot_be_null);
+            if (violation == null) throw new ArgumentNullException(nameof(violation), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"UPDATE POST_ASSIGNMENT SET EMPLOYEE_ID={postAssignmentModel.EmployeeId}, DESCRIPTION='{postAssignmentModel.Description}', ASSIGNMENT_DATE='{postAssignmentModel.AssignmentDate}', PREV_POST_ID={postAssignmentModel.PreviousPostId}, NEW_POST_ID={postAssignmentModel.NewPostId}, ORDER_NUMBER={postAssignmentModel.OrderNumber} WHERE ID={postAssignmentModel.Id};");
+            var cmd = new SqlCommand($@"UPDATE VIOLATION SET VIOLATOR_ID={violation.EmployeeId}, DESCRIPTION='{violation.Description}', VIOLATION_DATE='{violation.ViolationDate}' WHERE ID={violation.Id};");
 
             try
             {
@@ -155,15 +149,15 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         }
 
         /// <summary>
-        /// Удалить присвоение должности по id
+        /// Удалить нарушение по id
         /// </summary>
-        /// <param name="id">id присвоения должности</param>
+        /// <param name="id">id нарушения</param>
         /// <returns></returns>
         public bool DeleteById(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"DELETE FROM POST_ASSIGNMENT WHERE ID = '{id}'");
+            var cmd = new SqlCommand($@"DELETE FROM VIOLATION WHERE ID = '{id}'");
             try
             {
                 DataSingleton.Instance.DatabaseConnector.Execute(cmd);
@@ -178,17 +172,17 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         }
 
         /// <summary>
-        /// Возвращает список присвоений должности по id служащего
+        /// Возвращает список нарушений по id служащего
         /// </summary>
         /// <param name="id">id служащего</param>
         /// <returns></returns>
-        public ObservableCollection<PostAssignmentModel> SelectByEmployeeId(long? id)
+        public ObservableCollection<ViolationModel> SelectByEmployeeId(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var postAssignmentList = new ObservableCollection<PostAssignmentModel>();
+            var violationList = new ObservableCollection<ViolationModel>();
 
-            var cmd = new SqlCommand($"SELECT * FROM POST_ASSIGNMENT WHERE EMPLOYEE_ID = {id}");
+            var cmd = new SqlCommand($"SELECT * FROM VIOLATION WHERE EMPLOYEE_ID = {id}");
 
             try
             {
@@ -196,18 +190,15 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
                 while (sqlDataReader.Read())
                 {
-                    var postAssignment = new PostAssignmentModel
+                    var violationModel = new ViolationModel
                     {
                         Id = Int64.Parse(sqlDataReader[0].ToString()),
                         EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
                         Description = sqlDataReader[2].ToString(),
-                        AssignmentDate = DateTime.Parse(sqlDataReader[3].ToString()),
-                        PreviousPostId = int.Parse(sqlDataReader[4].ToString()),
-                        NewPostId = int.Parse(sqlDataReader[5].ToString()),
-                        OrderNumber = int.Parse(sqlDataReader[6].ToString())
+                        ViolationDate = DateTime.Parse(sqlDataReader[3].ToString())
                     };
 
-                    postAssignmentList.Add(postAssignment);
+                    violationList.Add(violationModel);
                 }
                 sqlDataReader.Close();
 
@@ -218,8 +209,9 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;
                 return null;
             }
-            return postAssignmentList;
+            return violationList;
         }
+
         #endregion
 
         #region IDisposable implementation
@@ -241,6 +233,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             _disposed = true;
         }
 
-        #endregion 
+        #endregion
+
     }
 }

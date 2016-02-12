@@ -8,32 +8,32 @@ using Staffinfo.Desktop.Properties;
 namespace Staffinfo.Desktop.Data.DataTableProviders
 {
     /// <summary>
-    /// Компонент доступа к таблице POST_ASSIGNMENT
+    /// Компонент доступа к таблице REPRIMAND
     /// </summary>
-    public class PostAssignmentTableProvider: IWritableDirectoryTableContract<PostAssignmentModel>, IDisposable
+    public class ReprimandTableProvider: IReadOnlyTableContract<ReprimandModel>, IDisposable
     {
         public string ErrorInfo { get; set; }
 
-        #region IWritableDirectoryTableContract
+        #region IWritableDirectoryTableContract implementation
 
         /// <summary>
-        /// Сохранить запись о присвоении должности
+        /// Сохранить выговор
         /// </summary>
-        /// <param name="postAssignmentModel">присвоение звания</param>
+        /// <param name="reprimand">выговор</param>
         /// <returns></returns>
-        public PostAssignmentModel Save(PostAssignmentModel postAssignmentModel)
+        public ReprimandModel Save(ReprimandModel reprimand)
         {
-            if (postAssignmentModel == null) throw new ArgumentNullException(nameof(postAssignmentModel), Resources.DatabaseConnector_parameter_cannot_be_null);
+            if (reprimand == null) throw new ArgumentNullException(nameof(reprimand), Resources.DatabaseConnector_parameter_cannot_be_null);
 
             var cmd =
-                new SqlCommand($@"INSERT INTO POST_ASSIGNMENT VALUES({postAssignmentModel.EmployeeId}, '{postAssignmentModel.Description}', '{postAssignmentModel.AssignmentDate}', {postAssignmentModel.PreviousPostId}, {postAssignmentModel.NewPostId}, {postAssignmentModel.OrderNumber}); SELECT MAX(ID) FROM POST_ASSIGNMENT;");
+                new SqlCommand($@"INSERT INTO REPRIMAND VALUES({reprimand.EmployeeId}, {reprimand.ReprimandSum}, '{reprimand.ReprimandDate}', '{reprimand.Description}'); SELECT MAX(ID) FROM REPRIMAND;");
 
             try
             {
                 var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
 
                 sqlDataReader.Read();
-                postAssignmentModel.Id = Int64.Parse(sqlDataReader[0].ToString());
+                reprimand.Id = Int64.Parse(sqlDataReader[0].ToString());
                 sqlDataReader.Close();
 
                 ErrorInfo = null;
@@ -44,36 +44,34 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 return null;
             }
 
-            return postAssignmentModel;
+            return reprimand;
         }
 
         /// <summary>
-        /// Возвращает присвоение должности по id
+        /// Возвращает выговор по id
         /// </summary>
-        /// <param name="id">id присвоения звания</param>
+        /// <param name="id">id выговора</param>
         /// <returns></returns>
-        public PostAssignmentModel Select(long? id)
+        public ReprimandModel Select(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"SELECT * FROM POST_ASSIGNMENT WHERE ID={id};");
+            var cmd = new SqlCommand($@"SELECT * FROM REPRIMAND WHERE ID={id};");
 
-            PostAssignmentModel postAssignmentModel = null;
+            ReprimandModel reprimandModel = null;
 
             try
             {
                 var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
                 sqlDataReader.Read();
 
-                postAssignmentModel = new PostAssignmentModel
+                reprimandModel = new ReprimandModel
                 {
                     Id = Int64.Parse(sqlDataReader[0].ToString()),
                     EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
-                    Description = sqlDataReader[2].ToString(),
-                    AssignmentDate = DateTime.Parse(sqlDataReader[3].ToString()),
-                    PreviousPostId = int.Parse(sqlDataReader[4].ToString()),
-                    NewPostId = int.Parse(sqlDataReader[5].ToString()),
-                    OrderNumber = int.Parse(sqlDataReader[6].ToString())
+                    ReprimandSum = decimal.Parse(sqlDataReader[2].ToString()),
+                    ReprimandDate = DateTime.Parse(sqlDataReader[3].ToString()),
+                    Description = sqlDataReader[4].ToString()
                 };
                 sqlDataReader.Close();
 
@@ -85,18 +83,18 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 return null;
             }
 
-            return postAssignmentModel;
+            return reprimandModel;
         }
 
         /// <summary>
-        /// Возвращает список всех присвоений должности
+        /// Возвращает список выговоров
         /// </summary>
         /// <returns></returns>
-        public ObservableCollection<PostAssignmentModel> Select()
+        public ObservableCollection<ReprimandModel> Select()
         {
-            var postAssignmentList = new ObservableCollection<PostAssignmentModel>();
+            var reprimandList = new ObservableCollection<ReprimandModel>();
 
-            var cmd = new SqlCommand("SELECT * FROM POST_ASSIGNMENT");
+            var cmd = new SqlCommand("SELECT * FROM REPRIMAND");
 
             try
             {
@@ -104,18 +102,16 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
                 while (sqlDataReader.Read())
                 {
-                    var postAssignmentModel = new PostAssignmentModel
+                    var reprimand = new ReprimandModel
                     {
                         Id = Int64.Parse(sqlDataReader[0].ToString()),
                         EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
-                        Description = sqlDataReader[2].ToString(),
-                        AssignmentDate = DateTime.Parse(sqlDataReader[3].ToString()),
-                        PreviousPostId = int.Parse(sqlDataReader[4].ToString()),
-                        NewPostId = int.Parse(sqlDataReader[5].ToString()),
-                        OrderNumber = int.Parse(sqlDataReader[6].ToString())
+                        ReprimandSum = decimal.Parse(sqlDataReader[2].ToString()),
+                        ReprimandDate = DateTime.Parse(sqlDataReader[3].ToString()),
+                        Description = sqlDataReader[4].ToString()
                     };
 
-                    postAssignmentList.Add(postAssignmentModel);
+                    reprimandList.Add(reprimand);
                 }
                 sqlDataReader.Close();
 
@@ -126,19 +122,19 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;
                 return null;
             }
-            return postAssignmentList;
+            return reprimandList;
         }
 
         /// <summary>
-        /// Обновить запись о присвоении должности
+        /// Обновить запись о выговоре
         /// </summary>
-        /// <param name="postAssignmentModel">присвоение звания</param>
+        /// <param name="reprimand">Контракт</param>
         /// <returns></returns>
-        public bool Update(PostAssignmentModel postAssignmentModel)
+        public bool Update(ReprimandModel reprimand)
         {
-            if (postAssignmentModel == null) throw new ArgumentNullException(nameof(postAssignmentModel), Resources.DatabaseConnector_parameter_cannot_be_null);
+            if (reprimand == null) throw new ArgumentNullException(nameof(reprimand), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"UPDATE POST_ASSIGNMENT SET EMPLOYEE_ID={postAssignmentModel.EmployeeId}, DESCRIPTION='{postAssignmentModel.Description}', ASSIGNMENT_DATE='{postAssignmentModel.AssignmentDate}', PREV_POST_ID={postAssignmentModel.PreviousPostId}, NEW_POST_ID={postAssignmentModel.NewPostId}, ORDER_NUMBER={postAssignmentModel.OrderNumber} WHERE ID={postAssignmentModel.Id};");
+            var cmd = new SqlCommand($@"UPDATE REPRIMAND SET EMPLOYEE_ID={reprimand.EmployeeId}, SUM_OF_REPRIMAND={reprimand.ReprimandSum}, REPRIMAND_DATE='{reprimand.ReprimandDate}', DESCRIPTION='{reprimand.Description}' WHERE ID={reprimand.Id};");
 
             try
             {
@@ -155,15 +151,15 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         }
 
         /// <summary>
-        /// Удалить присвоение должности по id
+        /// Удалить выговор по id
         /// </summary>
-        /// <param name="id">id присвоения должности</param>
+        /// <param name="id">id выговора</param>
         /// <returns></returns>
         public bool DeleteById(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"DELETE FROM POST_ASSIGNMENT WHERE ID = '{id}'");
+            var cmd = new SqlCommand($@"DELETE FROM REPRIMAND WHERE ID = '{id}'");
             try
             {
                 DataSingleton.Instance.DatabaseConnector.Execute(cmd);
@@ -178,17 +174,17 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         }
 
         /// <summary>
-        /// Возвращает список присвоений должности по id служащего
+        /// Возвращает список выговоров по id служащего
         /// </summary>
         /// <param name="id">id служащего</param>
         /// <returns></returns>
-        public ObservableCollection<PostAssignmentModel> SelectByEmployeeId(long? id)
+        public ObservableCollection<ReprimandModel> SelectByEmployeeId(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var postAssignmentList = new ObservableCollection<PostAssignmentModel>();
+            var reprimandList = new ObservableCollection<ReprimandModel>();
 
-            var cmd = new SqlCommand($"SELECT * FROM POST_ASSIGNMENT WHERE EMPLOYEE_ID = {id}");
+            var cmd = new SqlCommand($"SELECT * FROM REPRIMAND WHERE EMPLOYEE_ID = {id}");
 
             try
             {
@@ -196,18 +192,16 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
                 while (sqlDataReader.Read())
                 {
-                    var postAssignment = new PostAssignmentModel
+                    var reprimandModel = new ReprimandModel
                     {
                         Id = Int64.Parse(sqlDataReader[0].ToString()),
                         EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
-                        Description = sqlDataReader[2].ToString(),
-                        AssignmentDate = DateTime.Parse(sqlDataReader[3].ToString()),
-                        PreviousPostId = int.Parse(sqlDataReader[4].ToString()),
-                        NewPostId = int.Parse(sqlDataReader[5].ToString()),
-                        OrderNumber = int.Parse(sqlDataReader[6].ToString())
+                        ReprimandSum = decimal.Parse(sqlDataReader[2].ToString()),
+                        ReprimandDate = DateTime.Parse(sqlDataReader[3].ToString()),
+                        Description = sqlDataReader[4].ToString()
                     };
 
-                    postAssignmentList.Add(postAssignment);
+                    reprimandList.Add(reprimandModel);
                 }
                 sqlDataReader.Close();
 
@@ -218,8 +212,9 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;
                 return null;
             }
-            return postAssignmentList;
+            return reprimandList;
         }
+
         #endregion
 
         #region IDisposable implementation
@@ -241,6 +236,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             _disposed = true;
         }
 
-        #endregion 
+        #endregion
+
     }
 }

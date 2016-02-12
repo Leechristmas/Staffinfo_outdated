@@ -7,11 +7,6 @@ namespace Staffinfo.Desktop.Model
     /// </summary>
     public class RankAssignmentModel
     {
-        public RankAssignmentModel()
-        {
-                
-        }
-
         #region Properties
 
         public long Id { get; set; }
@@ -19,7 +14,7 @@ namespace Staffinfo.Desktop.Model
         public long PreviousRankId { get; set; }
         public long NewRankId { get; set; }
         public string Description { get; set; }
-        public ushort OrderNumber { get; set; }
+        public int OrderNumber { get; set; }
         public DateTime AssignmentDate { get; set; }
 
         #endregion

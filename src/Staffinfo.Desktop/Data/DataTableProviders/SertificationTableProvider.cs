@@ -8,32 +8,32 @@ using Staffinfo.Desktop.Properties;
 namespace Staffinfo.Desktop.Data.DataTableProviders
 {
     /// <summary>
-    /// Компонент доступа к таблице POST_ASSIGNMENT
+    /// Компонент доступа к таблице SERTIFICATION
     /// </summary>
-    public class PostAssignmentTableProvider: IWritableDirectoryTableContract<PostAssignmentModel>, IDisposable
+    public class SertificationTableProvider: IWritableDirectoryTableContract<SertificationModel>, IDisposable
     {
         public string ErrorInfo { get; set; }
 
-        #region IWritableDirectoryTableContract
+        #region IWritableDirectoryTableContract implementation
 
         /// <summary>
-        /// Сохранить запись о присвоении должности
+        /// Сохранить аттестацию
         /// </summary>
-        /// <param name="postAssignmentModel">присвоение звания</param>
+        /// <param name="sertification">аттестация</param>
         /// <returns></returns>
-        public PostAssignmentModel Save(PostAssignmentModel postAssignmentModel)
+        public SertificationModel Save(SertificationModel sertification)
         {
-            if (postAssignmentModel == null) throw new ArgumentNullException(nameof(postAssignmentModel), Resources.DatabaseConnector_parameter_cannot_be_null);
+            if (sertification == null) throw new ArgumentNullException(nameof(sertification), Resources.DatabaseConnector_parameter_cannot_be_null);
 
             var cmd =
-                new SqlCommand($@"INSERT INTO POST_ASSIGNMENT VALUES({postAssignmentModel.EmployeeId}, '{postAssignmentModel.Description}', '{postAssignmentModel.AssignmentDate}', {postAssignmentModel.PreviousPostId}, {postAssignmentModel.NewPostId}, {postAssignmentModel.OrderNumber}); SELECT MAX(ID) FROM POST_ASSIGNMENT;");
+                new SqlCommand($@"INSERT INTO SERTIFICATION VALUES({sertification.EmployeeId}, '{sertification.SertificationDate}', '{sertification.Description}'); SELECT MAX(ID) FROM SERTIFICATION;");
 
             try
             {
                 var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
 
                 sqlDataReader.Read();
-                postAssignmentModel.Id = Int64.Parse(sqlDataReader[0].ToString());
+                sertification.Id = Int64.Parse(sqlDataReader[0].ToString());
                 sqlDataReader.Close();
 
                 ErrorInfo = null;
@@ -44,36 +44,33 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 return null;
             }
 
-            return postAssignmentModel;
+            return sertification;
         }
 
         /// <summary>
-        /// Возвращает присвоение должности по id
+        /// Возвращает аттестацию по id
         /// </summary>
-        /// <param name="id">id присвоения звания</param>
+        /// <param name="id">id аттестации</param>
         /// <returns></returns>
-        public PostAssignmentModel Select(long? id)
+        public SertificationModel Select(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"SELECT * FROM POST_ASSIGNMENT WHERE ID={id};");
+            var cmd = new SqlCommand($@"SELECT * FROM SERTIFICATION WHERE ID={id};");
 
-            PostAssignmentModel postAssignmentModel = null;
+            SertificationModel sertificationModel = null;
 
             try
             {
                 var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
                 sqlDataReader.Read();
 
-                postAssignmentModel = new PostAssignmentModel
+                sertificationModel = new SertificationModel
                 {
                     Id = Int64.Parse(sqlDataReader[0].ToString()),
                     EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
-                    Description = sqlDataReader[2].ToString(),
-                    AssignmentDate = DateTime.Parse(sqlDataReader[3].ToString()),
-                    PreviousPostId = int.Parse(sqlDataReader[4].ToString()),
-                    NewPostId = int.Parse(sqlDataReader[5].ToString()),
-                    OrderNumber = int.Parse(sqlDataReader[6].ToString())
+                    SertificationDate = DateTime.Parse(sqlDataReader[2].ToString()),
+                    Description = sqlDataReader[3].ToString()
                 };
                 sqlDataReader.Close();
 
@@ -85,18 +82,18 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 return null;
             }
 
-            return postAssignmentModel;
+            return sertificationModel;
         }
 
         /// <summary>
-        /// Возвращает список всех присвоений должности
+        /// Возвращает список аттестаций
         /// </summary>
         /// <returns></returns>
-        public ObservableCollection<PostAssignmentModel> Select()
+        public ObservableCollection<SertificationModel> Select()
         {
-            var postAssignmentList = new ObservableCollection<PostAssignmentModel>();
+            var sertificationList = new ObservableCollection<SertificationModel>();
 
-            var cmd = new SqlCommand("SELECT * FROM POST_ASSIGNMENT");
+            var cmd = new SqlCommand("SELECT * FROM SERTIFICATION");
 
             try
             {
@@ -104,18 +101,15 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
                 while (sqlDataReader.Read())
                 {
-                    var postAssignmentModel = new PostAssignmentModel
+                    var sertification = new SertificationModel
                     {
                         Id = Int64.Parse(sqlDataReader[0].ToString()),
                         EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
-                        Description = sqlDataReader[2].ToString(),
-                        AssignmentDate = DateTime.Parse(sqlDataReader[3].ToString()),
-                        PreviousPostId = int.Parse(sqlDataReader[4].ToString()),
-                        NewPostId = int.Parse(sqlDataReader[5].ToString()),
-                        OrderNumber = int.Parse(sqlDataReader[6].ToString())
+                        SertificationDate = DateTime.Parse(sqlDataReader[2].ToString()),
+                        Description = sqlDataReader[4].ToString()
                     };
 
-                    postAssignmentList.Add(postAssignmentModel);
+                    sertificationList.Add(sertification);
                 }
                 sqlDataReader.Close();
 
@@ -126,19 +120,19 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;
                 return null;
             }
-            return postAssignmentList;
+            return sertificationList;
         }
 
         /// <summary>
-        /// Обновить запись о присвоении должности
+        /// Обновить запись об аттестации
         /// </summary>
-        /// <param name="postAssignmentModel">присвоение звания</param>
+        /// <param name="sertification">аттестация</param>
         /// <returns></returns>
-        public bool Update(PostAssignmentModel postAssignmentModel)
+        public bool Update(SertificationModel sertification)
         {
-            if (postAssignmentModel == null) throw new ArgumentNullException(nameof(postAssignmentModel), Resources.DatabaseConnector_parameter_cannot_be_null);
+            if (sertification == null) throw new ArgumentNullException(nameof(sertification), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"UPDATE POST_ASSIGNMENT SET EMPLOYEE_ID={postAssignmentModel.EmployeeId}, DESCRIPTION='{postAssignmentModel.Description}', ASSIGNMENT_DATE='{postAssignmentModel.AssignmentDate}', PREV_POST_ID={postAssignmentModel.PreviousPostId}, NEW_POST_ID={postAssignmentModel.NewPostId}, ORDER_NUMBER={postAssignmentModel.OrderNumber} WHERE ID={postAssignmentModel.Id};");
+            var cmd = new SqlCommand($@"UPDATE SERTIFICATION SET EMPLOYEE_ID={sertification.EmployeeId}, SERTIFICATION_DATE='{sertification.SertificationDate}', DESCRIPTION='{sertification.Description}' WHERE ID={sertification.Id};");
 
             try
             {
@@ -155,15 +149,15 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         }
 
         /// <summary>
-        /// Удалить присвоение должности по id
+        /// Удалить аттестацию по id
         /// </summary>
-        /// <param name="id">id присвоения должности</param>
+        /// <param name="id">id аттестации</param>
         /// <returns></returns>
         public bool DeleteById(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"DELETE FROM POST_ASSIGNMENT WHERE ID = '{id}'");
+            var cmd = new SqlCommand($@"DELETE FROM SERTIFICATION WHERE ID = '{id}'");
             try
             {
                 DataSingleton.Instance.DatabaseConnector.Execute(cmd);
@@ -178,17 +172,17 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         }
 
         /// <summary>
-        /// Возвращает список присвоений должности по id служащего
+        /// Возвращает список аттестаций по id служащего
         /// </summary>
         /// <param name="id">id служащего</param>
         /// <returns></returns>
-        public ObservableCollection<PostAssignmentModel> SelectByEmployeeId(long? id)
+        public ObservableCollection<SertificationModel> SelectByEmployeeId(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var postAssignmentList = new ObservableCollection<PostAssignmentModel>();
+            var sertificationList = new ObservableCollection<SertificationModel>();
 
-            var cmd = new SqlCommand($"SELECT * FROM POST_ASSIGNMENT WHERE EMPLOYEE_ID = {id}");
+            var cmd = new SqlCommand($"SELECT * FROM SERTIFICATION WHERE EMPLOYEE_ID = {id}");
 
             try
             {
@@ -196,18 +190,15 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
                 while (sqlDataReader.Read())
                 {
-                    var postAssignment = new PostAssignmentModel
+                    var sertificationModel = new SertificationModel
                     {
                         Id = Int64.Parse(sqlDataReader[0].ToString()),
                         EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
-                        Description = sqlDataReader[2].ToString(),
-                        AssignmentDate = DateTime.Parse(sqlDataReader[3].ToString()),
-                        PreviousPostId = int.Parse(sqlDataReader[4].ToString()),
-                        NewPostId = int.Parse(sqlDataReader[5].ToString()),
-                        OrderNumber = int.Parse(sqlDataReader[6].ToString())
+                        SertificationDate = DateTime.Parse(sqlDataReader[2].ToString()),
+                        Description = sqlDataReader[3].ToString()
                     };
 
-                    postAssignmentList.Add(postAssignment);
+                    sertificationList.Add(sertificationModel);
                 }
                 sqlDataReader.Close();
 
@@ -218,8 +209,9 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;
                 return null;
             }
-            return postAssignmentList;
+            return sertificationList;
         }
+
         #endregion
 
         #region IDisposable implementation

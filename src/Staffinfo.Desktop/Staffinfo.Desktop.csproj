@@ -112,8 +112,15 @@
     <Compile Include="Data\DataTableProviders\MilitaryProcessTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\PostAssignmentTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\PostTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\RankAssignmentTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\RankTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\RelativeTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\RelativeTypeTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\ReprimandTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\SertificationTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\ServiceTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\SpecialityTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\ViolationTableProvider.cs" />
     <Compile Include="Helpers\WindowCloseHelper.cs" />
     <Compile Include="Model\BaseModel.cs" />
     <Compile Include="Model\ClasinessModel.cs" />
