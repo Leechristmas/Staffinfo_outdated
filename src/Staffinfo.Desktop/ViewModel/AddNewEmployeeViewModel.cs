@@ -427,7 +427,8 @@ namespace Staffinfo.Desktop.ViewModel
 
                 employee = prvdr.Save(employee);
                 DataSingleton.Instance.EmployeeList.Add(new EmployeeViewModel(employee));
-            }    
+            }
+            WindowsClosed = true;
         }
 
         #endregion

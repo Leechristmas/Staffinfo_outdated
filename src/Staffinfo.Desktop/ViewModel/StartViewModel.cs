@@ -56,7 +56,7 @@ namespace Staffinfo.Desktop.ViewModel
         private void GoToAllEmployeesViewExecute()
         {
             var allEmployeesView = new AllEmployeesView();
-            allEmployeesView.Show();
+            allEmployeesView.ShowDialog();
         }
         #endregion
 

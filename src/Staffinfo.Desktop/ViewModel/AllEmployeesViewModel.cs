@@ -40,7 +40,7 @@ namespace Staffinfo.Desktop.ViewModel
         public RelayCommand GoToAddingNewEmployee
             => _goToAddingNewEmployee ?? (_goToAddingNewEmployee = new RelayCommand(GoToAddingNewEmployeeExecute));
 
-        public void GoToAddingNewEmployeeExecute()
+        private void GoToAddingNewEmployeeExecute()
         {
             var addNewEmployeeView = new AddNewEmployeeView {DataContext = new AddNewEmployeeViewModel()};
             addNewEmployeeView.ShowDialog();
@@ -54,7 +54,7 @@ namespace Staffinfo.Desktop.ViewModel
         public RelayCommand CloseWindowCommand
             => _closeWindowCommand ?? (_closeWindowCommand = new RelayCommand(CloseWindowCommandExecute));
 
-        public void CloseWindowCommandExecute()
+        private void CloseWindowCommandExecute()
         {
             WindowsClosed = true;
         }
@@ -67,7 +67,7 @@ namespace Staffinfo.Desktop.ViewModel
         public RelayCommand RemoveEmployee
             => _removeEmployee ?? (_removeEmployee = new RelayCommand(RemoveEmployeeExecute));
 
-        public void RemoveEmployeeExecute()
+        private void RemoveEmployeeExecute()
         {
             var remove = MessageBox.Show("Будет удалена вся ниформация о служащем. Вы уверены?", "Удаление", MessageBoxButton.YesNo,
                 MessageBoxImage.Question, MessageBoxResult.No);
