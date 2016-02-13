@@ -146,6 +146,7 @@
     <Compile Include="Model\ViolationModel.cs" />
     <Compile Include="ViewModel\AddNewEmployeeViewModel.cs" />
     <Compile Include="ViewModel\AllEmployeesViewModel.cs" />
+    <Compile Include="ViewModel\EmployeeEditViewModel.cs" />
     <Compile Include="ViewModel\EmployeeViewModel.cs" />
     <Compile Include="ViewModel\ListViewModel.cs" />
     <Compile Include="ViewModel\ObservableCollectionViewModel.cs" />

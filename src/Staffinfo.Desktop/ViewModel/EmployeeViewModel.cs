@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Media.Imaging;
 using GalaSoft.MvvmLight.Ioc;
+using Staffinfo.Desktop.Data;
 using Staffinfo.Desktop.Model;
 
 namespace Staffinfo.Desktop.ViewModel
 {
     /// <summary>
-    /// ViewModel для окна отображения служащего
+    /// ViewModel служащего
     /// </summary>
     public class EmployeeViewModel: WindowViewModelBase
     {
@@ -123,12 +124,12 @@ namespace Staffinfo.Desktop.ViewModel
         /// <summary>
         /// Должность
         /// </summary>
-        public long? Post
+        public PostModel Post
         {
-            get { return _empModel.PostId; }
+            get { return DataSingleton.Instance.PostList.Find(p => p.Id == _empModel.PostId); }
             set
             {
-                _empModel.PostId = value; 
+                _empModel.PostId = value.Id; 
                 RaisePropertyChanged("Post");
             }
         }
@@ -136,14 +137,22 @@ namespace Staffinfo.Desktop.ViewModel
         /// <summary>
         /// Звание
         /// </summary>
-        public long? Rank
+        public RankModel Rank
         {
-            get { return _empModel.RankId; }
+            get { return DataSingleton.Instance.RankList.Find(p => p.Id == _empModel.PostId); }
             set
             {
-                _empModel.RankId = value; 
+                _empModel.RankId = value.Id;
                 RaisePropertyChanged("Rank");
             }
+        }
+
+        /// <summary>
+        /// Служба
+        /// </summary>
+        public ServiceModel Service
+        {
+            get { return DataSingleton.Instance.ServiceList.Find(p => p.Id == Post.ServiceId); }
         }
 
         /// <summary>

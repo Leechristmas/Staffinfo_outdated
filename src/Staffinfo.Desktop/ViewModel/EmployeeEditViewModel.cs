@@ -1,31 +1,53 @@
 ﻿using System;
-using System.Windows.Media;
+using System.IO;
+using System.Windows.Media.Imaging;
 using GalaSoft.MvvmLight.Command;
 using Staffinfo.Desktop.Data;
-using Staffinfo.Desktop.Data.DataTableProviders;
 using Staffinfo.Desktop.Model;
 
 namespace Staffinfo.Desktop.ViewModel
 {
     /// <summary>
-    /// ViewModel для окна добавления служащего
+    /// ViewModel для редактирования модели служащего
     /// </summary>
-    public class AddNewEmployeeViewModel: WindowViewModelBase
+    public class EmployeeEditViewModel: WindowViewModelBase
     {
         #region Constructor
 
-        public AddNewEmployeeViewModel()
+        public EmployeeEditViewModel()
         {
-            BornDate = DateTime.Now.AddYears(-18);
-            JobStartDate = DateTime.Now;
-
             _rankList = new ListViewModel<RankModel>(DataSingleton.Instance.RankList);
             _postList = new ListViewModel<PostModel>(DataSingleton.Instance.PostList);
             _serviceList = new ListViewModel<ServiceModel>(DataSingleton.Instance.ServiceList);
         }
 
+        public EmployeeEditViewModel(EmployeeViewModel employeeViewModel) : this()
+        {
+            _rankList.SelectedItem = employeeViewModel.Rank;
+            _postList.SelectedItem = employeeViewModel.Post;
+            _serviceList.SelectedItem = employeeViewModel.Service;
+
+            BornDate = employeeViewModel.BornDate;
+            JobStartDate = employeeViewModel.JobStartDate;
+            FirstName = employeeViewModel.FirstName;
+            LastName = employeeViewModel.LastName;
+            MiddleName = employeeViewModel.MiddleName;
+            City = employeeViewModel.City;
+            Street = employeeViewModel.Street;
+            House = employeeViewModel.House;
+            Flat = employeeViewModel.Flat;
+            HomePhoneNumber = employeeViewModel.HomePhoneNumber;
+            MobilePhoneNumber = employeeViewModel.MobilePhoneNumber;
+            PasportNumber = employeeViewModel.PasportNumber;
+            PasportOrganizationUnit = employeeViewModel.PasportOrganizationUnit;
+            PasportSeries = employeeViewModel.PasportSeries;
+            PersonalNumber = employeeViewModel.PersonalNumber;
+            Photo = employeeViewModel.Photo;
+
+            EmployeeViewModel = employeeViewModel;
+        }
         #endregion
-        
+
         #region Fields
         /// <summary>
         /// Звания
@@ -43,10 +65,28 @@ namespace Staffinfo.Desktop.ViewModel
         private readonly ListViewModel<ServiceModel> _serviceList;
 
         /// <summary>
+        /// Фото служащего
+        /// </summary>
+        private BitmapImage _photo;
+
+        /// <summary>
+        /// Фото служащего
+        /// </summary>
+        public BitmapImage Photo
+        {
+            get { return _photo; }
+            set
+            {
+                _photo = value;
+                RaisePropertyChanged("Photo");
+            }
+        }
+
+        /// <summary>
         /// Личный номер
         /// </summary>
         private string _personalNumber;
-        
+
         /// <summary>
         /// Фамилия
         /// </summary>
@@ -61,16 +101,16 @@ namespace Staffinfo.Desktop.ViewModel
         /// Отчество
         /// </summary>
         private string _middleName;
-        
+
         /// <summary>
         /// Дата рождения
         /// </summary>
-        private DateTime _bornDate;
+        private DateTime? _bornDate;
 
         /// <summary>
         /// Дата начала службы в МЧС
         /// </summary>
-        private DateTime _jobStartDate;
+        private DateTime? _jobStartDate;
 
         /// <summary>
         /// Город
@@ -116,9 +156,29 @@ namespace Staffinfo.Desktop.ViewModel
         /// Номер домашнего телефона
         /// </summary>
         private string _homePhoneNumber;
+
+        /// <summary>
+        /// Были ли произведены изменения
+        /// </summary>
+        private bool _isChanged;
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Флаг изменений
+        /// </summary>
+        public bool IsChanged
+        {
+            get { return _isChanged; }
+            set { _isChanged = value; }
+        }
+
+        /// <summary>
+        /// ViewModel служащего, выбранного для просмотра/редактирования
+        /// </summary>
+        public EmployeeViewModel EmployeeViewModel { get; set; }
+
         /// <summary>
         /// Личный номер
         /// </summary>
@@ -128,8 +188,17 @@ namespace Staffinfo.Desktop.ViewModel
             set
             {
                 _personalNumber = value;
+                IsChanged = true;
                 RaisePropertyChanged("PersonalNumber");
             }
+        }
+
+        /// <summary>
+        /// Полное имя служащего
+        /// </summary>
+        public string FullName
+        {
+            get { return LastName + ' ' + FirstName + ' ' + MiddleName; }
         }
 
         /// <summary>
@@ -174,7 +243,7 @@ namespace Staffinfo.Desktop.ViewModel
         /// <summary>
         /// Дата рождения
         /// </summary>
-        public DateTime BornDate
+        public DateTime? BornDate
         {
             get { return _bornDate; }
             set
@@ -187,7 +256,7 @@ namespace Staffinfo.Desktop.ViewModel
         /// <summary>
         /// Дата начала работы
         /// </summary>
-        public DateTime JobStartDate
+        public DateTime? JobStartDate
         {
             get { return _jobStartDate; }
             set
@@ -332,6 +401,7 @@ namespace Staffinfo.Desktop.ViewModel
         #endregion
 
         #region Commands
+
         /// <summary>
         /// Закрыть окно
         /// </summary>
@@ -344,46 +414,47 @@ namespace Staffinfo.Desktop.ViewModel
         }
 
         /// <summary>
-        /// Открыть окно добавления служащего
+        /// Принять изменения
         /// </summary>
-        private RelayCommand _addNewEmployeeCommand;
+        private RelayCommand _acceptChanges;
+        public RelayCommand AcceptChanges => _acceptChanges ?? (_acceptChanges = new RelayCommand(AcceptChangesExecute));
 
-        public RelayCommand AddNewEmployeeCommand
-            => _addNewEmployeeCommand ?? (_addNewEmployeeCommand = new RelayCommand(AddNewEmployeeExecute));
-
-        private void AddNewEmployeeExecute()
+        public void AcceptChangesExecute()
         {
-            using (var prvdr = new EmployeeTableProvider())
-            {
-                var post = PostList.SelectedItem;
-                var rank = RankList.SelectedItem;
-
-                var employee = new EmployeeModel
-                {
-                    LastName = LastName,
-                    FirstName = FirstName,
-                    MiddleName = MiddleName,
-                    PersonalNumber = PersonalNumber,
-                    PostId = post.Id,
-                    RankId = rank.Id,
-                    BornDate = BornDate,
-                    JobStartDate = JobStartDate,
-                    Address = City + '#' + Street + '#' + House + '#' + Flat,
-                    City = City,
-                    Street = Street,
-                    House = House,
-                    Flat = Flat,
-                    Pasport = PasportOrganizationUnit + '#' + PasportSeries + '#' + PasportNumber,
-                    MobilePhoneNumber = MobilePhoneNumber,
-                    HomePhoneNumber = HomePhoneNumber
-                };
-
-                employee = prvdr.Save(employee);
-                DataSingleton.Instance.EmployeeList.Add(new EmployeeViewModel(employee));
-            }
-            WindowsClosed = true;
+            //Accept-code
         }
 
+        /// <summary>
+        /// Отменить изменения
+        /// </summary>
+        private RelayCommand _cleanOut;
+        public RelayCommand CleanOut => _cleanOut ?? (_cleanOut = new RelayCommand(CleanOutExecute));
+
+        public void CleanOutExecute()
+        {
+            _rankList.SelectedItem = EmployeeViewModel.Rank;
+            _postList.SelectedItem = EmployeeViewModel.Post;
+            _serviceList.SelectedItem = EmployeeViewModel.Service;
+
+            BornDate = EmployeeViewModel.BornDate;
+            JobStartDate = EmployeeViewModel.JobStartDate;
+            FirstName = EmployeeViewModel.FirstName;
+            LastName = EmployeeViewModel.LastName;
+            MiddleName = EmployeeViewModel.MiddleName;
+            City = EmployeeViewModel.City;
+            Street = EmployeeViewModel.Street;
+            House = EmployeeViewModel.House;
+            Flat = EmployeeViewModel.Flat;
+            HomePhoneNumber = EmployeeViewModel.HomePhoneNumber;
+            MobilePhoneNumber = EmployeeViewModel.MobilePhoneNumber;
+            PasportNumber = EmployeeViewModel.PasportNumber;
+            PasportOrganizationUnit = EmployeeViewModel.PasportOrganizationUnit;
+            PasportSeries = EmployeeViewModel.PasportSeries;
+            PersonalNumber = EmployeeViewModel.PersonalNumber;
+            Photo = EmployeeViewModel.Photo;
+
+            EmployeeViewModel = EmployeeViewModel;
+        }
         #endregion
     }
 }

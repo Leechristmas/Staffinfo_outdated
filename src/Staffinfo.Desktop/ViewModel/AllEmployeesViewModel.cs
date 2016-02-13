@@ -97,7 +97,7 @@ namespace Staffinfo.Desktop.ViewModel
 
         private void ShowEmployeeExecute()
         {
-            var employeeView = new EmployeeView {DataContext = EmployeeList.SelectedItem };
+            var employeeView = new EmployeeView {DataContext = new EmployeeEditViewModel(EmployeeList.SelectedItem) };
             employeeView.ShowDialog();
         }
 

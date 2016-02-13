@@ -6,32 +6,57 @@
         xmlns:local="clr-namespace:Staffinfo.Desktop.View"
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d"
-        Title="EmployeeView" MinWidth="600" MinHeight="700" Height="700" Width="600"
-        DataContext="{Binding Source={StaticResource Locator}, Path=Employee}">
+        Title="{Binding Path=FullName}" MinWidth="600" MinHeight="740" Height="740" Width="600">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition MinWidth="150" Width="150"/>
         </Grid.ColumnDefinitions>
-        <Grid>
+        <Grid Grid.Column="1">
+            <GroupBox>
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Vertical">
+                        <Button Name="AcceptBtn"
+                                Style="{StaticResource ButtonStyle}"
+                                Content="Принять"
+                                Command="{Binding Path=AcceptChanges}"/>
+                        <Button Name="CleanUpBtn"
+                                Style="{StaticResource ButtonStyle}"
+                                Content="Отменить"
+                                Command="{Binding Path=CleanOut}"/>
+                    </StackPanel>
+                    
+                </StackPanel>
+            </GroupBox>
+            <StackPanel VerticalAlignment="Bottom"
+                        Margin="0,20">
+                <Button Name="CloseBtn"
+                        Style="{StaticResource ButtonStyle}"
+                        Content="Закрыть"
+                        Command="{Binding Path=CloseWindowCommand}"/>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Column="0">
             <controls:MetroAnimatedTabControl>
                 <!--Общая информация-->
                 <controls:MetroTabItem Header="Общее">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition MinHeight="200" Height="210"/>
+                            <RowDefinition MinHeight="30" Height="30"/>
                             <RowDefinition MinHeight="80" Height="140"/>
                             <RowDefinition MinHeight="200" Height="*"/>
                         </Grid.RowDefinitions>
                         <StackPanel Orientation="Horizontal">
                             <Border BorderBrush="Black">
-                                <Image Height="200" Width="200" Source="{Binding Path=Photo}"/>
+                                <Image Height="200" Width="200" Margin="5,0" Source="{Binding Path=Photo}"/>
                             </Border>
                             <StackPanel Orientation="Vertical">
                                 <TextBox 
                                     Name="LastNameTBox" 
                                     MinWidth="200" 
-                                    Margin="20,4"
+                                    Height="30"
+                                    Margin="10,2"
                                     controls:TextBoxHelper.Watermark="Фамилия"
                                     controls:TextBoxHelper.ClearTextButton="True"
                                     FontSize="14"
@@ -40,15 +65,18 @@
                                 <TextBox 
                                     Name="FirstNameTBox"
                                     MinWidth="200"
-                                    Margin="20,4"
+                                    Height="30"
+                                    Margin="10,2"
                                     controls:TextBoxHelper.Watermark="Имя"
                                     controls:TextBoxHelper.ClearTextButton="True"
                                     FontSize="14"
                                     ToolTip="Имя"
                                     Text="{Binding Path=FirstName}"/>
                                 <TextBox 
-                                    Name="MiddleNameTBox" MinWidth="200" 
-                                    Margin="20,4"
+                                    Name="MiddleNameTBox" 
+                                    MinWidth="200" 
+                                    Height="30"
+                                    Margin="10,2"
                                     controls:TextBoxHelper.Watermark="Отчество"
                                     controls:TextBoxHelper.ClearTextButton="True"
                                     FontSize="14"
@@ -57,27 +85,49 @@
                                 <ComboBox 
                                     Name="ServiceCBox" 
                                     MinWidth="200" 
-                                    Margin="20,4"
+                                    Height="30"
+                                    Margin="10,2"
                                     controls:TextBoxHelper.Watermark="--Служба--"
                                     controls:TextBoxHelper.ClearTextButton="True"
-                                    FontSize="14"/>
+                                    FontSize="14"
+                                    SelectedItem="{Binding ServiceList.SelectedItem}"
+                                    ItemsSource="{Binding ServiceList.ModelList}"
+                                    DisplayMemberPath="ServiceTitle"/>
                                 <ComboBox 
                                     Name="PostCBox" 
                                     MinWidth="200" 
-                                    Margin="20,4"
+                                    Height="30"
+                                    Margin="10,2"
                                     controls:TextBoxHelper.Watermark="--Должность--"
                                     controls:TextBoxHelper.ClearTextButton="True"
-                                    FontSize="14"/>
+                                    FontSize="14"
+                                    SelectedItem="{Binding PostList.SelectedItem}"
+                                    ItemsSource="{Binding PostList.ModelList}"
+                                    DisplayMemberPath="PostTitle"/>
                                 <ComboBox 
                                     Name="RankCBox" 
                                     MinWidth="200" 
-                                    Margin="20,4"
+                                    Height="30"
+                                    Margin="10,2"
                                     controls:TextBoxHelper.Watermark="--Звание--"
                                     controls:TextBoxHelper.ClearTextButton="True"
-                                    FontSize="14"/>
+                                    FontSize="14"
+                                    SelectedItem="{Binding RankList.SelectedItem}"
+                                    ItemsSource="{Binding RankList.ModelList}"
+                                    DisplayMemberPath="RankTitle"/>
                             </StackPanel>
                         </StackPanel>
-                        <StackPanel Grid.Row="1" Orientation="Horizontal">
+                        <StackPanel Grid.Row="1"
+                                    Margin="0,-10">
+                            <Button Name="ChangePhotoBtn"
+                                    Content="Изменить фото"
+                                    Width="150"
+                                    Margin="30,0"
+                                    Style="{StaticResource ButtonStyle}"
+                                    HorizontalAlignment="Left"/>
+                        </StackPanel>
+                        <StackPanel Grid.Row="2" 
+                                    Orientation="Horizontal">
                             <StackPanel Orientation="Vertical" Margin="10,20">
                                 <TextBlock 
                                     Text="Дата рождения" 
@@ -99,7 +149,8 @@
                                     controls:TextBoxHelper.Watermark="Дата рождения"
                                     FontSize="14"
                                     ToolTip="Дата рождения"
-                                    Margin="0,4"
+                                    Margin="0,2"
+                                    Height="30"
                                     SelectedDate="{Binding Path=BornDate}"/>
                                 <DatePicker 
                                     Name="JobStartDatePicker"
@@ -107,7 +158,8 @@
                                     controls:TextBoxHelper.Watermark="Начало службы"
                                     FontSize="14"
                                     ToolTip="Дата начала службы"
-                                    Margin="0,4"
+                                    Margin="0,2"
+                                    Height="30"
                                     SelectedDate="{Binding Path=JobStartDate}"/>
                                 <TextBox 
                                     Name="PersonalNumber"
@@ -116,11 +168,12 @@
                                     controls:TextBoxHelper.ClearTextButton="True"
                                     FontSize="14"
                                     ToolTip="Личный номер служащего"
-                                    Margin="0,4"
+                                    Margin="0,2"
+                                    Height="30"
                                     Text="{Binding Path=PersonalNumber}"/>
                             </StackPanel>
                         </StackPanel>
-                        <StackPanel Grid.Row="2" Orientation="Horizontal">
+                        <StackPanel Grid.Row="3" Orientation="Horizontal">
                             <StackPanel Orientation="Vertical" Margin="4,0,0,0">
                                 <Expander
                                     Header="Домашний адрес"
@@ -131,7 +184,8 @@
                                             controls:TextBoxHelper.Watermark="Город"
                                             controls:TextBoxHelper.ClearTextButton="True"
                                             FontSize="14"
-                                            Margin="1,2"
+                                            Margin="1,1"
+                                            Height="30"
                                             ToolTip="Город"
                                             Text="{Binding Path=City}"/>
                                         <TextBox
@@ -139,7 +193,8 @@
                                             controls:TextBoxHelper.Watermark="Улица"
                                             controls:TextBoxHelper.ClearTextButton="True"
                                             FontSize="14"
-                                            Margin="1,2"
+                                            Margin="1,1"
+                                            Height="30"
                                             ToolTip="Улица"
                                             Text="{Binding Path=Street}"/>
                                         <TextBox
@@ -147,7 +202,8 @@
                                             controls:TextBoxHelper.Watermark="Дом"
                                             controls:TextBoxHelper.ClearTextButton="True"
                                             FontSize="14"
-                                            Margin="1,2"
+                                            Margin="1,1"
+                                            Height="30"
                                             ToolTip="Номер дома"
                                             Text="{Binding Path=House}"/>
                                         <TextBox
@@ -155,7 +211,8 @@
                                             controls:TextBoxHelper.Watermark="Квартира"
                                             controls:TextBoxHelper.ClearTextButton="True"
                                             FontSize="14"
-                                            Margin="1,2"
+                                            Margin="1,1"
+                                            Height="30"
                                             ToolTip="Номер квартиры"
                                             Text="{Binding Path=Flat}"/>
                                     </StackPanel>
@@ -169,7 +226,8 @@
                                             controls:TextBoxHelper.Watermark="Домашний телефон"
                                             controls:TextBoxHelper.ClearTextButton="True"
                                             FontSize="14"
-                                            Margin="1,2"
+                                            Margin="1,1"
+                                            Height="30"
                                             ToolTip="Номер мобильного телефона"
                                             Text="{Binding Path=HomePhoneNumber}"/>
                                         <TextBox
@@ -177,7 +235,8 @@
                                             controls:TextBoxHelper.Watermark="Мобильный телефон"
                                             controls:TextBoxHelper.ClearTextButton="True"
                                             FontSize="14"
-                                            Margin="1,2"
+                                            Margin="1,1"
+                                            Height="30"
                                             ToolTip="Номер домашнего телефона"
                                             Text="{Binding Path=MobilePhoneNumber}"/>
                                     </StackPanel>
@@ -194,7 +253,8 @@
                                             controls:TextBoxHelper.ClearTextButton="True"
                                             ToolTip="Организация, выдавшая паспорт"
                                             FontSize="14"
-                                            Margin="1,2"
+                                            Margin="1,1"
+                                            Height="30"
                                             SelectedValue="{Binding Path=PasportOrganizationUnit}"
                                             SelectedValuePath="Content">
                                             <ComboBoxItem Content="Гомельский РОВД"/>
@@ -204,7 +264,8 @@
                                             controls:TextBoxHelper.Watermark="Серия"
                                             controls:TextBoxHelper.ClearTextButton="True"
                                             FontSize="14"
-                                            Margin="1,2"
+                                            Margin="1,1"
+                                            Height="30"
                                             SelectedValue="{Binding Path=PasportSeries}"
                                             SelectedValuePath="Content">
                                             <ComboBoxItem Content="HB"/>
@@ -215,7 +276,8 @@
                                             controls:TextBoxHelper.ClearTextButton="True"
                                             FontSize="14"
                                             ToolTip="Номер паспорта"
-                                            Margin="1,2"
+                                            Margin="1,1"
+                                            Height="30"
                                             Text="{Binding Path=PasportNumber}"/>
                                     </StackPanel>
                                 </Expander>
