@@ -19,13 +19,15 @@
                         <Button Name="AcceptBtn"
                                 Style="{StaticResource ButtonStyle}"
                                 Content="Принять"
-                                Command="{Binding Path=AcceptChanges}"/>
+                                Command="{Binding Path=AcceptChanges}"
+                                ToolTip="Принять изменения"/>
                         <Button Name="CleanUpBtn"
                                 Style="{StaticResource ButtonStyle}"
                                 Content="Отменить"
-                                Command="{Binding Path=CleanOut}"/>
+                                Command="{Binding Path=CleanOut}"
+                                ToolTip="Отменить все изменения"/>
                     </StackPanel>
-                    
+
                 </StackPanel>
             </GroupBox>
             <StackPanel VerticalAlignment="Bottom"
@@ -90,6 +92,7 @@
                                     controls:TextBoxHelper.Watermark="--Служба--"
                                     controls:TextBoxHelper.ClearTextButton="True"
                                     FontSize="14"
+                                    ToolTip="Служба"
                                     SelectedItem="{Binding ServiceList.SelectedItem}"
                                     ItemsSource="{Binding ServiceList.ModelList}"
                                     DisplayMemberPath="ServiceTitle"/>
@@ -101,6 +104,7 @@
                                     controls:TextBoxHelper.Watermark="--Должность--"
                                     controls:TextBoxHelper.ClearTextButton="True"
                                     FontSize="14"
+                                    ToolTip="Должность"
                                     SelectedItem="{Binding PostList.SelectedItem}"
                                     ItemsSource="{Binding PostList.ModelList}"
                                     DisplayMemberPath="PostTitle"/>
@@ -112,6 +116,7 @@
                                     controls:TextBoxHelper.Watermark="--Звание--"
                                     controls:TextBoxHelper.ClearTextButton="True"
                                     FontSize="14"
+                                    ToolTip="Звание"
                                     SelectedItem="{Binding RankList.SelectedItem}"
                                     ItemsSource="{Binding RankList.ModelList}"
                                     DisplayMemberPath="RankTitle"/>
@@ -123,6 +128,7 @@
                                     Content="Изменить фото"
                                     Width="150"
                                     Margin="30,0"
+                                    ToolTip="Выбрать другое фото"
                                     Style="{StaticResource ButtonStyle}"
                                     HorizontalAlignment="Left"/>
                         </StackPanel>
@@ -157,7 +163,7 @@
                                     MinWidth="200"
                                     controls:TextBoxHelper.Watermark="Начало службы"
                                     FontSize="14"
-                                    ToolTip="Дата начала службы"
+                                    ToolTip="Дата начала службы в МЧС"
                                     Margin="0,2"
                                     Height="30"
                                     SelectedDate="{Binding Path=JobStartDate}"/>
