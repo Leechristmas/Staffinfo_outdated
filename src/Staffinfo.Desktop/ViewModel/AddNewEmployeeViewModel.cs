@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Media;
 using GalaSoft.MvvmLight.Command;
 using Staffinfo.Desktop.Data;
 using Staffinfo.Desktop.Data.DataTableProviders;
@@ -396,7 +397,9 @@ namespace Staffinfo.Desktop.ViewModel
             WindowsClosed = true;
         }
 
-
+        /// <summary>
+        /// Открыть окно добавления служащего
+        /// </summary>
         private RelayCommand _addNewEmployeeCommand;
 
         public RelayCommand AddNewEmployeeCommand
@@ -420,6 +423,10 @@ namespace Staffinfo.Desktop.ViewModel
                     BornDate = BornDate,
                     JobStartDate = JobStartDate,
                     Address = City + '#' + Street + '#' + House + '#' + Flat,
+                    City = City,
+                    Street = Street,
+                    House = House,
+                    Flat = Flat,
                     Pasport = PasportOrganizationUnit + '#' + PasportSeries + '#' + PasportNumber,
                     MobilePhoneNumber = MobilePhoneNumber,
                     HomePhoneNumber = HomePhoneNumber

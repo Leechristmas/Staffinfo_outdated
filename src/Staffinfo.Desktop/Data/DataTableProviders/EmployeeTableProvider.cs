@@ -68,6 +68,17 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
                 sqlDataReader.Read();
 
+                //Адрес
+                var address = sqlDataReader["ADDRESS"].ToString();
+                //Реквизитный состав адреса
+                var addressProps = address.Split('#');
+
+                //Паспорт
+                var pasport = sqlDataReader["PASPORT"].ToString();
+                //Реквизитный состав паспорта
+                var pasportProps = pasport.Split('#');
+
+
                 employeeModel = new EmployeeModel
                 {
                     Id = Int64.Parse(sqlDataReader[0].ToString()),
@@ -79,8 +90,15 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                     RankId = Int64.Parse(sqlDataReader["RANK_ID"].ToString()),
                     BornDate = DateTime.Parse(sqlDataReader["BORN_DATE"].ToString()),
                     JobStartDate = DateTime.Parse(sqlDataReader["JOB_START_DATE"].ToString()),
-                    Address = sqlDataReader["ADDRESS"].ToString(),
-                    Pasport = sqlDataReader["PASPORT"].ToString(),
+                    Address = address,
+                    City = addressProps[0],
+                    Street = addressProps[1],
+                    House = addressProps[2],
+                    Flat = addressProps[3],
+                    Pasport = pasport,
+                    PasportOrganizationUnit = pasportProps[0],
+                    PasportSeries = pasportProps[1],
+                    PasportNumber = pasportProps[2],
                     MobilePhoneNumber = sqlDataReader["MOBILE_PHONE_NUMBER"].ToString(),
                     HomePhoneNumber = sqlDataReader["HOME_PHONE_NUMBER"].ToString(),
                     IsPensioner = bool.Parse(sqlDataReader["IS_PENSIONER"].ToString())
@@ -116,6 +134,16 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
                 while (sqlDataReader.Read())
                 {
+                    //Адрес
+                    var address = sqlDataReader["ADDRESS"].ToString();
+                    //Реквизитный состав адреса
+                    var addressProps = address.Split('#');
+
+                    //Паспорт
+                    var pasport = sqlDataReader["PASPORT"].ToString();
+                    //Реквизитный состав паспорта
+                    var pasportProps = pasport.Split('#');
+
                     var employeeModel = new EmployeeModel
                     {
                         Id = Int64.Parse(sqlDataReader[0].ToString()),
@@ -127,8 +155,15 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                         RankId = Int64.Parse(sqlDataReader["RANK_ID"].ToString()),
                         BornDate = DateTime.Parse(sqlDataReader["BORN_DATE"].ToString()),
                         JobStartDate = DateTime.Parse(sqlDataReader["JOB_START_DATE"].ToString()),
-                        Address = sqlDataReader["ADDRESS"].ToString(),
-                        Pasport = sqlDataReader["PASPORT"].ToString(),
+                        Address = address,
+                        City = addressProps[0],
+                        Street = addressProps[1],
+                        House = addressProps[2],
+                        Flat = addressProps[3],
+                        Pasport = pasport,
+                        PasportOrganizationUnit = pasportProps[0],
+                        PasportSeries = pasportProps[1],
+                        PasportNumber = pasportProps[2],
                         MobilePhoneNumber = sqlDataReader["MOBILE_PHONE_NUMBER"].ToString(),
                         HomePhoneNumber = sqlDataReader["HOME_PHONE_NUMBER"].ToString(),
                         IsPensioner = bool.Parse(sqlDataReader["IS_PENSIONER"].ToString())

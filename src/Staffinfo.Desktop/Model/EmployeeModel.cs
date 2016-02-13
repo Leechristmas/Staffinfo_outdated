@@ -58,14 +58,49 @@ namespace Staffinfo.Desktop.Model
         public DateTime? JobStartDate { get; set; }
 
         /// <summary>
-        /// Адрес
+        /// Адрес TODO!!!: избыточность адреса
         /// </summary>
         public string Address { get; set; }
         
         /// <summary>
-        /// Паспортные данные
+        /// Город
+        /// </summary>
+        public string City { get; set; }
+
+        /// <summary>
+        /// Улица
+        /// </summary>
+        public string Street { get; set; }
+
+        /// <summary>
+        /// Номер дома
+        /// </summary>
+        public string House { get; set; }
+
+        /// <summary>
+        /// Номер квартиры
+        /// </summary>
+        public string Flat { get; set; }
+
+        /// <summary>
+        /// Паспортные данные TODO!!!:избыточность...или нет=)
         /// </summary>
         public string Pasport { get; set; }
+
+        /// <summary>
+        /// Серия паспорта
+        /// </summary>
+        public string PasportSeries { get; set; }
+
+        /// <summary>
+        /// Организация, выдавшая паспорт
+        /// </summary>
+        public string PasportOrganizationUnit { get; set; }
+
+        /// <summary>
+        /// Номер паспорта
+        /// </summary>
+        public string PasportNumber { get; set; }
 
         /// <summary>
         /// Номер мобильного телефона

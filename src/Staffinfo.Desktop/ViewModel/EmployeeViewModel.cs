@@ -186,6 +186,58 @@ namespace Staffinfo.Desktop.ViewModel
         }
 
         /// <summary>
+        /// Город
+        /// </summary>
+        public string City
+        {
+            get { return _empModel.City; }
+            set
+            {
+                _empModel.City = value;
+                RaisePropertyChanged("City");
+            }
+        }
+
+        /// <summary>
+        /// Улица
+        /// </summary>
+        public string Street
+        {
+            get { return _empModel.Street; }
+            set
+            {
+                _empModel.Street = value;
+                RaisePropertyChanged("Street");
+            }
+        }
+
+        /// <summary>
+        /// Номер дома
+        /// </summary>
+        public string House
+        {
+            get { return _empModel.House; }
+            set
+            {
+                _empModel.House = value;
+                RaisePropertyChanged("House");
+            }
+        }
+
+        /// <summary>
+        /// Номер квартиры
+        /// </summary>
+        public string Flat
+        {
+            get { return _empModel.Flat; }
+            set
+            {
+                _empModel.Flat = value;
+                RaisePropertyChanged("Flat");
+            }
+        }
+
+        /// <summary>
         /// Паспорт
         /// </summary>
         public string Pasport
@@ -195,6 +247,45 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 _empModel.Pasport = value; 
                 RaisePropertyChanged("Pasport");
+            }
+        }
+
+        /// <summary>
+        /// Серия паспорта
+        /// </summary>
+        public string PasportSeries
+        {
+            get { return _empModel.PasportSeries; }
+            set
+            {
+                _empModel.PasportSeries = value;
+                RaisePropertyChanged("PasportSeries");
+            }
+        }
+
+        /// <summary>
+        /// Организация, выдавшая паспорт
+        /// </summary>
+        public string PasportOrganizationUnit
+        {
+            get { return _empModel.PasportOrganizationUnit; }
+            set
+            {
+                _empModel.PasportOrganizationUnit = value;
+                RaisePropertyChanged("PasportOrganizationUnit");
+            }
+        }
+
+        /// <summary>
+        /// Номер паспорта
+        /// </summary>
+        public string PasportNumber
+        {
+            get { return _empModel.PasportNumber; }
+            set
+            {
+                _empModel.PasportNumber = value;
+                RaisePropertyChanged("PasportNumber");
             }
         }
 
