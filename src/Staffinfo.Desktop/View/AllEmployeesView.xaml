@@ -3,9 +3,9 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Staffinfo.Desktop.View"
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:helpers="clr-namespace:Staffinfo.Desktop.Helpers"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
         Title="Служащие" Height="700" Width="900" DataContext="{Binding Source={StaticResource Locator}, Path=AllEmployee}"
         helpers:WindowCloseHelper.WindowsClose="{Binding WindowsClosed}">
@@ -17,25 +17,31 @@
     <Grid Grid.Column="0">
      <!--Пробное представление-->
         <GroupBox Margin="0">
-        <StackPanel>
+        <Grid>
                 <ListBox ItemsSource="{Binding EmployeeList.ModelCollection}"
                           SelectedItem="{Binding EmployeeList.SelectedItem}"
                           ScrollViewer.CanContentScroll="true"
                           ScrollViewer.VerticalScrollBarVisibility="Auto"
                           ScrollViewer.HorizontalScrollBarVisibility="Auto" 
                           BorderThickness="0"
-                          ItemContainerStyle="{StaticResource ListViewItemStyle}">
-                <ListBox.ItemTemplate>
+                          ItemContainerStyle="{StaticResource ListViewItemStyle}"
+                          Height="{Binding ElementName=AllEmployeesView }">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseDoubleClick">
+                                <i:InvokeCommandAction Command="{Binding ShowEmployee}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Border BorderBrush="DodgerBlue" BorderThickness="2" Margin="1" >
                             <StackPanel
                                 Orientation="Horizontal"
-                                Height="50">
+                                Height="100">
                                     <StackPanel>
                                         <Border BorderBrush="Black" BorderThickness="1" Margin="0,0,10,0">
                                             <Image
-                                                Height="50"
-                                                Width="50"
+                                                Height="100"
+                                                Width="100"
                                                 Source="{Binding Photo}"/>
                                         </Border>
                                     </StackPanel>
@@ -50,7 +56,7 @@
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
-        </StackPanel>
+        </Grid>
             </GroupBox>
         </Grid>
         <Grid Grid.Column="1">

@@ -87,6 +87,20 @@ namespace Staffinfo.Desktop.ViewModel
                 EmployeeList.ModelCollection.Remove(item);
             }
         }
+
+        /// <summary>
+        /// Открыть окно с информацией по выбранному служащему
+        /// </summary>
+        private RelayCommand _showEmployee;
+
+        public RelayCommand ShowEmployee => _showEmployee ?? (_showEmployee = new RelayCommand(ShowEmployeeExecute));
+
+        private void ShowEmployeeExecute()
+        {
+            var employeeView = new EmployeeView {DataContext = EmployeeList.SelectedItem };
+            employeeView.ShowDialog();
+        }
+
         #endregion
     }
 }
