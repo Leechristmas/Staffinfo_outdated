@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Data.SqlClient;
+using System.IO;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Staffinfo.Desktop.Data.DataTableContracts;
 using Staffinfo.Desktop.Model;
 using Staffinfo.Desktop.Properties;
@@ -13,6 +17,60 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
     public class EmployeeTableProvider: IDisposable, IWritableTableContract<EmployeeModel>
     {
         public string ErrorInfo { get; set; }
+
+        /// <summary>
+        /// Конвертирует из массива байт в BitmapImage TODO!!!
+        /// </summary>
+        /// <param name="imageBytes">массив байт</param>
+        /// <returns></returns>
+        private BitmapImage ByteToImage(byte[] imageBytes)
+        {
+            using (var ms = new MemoryStream(imageBytes))
+            {
+                ms.Seek(0, SeekOrigin.Begin);
+
+                BitmapImage image = new BitmapImage();
+                image.BeginInit();
+                image.StreamSource = ms;
+                image.DecodePixelHeight = 100;
+                image.DecodePixelWidth = 100;
+                image.CacheOption = BitmapCacheOption.OnLoad;;
+                image.EndInit();
+
+                return image;
+            }
+        }
+
+        /// <summary>
+        /// Конвертирует картинку в массив байт
+        /// </summary>
+        /// <param name="image">исходное изображение</param>
+        /// <returns></returns>
+        private byte[] ImageToByte(BitmapImage image)
+        {
+            if (image == null) return null;
+
+            JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(image));
+
+            using (var ms = new MemoryStream())
+            {
+                encoder.Save(ms);
+                return ms.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Сравнивает 2 изображения
+        /// </summary>
+        /// <param name="btm1">первое изображение</param>
+        /// <param name="btm2">второе изображение</param>
+        /// <returns></returns>
+        private bool ImageCompare(BitmapImage btm1, BitmapImage btm2)
+        {
+            return Convert.ToBase64String(ImageToByte(btm1))
+                == Convert.ToBase64String(ImageToByte(btm2));
+        }
 
         #region IWritableTableContract implementation
 
@@ -28,7 +86,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             var cmd =
                 new SqlCommand($"INSERT INTO EMPLOYEE VALUES('{employee.FirstName}', '{employee.MiddleName}', '{employee.LastName}'," + 
                 $"'{employee.PersonalNumber}', {employee.PostId}, {employee.RankId}, '{employee.BornDate.Value}'," + 
-                $"'{employee.JobStartDate.Value}', '{employee.Address}', '{employee.Pasport}', '{employee.MobilePhoneNumber}', '{employee.HomePhoneNumber}', '{employee.IsPensioner}'); "+
+                $"'{employee.JobStartDate.Value}', '{employee.Address}', '{employee.Pasport}', '{employee.MobilePhoneNumber}', '{employee.HomePhoneNumber}', '{employee.IsPensioner}', {null}); "+
                 "SELECT MAX(ID) FROM EMPLOYEE;");
 
             try
@@ -78,6 +136,15 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 //Реквизитный состав паспорта
                 var pasportProps = pasport.Split('#');
 
+                //Фотография
+                var ms = new MemoryStream();
+                BitmapImage photo = null;
+                if (sqlDataReader["PHOTO"].ToString() != "")
+                {
+                    ms.Write((byte[])sqlDataReader["PHOTO"], 0, ((byte[])sqlDataReader["PHOTO"]).Length);
+                    photo = ByteToImage(ms.ToArray());
+                }
+
 
                 employeeModel = new EmployeeModel
                 {
@@ -101,7 +168,8 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                     PasportNumber = pasportProps[2],
                     MobilePhoneNumber = sqlDataReader["MOBILE_PHONE_NUMBER"].ToString(),
                     HomePhoneNumber = sqlDataReader["HOME_PHONE_NUMBER"].ToString(),
-                    IsPensioner = bool.Parse(sqlDataReader["IS_PENSIONER"].ToString())
+                    IsPensioner = bool.Parse(sqlDataReader["IS_PENSIONER"].ToString()),
+                    Photo = photo
                 };
                 sqlDataReader.Close();
 
@@ -129,9 +197,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             try
             {
                 var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
-
                 
-
                 while (sqlDataReader.Read())
                 {
                     //Адрес
@@ -143,6 +209,15 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                     var pasport = sqlDataReader["PASPORT"].ToString();
                     //Реквизитный состав паспорта
                     var pasportProps = pasport.Split('#');
+
+                    //Фотография
+                    var ms = new MemoryStream();
+                    BitmapImage photo = null;
+                    if (sqlDataReader["PHOTO"].ToString() != "")
+                    {
+                        ms.Write((byte[])sqlDataReader["PHOTO"], 0, ((byte[])sqlDataReader["PHOTO"]).Length);
+                        photo = ByteToImage(ms.ToArray());
+                    }
 
                     var employeeModel = new EmployeeModel
                     {
@@ -166,7 +241,8 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                         PasportNumber = pasportProps[2],
                         MobilePhoneNumber = sqlDataReader["MOBILE_PHONE_NUMBER"].ToString(),
                         HomePhoneNumber = sqlDataReader["HOME_PHONE_NUMBER"].ToString(),
-                        IsPensioner = bool.Parse(sqlDataReader["IS_PENSIONER"].ToString())
+                        IsPensioner = bool.Parse(sqlDataReader["IS_PENSIONER"].ToString()),
+                        Photo = photo
                     };
 
                     employeeList.Add(employeeModel);
@@ -196,8 +272,12 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 $"EMPLOYEE_LASTNAME='{employee.LastName}', PERSONAL_KEY='{employee.PersonalNumber}', POST_ID={employee.PostId}," +
                 $"RANK_ID={employee.RankId}, BORN_DATE='{employee.BornDate.Value}', JOB_START_DATE='{employee.JobStartDate.Value}'," +
                 $"ADDRESS='{employee.Address}', PASPORT='{employee.Pasport}', MOBILE_PHONE_NUMBER='{employee.MobilePhoneNumber}'," +
-                $"HOME_PHONE_NUMBER='{employee.HomePhoneNumber}', IS_PENSIONER='{employee.IsPensioner}' " +
+                $"HOME_PHONE_NUMBER='{employee.HomePhoneNumber}', IS_PENSIONER='{employee.IsPensioner}', PHOTO=@Photo " +
                 $"WHERE ID={employee.Id};");
+
+            SqlParameter param = cmd.Parameters.Add("@Photo", SqlDbType.VarBinary);
+            param.Value = ImageToByte(employee.Photo);
+
 
             try
             {

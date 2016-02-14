@@ -34,7 +34,7 @@ namespace Staffinfo.Desktop.ViewModel
         /// <summary>
         /// Выбранный служащий
         /// </summary>
-        readonly EmployeeModel _empModel;
+        public readonly EmployeeModel _empModel;
 
         /// <summary>
         /// Фото служащего
@@ -44,10 +44,9 @@ namespace Staffinfo.Desktop.ViewModel
             get
             {
                 return _empModel.Photo ??
-                       (_empModel.Photo =
-                           new BitmapImage(
+                       (new BitmapImage(
                                new Uri(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                                   "Resources/Images/empty_avatar_150x100.png"))));
+                                   "Resources/Images/empty_avatar_100x100.jpg"))));
             }
             set
             {

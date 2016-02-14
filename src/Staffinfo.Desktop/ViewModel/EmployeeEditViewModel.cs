@@ -1,16 +1,20 @@
 ﻿using System;
 using System.IO;
+using System.Windows;
 using System.Windows.Media.Imaging;
 using GalaSoft.MvvmLight.Command;
+using Microsoft.Win32;
 using Staffinfo.Desktop.Data;
+using Staffinfo.Desktop.Data.DataTableProviders;
 using Staffinfo.Desktop.Model;
+
 
 namespace Staffinfo.Desktop.ViewModel
 {
     /// <summary>
     /// ViewModel для редактирования модели служащего
     /// </summary>
-    public class EmployeeEditViewModel: WindowViewModelBase
+    public class EmployeeEditViewModel : WindowViewModelBase
     {
         #region Constructor
 
@@ -23,6 +27,8 @@ namespace Staffinfo.Desktop.ViewModel
 
         public EmployeeEditViewModel(EmployeeViewModel employeeViewModel) : this()
         {
+            EmployeeViewModel = employeeViewModel;
+
             _rankList.SelectedItem = employeeViewModel.Rank;
             _postList.SelectedItem = employeeViewModel.Post;
             _serviceList.SelectedItem = employeeViewModel.Service;
@@ -44,11 +50,11 @@ namespace Staffinfo.Desktop.ViewModel
             PersonalNumber = employeeViewModel.PersonalNumber;
             Photo = employeeViewModel.Photo;
 
-            EmployeeViewModel = employeeViewModel;
         }
         #endregion
 
         #region Fields
+
         /// <summary>
         /// Звания
         /// </summary>
@@ -68,19 +74,6 @@ namespace Staffinfo.Desktop.ViewModel
         /// Фото служащего
         /// </summary>
         private BitmapImage _photo;
-
-        /// <summary>
-        /// Фото служащего
-        /// </summary>
-        public BitmapImage Photo
-        {
-            get { return _photo; }
-            set
-            {
-                _photo = value;
-                RaisePropertyChanged("Photo");
-            }
-        }
 
         /// <summary>
         /// Личный номер
@@ -160,7 +153,9 @@ namespace Staffinfo.Desktop.ViewModel
         /// <summary>
         /// Были ли произведены изменения
         /// </summary>
-        private bool _isChanged;
+        private bool _wasChanged;
+
+
         #endregion
 
         #region Properties
@@ -168,16 +163,20 @@ namespace Staffinfo.Desktop.ViewModel
         /// <summary>
         /// Флаг изменений
         /// </summary>
-        public bool IsChanged
+        public bool WasChanged
         {
-            get { return _isChanged; }
-            set { _isChanged = value; }
+            get { return _wasChanged; }
+            set
+            {
+                _wasChanged = value;
+                RaisePropertyChanged("WasChanged");
+            }
         }
 
         /// <summary>
         /// ViewModel служащего, выбранного для просмотра/редактирования
         /// </summary>
-        public EmployeeViewModel EmployeeViewModel { get; set; }
+        private EmployeeViewModel EmployeeViewModel { get; set; }
 
         /// <summary>
         /// Личный номер
@@ -188,8 +187,9 @@ namespace Staffinfo.Desktop.ViewModel
             set
             {
                 _personalNumber = value;
-                IsChanged = true;
                 RaisePropertyChanged("PersonalNumber");
+
+                WasChanged = (_personalNumber != EmployeeViewModel.PersonalNumber);
             }
         }
 
@@ -211,6 +211,8 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 _lastName = value;
                 RaisePropertyChanged("LastName");
+
+                WasChanged = (_lastName != EmployeeViewModel.LastName);
             }
         }
 
@@ -224,6 +226,8 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 _firstName = value;
                 RaisePropertyChanged("FirstName");
+
+                WasChanged = (_firstName != EmployeeViewModel.FirstName);
             }
         }
 
@@ -237,6 +241,8 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 _middleName = value;
                 RaisePropertyChanged("MiddleName");
+
+                WasChanged = (_middleName != EmployeeViewModel.MiddleName);
             }
         }
 
@@ -250,6 +256,8 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 _bornDate = value;
                 RaisePropertyChanged("BornDate");
+
+                WasChanged = (_bornDate != EmployeeViewModel.BornDate);
             }
         }
 
@@ -263,6 +271,8 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 _jobStartDate = value;
                 RaisePropertyChanged("JobStartDate");
+
+                WasChanged = (_jobStartDate != EmployeeViewModel.JobStartDate);
             }
         }
 
@@ -276,6 +286,8 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 _city = value;
                 RaisePropertyChanged("City");
+
+                WasChanged = (_city != EmployeeViewModel.City);
             }
         }
 
@@ -289,6 +301,8 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 _street = value;
                 RaisePropertyChanged("Street");
+
+                WasChanged = (_street != EmployeeViewModel.Street);
             }
         }
 
@@ -302,6 +316,8 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 _house = value;
                 RaisePropertyChanged("House");
+
+                WasChanged = (_house != EmployeeViewModel.House);
             }
         }
 
@@ -315,6 +331,8 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 _flat = value;
                 RaisePropertyChanged("Flat");
+
+                WasChanged = (_flat != EmployeeViewModel.Flat);
             }
         }
 
@@ -328,6 +346,8 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 _pasportSeries = value;
                 RaisePropertyChanged("PasportSeries");
+
+                WasChanged = (_pasportSeries != EmployeeViewModel.PasportSeries);
             }
         }
 
@@ -341,6 +361,8 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 _pasportOrganizationUnit = value;
                 RaisePropertyChanged("PasportOrganizationUnit");
+
+                WasChanged = (_pasportOrganizationUnit != EmployeeViewModel.PasportOrganizationUnit);
             }
         }
 
@@ -354,6 +376,8 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 _pasportNumber = value;
                 RaisePropertyChanged("PasportNumber");
+
+                WasChanged = (_pasportNumber != EmployeeViewModel.PasportNumber);
             }
         }
 
@@ -367,6 +391,8 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 _mobilePhoneNumber = value;
                 RaisePropertyChanged("MobilePhoneNumber");
+
+                WasChanged = (_mobilePhoneNumber != EmployeeViewModel.MobilePhoneNumber);
             }
         }
 
@@ -380,6 +406,29 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 _homePhoneNumber = value;
                 RaisePropertyChanged("HomePhoneNumber");
+
+                WasChanged = _homePhoneNumber != EmployeeViewModel.HomePhoneNumber;
+            }
+        }
+
+        /// <summary>
+        /// Фото служащего
+        /// </summary>
+        public BitmapImage Photo
+        {
+            get
+            {
+                return _photo ??
+                     (new BitmapImage(
+                             new Uri(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                                 "Resources/Images/empty_avatar_100x100.jpg"))));
+            }
+            set
+            {
+                _photo = value;
+                RaisePropertyChanged("Photo");
+
+                WasChanged = !ImageCompare(_photo, EmployeeViewModel.Photo);
             }
         }
 
@@ -417,11 +466,43 @@ namespace Staffinfo.Desktop.ViewModel
         /// Принять изменения
         /// </summary>
         private RelayCommand _acceptChanges;
-        public RelayCommand AcceptChanges => _acceptChanges ?? (_acceptChanges = new RelayCommand(AcceptChangesExecute));
+        public RelayCommand AcceptChanges => _acceptChanges ?? (_acceptChanges = new RelayCommand(AcceptChangesExecute));   //TODO: добавить флаг изменений
 
-        public void AcceptChangesExecute()
+        private void AcceptChangesExecute()
         {
-            //Accept-code
+            var accept = MessageBox.Show("Применить изменения?", "Принять изменения", MessageBoxButton.YesNo,
+                MessageBoxImage.Question, MessageBoxResult.No);
+
+            if (accept == MessageBoxResult.No) return;
+
+            EmployeeViewModel.Rank = _rankList.SelectedItem;
+            EmployeeViewModel.Post = _postList.SelectedItem;
+
+            EmployeeViewModel.BornDate = BornDate;
+            EmployeeViewModel.JobStartDate = JobStartDate;
+            EmployeeViewModel.FirstName = FirstName;
+            EmployeeViewModel.LastName = LastName;
+            EmployeeViewModel.MiddleName = MiddleName;
+            EmployeeViewModel.City = City;
+            EmployeeViewModel.Street = Street;
+            EmployeeViewModel.House = House;
+            EmployeeViewModel.Flat = Flat;
+            EmployeeViewModel.HomePhoneNumber = HomePhoneNumber;
+            EmployeeViewModel.MobilePhoneNumber = MobilePhoneNumber;
+            EmployeeViewModel.PasportNumber = PasportNumber;
+            EmployeeViewModel.PasportOrganizationUnit = PasportOrganizationUnit;
+            EmployeeViewModel.PasportSeries = PasportSeries;
+            EmployeeViewModel.PersonalNumber = PersonalNumber;
+            EmployeeViewModel.Photo = Photo;
+
+            using (var empTP = new EmployeeTableProvider())
+            {
+                if (!empTP.Update(EmployeeViewModel._empModel))
+                    MessageBox.Show("Не удалось применить изменения! Ошибка: " + empTP.ErrorInfo, "Ошибка",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+
+            }
         }
 
         /// <summary>
@@ -430,7 +511,7 @@ namespace Staffinfo.Desktop.ViewModel
         private RelayCommand _cleanOut;
         public RelayCommand CleanOut => _cleanOut ?? (_cleanOut = new RelayCommand(CleanOutExecute));
 
-        public void CleanOutExecute()
+        private void CleanOutExecute()
         {
             _rankList.SelectedItem = EmployeeViewModel.Rank;
             _postList.SelectedItem = EmployeeViewModel.Post;
@@ -455,6 +536,80 @@ namespace Staffinfo.Desktop.ViewModel
 
             EmployeeViewModel = EmployeeViewModel;
         }
+
+        /// <summary>
+        /// Открывает OpenDialog для выбора новой фотографии
+        /// </summary>
+        private RelayCommand _changePhoto;
+        public RelayCommand ChangePhoto => _changePhoto ?? (_changePhoto = new RelayCommand(ChangePhotoExecute));
+
+        private void ChangePhotoExecute()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                Filter = "JPEG Photo (*.jpg)|*.jpg"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                var fileInfo = new FileInfo(openFileDialog.FileName);
+
+                if (fileInfo.Extension.ToLower() == ".jpg")
+                {
+                    Photo = new BitmapImage(new Uri(fileInfo.FullName));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Удаляет фото служащего (устанавливает аватар по умолчанию)
+        /// </summary>
+        private RelayCommand _dropPhoto;
+        public RelayCommand DropPhoto => _dropPhoto ?? (_dropPhoto = new RelayCommand(DropPhotoExecute));
+
+        private void DropPhotoExecute()
+        {
+            Photo = null;
+        }
+
         #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Конвертирует картинку в массив байт TODO!!!
+        /// </summary>
+        /// <param name="image">исходное изображение</param>
+        /// <returns></returns>
+        private byte[] ImageToByte(BitmapImage image)
+        {
+            if (image == null) return null;
+
+            JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(image));
+
+            using (var ms = new MemoryStream())
+            {
+                encoder.Save(ms);
+                return ms.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Сравнивает 2 изображения
+        /// </summary>
+        /// <param name="btm1">первое изображение</param>
+        /// <param name="btm2">второе изображение</param>
+        /// <returns></returns>
+        private bool ImageCompare(BitmapImage btm1, BitmapImage btm2)
+        {
+            if (btm2 == null || btm1 == null) return false;
+
+            return Convert.ToBase64String(ImageToByte(btm1))
+                   == Convert.ToBase64String(ImageToByte(btm2));
+        }
+
+        #endregion
+
     }
 }

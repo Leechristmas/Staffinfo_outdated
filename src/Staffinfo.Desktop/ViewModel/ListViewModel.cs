@@ -18,34 +18,17 @@ namespace Staffinfo.Desktop.ViewModel
 
         #region SelectedItem
         
-        //private const string SelectedIndexPropertyName = "SelectedIndex";
-        //private int? _selectedIndex = -1;
-        ///// <summary>
-        ///// Нужен был для selected item
-        ///// </summary>
-        //public int? SelectedIndex
-        //{
-        //    get { return _selectedIndex; }
-
-        //    set
-        //    {
-        //        _selectedIndex = value;
-        //        RaisePropertyChanged(SelectedIndexPropertyName);
-        //    }
-        //}
-
-        private const string SelectedItemPropertyName = "SelectedItem";
+        //private const string SelectedItemPropertyName = "SelectedItem";
 
         private T _selectedItem = new T();
 
         public T SelectedItem
         {
             get { return _selectedItem; }
-            //get { return ModelList[_selectedIndex.Value]; }
             set
             {
                 _selectedItem = value;
-                RaisePropertyChanged(SelectedItemPropertyName);
+                RaisePropertyChanged("SelectedItem");
             }
         }
         #endregion

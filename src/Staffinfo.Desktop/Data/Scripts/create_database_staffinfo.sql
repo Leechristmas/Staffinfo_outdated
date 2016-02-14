@@ -4,12 +4,6 @@ ALTER TABLE CLASINESS
 
 GO
 
-ALTER TABLE PHOTO
-	DROP 
-		CONSTRAINT FK_PHOTO_EMPLOYEE;
-
-GO
-
 ALTER TABLE CONTRACT
 	DROP
 		CONSTRAINT	FK_CONTRACT_EMPLOYEE;
@@ -122,8 +116,6 @@ DROP TABLE REPRIMAND;
 DROP TABLE SPECIALITY;
 DROP TABLE EMPLOYEE;
 DROP TABLE VIOLATION;
-DROP TABLE PHOTO;
-
 
 GO
 
@@ -318,7 +310,8 @@ CREATE TABLE EMPLOYEE(
 	PASPORT	VARCHAR(64),
 	MOBILE_PHONE_NUMBER VARCHAR(13),
 	HOME_PHONE_NUMBER VARCHAR(10),
-	IS_PENSIONER BIT);
+	IS_PENSIONER BIT,
+	PHOTO IMAGE);
 
 GO
 
@@ -336,20 +329,6 @@ CREATE TABLE MILITARY_UNIT(
 	ID INT PRIMARY KEY IDENTITY,
 	MILITARY_NAME VARCHAR(120),
 	DESCRIPTION VARCHAR(240));
-
-GO
-
---ФОТОГРАФИИ СЛУЖАЩИХ
-CREATE TABLE PHOTO(
-	ID INT PRIMARY KEY IDENTITY,
-	PHOTO IMAGE,
-	EMPLOYEE_ID INT)
-
-GO
-
-ALTER TABLE PHOTO
-	ADD CONSTRAINT FK_PHOTO_EMPLOYEE
-				   FOREIGN KEY (EMPLOYEE_ID) REFERENCES EMPLOYEE;
 
 GO
 
@@ -534,10 +513,10 @@ INSERT INTO SPECIALITY
 GO
 
 INSERT INTO EMPLOYEE
-	VALUES('Алексей', 'Иванович', 'Петров',11423,1,2,'1972-01-01', '2000-02-04', 'Смолевичи#Интернациональная#123#32', 'Гомельский РОВД#HB#1231231', 'типа номер','номерок', 0),
-	('Виктор', 'Сергеевич', 'Скворцов', 10233, 2,3, '1973-04-07', '2002-10-07', 'Витебск#Ленина#234#2342', 'Гомельский РОВД#HB#3242312', 'типа номер','номерок', 0),
-	('Петр', 'Александрович', 'Головач', 10443, 1,1, '1979-02-11', '2004-04-02', 'Торжок#Ленина#232#12', 'Гомельский РОВД#HB#232123', 'типа номер','номерок', 0),
-	('Иван', 'Федорович', 'Кедров', 13228, 3,3, '1976-01-12', '2002-05-01', 'Гомель#Советская#21#12', 'Гомельский РОВД#HB#3232123', 'типа номер','номерок', 0);
+	VALUES('Алексей', 'Иванович', 'Петров',11423,1,2,'1972-01-01', '2000-02-04', 'Смолевичи#Интернациональная#123#32', 'Гомельский РОВД#HB#1231231', 'типа номер','номерок', 0, NULL),
+	('Виктор', 'Сергеевич', 'Скворцов', 10233, 2,3, '1973-04-07', '2002-10-07', 'Витебск#Ленина#234#2342', 'Гомельский РОВД#HB#3242312', 'типа номер','номерок', 0, NULL),
+	('Петр', 'Александрович', 'Головач', 10443, 1,1, '1979-02-11', '2004-04-02', 'Торжок#Ленина#232#12', 'Гомельский РОВД#HB#232123', 'типа номер','номерок', 0, NULL),
+	('Иван', 'Федорович', 'Кедров', 13228, 3,3, '1976-01-12', '2002-05-01', 'Гомель#Советская#21#12', 'Гомельский РОВД#HB#3232123', 'типа номер','номерок', 0, NULL);
 
 GO
 

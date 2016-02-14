@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Media;
 using GalaSoft.MvvmLight.Command;
 using Staffinfo.Desktop.Data;
@@ -19,9 +20,9 @@ namespace Staffinfo.Desktop.ViewModel
             BornDate = DateTime.Now.AddYears(-18);
             JobStartDate = DateTime.Now;
 
+            _serviceList = new ListViewModel<ServiceModel>(DataSingleton.Instance.ServiceList);
             _rankList = new ListViewModel<RankModel>(DataSingleton.Instance.RankList);
             _postList = new ListViewModel<PostModel>(DataSingleton.Instance.PostList);
-            _serviceList = new ListViewModel<ServiceModel>(DataSingleton.Instance.ServiceList);
         }
 
         #endregion

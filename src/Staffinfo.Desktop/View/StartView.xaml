@@ -9,7 +9,8 @@
         mc:Ignorable="d"
         Title="Главное меню" Height="350" Width="525"
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
-        helpers:WindowCloseHelper.WindowsClose="{Binding WindowsClosed}">   
+        helpers:WindowCloseHelper.WindowsClose="{Binding WindowsClosed}"
+        Icon="../Resources/Images/mis.png">   
     <Grid>
         <StackPanel Width="130"
                     Orientation="Vertical"
