@@ -577,7 +577,7 @@ namespace Staffinfo.Desktop.ViewModel
         #region Methods
 
         /// <summary>
-        /// Конвертирует картинку в массив байт TODO!!!
+        /// Конвертирует картинку в массив байт
         /// </summary>
         /// <param name="image">исходное изображение</param>
         /// <returns></returns>
@@ -610,6 +610,5 @@ namespace Staffinfo.Desktop.ViewModel
         }
 
         #endregion
-
     }
 }

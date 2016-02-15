@@ -9,12 +9,6 @@ namespace Staffinfo.Desktop.Model
     /// </summary>
     public class EmployeeModel: BaseModel
     {
-        #region Constructor
-        public EmployeeModel()
-        {
-        }
-        #endregion
-
         #region Properties
                 
         /// <summary>
@@ -120,6 +114,5 @@ namespace Staffinfo.Desktop.Model
         public bool IsPensioner { get; set; }
                 
         #endregion
-
     }
 }

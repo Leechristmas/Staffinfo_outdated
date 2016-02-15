@@ -5,15 +5,10 @@
     /// </summary>
     public class ServiceModel: BaseModel
     {
-        public ServiceModel()
-        {
-                
-        }
-
-        #region Properties
-        
+        /// <summary>
+        /// Название службы
+        /// </summary>
         public string ServiceTitle { get; set; }
 
-        #endregion
     }
 }

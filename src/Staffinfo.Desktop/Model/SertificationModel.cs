@@ -5,13 +5,23 @@ namespace Staffinfo.Desktop.Model
     /// <summary>
     /// Аттестация
     /// </summary>
-    public class SertificationModel
+    public class SertificationModel: BaseModel
     {
         #region Properties
 
-        public long Id { get; set; }
+        /// <summary>
+        /// Код служащего
+        /// </summary>
         public long EmployeeId { get; set; }
+
+        /// <summary>
+        /// Дата аттестации
+        /// </summary>
         public DateTime SertificationDate { get; set; }
+
+        /// <summary>
+        /// Описание
+        /// </summary>
         public string Description { get; set; }
 
         #endregion

@@ -5,12 +5,9 @@
     /// </summary>
     public class RankModel: BaseModel
     {
-        public RankModel()
-        {
-                
-        }
-                    
-        public long Id { get;  set; }
+        /// <summary>
+        /// Звание
+        /// </summary>
         public string RankTitle { get;  set; }
     }
 }

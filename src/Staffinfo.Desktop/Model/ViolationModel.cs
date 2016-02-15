@@ -5,13 +5,23 @@ namespace Staffinfo.Desktop.Model
     /// <summary>
     /// Нарушение
     /// </summary>
-    public class ViolationModel
+    public class ViolationModel: BaseModel
     {
         #region Properties
 
-        public long Id { get; set; }
+        /// <summary>
+        /// Код служащего
+        /// </summary>
         public long EmployeeId { get; set; }
+
+        /// <summary>
+        /// Описание
+        /// </summary>
         public string Description { get; set; }
+
+        /// <summary>
+        /// Дата нарушения
+        /// </summary>
         public DateTime ViolationDate { get; set; }
 
         #endregion

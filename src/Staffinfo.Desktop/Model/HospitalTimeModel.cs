@@ -5,19 +5,28 @@ namespace Staffinfo.Desktop.Model
     /// <summary>
     /// Модель больничного
     /// </summary>
-    public class HospitalTimeModel
+    public class HospitalTimeModel: BaseModel
     {
-        public HospitalTimeModel()
-        {
-                
-        }
-
         #region Properties
-
-        public long Id { get; set; }
+        
+        /// <summary>
+        /// Код служащего
+        /// </summary>
         public long EmployeeId { get; set; }
+
+        /// <summary>
+        /// Описание
+        /// </summary>
         public string Description { get; set; }
+
+        /// <summary>
+        /// Дата открытия больничного
+        /// </summary>
         public DateTime StartDate { get; set; }
+
+        /// <summary>
+        /// Дата окончания больничного
+        /// </summary>
         public DateTime FinishDate { get; set; }
 
         #endregion

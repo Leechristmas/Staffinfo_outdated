@@ -5,10 +5,6 @@
     /// </summary>
     public class PostModel: BaseModel
     {
-        public PostModel()
-        {
-                
-        }
         
         #region Properties
 
