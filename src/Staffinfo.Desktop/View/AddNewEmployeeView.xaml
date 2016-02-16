@@ -246,18 +246,6 @@
                     </ComboBox>
                 </StackPanel>
                 <StackPanel Margin="5,0">
-                    <ComboBox MinWidth="150"
-                              Name="PasportOrganizationCBox"
-                              Controls:TextBoxHelper.Watermark="--Организация--"
-                              Controls:TextBoxHelper.ClearTextButton="True"
-                              Margin="0,1"
-                              MinHeight="30"
-                              FontSize="14"
-                              Text="{Binding PasportOrganizationUnit}">
-                        <ComboBoxItem Content="Гомельский РОВД"/>
-                    </ComboBox>
-                </StackPanel>
-                <StackPanel>
                     <TextBox MinWidth="150"
                              Name="PasportNumberTBox"
                              Controls:TextBoxHelper.Watermark="--Номер паспорта--"
@@ -266,6 +254,25 @@
                              MinHeight="30"
                              FontSize="14"
                              Text="{Binding PasportNumber}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <ComboBox MinWidth="150"
+                              Name="PasportOrganizationCBox"
+                              Controls:TextBoxHelper.Watermark="--Организация--"
+                              Controls:TextBoxHelper.ClearTextButton="True"
+                              Margin="0,1,0,0"
+                              MinHeight="30"
+                              FontSize="14"
+                              Text="{Binding PasportOrganizationUnit}">
+                        <ComboBoxItem Content="Гомельский РОВД"/>
+                    </ComboBox>
+                    <Button Name="AddNewOrganizationUnit"
+                            Content="..."
+                            Style="{StaticResource ButtonStyle}"
+                            MinWidth="10"
+                            FontSize="26"
+                            Margin="5,0"
+                            Command="{Binding AddNewOrganizationUnit}"/>
                 </StackPanel>
             </StackPanel>
         </GroupBox>

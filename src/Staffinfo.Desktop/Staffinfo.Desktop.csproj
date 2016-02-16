@@ -158,6 +158,7 @@
     <Compile Include="Model\SpecialityModel.cs" />
     <Compile Include="Model\ViolationModel.cs" />
     <Compile Include="ViewModel\AddNewEmployeeViewModel.cs" />
+    <Compile Include="ViewModel\AddNewPasportOrganizationUnitViewModel.cs" />
     <Compile Include="ViewModel\AllEmployeesViewModel.cs" />
     <Compile Include="ViewModel\DictionaryViewModelBase.cs" />
     <Compile Include="ViewModel\EmployeeEditViewModel.cs" />

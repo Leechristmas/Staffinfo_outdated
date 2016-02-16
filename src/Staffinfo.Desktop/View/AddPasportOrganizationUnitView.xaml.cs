@@ -11,13 +11,14 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using MahApps.Metro.Controls;
 
 namespace Staffinfo.Desktop.View
 {
     /// <summary>
     /// Interaction logic for AddPasportOrganizationUnitView.xaml
     /// </summary>
-    public partial class AddPasportOrganizationUnitView : Window
+    public partial class AddPasportOrganizationUnitView : MetroWindow
     {
         public AddPasportOrganizationUnitView()
         {

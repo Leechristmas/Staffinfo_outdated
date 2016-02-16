@@ -5,6 +5,7 @@ using GalaSoft.MvvmLight.Command;
 using Staffinfo.Desktop.Data;
 using Staffinfo.Desktop.Data.DataTableProviders;
 using Staffinfo.Desktop.Model;
+using Staffinfo.Desktop.View;
 
 namespace Staffinfo.Desktop.ViewModel
 {
@@ -17,7 +18,7 @@ namespace Staffinfo.Desktop.ViewModel
 
         public AddNewEmployeeViewModel()
         {
-            BornDate = DateTime.Now.AddYears(-18);
+            BornDate = DateTime.Now.AddYears(-18);  //минимальный возраст служащего - 18 лет
             JobStartDate = DateTime.Now;
 
             _serviceList = new ListViewModel<ServiceModel>(DataSingleton.Instance.ServiceList);
@@ -345,10 +346,9 @@ namespace Staffinfo.Desktop.ViewModel
         }
 
         /// <summary>
-        /// Открыть окно добавления служащего
+        /// Добавить служащего
         /// </summary>
         private RelayCommand _addNewEmployeeCommand;
-
         public RelayCommand AddNewEmployeeCommand
             => _addNewEmployeeCommand ?? (_addNewEmployeeCommand = new RelayCommand(AddNewEmployeeExecute));
 
@@ -385,6 +385,18 @@ namespace Staffinfo.Desktop.ViewModel
             WindowsClosed = true;
         }
 
+        /// <summary>
+        /// Добавить организацию (паспортный стол)
+        /// </summary>
+        private RelayCommand _addNewOrganizationUnit;
+        public RelayCommand AddNewOrganizationUnit
+            => _addNewEmployeeCommand ?? (_addNewOrganizationUnit = new RelayCommand(AddNewOrganizationUnitExecute));
+
+        private void AddNewOrganizationUnitExecute()
+        {
+            var addOrganizationView = new AddPasportOrganizationUnitView();
+            addOrganizationView.ShowDialog();
+        }
         #endregion
     }
 }
