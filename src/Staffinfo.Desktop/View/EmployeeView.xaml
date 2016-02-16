@@ -307,7 +307,14 @@
                                             ToolTip="Серия паспорта"
                                             SelectedValue="{Binding Path=PasportSeries}"
                                             SelectedValuePath="Content">
+                                            <ComboBoxItem Content="AB"/>
+                                            <ComboBoxItem Content="BM"/>
                                             <ComboBoxItem Content="HB"/>
+                                            <ComboBoxItem Content="KH"/>
+                                            <ComboBoxItem Content="MP"/>
+                                            <ComboBoxItem Content="MC"/>
+                                            <ComboBoxItem Content="KB"/>
+                                            <ComboBoxItem Content="PP"/>
                                         </ComboBox>
                                         <TextBox
                                             Name="PasportNumberTBox"

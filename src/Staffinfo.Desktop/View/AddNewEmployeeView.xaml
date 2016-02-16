@@ -235,7 +235,14 @@
                               MinHeight="30"
                               FontSize="14"
                               Text="{Binding PasportSeries}">
+                        <ComboBoxItem Content="AB"/>
+                        <ComboBoxItem Content="BM"/>
                         <ComboBoxItem Content="HB"/>
+                        <ComboBoxItem Content="KH"/>
+                        <ComboBoxItem Content="MP"/>
+                        <ComboBoxItem Content="MC"/>
+                        <ComboBoxItem Content="KB"/>
+                        <ComboBoxItem Content="PP"/>
                     </ComboBox>
                 </StackPanel>
                 <StackPanel Margin="5,0">

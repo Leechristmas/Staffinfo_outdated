@@ -159,6 +159,7 @@
     <Compile Include="Model\ViolationModel.cs" />
     <Compile Include="ViewModel\AddNewEmployeeViewModel.cs" />
     <Compile Include="ViewModel\AllEmployeesViewModel.cs" />
+    <Compile Include="ViewModel\DictionaryViewModelBase.cs" />
     <Compile Include="ViewModel\EmployeeEditViewModel.cs" />
     <Compile Include="ViewModel\EmployeeViewModel.cs" />
     <Compile Include="ViewModel\ListViewModel.cs" />
@@ -170,8 +171,20 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ViewModel\WindowViewModelBase.cs" />
+    <Compile Include="View\AddEducationalInstitutionView.xaml.cs">
+      <DependentUpon>AddEducationalInstitutionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AddMilitaryUnitView.xaml.cs">
+      <DependentUpon>AddMilitaryUnitView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\AddNewEmployeeView.xaml.cs">
       <DependentUpon>AddNewEmployeeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AddPasportOrganizationUnitView.xaml.cs">
+      <DependentUpon>AddPasportOrganizationUnitView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AddSpecialityView.xaml.cs">
+      <DependentUpon>AddSpecialityView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\AllEmployeesView.xaml.cs">
       <DependentUpon>AllEmployeesView.xaml</DependentUpon>
@@ -225,9 +238,25 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Page>
+    <Page Include="View\AddEducationalInstitutionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AddMilitaryUnitView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\AddNewEmployeeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\AddPasportOrganizationUnitView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AddSpecialityView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\AllEmployeesView.xaml">
       <Generator>MSBuild:Compile</Generator>
