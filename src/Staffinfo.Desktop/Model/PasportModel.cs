@@ -3,14 +3,19 @@
     /// <summary>
     /// Паспортные данные
     /// </summary>
-    public class PasportModel: BaseModel
+    public class PasportModel : BaseModel
     {
         #region Properties
 
+        ///// <summary>
+        ///// Id паспортного стола
+        ///// </summary>
+        //public long OrganizationUnitId { get; set; }
+
         /// <summary>
-        /// Id паспортного стола
+        /// Паспортный стол
         /// </summary>
-        public long OrganizationUnitId { get; set; }
+        public string OrganizationUnit { get; set; }
 
         /// <summary>
         /// Номер паспорта

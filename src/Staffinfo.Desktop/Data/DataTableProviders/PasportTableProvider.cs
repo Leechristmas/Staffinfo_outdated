@@ -8,32 +8,32 @@ using Staffinfo.Desktop.Properties;
 namespace Staffinfo.Desktop.Data.DataTableProviders
 {
     /// <summary>
-    /// Компонент доступа к таблице PASPORT_ORANIZATION_UNIT (паспортные столы) 
+    /// Компонент доступа к таблице PASPORT (паспорт)
     /// </summary>
-    public class PasportOrganizationUnitTableProvider: IWritableTableContract<PasportOrganizationUnitModel>, IDisposable
+    public class PasportTableProvider : IWritableTableContract<PasportModel>, IDisposable
     {
         public string ErrorInfo { get; set; }
 
-        #region IWritableDirectoryTableContract
+        #region IWritableDirectoryTableContract implementation
 
         /// <summary>
-        /// Сохранить паспортный стол
+        /// Сохранить паспорт в БД
         /// </summary>
-        /// <param name="pasportOrganizationUnit">Паспортный стол</param>
+        /// <param name="pasport">паспорт</param>
         /// <returns></returns>
-        public PasportOrganizationUnitModel Save(PasportOrganizationUnitModel pasportOrganizationUnit)
+        public PasportModel Save(PasportModel pasport)
         {
-            if (pasportOrganizationUnit == null) throw new ArgumentNullException(nameof(pasportOrganizationUnit), Resources.DatabaseConnector_parameter_cannot_be_null);
+            if (pasport == null) throw new ArgumentNullException(nameof(pasport), Resources.DatabaseConnector_parameter_cannot_be_null);
 
             var cmd =
-                new SqlCommand($@"INSERT INTO PASPORT_ORGANIZATION_UNIT VALUES('{pasportOrganizationUnit.OrganizationUnitName}', '{pasportOrganizationUnit.Address}'); SELECT MAX(ID) FROM PASPORT_ORGANIZATION_UNIT;");
+                new SqlCommand($@"INSERT INTO PASPORT VALUES('{pasport.OrganizationUnit}', '{pasport.Number}', '{pasport.Series}'); SELECT MAX(ID) FROM PASPORT;");
 
             try
             {
                 var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
 
                 sqlDataReader.Read();
-                pasportOrganizationUnit.Id = Int64.Parse(sqlDataReader[0].ToString());
+                pasport.Id = Int64.Parse(sqlDataReader[0].ToString());
                 sqlDataReader.Close();
 
                 ErrorInfo = null;
@@ -44,32 +44,33 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 return null;
             }
 
-            return pasportOrganizationUnit;
+            return pasport;
         }
 
         /// <summary>
-        /// Возвращает паспортный стол по id
+        /// Возвращает паспорт по id
         /// </summary>
-        /// <param name="id">id паспортного стола</param>
+        /// <param name="id">id паспорта</param>
         /// <returns></returns>
-        public PasportOrganizationUnitModel Select(long? id)
+        public PasportModel Select(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"SELECT * FROM PASPORT_ORGANIZATION_UNIT WHERE ID={id};");
+            var cmd = new SqlCommand($@"SELECT * FROM PASPORT WHERE ID={id};");
 
-            PasportOrganizationUnitModel organizationUnit = null;
+            PasportModel pasport = null;
 
             try
             {
                 var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
                 sqlDataReader.Read();
 
-                organizationUnit = new PasportOrganizationUnitModel
+                pasport = new PasportModel
                 {
                     Id = Int64.Parse(sqlDataReader[0].ToString()),
-                    OrganizationUnitName = sqlDataReader[1].ToString(),
-                    Address = sqlDataReader[2].ToString()
+                    OrganizationUnit = sqlDataReader[1].ToString(),
+                    Number = sqlDataReader[2].ToString(),
+                    Series = sqlDataReader[3].ToString()
                 };
                 sqlDataReader.Close();
 
@@ -81,18 +82,18 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 return null;
             }
 
-            return organizationUnit;
+            return pasport;
         }
 
         /// <summary>
-        /// Возвращает список паспортных столов
+        /// Возвращает все паспорта
         /// </summary>
         /// <returns></returns>
-        public ObservableCollection<PasportOrganizationUnitModel> Select()
+        public ObservableCollection<PasportModel> Select()
         {
-            var organizationUnitList = new ObservableCollection<PasportOrganizationUnitModel>();
+            var pasportList = new ObservableCollection<PasportModel>();
 
-            var cmd = new SqlCommand("SELECT * FROM PASPORT_ORGANIZATION_UNIT");
+            var cmd = new SqlCommand("SELECT * FROM PASPORT");
 
             try
             {
@@ -100,14 +101,15 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
                 while (sqlDataReader.Read())
                 {
-                    var organizationUnit = new PasportOrganizationUnitModel
+                    var pasport = new PasportModel
                     {
                         Id = Int64.Parse(sqlDataReader[0].ToString()),
-                        OrganizationUnitName = sqlDataReader[1].ToString(),
-                        Address = sqlDataReader[2].ToString()
+                        OrganizationUnit = sqlDataReader[1].ToString(),
+                        Number = sqlDataReader[2].ToString(),
+                        Series = sqlDataReader[3].ToString()
                     };
 
-                    organizationUnitList.Add(organizationUnit);
+                    pasportList.Add(pasport);
                 }
                 sqlDataReader.Close();
 
@@ -118,19 +120,19 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;
                 return null;
             }
-            return organizationUnitList;
+            return pasportList;
         }
 
         /// <summary>
-        /// Обновить запись о паспортном столе
+        /// Обновляет процесс обучения
         /// </summary>
-        /// <param name="organizationUnit">паспортный стол</param>
+        /// <param name="pasport">паспорт</param>
         /// <returns></returns>
-        public bool Update(PasportOrganizationUnitModel organizationUnit)
+        public bool Update(PasportModel pasport)
         {
-            if (organizationUnit == null) throw new ArgumentNullException(nameof(organizationUnit), Resources.DatabaseConnector_parameter_cannot_be_null);
+            if (pasport == null) throw new ArgumentNullException(nameof(pasport), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"UPDATE PASPORT_ORGANIZATION_UNIT SET ORGANIZATION_NAME='{organizationUnit.OrganizationUnitName}', ADDRESS='{organizationUnit.Address}' WHERE ID={organizationUnit.Id};");
+            var cmd = new SqlCommand($@"UPDATE PASPORT SET ORGANIZATION_UNIT_ID='{pasport.OrganizationUnit}', NUMBER='{pasport.Number}', SERIES='{pasport.Series}' WHERE ID={pasport.Id};");
 
             try
             {
@@ -147,15 +149,15 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         }
 
         /// <summary>
-        /// Удалить паспортный стол по id
+        /// Удалить паспорт по id
         /// </summary>
-        /// <param name="id">id паспортного стола</param>
+        /// <param name="id">id паспорта</param>
         /// <returns></returns>
         public bool DeleteById(long? id)
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"DELETE FROM PASPORT_ORGANIZATION_UNIT WHERE ID = '{id}'");
+            var cmd = new SqlCommand($@"DELETE FROM PASPORT WHERE ID = '{id}'");
             try
             {
                 DataSingleton.Instance.DatabaseConnector.Execute(cmd);
@@ -168,7 +170,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             }
             return true;
         }
-        
+
         #endregion
 
         #region IDisposable implementation

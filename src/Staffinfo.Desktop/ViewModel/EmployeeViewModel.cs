@@ -2,9 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Windows;
 using System.Windows.Media.Imaging;
 using GalaSoft.MvvmLight.Ioc;
 using Staffinfo.Desktop.Data;
+using Staffinfo.Desktop.Data.DataTableProviders;
 using Staffinfo.Desktop.Model;
 
 namespace Staffinfo.Desktop.ViewModel
@@ -26,6 +28,20 @@ namespace Staffinfo.Desktop.ViewModel
         {
             _empModel = new EmployeeModel();
         }
+
+        #endregion
+
+        #region Fields
+
+        /// <summary>
+        /// Паспорт
+        /// </summary>
+        private PasportModel _pasport;
+
+        /// <summary>
+        /// Тип даныых, которые будут отображаться в grid'e
+        /// </summary>
+        private List<string> _informationModeList;
 
         #endregion
 
@@ -246,57 +262,18 @@ namespace Staffinfo.Desktop.ViewModel
         }
 
         /// <summary>
-        /// Паспорт
+        /// Id паспорта
         /// </summary>
-        public string Pasport
+        public long? PasportId
         {
-            get { return _empModel.Pasport; }
+            get { return _empModel.PasportId; }
             set
             {
-                _empModel.Pasport = value; 
-                RaisePropertyChanged("Pasport");
+                _empModel.PasportId = value;
+                RaisePropertyChanged("PasportId");
             }
         }
-
-        /// <summary>
-        /// Серия паспорта
-        /// </summary>
-        public string PasportSeries
-        {
-            get { return _empModel.PasportSeries; }
-            set
-            {
-                _empModel.PasportSeries = value;
-                RaisePropertyChanged("PasportSeries");
-            }
-        }
-
-        /// <summary>
-        /// Организация, выдавшая паспорт
-        /// </summary>
-        public string PasportOrganizationUnit
-        {
-            get { return _empModel.PasportOrganizationUnit; }
-            set
-            {
-                _empModel.PasportOrganizationUnit = value;
-                RaisePropertyChanged("PasportOrganizationUnit");
-            }
-        }
-
-        /// <summary>
-        /// Номер паспорта
-        /// </summary>
-        public string PasportNumber
-        {
-            get { return _empModel.PasportNumber; }
-            set
-            {
-                _empModel.PasportNumber = value;
-                RaisePropertyChanged("PasportNumber");
-            }
-        }
-
+        
         /// <summary>
         /// Номер мобильного телефона
         /// </summary>
@@ -322,13 +299,10 @@ namespace Staffinfo.Desktop.ViewModel
                 RaisePropertyChanged("HomePhoneNumber");
             }
         }
-
-
+        
         /// <summary>
-        /// Тип даныых, которые будут отображаться в grid'e
+        /// Режимы
         /// </summary>
-        private List<string> _informationModeList;
-
         public List<string> InformationModeList
         {
             get
@@ -354,5 +328,6 @@ namespace Staffinfo.Desktop.ViewModel
         }
 
         #endregion
+        
     }
 }

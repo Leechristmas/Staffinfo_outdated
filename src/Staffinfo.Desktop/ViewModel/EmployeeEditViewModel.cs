@@ -20,9 +20,18 @@ namespace Staffinfo.Desktop.ViewModel
 
         public EmployeeEditViewModel()
         {
+            //подтягиваем список званий
             _rankList = new ListViewModel<RankModel>(DataSingleton.Instance.RankList);
+            
+            //список должностей
             _postList = new ListViewModel<PostModel>(DataSingleton.Instance.PostList);
+
+            //список служб
             _serviceList = new ListViewModel<ServiceModel>(DataSingleton.Instance.ServiceList);
+
+            ////список паспортных столов
+            //_pasportOrganizationUnitList = new ListViewModel<PasportOrganizationUnitModel>(DataSingleton.Instance.PasportOrganizationUnitList);
+
         }
 
         public EmployeeEditViewModel(EmployeeViewModel employeeViewModel) : this()
@@ -44,9 +53,7 @@ namespace Staffinfo.Desktop.ViewModel
             Flat = employeeViewModel.Flat;
             HomePhoneNumber = employeeViewModel.HomePhoneNumber;
             MobilePhoneNumber = employeeViewModel.MobilePhoneNumber;
-            PasportNumber = employeeViewModel.PasportNumber;
-            PasportOrganizationUnit = employeeViewModel.PasportOrganizationUnit;
-            PasportSeries = employeeViewModel.PasportSeries;
+            Pasport = GetPasport(employeeViewModel.PasportId);
             PersonalNumber = employeeViewModel.PersonalNumber;
             Photo = employeeViewModel.Photo;
 
@@ -69,6 +76,11 @@ namespace Staffinfo.Desktop.ViewModel
         /// Службы
         /// </summary>
         private readonly ListViewModel<ServiceModel> _serviceList;
+
+        ///// <summary>
+        ///// Список паспортных столов
+        ///// </summary>
+        //private ListViewModel<PasportOrganizationUnitModel> _pasportOrganizationUnitList;
 
         /// <summary>
         /// Фото служащего
@@ -126,21 +138,6 @@ namespace Staffinfo.Desktop.ViewModel
         private string _flat;
 
         /// <summary>
-        /// Серия паспорта
-        /// </summary>
-        private string _pasportSeries;
-
-        /// <summary>
-        /// Организация, выдавшая паспорт
-        /// </summary>
-        private string _pasportOrganizationUnit;
-
-        /// <summary>
-        /// Номер паспорта
-        /// </summary>
-        private string _pasportNumber;
-
-        /// <summary>
         /// Номер мобильного телефона
         /// </summary>
         private string _mobilePhoneNumber;
@@ -149,6 +146,11 @@ namespace Staffinfo.Desktop.ViewModel
         /// Номер домашнего телефона
         /// </summary>
         private string _homePhoneNumber;
+
+        /// <summary>
+        /// Паспорт
+        /// </summary>
+        private PasportModel _pasport;
 
         /// <summary>
         /// Были ли произведены изменения
@@ -336,48 +338,21 @@ namespace Staffinfo.Desktop.ViewModel
             }
         }
 
-        /// <summary>
-        /// Серия паспорта
-        /// </summary>
-        public string PasportSeries
-        {
-            get { return _pasportSeries; }
-            set
-            {
-                _pasportSeries = value;
-                RaisePropertyChanged("PasportSeries");
-
-                WasChanged = (_pasportSeries != EmployeeViewModel.PasportSeries);
-            }
-        }
+        ///// <summary>
+        ///// Паспортные столы
+        ///// </summary>
+        //public ListViewModel<PasportOrganizationUnitModel> PasportOrganizationList => _pasportOrganizationUnitList;
 
         /// <summary>
-        /// Организация, выдавшая паспорт
+        /// Паспорт
         /// </summary>
-        public string PasportOrganizationUnit
+        public PasportModel Pasport
         {
-            get { return _pasportOrganizationUnit; }
+            get { return _pasport ?? (_pasport = new PasportModel()); }
             set
             {
-                _pasportOrganizationUnit = value;
-                RaisePropertyChanged("PasportOrganizationUnit");
-
-                WasChanged = (_pasportOrganizationUnit != EmployeeViewModel.PasportOrganizationUnit);
-            }
-        }
-
-        /// <summary>
-        /// Номер паспорта
-        /// </summary>
-        public string PasportNumber
-        {
-            get { return _pasportNumber; }
-            set
-            {
-                _pasportNumber = value;
-                RaisePropertyChanged("PasportNumber");
-
-                WasChanged = (_pasportNumber != EmployeeViewModel.PasportNumber);
+                _pasport = value;
+                RaisePropertyChanged("Pasport");
             }
         }
 
@@ -489,9 +464,9 @@ namespace Staffinfo.Desktop.ViewModel
             EmployeeViewModel.Flat = Flat;
             EmployeeViewModel.HomePhoneNumber = HomePhoneNumber;
             EmployeeViewModel.MobilePhoneNumber = MobilePhoneNumber;
-            EmployeeViewModel.PasportNumber = PasportNumber;
-            EmployeeViewModel.PasportOrganizationUnit = PasportOrganizationUnit;
-            EmployeeViewModel.PasportSeries = PasportSeries;
+            //EmployeeViewModel.PasportNumber = PasportNumber;
+            //EmployeeViewModel.PasportOrganizationUnit = PasportOrganizationUnit;
+            //EmployeeViewModel.PasportSeries = PasportSeries;
             EmployeeViewModel.PersonalNumber = PersonalNumber;
             EmployeeViewModel.Photo = Photo;
 
@@ -528,9 +503,9 @@ namespace Staffinfo.Desktop.ViewModel
             Flat = EmployeeViewModel.Flat;
             HomePhoneNumber = EmployeeViewModel.HomePhoneNumber;
             MobilePhoneNumber = EmployeeViewModel.MobilePhoneNumber;
-            PasportNumber = EmployeeViewModel.PasportNumber;
-            PasportOrganizationUnit = EmployeeViewModel.PasportOrganizationUnit;
-            PasportSeries = EmployeeViewModel.PasportSeries;
+            //PasportNumber = EmployeeViewModel.PasportNumber;
+            //PasportOrganizationUnit = EmployeeViewModel.PasportOrganizationUnit;
+            //PasportSeries = EmployeeViewModel.PasportSeries;
             PersonalNumber = EmployeeViewModel.PersonalNumber;
             Photo = EmployeeViewModel.Photo;
 
@@ -609,6 +584,53 @@ namespace Staffinfo.Desktop.ViewModel
                    == Convert.ToBase64String(ImageToByte(btm2));
         }
 
+        /// <summary>
+        /// Подбирает паспорт из БД по id
+        /// </summary>
+        /// <param name="id">id паспорта</param>
+        /// <returns></returns>
+        private PasportModel GetPasport(long? id)
+        {
+            PasportModel pasport = null;
+            try
+            {
+                using (var pasportTblPrvdr = new PasportTableProvider())
+                {
+                    pasport = pasportTblPrvdr.Select(id);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Не удалось загрузить паспортные данные", "Ошибка", MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+            return pasport;
+        }
+
+        //Законсервировал до лучших времен...
+        ///// <summary>
+        ///// Подбираем паспортный стол по id
+        ///// </summary>
+        ///// <param name="id"></param>
+        ///// <returns></returns>
+        //private PasportOrganizationUnitModel GetPasportOrganizationUnit(long? id)
+        //{
+        //    PasportOrganizationUnitModel pasportOrganizationUnit = null;
+        //    try
+        //    {
+        //        using (var prvdr = new PasportOrganizationUnitTableProvider())
+        //        {
+        //            pasportOrganizationUnit = prvdr.Select(id);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show("Не удалось загрузить паспортные данные", "Ошибка", MessageBoxButton.OK,
+        //            MessageBoxImage.Error);
+        //    }
+        //    return pasportOrganizationUnit;
+        //}
+        
         #endregion
     }
 }

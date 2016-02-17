@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Windows;
 using System.Windows.Media;
 using GalaSoft.MvvmLight.Command;
 using Staffinfo.Desktop.Data;
@@ -24,6 +25,9 @@ namespace Staffinfo.Desktop.ViewModel
             _serviceList = new ListViewModel<ServiceModel>(DataSingleton.Instance.ServiceList);
             _rankList = new ListViewModel<RankModel>(DataSingleton.Instance.RankList);
             _postList = new ListViewModel<PostModel>(DataSingleton.Instance.PostList);
+            //_pasportOrganizationUnitList = new ListViewModel<PasportOrganizationUnitModel>(DataSingleton.Instance.PasportOrganizationUnitList); //пока что паспортный стол будет вводиться руками
+
+            _pasport = new PasportModel();
         }
 
         #endregion
@@ -43,6 +47,11 @@ namespace Staffinfo.Desktop.ViewModel
         /// Службы
         /// </summary>
         private readonly ListViewModel<ServiceModel> _serviceList;
+
+        ///// <summary>
+        ///// Список паспортных столов
+        ///// </summary>
+        //private ListViewModel<PasportOrganizationUnitModel> _pasportOrganizationUnitList; 
 
         /// <summary>
         /// Личный номер
@@ -95,21 +104,6 @@ namespace Staffinfo.Desktop.ViewModel
         private string _flat;
 
         /// <summary>
-        /// Серия паспорта
-        /// </summary>
-        private string _pasportSeries;
-
-        /// <summary>
-        /// Организация, выдавшая паспорт
-        /// </summary>
-        private string _pasportOrganizationUnit;
-
-        /// <summary>
-        /// Номер паспорта
-        /// </summary>
-        private string _pasportNumber;
-
-        /// <summary>
         /// Номер мобильного телефона
         /// </summary>
         private string _mobilePhoneNumber;
@@ -118,6 +112,12 @@ namespace Staffinfo.Desktop.ViewModel
         /// Номер домашнего телефона
         /// </summary>
         private string _homePhoneNumber;
+
+        /// <summary>
+        /// Паспорт
+        /// </summary>
+        private PasportModel _pasport;
+
         #endregion
 
         #region Properties
@@ -252,41 +252,15 @@ namespace Staffinfo.Desktop.ViewModel
         }
 
         /// <summary>
-        /// Серия паспорта
+        /// Паспорт
         /// </summary>
-        public string PasportSeries
+        public PasportModel Pasport
         {
-            get { return _pasportSeries; }
+            get { return _pasport ?? (_pasport = new PasportModel()); }
             set
             {
-                _pasportSeries = value;
-                RaisePropertyChanged("PasportSeries");
-            }
-        }
-
-        /// <summary>
-        /// Организация, выдавшая паспорт
-        /// </summary>
-        public string PasportOrganizationUnit
-        {
-            get { return _pasportOrganizationUnit; }
-            set
-            {
-                _pasportOrganizationUnit = value;
-                RaisePropertyChanged("PasportOrganizationUnit");
-            }
-        }
-
-        /// <summary>
-        /// Номер паспорта
-        /// </summary>
-        public string PasportNumber
-        {
-            get { return _pasportNumber; }
-            set
-            {
-                _pasportNumber = value;
-                RaisePropertyChanged("PasportNumber");
+                _pasport = value;
+                RaisePropertyChanged("Pasport");
             }
         }
 
@@ -331,6 +305,11 @@ namespace Staffinfo.Desktop.ViewModel
         /// </summary>
         public ListViewModel<ServiceModel> ServiceList => _serviceList;
 
+        ///// <summary>
+        ///// Паспортные столы
+        ///// </summary>
+        //public ListViewModel<PasportOrganizationUnitModel> PasportOrganizationList => _pasportOrganizationUnitList;  
+
         #endregion
 
         #region Commands
@@ -354,11 +333,18 @@ namespace Staffinfo.Desktop.ViewModel
 
         private void AddNewEmployeeExecute()
         {
+            //сохраняем паспорт
+            using (var prvdr = new PasportTableProvider())
+            {
+                Pasport = prvdr.Save(Pasport);
+            }
+
+            //сохраняем самого служащего
             using (var prvdr = new EmployeeTableProvider())
             {
                 var post = PostList.SelectedItem;
                 var rank = RankList.SelectedItem;
-
+                
                 var employee = new EmployeeModel
                 {
                     LastName = LastName,
@@ -374,29 +360,36 @@ namespace Staffinfo.Desktop.ViewModel
                     Street = Street,
                     House = House,
                     Flat = Flat,
-                    Pasport = PasportOrganizationUnit + '#' + PasportSeries + '#' + PasportNumber,
+                    PasportId = Pasport.Id,
                     MobilePhoneNumber = MobilePhoneNumber,
                     HomePhoneNumber = HomePhoneNumber
                 };
 
                 employee = prvdr.Save(employee);
-                DataSingleton.Instance.EmployeeList.Add(new EmployeeViewModel(employee));
+
+                if (employee == null)
+                    MessageBox.Show("Не удалось сохранить служащего!" + prvdr.ErrorInfo, "Ошибка!", MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                else
+                    DataSingleton.Instance.EmployeeList.Add(new EmployeeViewModel(employee));
             }
             WindowsClosed = true;
         }
 
-        /// <summary>
-        /// Добавить организацию (паспортный стол)
-        /// </summary>
-        private RelayCommand _addNewOrganizationUnit;
-        public RelayCommand AddNewOrganizationUnit
-            => _addNewEmployeeCommand ?? (_addNewOrganizationUnit = new RelayCommand(AddNewOrganizationUnitExecute));
+        ///// <summary>
+        ///// Добавить организацию (паспортный стол)
+        ///// </summary>
+        //private RelayCommand _addNewOrganizationUnit;
+        
+        //public RelayCommand AddNewOrganizationUnit
+        //    => _addNewEmployeeCommand ?? (_addNewOrganizationUnit = new RelayCommand(AddNewOrganizationUnitExecute));
 
-        private void AddNewOrganizationUnitExecute()
-        {
-            var addOrganizationView = new AddPasportOrganizationUnitView();
-            addOrganizationView.ShowDialog();
-        }
+        //private void AddNewOrganizationUnitExecute()
+        //{
+        //    var addOrganizationView = new AddPasportOrganizationUnitView();
+        //    addOrganizationView.ShowDialog();
+        //}
         #endregion
+        
     }
 }

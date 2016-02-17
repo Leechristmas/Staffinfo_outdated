@@ -77,24 +77,29 @@ namespace Staffinfo.Desktop.Model
         public string Flat { get; set; }
 
         /// <summary>
+        /// Код паспорта
+        /// </summary>
+        public long? PasportId { get; set; }
+
+        /// <summary>
         /// Паспортные данные TODO!!!:избыточность...или нет=)
         /// </summary>
-        public string Pasport { get; set; }
+        //public string Pasport { get; set; }
 
         /// <summary>
         /// Серия паспорта
         /// </summary>
-        public string PasportSeries { get; set; }
+        //public string PasportSeries { get; set; }
 
-        /// <summary>
-        /// Организация, выдавшая паспорт
-        /// </summary>
-        public string PasportOrganizationUnit { get; set; }
+        ///// <summary>
+        ///// Организация, выдавшая паспорт
+        ///// </summary>
+        //public string PasportOrganizationUnit { get; set; }
 
-        /// <summary>
-        /// Номер паспорта
-        /// </summary>
-        public string PasportNumber { get; set; }
+        ///// <summary>
+        ///// Номер паспорта
+        ///// </summary>
+        //public string PasportNumber { get; set; }
 
         /// <summary>
         /// Номер мобильного телефона

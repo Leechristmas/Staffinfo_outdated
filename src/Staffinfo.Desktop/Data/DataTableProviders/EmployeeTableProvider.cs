@@ -86,8 +86,11 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             var cmd =
                 new SqlCommand($"INSERT INTO EMPLOYEE VALUES('{employee.FirstName}', '{employee.MiddleName}', '{employee.LastName}'," + 
                 $"'{employee.PersonalNumber}', {employee.PostId}, {employee.RankId}, '{employee.BornDate.Value}'," + 
-                $"'{employee.JobStartDate.Value}', '{employee.Address}', '{employee.Pasport}', '{employee.MobilePhoneNumber}', '{employee.HomePhoneNumber}', '{employee.IsPensioner}', {null}); "+
+                $"'{employee.JobStartDate.Value}', '{employee.Address}', {employee.PasportId}, '{employee.MobilePhoneNumber}', '{employee.HomePhoneNumber}', '{employee.IsPensioner}', NULL); "+
                 "SELECT MAX(ID) FROM EMPLOYEE;");
+
+            //SqlParameter param = cmd.Parameters.Add("@Photo", SqlDbType.VarBinary);
+            //param.Value = DBNull.Value;
 
             try
             {
@@ -96,7 +99,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 sqlDataReader.Read();
                 employee.Id = Int64.Parse(sqlDataReader[0].ToString());
                 sqlDataReader.Close();
-
+                
                 ErrorInfo = null;
             }
             catch (Exception ex)
@@ -130,12 +133,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 var address = sqlDataReader["ADDRESS"].ToString();
                 //Реквизитный состав адреса
                 var addressProps = address.Split('#');
-
-                //Паспорт
-                var pasport = sqlDataReader["PASPORT"].ToString();
-                //Реквизитный состав паспорта
-                var pasportProps = pasport.Split('#');
-
+                
                 //Фотография
                 var ms = new MemoryStream();
                 BitmapImage photo = null;
@@ -144,7 +142,6 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                     ms.Write((byte[])sqlDataReader["PHOTO"], 0, ((byte[])sqlDataReader["PHOTO"]).Length);
                     photo = ByteToImage(ms.ToArray());
                 }
-
 
                 employeeModel = new EmployeeModel
                 {
@@ -162,10 +159,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                     Street = addressProps[1],
                     House = addressProps[2],
                     Flat = addressProps[3],
-                    Pasport = pasport,
-                    PasportOrganizationUnit = pasportProps[0],
-                    PasportSeries = pasportProps[1],
-                    PasportNumber = pasportProps[2],
+                    PasportId = int.Parse(sqlDataReader["PASPORT_ID"].ToString()),
                     MobilePhoneNumber = sqlDataReader["MOBILE_PHONE_NUMBER"].ToString(),
                     HomePhoneNumber = sqlDataReader["HOME_PHONE_NUMBER"].ToString(),
                     IsPensioner = bool.Parse(sqlDataReader["IS_PENSIONER"].ToString()),
@@ -204,12 +198,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                     var address = sqlDataReader["ADDRESS"].ToString();
                     //Реквизитный состав адреса
                     var addressProps = address.Split('#');
-
-                    //Паспорт
-                    var pasport = sqlDataReader["PASPORT"].ToString();
-                    //Реквизитный состав паспорта
-                    var pasportProps = pasport.Split('#');
-
+                    
                     //Фотография
                     var ms = new MemoryStream();
                     BitmapImage photo = null;
@@ -235,10 +224,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                         Street = addressProps[1],
                         House = addressProps[2],
                         Flat = addressProps[3],
-                        Pasport = pasport,
-                        PasportOrganizationUnit = pasportProps[0],
-                        PasportSeries = pasportProps[1],
-                        PasportNumber = pasportProps[2],
+                        PasportId = int.Parse(sqlDataReader["PASPORT_ID"].ToString()),
                         MobilePhoneNumber = sqlDataReader["MOBILE_PHONE_NUMBER"].ToString(),
                         HomePhoneNumber = sqlDataReader["HOME_PHONE_NUMBER"].ToString(),
                         IsPensioner = bool.Parse(sqlDataReader["IS_PENSIONER"].ToString()),
@@ -271,7 +257,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             var cmd = new SqlCommand($@"UPDATE EMPLOYEE SET EMPLOYEE_FIRSTNAME='{employee.FirstName}', EMPLOYEE_MIDDLENAME='{employee.MiddleName}'," + 
                 $"EMPLOYEE_LASTNAME='{employee.LastName}', PERSONAL_KEY='{employee.PersonalNumber}', POST_ID={employee.PostId}," +
                 $"RANK_ID={employee.RankId}, BORN_DATE='{employee.BornDate.Value}', JOB_START_DATE='{employee.JobStartDate.Value}'," +
-                $"ADDRESS='{employee.Address}', PASPORT='{employee.Pasport}', MOBILE_PHONE_NUMBER='{employee.MobilePhoneNumber}'," +
+                $"ADDRESS='{employee.Address}', PASPORT_ID={employee.PasportId}, MOBILE_PHONE_NUMBER='{employee.MobilePhoneNumber}'," +
                 $"HOME_PHONE_NUMBER='{employee.HomePhoneNumber}', IS_PENSIONER='{employee.IsPensioner}', PHOTO=@Photo " +
                 $"WHERE ID={employee.Id};");
 

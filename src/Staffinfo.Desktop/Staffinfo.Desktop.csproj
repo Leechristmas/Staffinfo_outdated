@@ -123,6 +123,8 @@
     <Compile Include="Data\DataTableProviders\HolidayTimeTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\HospitalTimeTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\MilitaryProcessTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\PasportOrganizationUnitTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\PasportTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\PostAssignmentTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\PostTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\RankAssignmentTableProvider.cs" />
@@ -146,6 +148,8 @@
     <Compile Include="Model\HospitalTimeModel.cs" />
     <Compile Include="Model\MilitaryProcessModel.cs" />
     <Compile Include="Model\MilitaryUnitModel.cs" />
+    <Compile Include="Model\PasportModel.cs" />
+    <Compile Include="Model\PasportOrganizationUnitModel.cs" />
     <Compile Include="Model\PostAssignmentModel.cs" />
     <Compile Include="Model\PostModel.cs" />
     <Compile Include="Model\RankAssignmentModel.cs" />

@@ -55,6 +55,7 @@
     <Compile Include="DataTests\EducationalInstitutionTableProviderTests.cs" />
     <Compile Include="DataTests\EducationTimeTableProviderTests.cs" />
     <Compile Include="DataTests\EmployeeTableProviderTests.cs" />
+    <Compile Include="DataTests\PasportTableProviderTests.cs" />
     <Compile Include="DataTests\PostTableProviderTest.cs" />
     <Compile Include="DataTests\RankTableProviderTests.cs" />
     <Compile Include="DataTests\ServiceTableProviderTests.cs" />

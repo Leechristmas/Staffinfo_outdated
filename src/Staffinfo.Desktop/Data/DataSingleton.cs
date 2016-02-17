@@ -66,6 +66,21 @@ namespace Staffinfo.Desktop.Data
 
         #endregion
 
+        #region PasportOrganizationUnitList
+
+        private List<PasportOrganizationUnitModel> _pasportOrganizationUnitList;
+
+        public List<PasportOrganizationUnitModel> PasportOrganizationUnitList
+        {
+            get
+            {
+                return _pasportOrganizationUnitList ??
+                       (_pasportOrganizationUnitList = new List<PasportOrganizationUnitModel>());
+            }
+        }
+
+        #endregion
+
 
         /// <summary>
         /// Подтягивает все данные из БД
@@ -94,7 +109,13 @@ namespace Staffinfo.Desktop.Data
             using (var prvdr = new ServiceTableProvider())
             {
                 _instance._serviceList = prvdr.Select().ToList();
-            } 
+            }
+
+            //Паспортные столы
+            using (var prvdr = new PasportOrganizationUnitTableProvider())
+            {
+                _instance._pasportOrganizationUnitList = prvdr.Select().ToList();
+            }
         }
     }
 }
