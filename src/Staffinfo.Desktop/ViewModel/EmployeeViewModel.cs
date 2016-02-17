@@ -154,7 +154,7 @@ namespace Staffinfo.Desktop.ViewModel
         /// </summary>
         public RankModel Rank
         {
-            get { return DataSingleton.Instance.RankList.Find(p => p.Id == _empModel.PostId); }
+            get { return DataSingleton.Instance.RankList.Find(p => p.Id == _empModel.RankId); }
             set
             {
                 _empModel.RankId = value.Id;

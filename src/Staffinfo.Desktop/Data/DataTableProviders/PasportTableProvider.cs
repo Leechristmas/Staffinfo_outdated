@@ -132,7 +132,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             if (pasport == null) throw new ArgumentNullException(nameof(pasport), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"UPDATE PASPORT SET ORGANIZATION_UNIT_ID='{pasport.OrganizationUnit}', NUMBER='{pasport.Number}', SERIES='{pasport.Series}' WHERE ID={pasport.Id};");
+            var cmd = new SqlCommand($@"UPDATE PASPORT SET ORGANIZATION_UNIT='{pasport.OrganizationUnit}', NUMBER='{pasport.Number}', SERIES='{pasport.Series}' WHERE ID={pasport.Id};");
 
             try
             {

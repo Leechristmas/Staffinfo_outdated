@@ -464,16 +464,22 @@ namespace Staffinfo.Desktop.ViewModel
             EmployeeViewModel.Flat = Flat;
             EmployeeViewModel.HomePhoneNumber = HomePhoneNumber;
             EmployeeViewModel.MobilePhoneNumber = MobilePhoneNumber;
-            //EmployeeViewModel.PasportNumber = PasportNumber;
-            //EmployeeViewModel.PasportOrganizationUnit = PasportOrganizationUnit;
-            //EmployeeViewModel.PasportSeries = PasportSeries;
             EmployeeViewModel.PersonalNumber = PersonalNumber;
             EmployeeViewModel.Photo = Photo;
 
-            using (var empTP = new EmployeeTableProvider())
+            using (var prvdr = new PasportTableProvider())
             {
-                if (!empTP.Update(EmployeeViewModel._empModel))
-                    MessageBox.Show("Не удалось применить изменения! Ошибка: " + empTP.ErrorInfo, "Ошибка",
+                if (!prvdr.Update(Pasport))
+                    MessageBox.Show("Не удалось применить изменения! Ошибка: " + prvdr.ErrorInfo, "Ошибка",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+
+            }
+
+            using (var prvdr = new EmployeeTableProvider())
+            {
+                if (!prvdr.Update(EmployeeViewModel._empModel))
+                    MessageBox.Show("Не удалось применить изменения! Ошибка: " + prvdr.ErrorInfo, "Ошибка",
                         MessageBoxButton.OK,
                         MessageBoxImage.Error);
 
