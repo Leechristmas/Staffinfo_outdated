@@ -9,6 +9,7 @@
         mc:Ignorable="d"
         helpers:WindowCloseHelper.WindowsClose="{Binding WindowsClosed}"
         Title="{Binding Path=FullName}" MinWidth="600" MinHeight="740" Height="740" Width="600">
+    
     <controls:MetroWindow.RightWindowCommands>
         <controls:WindowCommands>
             <Button>
@@ -353,10 +354,9 @@
                                     Width="200"
                                     HorizontalAlignment="Left"
                                     FontSize="16"
-                                    ItemsSource="{Binding ElementName=AdditionalInfoTabControl, Path=Items}"
+                                    ItemsSource="{Binding InformationModeList}"
                                     SelectedIndex="{Binding ElementName=AdditionalInfoTabControl, Path=SelectedIndex}"
-                                    DisplayMemberPath="Header"
-                                    controls:TextBoxHelper.Watermark="Укажите тип данных"/>
+                                    controls:TextBoxHelper.Watermark="Укажите тип данных" ></ComboBox>
                                 <Button 
                                     Name="ToAddFormBtn"
                                     MinWidth="100"

@@ -19,7 +19,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         public string ErrorInfo { get; set; }
 
         /// <summary>
-        /// Конвертирует из массива байт в BitmapImage TODO!!!
+        /// Конвертирует из массива байт в BitmapImage
         /// </summary>
         /// <param name="imageBytes">массив байт</param>
         /// <returns></returns>
@@ -32,8 +32,8 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 BitmapImage image = new BitmapImage();
                 image.BeginInit();
                 image.StreamSource = ms;
-                image.DecodePixelHeight = 100;
-                image.DecodePixelWidth = 100;
+                image.DecodePixelHeight = 600;
+                image.DecodePixelWidth = 600;
                 image.CacheOption = BitmapCacheOption.OnLoad;;
                 image.EndInit();
 

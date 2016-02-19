@@ -41,7 +41,7 @@ namespace Staffinfo.Desktop.ViewModel
             }
             catch(Exception ex)
             {
-                MessageBox.Show("Ошибка при загрузке данных!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Ошибка при загрузке данных!" + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

@@ -303,29 +303,22 @@ namespace Staffinfo.Desktop.ViewModel
         /// <summary>
         /// Режимы
         /// </summary>
-        public List<string> InformationModeList
+        public List<string> InformationModeList => _informationModeList ?? (_informationModeList = new List<string>
         {
-            get
-            {
-                return _informationModeList ?? (_informationModeList = new List<string>
-                {
-                    "Аттестация",
-                    "Благодарности",
-                    "Больничные",
-                    "Взыскания",
-                    "Вониская служба",
-                    "Классность",
-                    "Контракты",
-                    "Нарушения",
-                    "Образование",
-                    "Отпуска",
-                    "Присвоение должностей",
-                    "Присвоение званий",
-                    "Родственники"
-                });
-            }
-            set { _informationModeList = value; }
-        }
+            "Аттестация",
+            "Благодарности",
+            "Больничные",
+            "Взыскания",
+            "Вониская служба",
+            "Классность",
+            "Контракты",
+            "Нарушения",
+            "Образование",
+            "Отпуска",
+            "Присвоение должностей",
+            "Присвоение званий",
+            "Родственники"
+        });
 
         #endregion
         

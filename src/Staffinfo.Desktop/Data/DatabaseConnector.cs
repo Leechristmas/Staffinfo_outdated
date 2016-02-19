@@ -13,9 +13,11 @@ namespace Staffinfo.Desktop.Data
         /// строка соединения (notebook)
         /// </summary>
         //private const string UrlDataBase = @"Data Source=DESKTOP-84584PI\SQLEXPRESS; Initial Catalog = staffinfo_tests; Integrated Security=SSPI;";
-        
+
+
         /// <summary>
-        /// строка соединения (PC)
+        /// строка соединения(PC)
+        /// </summary>
         private const string UrlDataBase = @"Data Source=DESKTOP-2B54QFI\SQLEXPRESS; Initial Catalog = staffinfo_tests; Integrated Security=SSPI;";
 
 

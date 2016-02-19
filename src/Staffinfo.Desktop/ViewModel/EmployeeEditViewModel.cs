@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Media.Imaging;
@@ -6,6 +8,7 @@ using GalaSoft.MvvmLight.Command;
 using Microsoft.Win32;
 using Staffinfo.Desktop.Data;
 using Staffinfo.Desktop.Data.DataTableProviders;
+using Staffinfo.Desktop.Helpers;
 using Staffinfo.Desktop.Model;
 
 
@@ -32,6 +35,9 @@ namespace Staffinfo.Desktop.ViewModel
             ////список паспортных столов
             //_pasportOrganizationUnitList = new ListViewModel<PasportOrganizationUnitModel>(DataSingleton.Instance.PasportOrganizationUnitList);
 
+            //TODO
+            _catalogList = new CatalogObservableCollectionsList(
+                );
         }
 
         public EmployeeEditViewModel(EmployeeViewModel employeeViewModel) : this()
@@ -76,6 +82,11 @@ namespace Staffinfo.Desktop.ViewModel
         /// Службы
         /// </summary>
         private readonly ListViewModel<ServiceModel> _serviceList;
+
+        /// <summary>
+        /// Тип даныых, которые будут отображаться в grid'e
+        /// </summary>
+        private List<string> _informationModeList;
 
         ///// <summary>
         ///// Список паспортных столов
@@ -157,10 +168,19 @@ namespace Staffinfo.Desktop.ViewModel
         /// </summary>
         private bool _wasChanged;
 
+        /// <summary>
+        /// Коллекция справочников
+        /// </summary>
+        private CatalogObservableCollectionsList _catalogList;
 
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Коллекция справочников
+        /// </summary>
+        public CatalogObservableCollectionsList CatalogList => _catalogList;
 
         /// <summary>
         /// Флаг изменений
@@ -422,6 +442,26 @@ namespace Staffinfo.Desktop.ViewModel
         /// </summary>
         public ListViewModel<ServiceModel> ServiceList => _serviceList;
 
+        /// <summary>
+        /// Режимы
+        /// </summary>
+        public List<string> InformationModeList => _informationModeList ?? (_informationModeList = new List<string>
+        {
+            "Аттестация",
+            "Благодарности",
+            "Больничные",
+            "Взыскания",
+            "Вониская служба",
+            "Классность",
+            "Контракты",
+            "Нарушения",
+            "Образование",
+            "Отпуска",
+            "Присвоение должностей",
+            "Присвоение званий",
+            "Родственники"
+        });
+
         #endregion
 
         #region Commands
@@ -537,8 +577,8 @@ namespace Staffinfo.Desktop.ViewModel
 
                 if (fileInfo.Extension.ToLower() == ".jpg")
                 {
-                    Photo = new BitmapImage(new Uri(fileInfo.FullName));
-                }
+                    Photo = SetSize(new BitmapImage(new Uri(fileInfo.FullName)), 600, 600); //стоит использовать менеезатратный вариант
+                 }
             }
         }
 
@@ -556,6 +596,56 @@ namespace Staffinfo.Desktop.ViewModel
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Установить расширение (наверняка костыль=))
+        /// </summary>
+        /// <param name="btm">изображение</param>
+        /// <param name="height">высота,px</param>
+        /// <param name="width">ширина,px</param>
+        /// <returns></returns>
+        private BitmapImage SetSize(BitmapImage btm, int height, int width)
+        {
+            var imageBytes = ImageToByte(btm);      //конвертируем изображение в byte[]
+            
+            using (var ms = new MemoryStream(imageBytes))
+            {
+                ms.Seek(0, SeekOrigin.Begin);
+
+                BitmapImage image = new BitmapImage();
+                image.BeginInit();
+                image.StreamSource = ms;
+                image.DecodePixelHeight = height;
+                image.DecodePixelWidth = width;
+                image.CacheOption = BitmapCacheOption.OnLoad; ;
+                image.EndInit();
+
+                return image;
+            }
+        }
+
+        /// <summary>
+        /// Конвертирует из массива байт в BitmapImage 
+        /// </summary>
+        /// <param name="imageBytes">массив байт</param>
+        /// <returns></returns>
+        private BitmapImage ByteToImage(byte[] imageBytes)
+        {
+            using (var ms = new MemoryStream(imageBytes))
+            {
+                ms.Seek(0, SeekOrigin.Begin);
+
+                BitmapImage image = new BitmapImage();
+                image.BeginInit();
+                image.StreamSource = ms;
+                image.DecodePixelHeight = 100;
+                image.DecodePixelWidth = 100;
+                image.CacheOption = BitmapCacheOption.OnLoad; ;
+                image.EndInit();
+
+                return image;
+            }
+        }
 
         /// <summary>
         /// Конвертирует картинку в массив байт
