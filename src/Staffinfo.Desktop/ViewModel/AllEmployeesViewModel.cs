@@ -13,21 +13,54 @@ namespace Staffinfo.Desktop.ViewModel
     /// </summary>
     public class AllEmployeesViewModel: WindowViewModelBase
     {
-        #region Constructors
 
-        public AllEmployeesViewModel()
-        {
-            EmployeeList = new ObservableCollectionViewModel<EmployeeViewModel>(DataSingleton.Instance.EmployeeList);
-        }
+        #region Fields
+
+        private ObservableCollectionViewModel<EmployeeViewModel> _employeeList =
+            new ObservableCollectionViewModel<EmployeeViewModel>(DataSingleton.Instance.EmployeeList);
+
+        private string _searchText;
 
         #endregion
+
 
         #region Properties
 
         /// <summary>
         /// Служащие
         /// </summary>
-        public ObservableCollectionViewModel<EmployeeViewModel> EmployeeList { get; set; }
+        public ObservableCollectionViewModel<EmployeeViewModel> EmployeeList
+        {
+            get
+            {
+
+                //if(SearchText == null) return EmployeeList;//x.ToUpper().StartsWith(SearchText.ToUpper())
+
+                //var filtered = from emp in EmployeeList.ModelCollection
+                //    let lname = emp.LastName
+                //    where lname.StartsWith(SearchText.ToUpper())
+                //    select emp;
+
+                //return filtered;
+
+
+                //return new ObservableCollectionViewModel<EmployeeViewModel>(EmployeeList.ModelCollection.Where(x => x.LastName.ToUpper().StartsWith(SearchText.ToUpper())).ToList());
+
+                return _employeeList;
+            }
+        }
+
+        public string SearchText
+        {
+            get { return _searchText; }
+            set
+            {
+                _searchText = value;
+                
+                RaisePropertyChanged("SearchText");
+                RaisePropertyChanged("EmployeeList");
+            }
+        }
 
         #endregion
 

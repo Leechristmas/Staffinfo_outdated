@@ -11,6 +11,11 @@
         helpers:WindowCloseHelper.WindowsClose="{Binding WindowsClosed}">
     <controls:MetroWindow.RightWindowCommands>
         <controls:WindowCommands>
+            <TextBox Name="SearchTBox"
+                     controls:TextBoxHelper.Watermark="Начните вводить фамилию"
+                     Margin="2"
+                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                     MaxWidth="200"/>
             <Button>
                 <StackPanel Orientation="Horizontal">
                     <Rectangle Width="20"
