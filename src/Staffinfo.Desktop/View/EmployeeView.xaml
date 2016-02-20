@@ -12,7 +12,7 @@
     
     <controls:MetroWindow.RightWindowCommands>
         <controls:WindowCommands>
-            <Button>
+            <Button Command="{Binding ShowSettings}">
                 <StackPanel Orientation="Horizontal">
                     <Rectangle Width="20"
                                Height="20"
@@ -362,16 +362,19 @@
                                     MinWidth="100"
                                     Content="Добавить"
                                     Style="{DynamicResource ChromelessButtonStyle}"
-                                    FontSize="16"/>
+                                    FontSize="16"
+                                    Command="{Binding GoToAddTab}"/>
                                 <Button 
                                     Name="ToBackFormBtn"
                                     MinWidth="100"
                                     Content="Назад"
                                     Style="{DynamicResource ChromelessButtonStyle}"
-                                    FontSize="16"/>
+                                    FontSize="16"
+                                    Command="{Binding GoToDataTab}"/>
                             </StackPanel>
 
-                            <controls:MetroTabControl Name="DataGridTabControl">
+                            <controls:MetroTabControl Name="InfoTabControl"
+                                                      SelectedIndex="{Binding SelectedTabIndex}">
                                 <controls:MetroTabItem
                                     Name="DataGridTab">
                                     <DataGrid
@@ -386,7 +389,7 @@
                                         GridLinesVisibility="All">
                                     </DataGrid>
                                 </controls:MetroTabItem>
-                                <controls:MetroTabItem>
+                                <controls:MetroTabItem Name="EditTabs">
                                     <!--Страницы редактирования доп. информ-ции-->
                                     <controls:MetroAnimatedTabControl   Name="AdditionalInfoTabControl">
                                         <TabControl.ItemContainerStyle>

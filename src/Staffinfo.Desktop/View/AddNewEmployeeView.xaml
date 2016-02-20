@@ -13,7 +13,7 @@
                       helpers:WindowCloseHelper.WindowsClose="{Binding WindowsClosed}">
     <Controls:MetroWindow.RightWindowCommands>
         <Controls:WindowCommands>
-            <Button>
+            <Button Command="{Binding ShowSettings}">
                 <StackPanel Orientation="Horizontal">
                     <Rectangle Width="20"
                                Height="20"

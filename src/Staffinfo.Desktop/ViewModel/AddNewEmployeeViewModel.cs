@@ -27,7 +27,7 @@ namespace Staffinfo.Desktop.ViewModel
             _postList = new ListViewModel<PostModel>(DataSingleton.Instance.PostList);
             //_pasportOrganizationUnitList = new ListViewModel<PasportOrganizationUnitModel>(DataSingleton.Instance.PasportOrganizationUnitList); //пока что паспортный стол будет вводиться руками
 
-            _pasport = new PasportModel();
+            
         }
 
         #endregion
@@ -116,7 +116,7 @@ namespace Staffinfo.Desktop.ViewModel
         /// <summary>
         /// Паспорт
         /// </summary>
-        private PasportModel _pasport;
+        private PasportModel _pasport = new PasportModel();
 
         #endregion
 

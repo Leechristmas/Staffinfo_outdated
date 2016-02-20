@@ -1,4 +1,6 @@
 ﻿using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
+using Staffinfo.Desktop.View;
 
 namespace Staffinfo.Desktop.ViewModel
 {
@@ -22,6 +24,18 @@ namespace Staffinfo.Desktop.ViewModel
                 _windowsClosed = value;
                 RaisePropertyChanged("WindowsClosed");
             }
+        }
+
+        /// <summary>
+        /// Окно сеттингов
+        /// </summary>
+        private RelayCommand _showSettings;
+        public RelayCommand ShowSettings => _showSettings ?? (_showSettings = new RelayCommand(ShowSettingsExecute));
+
+        private void ShowSettingsExecute()
+        {
+            var settingsView = new SettingsView();
+            settingsView.ShowDialog();
         }
     }
 }

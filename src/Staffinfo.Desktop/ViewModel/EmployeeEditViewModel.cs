@@ -173,6 +173,10 @@ namespace Staffinfo.Desktop.ViewModel
         /// </summary>
         private CatalogObservableCollectionsList _catalogList;
 
+        /// <summary>
+        /// Индекс выбранного "таба"
+        /// </summary>
+        private int _selectedTabIndex;
         #endregion
 
         #region Properties
@@ -181,6 +185,19 @@ namespace Staffinfo.Desktop.ViewModel
         /// Коллекция справочников
         /// </summary>
         public CatalogObservableCollectionsList CatalogList => _catalogList;
+        
+        /// <summary>
+        /// Индекс выбранного "таба"
+        /// </summary>
+        public int SelectedTabIndex
+        {
+            get { return _selectedTabIndex; }
+            set
+            {
+                _selectedTabIndex = value;
+                RaisePropertyChanged();
+            }
+        }
 
         /// <summary>
         /// Флаг изменений
@@ -191,7 +208,7 @@ namespace Staffinfo.Desktop.ViewModel
             set
             {
                 _wasChanged = value;
-                RaisePropertyChanged("WasChanged");
+                RaisePropertyChanged();
             }
         }
 
@@ -593,6 +610,27 @@ namespace Staffinfo.Desktop.ViewModel
             Photo = null;
         }
 
+        /// <summary>
+        /// Переходим на edit tabs
+        /// </summary>
+        private RelayCommand _goToAddTab;
+        public RelayCommand GoToAddTab => _goToAddTab ?? (_goToAddTab = new RelayCommand(GoToAddTabExecute));
+
+        private void GoToAddTabExecute()
+        {
+            SelectedTabIndex = 1;
+        }
+
+        /// <summary>
+        /// Переходим на data tab
+        /// </summary>
+        private RelayCommand _goToDataTab;
+        public RelayCommand GoToDataTab => _goToDataTab ?? (_goToDataTab = new RelayCommand(GoToDataTabExecute));
+
+        private void GoToDataTabExecute()
+        {
+            SelectedTabIndex = 0;
+        }
         #endregion
 
         #region Methods
