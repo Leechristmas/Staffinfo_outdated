@@ -4,15 +4,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-        xmlns:local="clr-namespace:Staffinfo.Desktop"
+        xmlns:local="clr-namespace:Staffinfo.Desktop"           
         xmlns:helpers="clr-namespace:Staffinfo.Desktop.Helpers"
         mc:Ignorable="d"
-        Title="Главное меню" Height="350" Width="525"
+        Title="Авторизация" Height="350" Width="525"
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
         helpers:WindowCloseHelper.WindowsClose="{Binding WindowsClosed}">
     <Controls:MetroWindow.RightWindowCommands>
         <Controls:WindowCommands>
-            <Button Command="{Binding ShowSettings}">
+            <Button Command="{Binding ShowSettings}"
+                    Visibility="{Binding SettingVisibility}">
                 <StackPanel Orientation="Horizontal">
                     <Rectangle Width="20"
                                Height="20"
@@ -27,36 +28,87 @@
         </Controls:WindowCommands>
     </Controls:MetroWindow.RightWindowCommands>
     <Grid>
-        <StackPanel Width="130"
-                    Orientation="Vertical"
-                    HorizontalAlignment="Right">
-            <Button Name="EmployeeListButton"
-                    Content="Служащие"
-                    VerticalAlignment="Center"
-                    Style="{StaticResource ButtonStyle}"
-                    Command="{Binding GoToAllEmployeesView}"/>
-            <Button Name="OldEmployeeListButton"
-                    Content="Пенсионеры"
-                    VerticalAlignment="Center"
-                    Style="{StaticResource ButtonStyle}"/>
-            <Button Name="SettingButton"
-                    Content="Настройки"
-                    VerticalAlignment="Center"
-                    Style="{StaticResource ButtonStyle}"/>
-            <Button Name="ReportButton"
-                    Content="Отчеты"
-                    VerticalAlignment="Center"
-                    Style="{StaticResource ButtonStyle}"/>
-        </StackPanel>
-        <StackPanel Width="130"
-                    Orientation="Vertical"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Bottom">
-            <Button Name="CloseButton"
-                    Content="Закрыть"
-                    VerticalAlignment="Bottom"
-                    Style="{StaticResource ButtonStyle}"
-                    Command="{Binding CloseWindowCommand}"/>
-        </StackPanel>
+        <Controls:MetroTabControl Name="StartTabControl"
+                                  SelectedIndex="{Binding SelectedTabIndex}">
+            <Controls:MetroTabItem>
+                <Grid>
+                    <StackPanel Orientation="Vertical"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal"
+                                    Margin="0,5">
+                            <TextBlock Text="Логин"
+                                       FontSize="16"
+                                       Margin="5,0"/>
+                            <TextBox MinWidth="150"
+                                     FontSize="16"
+                                     Margin="5,0"
+                                     Height="30"
+                                     MaxLength="20"
+                                     Text="{Binding Login}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Пароль"
+                                       FontSize="16"/>
+                            <PasswordBox MinWidth="150"
+                                         FontSize="16"
+                                         Margin="5,0"
+                                         MaxLength="20"
+                                         Height="30"
+                                         PasswordChar="*"
+                                         Controls:PasswordBoxHelper.CapsLockWarningToolTip="Включен CapsLock"
+                                         helpers:PasswordHelper.Attach="True"
+                                         helpers:PasswordHelper.Password="{Binding Path=Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                        </StackPanel>
+                        <Button Name="SignInBtn"
+                                Content="Войти"
+                                Style="{StaticResource ButtonStyle}"
+                                Margin="20,10"
+                                Command="{Binding Authorization}"
+                                IsDefault="True"/>
+                    </StackPanel>
+                </Grid>
+            </Controls:MetroTabItem>
+            <Controls:MetroTabItem>
+                <Grid>
+                    <StackPanel Width="130"
+                                Orientation="Vertical"
+                                HorizontalAlignment="Right">
+                        <Button Name="EmployeeListBtn"
+                                Content="Служащие"
+                                VerticalAlignment="Center"
+                                Style="{StaticResource ButtonStyle}"
+                                Command="{Binding GoToAllEmployeesView}"/>
+                        <Button Name="OldEmployeeListBtn"
+                                Content="Пенсионеры"
+                                VerticalAlignment="Center"
+                                Style="{StaticResource ButtonStyle}"/>
+                        <Button Name="SettingBtn"
+                                Content="Настройки"
+                                VerticalAlignment="Center"
+                                Style="{StaticResource ButtonStyle}"/>
+                        <Button Name="ReportBtn"
+                                Content="Отчеты"
+                                VerticalAlignment="Center"
+                                Style="{StaticResource ButtonStyle}"/>
+                        <Button Name="UsersBtn"
+                                Content="Пользователи"
+                                VerticalAlignment="Center"
+                                Style="{StaticResource ButtonStyle}"
+                                Command="{Binding ShowUsers}"/>
+                    </StackPanel>
+                    <StackPanel Width="130"
+                                Orientation="Vertical"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Bottom">
+                        <Button Name="CloseButton"
+                                Content="Закрыть"
+                                VerticalAlignment="Bottom"
+                                Style="{StaticResource ButtonStyle}"
+                                Command="{Binding CloseWindowCommand}"/>
+                    </StackPanel>
+                </Grid>
+            </Controls:MetroTabItem>
+        </Controls:MetroTabControl>
     </Grid>
 </Controls:MetroWindow>

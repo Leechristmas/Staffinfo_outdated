@@ -86,5 +86,23 @@ namespace Staffinfo.Desktop.Properties {
                 return ResourceManager.GetString("DatabaseConnector_query_has_some_errors", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Некорректный логин.
+        /// </summary>
+        internal static string UserTableProvider_Check_Некорректный_логин {
+            get {
+                return ResourceManager.GetString("UserTableProvider_Check_Некорректный_логин", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Некорректный пароль.
+        /// </summary>
+        internal static string UserTableProvider_Check_Некорректный_пароль {
+            get {
+                return ResourceManager.GetString("UserTableProvider_Check_Некорректный_пароль", resourceCulture);
+            }
+        }
     }
 }

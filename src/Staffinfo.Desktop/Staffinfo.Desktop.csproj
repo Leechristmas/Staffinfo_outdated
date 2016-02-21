@@ -136,9 +136,12 @@
     <Compile Include="Data\DataTableProviders\SertificationTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\ServiceTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\SpecialityTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\UserTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\ViolationTableProvider.cs" />
     <Compile Include="Helpers\CatalogObservableCollectionsList.cs" />
+    <Compile Include="Helpers\PasswordHelper.cs" />
     <Compile Include="Helpers\WindowCloseHelper.cs" />
+    <Compile Include="Model\AccessLevelType.cs" />
     <Compile Include="Model\BaseModel.cs" />
     <Compile Include="Model\ClasinessModel.cs" />
     <Compile Include="Model\ContractModel.cs" />
@@ -162,6 +165,7 @@
     <Compile Include="Model\SertificationModel.cs" />
     <Compile Include="Model\ServiceModel.cs" />
     <Compile Include="Model\SpecialityModel.cs" />
+    <Compile Include="Model\UserModel.cs" />
     <Compile Include="Model\ViolationModel.cs" />
     <Compile Include="ViewModel\AddNewEmployeeViewModel.cs" />
     <Compile Include="ViewModel\AddNewPasportOrganizationUnitViewModel.cs" />
@@ -172,6 +176,7 @@
     <Compile Include="ViewModel\ListViewModel.cs" />
     <Compile Include="ViewModel\ObservableCollectionViewModel.cs" />
     <Compile Include="ViewModel\StartViewModel.cs" />
+    <Compile Include="ViewModel\UserViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
@@ -204,6 +209,9 @@
     </Compile>
     <Compile Include="View\StartView.xaml.cs">
       <DependentUpon>StartView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UsersView.xaml.cs">
+      <DependentUpon>UsersView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -280,6 +288,10 @@
     <Page Include="View\StartView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\UsersView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>

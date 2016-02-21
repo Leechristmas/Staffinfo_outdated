@@ -129,12 +129,17 @@ namespace Staffinfo.Desktop.Data
         /// Нарушения
         /// </summary>
         private List<ViolationModel> _violationList;
-
+        
         #endregion
 
 
 
         #region Properties
+
+        /// <summary>
+        /// Пользователь
+        /// </summary>
+        public UserModel User { get; set; }
 
         /// <summary>
         /// Служащий

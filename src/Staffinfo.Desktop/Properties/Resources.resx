@@ -128,4 +128,10 @@
     <value>Ошибка выполнения запроса.</value>
     <comment>Ошибка выполнения запроса: вероятно, некорректный запрос</comment>
   </data>
+  <data name="UserTableProvider_Check_Некорректный_логин" xml:space="preserve">
+    <value>Некорректный логин</value>
+  </data>
+  <data name="UserTableProvider_Check_Некорректный_пароль" xml:space="preserve">
+    <value>Некорректный пароль</value>
+  </data>
 </root>
