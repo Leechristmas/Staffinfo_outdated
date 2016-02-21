@@ -61,6 +61,15 @@ namespace Staffinfo.Desktop.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Авторизация.
+        /// </summary>
+        internal static string AuthorizationMode {
+            get {
+                return ResourceManager.GetString("AuthorizationMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ошибка выполнения операции..
         /// </summary>
         internal static string DatabaseConnector_operation_error {
@@ -84,6 +93,15 @@ namespace Staffinfo.Desktop.Properties {
         internal static string DatabaseConnector_query_has_some_errors {
             get {
                 return ResourceManager.GetString("DatabaseConnector_query_has_some_errors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Главное меню.
+        /// </summary>
+        internal static string MainMode {
+            get {
+                return ResourceManager.GetString("MainMode", resourceCulture);
             }
         }
         

@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:Staffinfo.Desktop"           
         xmlns:helpers="clr-namespace:Staffinfo.Desktop.Helpers"
         mc:Ignorable="d"
-        Title="Авторизация" Height="350" Width="525"
+        Title="{Binding Mode}" Height="350" Width="525"
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
         helpers:WindowCloseHelper.WindowsClose="{Binding WindowsClosed}">
     <Controls:MetroWindow.RightWindowCommands>
@@ -100,12 +100,25 @@
                     <StackPanel Width="130"
                                 Orientation="Vertical"
                                 HorizontalAlignment="Right"
-                                VerticalAlignment="Bottom">
+                                VerticalAlignment="Bottom"
+                                Margin="0,0,0,20">
                         <Button Name="CloseButton"
                                 Content="Закрыть"
                                 VerticalAlignment="Bottom"
                                 Style="{StaticResource ButtonStyle}"
                                 Command="{Binding CloseWindowCommand}"/>
+                    </StackPanel>
+                    <StackPanel VerticalAlignment="Bottom"
+                                Orientation="Horizontal"
+                                Background="#41B1E1">
+                        <TextBlock Name="AccessLevelTBlock"
+                                   Text="{Binding AccessType}"
+                                   Foreground="White"
+                                   FontSize="14"/>
+                        <TextBlock Name="FullNameTBlock"
+                                   Text="{Binding FullName}"
+                                   Foreground="White"
+                                   FontSize="14"/>
                     </StackPanel>
                 </Grid>
             </Controls:MetroTabItem>

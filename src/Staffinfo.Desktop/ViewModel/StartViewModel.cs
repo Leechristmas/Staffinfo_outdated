@@ -7,6 +7,7 @@ using System;
 using System.Net;
 using System.Windows;
 using Staffinfo.Desktop.Model;
+using Staffinfo.Desktop.Properties;
 
 namespace Staffinfo.Desktop.ViewModel
 {
@@ -48,18 +49,69 @@ namespace Staffinfo.Desktop.ViewModel
         }
 
         #region Fields
-
+        /// <summary>
+        /// Отчество
+        /// </summary>
         private string _middleName;
+
+        /// <summary>
+        /// Имя
+        /// </summary>
         private string _firstName;
+
+        /// <summary>
+        /// Фамилия
+        /// </summary>
         private string _lastName;
+        
+        /// <summary>
+        /// Уровень доступа
+        /// </summary>
         private int _accessLevel;
+
+        /// <summary>
+        /// Логин
+        /// </summary>
         private string _login;
+
+        /// <summary>
+        /// Пароль
+        /// </summary>
         private string _password;
+
+        /// <summary>
+        /// Выбранный таб
+        /// </summary>
+        private int _selectedTabIndex;
+
+        /// <summary>
+        /// Авторизованный пользователь
+        /// </summary>
+        private UserModel _user;
+
+        /// <summary>
+        /// Текущий режим
+        /// </summary>
+        private string _mode = Resources.AuthorizationMode;
 
         #endregion
 
         #region Properties
 
+        /// <summary>
+        /// Тип доступа
+        /// </summary>
+        public string AccessType => _accessLevel == 0 ? "reader: ":
+            "admin: ";
+
+        /// <summary>
+        /// Полное имя пользователя
+        /// </summary>
+        public string FullName => User?.LastName + ' ' + User?.FirstName + ' ' + User?.MiddleName;
+
+        /// <summary>
+        /// visibility для кнопки settings в топбаре
+        /// </summary>
         public Visibility SettingVisibility
         {
             get
@@ -173,6 +225,20 @@ namespace Staffinfo.Desktop.ViewModel
                 _user = value;
                 RaisePropertyChanged();
                 RaisePropertyChanged("SettingVisibility");
+                RaisePropertyChanged("FullName");
+            }
+        }
+
+        /// <summary>
+        /// Текущий режим (авторизация/главное меню)
+        /// </summary>
+        public string Mode
+        {
+            get { return _mode; }
+            set
+            {
+                _mode = value;
+                RaisePropertyChanged();
             }
         }
 
@@ -222,6 +288,7 @@ namespace Staffinfo.Desktop.ViewModel
                 }
             }
             DataSingleton.Instance.User = User;
+            Mode = Resources.MainMode;
             SelectedTabIndex = 1;
         }
 
@@ -250,9 +317,6 @@ namespace Staffinfo.Desktop.ViewModel
         #region CloseCommand
 
         private RelayCommand _closeWindowCommand;
-
-        private int _selectedTabIndex;
-        private UserModel _user;
 
         public RelayCommand CloseWindowCommand
             => _closeWindowCommand ?? (_closeWindowCommand = new RelayCommand(CloseWindow));

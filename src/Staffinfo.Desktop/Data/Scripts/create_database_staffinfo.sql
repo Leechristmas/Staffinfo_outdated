@@ -142,7 +142,10 @@ CREATE TABLE USERS(
 	ID INT PRIMARY KEY IDENTITY,
 	USER_LOGIN VARCHAR(20) NOT NULL,
 	USER_PASSWORD VARCHAR(20) NOT NULL,
-	ACCESS_LEVEL INT NOT NULL)
+	ACCESS_LEVEL INT NOT NULL,
+	LAST_NAME VARCHAR(50) NOT NULL,
+	FIRST_NAME VARCHAR(50),
+	MIDDLE_NAME VARCHAR(50))
 
 GO
 
@@ -515,8 +518,8 @@ ALTER TABLE VIOLATION
 ----------------------------------------------------
 GO
 
-INSERT INTO USERS VALUES('ADMIN', 'admin', 1),
-						('READER', 'reader', 0);
+INSERT INTO USERS VALUES('ADMIN', 'admin', 1, 'Шевчук', 'Дмитрий', 'Павлович'),
+						('READER', 'reader', 0, 'Шевчук', 'Дмитрий', 'Павлович');
 
 GO
 

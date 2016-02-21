@@ -72,7 +72,10 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                     Id = Int64.Parse(sqlDataReader[0].ToString()),
                     Login = sqlDataReader[1].ToString(),
                     Password = sqlDataReader[2].ToString(),
-                    AccessLevel = int.Parse(sqlDataReader[3].ToString())
+                    AccessLevel = int.Parse(sqlDataReader[3].ToString()),
+                    LastName = sqlDataReader[4].ToString(),
+                    FirstName = sqlDataReader[5].ToString(),
+                    MiddleName = sqlDataReader[6].ToString()
                 };
                 sqlDataReader.Close();
 
