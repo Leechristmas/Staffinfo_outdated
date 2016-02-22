@@ -26,10 +26,27 @@ namespace Staffinfo.Desktop.ViewModel
             }
         }
 
+        #region CloseCommand
+
+        private RelayCommand _closeWindowCommand;
+
+        public RelayCommand CloseWindowCommand
+            => _closeWindowCommand ?? (_closeWindowCommand = new RelayCommand(CloseWindow));
+
+        private void CloseWindow()
+        {
+            WindowsClosed = true;
+        }
+
+        #endregion
+
+        #region ShowSettings command
+
         /// <summary>
         /// Окно сеттингов
         /// </summary>
         private RelayCommand _showSettings;
+
         public RelayCommand ShowSettings => _showSettings ?? (_showSettings = new RelayCommand(ShowSettingsExecute));
 
         private void ShowSettingsExecute()
@@ -37,5 +54,8 @@ namespace Staffinfo.Desktop.ViewModel
             var settingsView = new SettingsView();
             settingsView.ShowDialog();
         }
+
+        #endregion
+
     }
 }

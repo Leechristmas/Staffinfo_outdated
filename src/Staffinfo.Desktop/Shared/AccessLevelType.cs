@@ -1,4 +1,4 @@
-﻿namespace Staffinfo.Desktop.Model
+﻿namespace Staffinfo.Desktop.Shared
 {
     /// <summary>
     /// Тип уровня доступа к БД

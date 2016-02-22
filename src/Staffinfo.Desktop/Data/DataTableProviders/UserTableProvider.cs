@@ -15,6 +15,11 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
     {
         public string ErrorInfo { get; set; }
 
+        /// <summary>
+        /// Возвращает пользователя если авторизация удалась
+        /// </summary>
+        /// <param name="user">авторизуемый пользователь</param>
+        /// <returns></returns>
         public UserModel Check(UserModel user)
         {
             if (user == null) throw new ArgumentNullException(nameof(user), Resources.DatabaseConnector_parameter_cannot_be_null);
@@ -48,6 +53,12 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             return userModel;
         }
 
+        /// <summary>
+        /// Возвращает пользователя если авторизация удалась
+        /// </summary>
+        /// <param name="login">Логин</param>
+        /// <param name="password">Пароль</param>
+        /// <returns></returns>
         public UserModel Check(string login, string password )
         {
             if (login == null || login.Length < 5) throw new ArgumentException(Resources.UserTableProvider_Check_Некорректный_логин,login);
@@ -100,9 +111,45 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Возвращает всех пользователей    
+        /// </summary>
+        /// <returns></returns>
         public ObservableCollection<UserModel> Select()
         {
-            throw new NotImplementedException();
+            var userList = new ObservableCollection<UserModel>();
+
+            var cmd = new SqlCommand("GET_ALL_USERS");
+
+            try
+            {
+                var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
+
+                while (sqlDataReader.Read())
+                {
+                    var user = new UserModel
+                    {
+                        Id = Int64.Parse(sqlDataReader[0].ToString()),
+                        Login = sqlDataReader["USER_LOGIN"].ToString(),
+                        Password = sqlDataReader["USER_PASSWORD"].ToString(),
+                        AccessLevel = int.Parse(sqlDataReader["ACCESS_LEVEL"].ToString()),
+                        LastName = sqlDataReader["LAST_NAME"].ToString(),
+                        FirstName = sqlDataReader["FIRST_NAME"].ToString(),
+                        MiddleName = sqlDataReader["MIDDLE_NAME"].ToString()
+                    };
+
+                    userList.Add(user);
+                }
+                sqlDataReader.Close();
+
+                ErrorInfo = null;
+            }
+            catch (Exception ex)
+            {
+                ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;
+                return null;
+            }
+            return userList;
         }
 
         public bool Update(UserModel obj)

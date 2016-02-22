@@ -35,55 +35,57 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="150"/>
         </Grid.ColumnDefinitions>
-    <Grid Grid.Column="0">
-     <!--Пробное представление-->
-        <GroupBox Margin="0">
-        <Grid>
-                <ListBox ItemsSource="{Binding EmployeeList.ModelCollection}"
-                          SelectedItem="{Binding EmployeeList.SelectedItem}"
-                          ScrollViewer.CanContentScroll="true"
-                          ScrollViewer.VerticalScrollBarVisibility="Auto"
-                          ScrollViewer.HorizontalScrollBarVisibility="Auto" 
-                          BorderThickness="0"
-                          ItemContainerStyle="{StaticResource ListViewItemStyle}"
-                          Height="{Binding ElementName=AllEmployeesView }">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="45"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Column="0">
+            <!--Пробное представление-->
+            <GroupBox Margin="0">
+                <Grid>
+                    <ListBox ItemsSource="{Binding EmployeeList.ModelCollection}"
+                             SelectedItem="{Binding EmployeeList.SelectedItem}"
+                             ScrollViewer.CanContentScroll="true"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                             ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+                             BorderThickness="0"
+                             ItemContainerStyle="{StaticResource ListViewItemStyle}"
+                             Height="{Binding ElementName=AllEmployeesView}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseDoubleClick">
                                 <i:InvokeCommandAction Command="{Binding ShowEmployee}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                         <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Border BorderBrush="DodgerBlue" BorderThickness="2" Margin="1" >
-                            <StackPanel
-                                Orientation="Horizontal"
-                                Height="100">
-                                    <StackPanel>
-                                        <Border BorderBrush="Black" BorderThickness="1" Margin="0,0,10,0">
-                                            <Image
+                            <DataTemplate>
+                                <Border BorderBrush="DodgerBlue" BorderThickness="2" Margin="1" >
+                                    <StackPanel Orientation="Horizontal"
+                                                Height="100">
+                                        <StackPanel>
+                                            <Border BorderBrush="Black" BorderThickness="1" Margin="0,0,10,0">
+                                                <Image
                                                 Height="100"
                                                 Width="100"
                                                 Source="{Binding Photo}"/>
-                                        </Border>
+                                            </Border>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding LastName}" FontWeight="Bold" FontSize="16" Margin="5" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding FirstName}" FontWeight="Bold" FontSize="16" Margin="5" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding MiddleName}" FontWeight="Bold" FontSize="16" Margin="5" VerticalAlignment="Center"/>
+                                        </StackPanel>
                                     </StackPanel>
-                                <StackPanel
-                                    Orientation="Horizontal">
-                                    <TextBlock Text="{Binding LastName}" FontWeight="Bold" FontSize="16" Margin="5" VerticalAlignment="Center"/>
-                                    <TextBlock Text="{Binding FirstName}" FontWeight="Bold" FontSize="16" Margin="5" VerticalAlignment="Center"/>
-                                    <TextBlock Text="{Binding MiddleName}" FontWeight="Bold" FontSize="16" Margin="5" VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </StackPanel>
-                        </Border>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-        </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
             </GroupBox>
         </Grid>
         <Grid Grid.Column="1">
-                <GroupBox Margin="0">
-                    <Grid>
-                        <StackPanel>
+            <GroupBox Margin="0">
+                <Grid>
+                    <StackPanel>
                         <Button Name="AddEmployeeBtn"
                                 FontSize="16"
                                 Content="Добавить" 
@@ -100,17 +102,37 @@
                                 FontSize="16"
                                 Content="Найти" 
                                 Style="{DynamicResource ChromelessButtonStyle}"
-                                MinHeight="20" Margin="0"/>    
-                        </StackPanel>
-                        <Button Name="CloseBtn"
-                                FontSize="16"
-                                Content="Закрыть" 
-                                VerticalAlignment="Bottom"
-                                Style="{DynamicResource ChromelessButtonStyle}"
-                                MinHeight="20" Margin="0"
-                                Command="{Binding CloseWindowCommand}"/>
-                    </Grid>
-                </GroupBox>
+                                MinHeight="20" Margin="0"/>
+                    </StackPanel>
+                </Grid>
+            </GroupBox>
         </Grid>
+
+        <StackPanel Grid.Row="1"
+                    Grid.ColumnSpan="2"
+                    Grid.Column="0"
+                    Height="25"
+                    VerticalAlignment="Top">
+            <Border Background="LightGray"
+                    Height="25">
+                <Button Name="CloseBtn"
+                    FontSize="16"
+                    Content="Закрыть"
+                    VerticalAlignment="Bottom"
+                    Style="{StaticResource ButtonStyle}"
+                    MinHeight="20" 
+                    Margin="0"
+                    Command="{Binding CloseWindowCommand}"
+                    HorizontalAlignment="Right"/>
+            </Border>
+        </StackPanel>
+        <StackPanel Orientation="Vertical"
+                    Height="20"
+                    Grid.Row="1"
+                    Grid.ColumnSpan="2"
+                    Grid.Column="0"
+                    Background="#41B1E1"
+                    VerticalAlignment="Bottom">
+        </StackPanel>
     </Grid>
 </controls:MetroWindow>

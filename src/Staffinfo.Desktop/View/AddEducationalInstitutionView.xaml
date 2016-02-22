@@ -41,18 +41,21 @@
                          MinWidth="230"
                          FontSize="14"/>
             </StackPanel>
+        </StackPanel>
+        <Border Background="LightGray"
+                    Height="25"
+                VerticalAlignment="Bottom">
             <StackPanel Orientation="Horizontal"
-                        Margin="5"
                         HorizontalAlignment="Right">
-                <Button Name="AddOrganizationUnit"
+                <Button Name="AddSpeciality"
                         Content="Добавить"
-                        MinWidth="100"
+                        MinWidth="190"
                         Style="{StaticResource ButtonStyle}"/>
                 <Button Name="CloseBtn"
                         Content="Закрыть"
-                        MinWidth="100"
+                        MinWidth="190"
                         Style="{StaticResource ButtonStyle}"/>
             </StackPanel>
-        </StackPanel>
+        </Border>
     </Grid>
 </Window>

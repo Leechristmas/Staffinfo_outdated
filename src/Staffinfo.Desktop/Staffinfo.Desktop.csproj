@@ -141,7 +141,7 @@
     <Compile Include="Helpers\CatalogObservableCollectionsList.cs" />
     <Compile Include="Helpers\PasswordHelper.cs" />
     <Compile Include="Helpers\WindowCloseHelper.cs" />
-    <Compile Include="Model\AccessLevelType.cs" />
+    <Compile Include="Shared\AccessLevelType.cs" />
     <Compile Include="Model\BaseModel.cs" />
     <Compile Include="Model\ClasinessModel.cs" />
     <Compile Include="Model\ContractModel.cs" />
@@ -168,13 +168,14 @@
     <Compile Include="Model\UserModel.cs" />
     <Compile Include="Model\ViolationModel.cs" />
     <Compile Include="ViewModel\AddNewEmployeeViewModel.cs" />
-    <Compile Include="ViewModel\AddNewPasportOrganizationUnitViewModel.cs" />
     <Compile Include="ViewModel\AllEmployeesViewModel.cs" />
+    <Compile Include="ViewModel\AllUsersViewModel.cs" />
     <Compile Include="ViewModel\DictionaryViewModelBase.cs" />
     <Compile Include="ViewModel\EmployeeEditViewModel.cs" />
     <Compile Include="ViewModel\EmployeeViewModel.cs" />
     <Compile Include="ViewModel\ListViewModel.cs" />
     <Compile Include="ViewModel\ObservableCollectionViewModel.cs" />
+    <Compile Include="ViewModel\PartialUserViewModel.cs" />
     <Compile Include="ViewModel\StartViewModel.cs" />
     <Compile Include="ViewModel\UserViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
@@ -192,9 +193,6 @@
     <Compile Include="View\AddNewEmployeeView.xaml.cs">
       <DependentUpon>AddNewEmployeeView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\AddPasportOrganizationUnitView.xaml.cs">
-      <DependentUpon>AddPasportOrganizationUnitView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\AddSpecialityView.xaml.cs">
       <DependentUpon>AddSpecialityView.xaml</DependentUpon>
     </Compile>
@@ -203,6 +201,9 @@
     </Compile>
     <Compile Include="View\EmployeeView.xaml.cs">
       <DependentUpon>EmployeeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\PasswordChangingView.xaml.cs">
+      <DependentUpon>PasswordChangingView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
@@ -265,10 +266,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\AddPasportOrganizationUnitView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="View\AddSpecialityView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -280,6 +277,10 @@
     <Page Include="View\EmployeeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\PasswordChangingView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\SettingsView.xaml">
       <Generator>MSBuild:Compile</Generator>

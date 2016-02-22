@@ -23,7 +23,6 @@ namespace Staffinfo.Desktop.ViewModel
 
         #endregion
 
-
         #region Properties
 
         /// <summary>
@@ -78,20 +77,7 @@ namespace Staffinfo.Desktop.ViewModel
             var addNewEmployeeView = new AddNewEmployeeView {DataContext = new AddNewEmployeeViewModel()};
             addNewEmployeeView.ShowDialog();
         }
-
-        /// <summary>
-        /// Закрыть окно
-        /// </summary>
-        private RelayCommand _closeWindowCommand;
-
-        public RelayCommand CloseWindowCommand
-            => _closeWindowCommand ?? (_closeWindowCommand = new RelayCommand(CloseWindowCommandExecute));
-
-        private void CloseWindowCommandExecute()
-        {
-            WindowsClosed = true;
-        }
-
+        
         /// <summary>
         /// Удалить служащего
         /// </summary>

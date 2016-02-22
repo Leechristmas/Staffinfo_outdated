@@ -25,9 +25,6 @@ namespace Staffinfo.Desktop.ViewModel
             _serviceList = new ListViewModel<ServiceModel>(DataSingleton.Instance.ServiceList);
             _rankList = new ListViewModel<RankModel>(DataSingleton.Instance.RankList);
             _postList = new ListViewModel<PostModel>(DataSingleton.Instance.PostList);
-            //_pasportOrganizationUnitList = new ListViewModel<PasportOrganizationUnitModel>(DataSingleton.Instance.PasportOrganizationUnitList); //пока что паспортный стол будет вводиться руками
-
-            
         }
 
         #endregion
@@ -47,11 +44,6 @@ namespace Staffinfo.Desktop.ViewModel
         /// Службы
         /// </summary>
         private readonly ListViewModel<ServiceModel> _serviceList;
-
-        ///// <summary>
-        ///// Список паспортных столов
-        ///// </summary>
-        //private ListViewModel<PasportOrganizationUnitModel> _pasportOrganizationUnitList; 
 
         /// <summary>
         /// Личный номер
@@ -304,25 +296,10 @@ namespace Staffinfo.Desktop.ViewModel
         /// Службы
         /// </summary>
         public ListViewModel<ServiceModel> ServiceList => _serviceList;
-
-        ///// <summary>
-        ///// Паспортные столы
-        ///// </summary>
-        //public ListViewModel<PasportOrganizationUnitModel> PasportOrganizationList => _pasportOrganizationUnitList;  
-
+        
         #endregion
 
         #region Commands
-        /// <summary>
-        /// Закрыть окно
-        /// </summary>
-        private RelayCommand _closeWindowCommand;
-        public RelayCommand CloseWindowCommand => _closeWindowCommand ?? (_closeWindowCommand = new RelayCommand(CloseWindowExecute));
-
-        private void CloseWindowExecute()
-        {
-            WindowsClosed = true;
-        }
 
         /// <summary>
         /// Добавить служащего
@@ -375,21 +352,7 @@ namespace Staffinfo.Desktop.ViewModel
             }
             WindowsClosed = true;
         }
-
-        ///// <summary>
-        ///// Добавить организацию (паспортный стол)
-        ///// </summary>
-        //private RelayCommand _addNewOrganizationUnit;
         
-        //public RelayCommand AddNewOrganizationUnit
-        //    => _addNewEmployeeCommand ?? (_addNewOrganizationUnit = new RelayCommand(AddNewOrganizationUnitExecute));
-
-        //private void AddNewOrganizationUnitExecute()
-        //{
-        //    var addOrganizationView = new AddPasportOrganizationUnitView();
-        //    addOrganizationView.ShowDialog();
-        //}
         #endregion
-        
     }
 }

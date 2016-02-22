@@ -16,11 +16,11 @@ using MahApps.Metro.Controls;
 namespace Staffinfo.Desktop.View
 {
     /// <summary>
-    /// Interaction logic for AddPasportOrganizationUnitView.xaml
+    /// Interaction logic for PasswordChangingView.xaml
     /// </summary>
-    public partial class AddPasportOrganizationUnitView : MetroWindow
+    public partial class PasswordChangingView : MetroWindow
     {
-        public AddPasportOrganizationUnitView()
+        public PasswordChangingView()
         {
             InitializeComponent();
         }

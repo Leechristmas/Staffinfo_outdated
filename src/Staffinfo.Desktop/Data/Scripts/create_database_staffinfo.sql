@@ -128,9 +128,20 @@ DROP TABLE PASPORT;
 DROP TABLE USERS;
 
 DROP PROCEDURE CHECK_USER;
+DROP PROCEDURE GET_ALL_USERS;
 
 GO
 
+--ВОЗВРАЩАЕТ ВСЕХ ПОЛЬЗОВАТЕЛЕЙ
+CREATE PROCEDURE GET_ALL_USERS
+AS
+	SELECT * FROM USERS;
+
+GO
+
+--ВОЗВРАЩАЕТ ПОЛЬЗОВАТЕЛЯ, ЕСЛИ АВТОРИЗАЦИЯ ПРОШЛА УСПЕШНО
+--@LOGIN - ЛОГИН
+--@PASSWORD - ПАРОЛЬ
 CREATE PROCEDURE CHECK_USER 
 	@LOGIN VARCHAR(20), @PASSWORD VARCHAR(20)
 AS

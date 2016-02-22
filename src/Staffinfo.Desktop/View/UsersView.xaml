@@ -3,11 +3,200 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Staffinfo.Desktop.View"
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:helpers="clr-namespace:Staffinfo.Desktop.Helpers"
         mc:Ignorable="d"
-        Title="UsersView" Height="300" Width="300">
+        Title="Пользователи" Height="400" Width="500"
+        helpers:WindowCloseHelper.WindowsClose="{Binding WindowsClosed}">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="20"/>
+        </Grid.RowDefinitions>
+        <controls:MetroTabControl Name="UserTabCtrl">
+            <controls:MetroTabItem Name="CurrentUserTab">
+                <controls:MetroTabItem.HeaderTemplate>
+                    <DataTemplate>
+                        <ContentPresenter>
+                            <ContentPresenter.Content>
+                                <TextBlock Text="Текущий пользователь"
+                                           FontSize="18"/>
+                            </ContentPresenter.Content>
+                        </ContentPresenter>
+                    </DataTemplate>
+                </controls:MetroTabItem.HeaderTemplate>
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal"
+                                Margin="10">
+                        <StackPanel Orientation="Vertical"
+                                    MinWidth="100">
+                            <TextBlock Text="Логин"
+                                       FontSize="14"
+                                       Margin="10,10,20,10"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="Пароль"
+                                       FontSize="14"
+                                       Margin="10,10,20,10"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="Фамилия"
+                                       FontSize="14"
+                                       Margin="10,10,20,10"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="Имя"
+                                       FontSize="14"
+                                       Margin="10,10,20,10"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="Отчество"
+                                       FontSize="14"
+                                       Margin="10,10,20,10"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="Уровень доступа"
+                                       FontSize="14"
+                                       Margin="10,10,20,10"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical">
+                            <TextBox Name="LoginTBox"
+                                     FontSize="14"
+                                     MinWidth="150"
+                                     Text="{Binding Login}"
+                                     IsEnabled="{Binding IsAdmin}"
+                                     Margin="10,10,20,10"/>
+
+                            <StackPanel Orientation="Horizontal">
+                                <!--<TextBox Name="PasswordTBox"
+                                     FontSize="14"
+                                     MinWidth="150"
+                                     Text="{Binding Password}"
+                                     IsEnabled="False"
+                                     Margin="10,2,20,10"/>-->
+                                <PasswordBox MinWidth="150"
+                                             FontSize="14"
+                                             MaxLength="20"
+                                             Margin="10,2,20,10"
+                                             PasswordChar="*"
+                                             controls:PasswordBoxHelper.CapsLockWarningToolTip="Включен CapsLock"
+                                             helpers:PasswordHelper.Attach="True"
+                                             helpers:PasswordHelper.Password="{Binding Path=Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                                <Button Content="Сменить"
+                                        Style="{StaticResource ButtonStyle}" 
+                                        MinWidth="100"
+                                        MinHeight="20"
+                                        Height="30"
+                                        VerticalAlignment="Top"
+                                        IsEnabled="{Binding IsAdmin}"
+                                        Command="{Binding ShowPasswordChanging}"/>
+                            </StackPanel>
+
+                            <TextBox Name="LastNameTBox"
+                                     FontSize="14"
+                                     MinWidth="150"
+                                     Text="{Binding LastName}"
+                                     IsEnabled="{Binding IsAdmin}"
+                                     Margin="10,2,20,10"/>
+
+                            <TextBox Name="FirstNameTBox"
+                                     FontSize="14"
+                                     MinWidth="150"
+                                     Text="{Binding FirstName}"
+                                     IsEnabled="{Binding IsAdmin}"
+                                     Margin="10,2,20,10"/>
+                            <TextBox Name="MiddleNameTBox"
+                                     FontSize="14"
+                                     MinWidth="150"
+                                     Text="{Binding MiddleName}"
+                                     IsEnabled="{Binding IsAdmin}"
+                                     Margin="10,2,20,10"/>
+                            <ComboBox Name="AccessLevelTBox"
+                                      FontSize="14"
+                                      MinWidth="150"
+                                      Margin="10,2,20,10"
+                                      SelectedIndex="{Binding AccessLevel}"
+                                      IsEnabled="False">
+                                <ComboBoxItem Content="Reader"/>
+                                <ComboBoxItem Content="Administrator"/>
+                            </ComboBox>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+            </controls:MetroTabItem>
+            <controls:MetroTabItem Name="AllUsersTab"
+                                   IsEnabled="{Binding IsAdmin}">
+                <controls:MetroTabItem.HeaderTemplate>
+                    <DataTemplate>
+                        <ContentPresenter>
+                            <ContentPresenter.Content>
+                                <TextBlock Text="Все пользователи"
+                                           FontSize="18"/>
+                            </ContentPresenter.Content>
+                        </ContentPresenter>
+                    </DataTemplate>
+                </controls:MetroTabItem.HeaderTemplate>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="150"/>
+                    </Grid.ColumnDefinitions>
+                    <ListBox ItemsSource="{Binding UserList.ModelCollection}"
+                             SelectedItem="{Binding UserList.SelectedItem}"
+                             ScrollViewer.CanContentScroll="true"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                             ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+                             BorderThickness="0"
+                             Margin="5"
+                             ItemContainerStyle="{StaticResource ListViewItemStyle}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseDoubleClick">
+                                <i:InvokeCommandAction Command="{Binding ShowUser}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal"
+                                            Height="30">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Login}" FontWeight="Bold" FontSize="16" Margin="5" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding LastName}" FontWeight="Bold" FontSize="16" Margin="5" VerticalAlignment="Center"/>
+                                        <TextBlock Text="{Binding FirstName}" FontWeight="Bold" FontSize="16" Margin="5" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <StackPanel Grid.Column="1"
+                                Grid.Row="0"
+                                Orientation="Vertical">
+                        <Button Content="Добавить"
+                                Style="{StaticResource ButtonStyle}"/>
+                        <Button Content="Удалить"
+                                Style="{StaticResource ButtonStyle}"/>
+                    </StackPanel>
+                </Grid>
+            </controls:MetroTabItem>
+        </controls:MetroTabControl>
+        <Border Grid.Row="1"
+                Background="LightGray">
+            <StackPanel VerticalAlignment="Bottom"
+                    Grid.Row="1"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+                <Button Content="Сохранить"
+                    Height="20"
+                    Width="100"
+                    Style="{StaticResource ButtonStyle}"
+                    VerticalAlignment="Bottom"
+                    HorizontalAlignment="Right"
+                    IsEnabled="{Binding IsAdmin}"
+                    Command="{Binding SaveChanges}"/>
+                <Button Content="Закрыть"
+                    Height="20"
+                    Width="100"
+                    Style="{StaticResource ButtonStyle}"
+                    VerticalAlignment="Bottom"
+                    HorizontalAlignment="Right"
+                    Command="{Binding CloseWindowCommand}"/>
+            </StackPanel>
+        </Border>
     </Grid>
 </controls:MetroWindow>

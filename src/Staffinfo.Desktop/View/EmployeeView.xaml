@@ -31,6 +31,10 @@
             <ColumnDefinition />
             <ColumnDefinition MinWidth="150" Width="150"/>
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="45"/>
+        </Grid.RowDefinitions>
         <Grid Grid.Column="1">
             <GroupBox Margin="-1">
                 <StackPanel Orientation="Vertical">
@@ -49,13 +53,6 @@
 
                 </StackPanel>
             </GroupBox>
-            <StackPanel VerticalAlignment="Bottom"
-                        Margin="0,20">
-                <Button Name="CloseBtn"
-                        Style="{StaticResource ButtonStyle}"
-                        Content="Закрыть"
-                        Command="{Binding CloseWindowCommand}"/>
-            </StackPanel>
         </Grid>
         <Grid Grid.Column="0">
             <controls:MetroAnimatedTabControl>
@@ -695,8 +692,21 @@
                 </controls:MetroTabItem>
             </controls:MetroAnimatedTabControl>
         </Grid>
+        <Border Height="25"
+                Grid.Row="1"
+                Grid.ColumnSpan="2"
+                Grid.Column="0"
+                VerticalAlignment="Top"
+                Background="LightGray">
+                <Button Name="CloseBtn"
+                        Style="{StaticResource ButtonStyle}"
+                        Content="Закрыть"
+                        HorizontalAlignment="Right"
+                        Command="{Binding CloseWindowCommand}"/>
+        </Border>
         <StackPanel     Grid.Column="0"
                         Grid.ColumnSpan="2"
+                        Grid.Row="1"
                         Orientation="Horizontal"
                         Height="20"
                         VerticalAlignment="Bottom"

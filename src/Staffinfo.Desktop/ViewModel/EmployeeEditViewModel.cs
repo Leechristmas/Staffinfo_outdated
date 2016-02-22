@@ -482,18 +482,7 @@ namespace Staffinfo.Desktop.ViewModel
         #endregion
 
         #region Commands
-
-        /// <summary>
-        /// Закрыть окно
-        /// </summary>
-        private RelayCommand _closeWindowCommand;
-        public RelayCommand CloseWindowCommand => _closeWindowCommand ?? (_closeWindowCommand = new RelayCommand(CloseWindowExecute));
-
-        private void CloseWindowExecute()
-        {
-            WindowsClosed = true;
-        }
-
+        
         /// <summary>
         /// Принять изменения
         /// </summary>

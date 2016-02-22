@@ -8,6 +8,7 @@ using System.Net;
 using System.Windows;
 using Staffinfo.Desktop.Model;
 using Staffinfo.Desktop.Properties;
+using Staffinfo.Desktop.Shared;
 
 namespace Staffinfo.Desktop.ViewModel
 {
@@ -101,7 +102,7 @@ namespace Staffinfo.Desktop.ViewModel
         /// <summary>
         /// Тип доступа
         /// </summary>
-        public string AccessType => _accessLevel == 0 ? "reader: ":
+        public string AccessType => User?.AccessLevel == (int) AccessLevelType.Reader ? "reader: ":
             "admin: ";
 
         /// <summary>
@@ -117,59 +118,6 @@ namespace Staffinfo.Desktop.ViewModel
             get
             {
                 return User == null ? Visibility.Collapsed : Visibility.Visible;
-            }
-        }
-
-        /// <summary>
-        /// Отчество
-        /// </summary>
-        public string MiddleName
-        {
-            get { return _middleName; }
-            set
-            {
-                _middleName = value.Trim();
-                RaisePropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// Имя
-        /// </summary>
-        public string FirstName
-        {
-            get { return _firstName; }
-            set
-            {
-                _firstName = value.Trim();
-                RaisePropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// Фамилия пользователя
-        /// </summary>
-        public string LastName
-        {
-            get { return _lastName; }
-            set
-            {
-                _lastName = value.Trim();
-                RaisePropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// Уровень доступа к БД
-        /// </summary>
-        public int AccessLevel
-        {
-            get { return _accessLevel; }
-            set
-            {
-                if (value < 0 || value > 1) throw new Exception("Неверный уровень доступа");
-                _accessLevel = value;
-                RaisePropertyChanged();
             }
         }
 
@@ -223,9 +171,11 @@ namespace Staffinfo.Desktop.ViewModel
             set
             {
                 _user = value;
+
                 RaisePropertyChanged();
                 RaisePropertyChanged("SettingVisibility");
                 RaisePropertyChanged("FullName");
+                RaisePropertyChanged("AccessType");
             }
         }
 
@@ -245,19 +195,19 @@ namespace Staffinfo.Desktop.ViewModel
         #endregion
 
         #region Commands
-
-        #region ShowUsers command
-
+        
         /// <summary>
         /// Открыть окно пользователей
         /// </summary>
+        #region ShowUsers command
+
         private RelayCommand _showUsers;
 
         public RelayCommand ShowUsers => _showUsers ?? (_showUsers = new RelayCommand(ShowUsersExecute));
 
         private void ShowUsersExecute()
         {
-            var usersView = new UsersView(); //добавить data context
+            var usersView = new UsersView() {DataContext = new UserViewModel(DataSingleton.Instance.User)}; //добавить data context
             usersView.ShowDialog();
         }
 
@@ -310,24 +260,7 @@ namespace Staffinfo.Desktop.ViewModel
         }
 
         #endregion
-
-        /// <summary>
-        ///  Команда закрытия окна
-        /// </summary>
-        #region CloseCommand
-
-        private RelayCommand _closeWindowCommand;
-
-        public RelayCommand CloseWindowCommand
-            => _closeWindowCommand ?? (_closeWindowCommand = new RelayCommand(CloseWindow));
-
-        private void CloseWindow()
-        {
-            WindowsClosed = true;
-        }
-
-        #endregion
-
+        
         #endregion
         
     }
