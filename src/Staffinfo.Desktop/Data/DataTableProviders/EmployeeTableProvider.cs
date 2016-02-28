@@ -6,6 +6,7 @@ using System.IO;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Staffinfo.Desktop.Data.DataTableContracts;
+using Staffinfo.Desktop.Helpers;
 using Staffinfo.Desktop.Model;
 using Staffinfo.Desktop.Properties;
 
@@ -17,61 +18,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
     public class EmployeeTableProvider: IDisposable, IWritableTableContract<EmployeeModel>
     {
         public string ErrorInfo { get; set; }
-
-        /// <summary>
-        /// Конвертирует из массива байт в BitmapImage
-        /// </summary>
-        /// <param name="imageBytes">массив байт</param>
-        /// <returns></returns>
-        private BitmapImage ByteToImage(byte[] imageBytes)
-        {
-            using (var ms = new MemoryStream(imageBytes))
-            {
-                ms.Seek(0, SeekOrigin.Begin);
-
-                BitmapImage image = new BitmapImage();
-                image.BeginInit();
-                image.StreamSource = ms;
-                image.DecodePixelHeight = 600;
-                image.DecodePixelWidth = 600;
-                image.CacheOption = BitmapCacheOption.OnLoad;;
-                image.EndInit();
-
-                return image;
-            }
-        }
-
-        /// <summary>
-        /// Конвертирует картинку в массив байт
-        /// </summary>
-        /// <param name="image">исходное изображение</param>
-        /// <returns></returns>
-        private byte[] ImageToByte(BitmapImage image)
-        {
-            if (image == null) return null;
-
-            JpegBitmapEncoder encoder = new JpegBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(image));
-
-            using (var ms = new MemoryStream())
-            {
-                encoder.Save(ms);
-                return ms.ToArray();
-            }
-        }
-
-        /// <summary>
-        /// Сравнивает 2 изображения
-        /// </summary>
-        /// <param name="btm1">первое изображение</param>
-        /// <param name="btm2">второе изображение</param>
-        /// <returns></returns>
-        private bool ImageCompare(BitmapImage btm1, BitmapImage btm2)
-        {
-            return Convert.ToBase64String(ImageToByte(btm1))
-                == Convert.ToBase64String(ImageToByte(btm2));
-        }
-
+        
         #region IWritableTableContract implementation
 
         /// <summary>
@@ -140,7 +87,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 if (sqlDataReader["PHOTO"].ToString() != "")
                 {
                     ms.Write((byte[])sqlDataReader["PHOTO"], 0, ((byte[])sqlDataReader["PHOTO"]).Length);
-                    photo = ByteToImage(ms.ToArray());
+                    photo = BitmapImageHelper.ByteToImage(ms.ToArray());
                 }
 
                 employeeModel = new EmployeeModel
@@ -205,7 +152,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                     if (sqlDataReader["PHOTO"].ToString() != "")
                     {
                         ms.Write((byte[])sqlDataReader["PHOTO"], 0, ((byte[])sqlDataReader["PHOTO"]).Length);
-                        photo = ByteToImage(ms.ToArray());
+                        photo = BitmapImageHelper.ByteToImage(ms.ToArray());
                     }
 
                     var employeeModel = new EmployeeModel
@@ -261,8 +208,10 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 $"HOME_PHONE_NUMBER='{employee.HomePhoneNumber}', IS_PENSIONER='{employee.IsPensioner}', PHOTO=@Photo " +
                 $"WHERE ID={employee.Id};");
 
-            SqlParameter param = cmd.Parameters.Add("@Photo", SqlDbType.VarBinary);
-            param.Value = ImageToByte(employee.Photo);
+            var param = cmd.Parameters.Add("@Photo", SqlDbType.VarBinary);
+            if (employee.Photo == null)
+                param.Value = DBNull.Value;
+            else param.Value = BitmapImageHelper.ImageToByte(employee.Photo);
 
 
             try

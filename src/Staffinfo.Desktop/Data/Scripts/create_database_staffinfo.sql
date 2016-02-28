@@ -3,13 +3,7 @@ ALTER TABLE CLASINESS
 		CONSTRAINT FK_CLASINESS_EMPLOYEE;
 
 GO
-/*
-ALTER TABLE PASPORT
-	DROP
-		CONSTRAINT FK_PASPORT_PASPORT_ORGANIZATION_UNIT;
 
-GO
-*/
 ALTER TABLE CONTRACT
 	DROP
 		CONSTRAINT	FK_CONTRACT_EMPLOYEE;
@@ -25,6 +19,7 @@ ALTER TABLE EDUCATION_TIME
 GO
 
 ALTER TABLE EMPLOYEE
+
 	DROP
 		CONSTRAINT	FK_EMPLOYEE_POST,
 		CONSTRAINT	FK_EMPLOYEE_RANK,
@@ -123,7 +118,6 @@ DROP TABLE REPRIMAND;
 DROP TABLE SPECIALITY;
 DROP TABLE EMPLOYEE;
 DROP TABLE VIOLATION;
---DROP TABLE PASPORT_ORGANIZATION_UNIT;
 DROP TABLE PASPORT;
 DROP TABLE USERS;
 
@@ -372,15 +366,7 @@ CREATE TABLE MILITARY_UNIT(
 	DESCRIPTION VARCHAR(240));
 
 GO
-/*
---ОРГАНИЗАЦИИ (ПАСПОРТНЫЕ СТОЛЫ)
-CREATE TABLE PASPORT_ORGANIZATION_UNIT(
-	ID INT PRIMARY KEY IDENTITY,
-	ORGANIZATION_NAME VARCHAR(120),
-	ADDRESS VARCHAR(120))
 
-GO
-*/
 --ПАСПОРТНЫЕ ДАННЫЕ
 CREATE TABLE PASPORT(
 	ID INT PRIMARY KEY IDENTITY,
@@ -395,8 +381,6 @@ ALTER TABLE PASPORT
 	ADD
 		CONSTRAINT	FK_PASPORT_UNIQUE
 					UNIQUE (NUMBER, SERIES);
-		--CONSTRAINT	FK_PASPORT_PASPORT_ORGANIZATION_UNIT
-		--			FOREIGN KEY (ORGANIZATION_UNIT_ID) REFERENCES PASPORT_ORGANIZATION_UNIT;
 
 GO
 
@@ -526,99 +510,3 @@ ALTER TABLE VIOLATION
 					FOREIGN KEY (VIOLATOR_ID) REFERENCES EMPLOYEE;
 
 
-----------------------------------------------------
-GO
-
-INSERT INTO USERS VALUES('ADMIN', 'admin', 1, 'Шевчук', 'Дмитрий', 'Павлович'),
-						('READER', 'reader', 0, 'Шевчук', 'Дмитрий', 'Павлович');
-
-GO
-
-INSERT INTO EDUCATIONAL_INSTITUTION
-	VALUES('ГГУ им. Ф. Скорнины', '', 'ВУЗ'),
-		('ГГTУ им. Сухого', 'Технический ВУЗ', 'ВУЗ');
-
-GO
-
-INSERT INTO MILITARY_UNIT
-	VALUES('Военная часть 5505','г. Гомель'),
-		('Военная часть 3216','г. Минск');
-
-GO
-
-INSERT INTO SERVICE
-	VALUES('Пожарно-спасательная'),
-		('Медицинская'),
-		('Взрывотезническая'),
-		('Водолазная');
-
-GO
-
-INSERT INTO POST
-	VALUES('Водитель', 1),
-		('Спасатель',1),
-		('Начальник службы',1),
-		('Водитель', 2),
-		('Спасатель',2),
-		('Начальник службы',2),
-		('Водитель', 3),
-		('Спасатель',3),
-		('Начальник службы',3),
-		('Водитель', 4),
-		('Спасатель',4),
-		('Начальник службы',4);
-
-GO
-
-INSERT INTO RANK
-	VALUES('Сержант'),('Прапорщик'), ('Лейтенант'),
-	('Капитан'),('Майор'),('Подполковник');
-
-GO
-
-INSERT INTO RELATIVE_TYPE
-	VALUES('Супруг(а)'),
-	('Сын'),('Дочь'),('Мать'),('Отец');
-
-GO
-
-INSERT INTO SPECIALITY
-	VALUES('Спасатель', ''),
-	('Инженер-механик',''),
-	('Инструктор', '');
-
-GO
-
-INSERT INTO PASPORT_ORGANIZATION_UNIT
-	VALUES('Гомельский РОВД', 'г. ГОМЕЛЬ'),
-	('Областной РОВД Гомельской области', 'г. ГОМЕЛЬ');
-
-GO
-
-INSERT INTO PASPORT
-	VALUES('Гомельский РОВД', 226023, 'HB'),
-	('Областной РОВД Гомельской области', 226012, 'HB'),
-	('Гомельский РОВД', 222123, 'HB'),
-	('Областной РОВД Гомельской области', 232017, 'HB');
-GO
-
-INSERT INTO EMPLOYEE
-	VALUES('Алексей', 'Иванович', 'Петров',11423,1,2,'1972-01-01', '2000-02-04', 'Смолевичи#Интернациональная#123#32', 1, 'типа номер','номерок', 0, NULL),
-	('Виктор', 'Сергеевич', 'Скворцов', 10233, 2,3, '1973-04-07', '2002-10-07', 'Витебск#Ленина#234#2342', 2, 'типа номер','номерок', 0, NULL),
-	('Петр', 'Александрович', 'Головач', 10443, 1,1, '1979-02-11', '2004-04-02', 'Торжок#Ленина#232#12', 3, 'типа номер','номерок', 0, NULL),
-	('Иван', 'Федорович', 'Кедров', 13228, 3,3, '1976-01-12', '2002-05-01', 'Гомель#Советская#21#12', 4, 'типа номер','номерок', 0, NULL);
-
-GO
-
-INSERT INTO CLASINESS
-	VALUES(3,2,'2000-03-02',2,'типа классность');
-
-GO
-
-INSERT INTO CONTRACT
-	VALUES(1,'2000-01-06', '2002-02-01', 'decsription');
-
-GO
-
-INSERT INTO EDUCATION_TIME
-	VALUES(2, '1990-01-06', '1995-02-01', 1, 1, 'education_time_description');

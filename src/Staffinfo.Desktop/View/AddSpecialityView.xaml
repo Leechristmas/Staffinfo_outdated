@@ -7,26 +7,27 @@
         mc:Ignorable="d"
         Title="Добавить специальность" Height="140" Width="400">
     <Grid>
-        <StackPanel Orientation="Vertical"
+        <StackPanel Orientation="Horizontal"
                     Margin="5">
-            <StackPanel Orientation="Horizontal"
+            <StackPanel Orientation="Vertical"
                         Margin="5">
                 <TextBlock Text="Название специальности:"
                            FontSize="14"
                            VerticalAlignment="Center"/>
+                <TextBlock Text="Описание:"
+                           FontSize="14"
+                           VerticalAlignment="Center"
+                           Margin="0,15"/>
+            </StackPanel>
+            <StackPanel Orientation="Vertical"
+                        Margin="5">
                 <TextBox Name="SpecialityTitleTBox"
                          Margin="10,0"
                          MinWidth="185"
                          FontSize="14"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal"
-                        Margin="5">
-                <TextBlock Text="Описание:"
-                           FontSize="14"
-                           VerticalAlignment="Center"/>
                 <TextBox Name="DescriptionSpecialityTBox"
-                         Margin="10,0"
-                         MinWidth="283"
+                         Margin="10,5"
+                         MinWidth="185"
                          FontSize="14"/>
             </StackPanel>
         </StackPanel>
@@ -37,11 +38,11 @@
                         HorizontalAlignment="Right">
                 <Button Name="AddSpeciality"
                         Content="Добавить"
-                        MinWidth="190"
+                        MinWidth="80"
                         Style="{StaticResource ButtonStyle}"/>
                 <Button Name="CloseBtn"
                         Content="Закрыть"
-                        MinWidth="190"
+                        MinWidth="80"
                         Style="{StaticResource ButtonStyle}"/>
             </StackPanel>
         </Border>

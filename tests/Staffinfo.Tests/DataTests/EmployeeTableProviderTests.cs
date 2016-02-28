@@ -80,7 +80,8 @@ using Staffinfo.Desktop.Model;
                     PersonalNumber = "U-2345",
                     PostId = 2,
                     RankId = 3,
-                    IsPensioner = false
+                    IsPensioner = false,
+                    Photo = null
                 }));
             }
         }

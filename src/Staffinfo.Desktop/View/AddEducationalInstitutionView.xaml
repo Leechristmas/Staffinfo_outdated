@@ -7,35 +7,33 @@
         mc:Ignorable="d"
         Title="Добавить учебное заведение" Height="175" Width="380">
     <Grid>
-        <StackPanel Orientation="Vertical"
+        <StackPanel Orientation="Horizontal"
                     Margin="5">
-            <StackPanel Orientation="Horizontal"
+            <StackPanel Orientation="Vertical"
                         Margin="5">
                 <TextBlock Text="Название:"
                            FontSize="14"
                            VerticalAlignment="Center"/>
-                <TextBox Name="OrganizationUnitTBox"
-                         Margin="10,0"
-                         MinWidth="270"
-                         FontSize="14"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal"
-                        Margin="5">
                 <TextBlock Text="Тип:"
                            FontSize="14"
-                           VerticalAlignment="Center"/>
-                <ComboBox Name="OrganizationUnitAddressCBox"
-                         Margin="10,0"
-                         MinWidth="307">
-                    <ComboBoxItem Content="ВУЗ"/>
-                    <ComboBoxItem Content="СУЗ"/>
-                </ComboBox>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal"
-                        Margin="5">
+                           VerticalAlignment="Center"
+                           Margin="0,15"/>
                 <TextBlock Text="Дополнительно:"
                            FontSize="14"
                            VerticalAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Orientation="Vertical"
+                        Margin="5">
+                <TextBox Name="OrganizationUnitTBox"
+                         Margin="10,0"
+                         MinWidth="200"
+                         FontSize="14"/>
+                <ComboBox Name="OrganizationUnitAddressCBox"
+                         Margin="10,7"
+                         MinWidth="200">
+                    <ComboBoxItem Content="ВУЗ"/>
+                    <ComboBoxItem Content="СУЗ"/>
+                </ComboBox>
                 <TextBox Name="DescriptionTBox"
                          Margin="10,0"
                          MinWidth="230"
@@ -49,11 +47,11 @@
                         HorizontalAlignment="Right">
                 <Button Name="AddSpeciality"
                         Content="Добавить"
-                        MinWidth="190"
+                        MinWidth="80"
                         Style="{StaticResource ButtonStyle}"/>
                 <Button Name="CloseBtn"
                         Content="Закрыть"
-                        MinWidth="190"
+                        MinWidth="80"
                         Style="{StaticResource ButtonStyle}"/>
             </StackPanel>
         </Border>

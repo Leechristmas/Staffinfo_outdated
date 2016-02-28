@@ -5,7 +5,6 @@ namespace Staffinfo.Desktop.Model
 {
     /// <summary>
     /// Набор полей, описывающих служащго
-    /// P.S. вряд ли можно назвать "моделью" =)
     /// </summary>
     public class EmployeeModel: BaseModel
     {
@@ -80,26 +79,6 @@ namespace Staffinfo.Desktop.Model
         /// Код паспорта
         /// </summary>
         public long? PasportId { get; set; }
-
-        /// <summary>
-        /// Паспортные данные TODO!!!:избыточность...или нет=)
-        /// </summary>
-        //public string Pasport { get; set; }
-
-        /// <summary>
-        /// Серия паспорта
-        /// </summary>
-        //public string PasportSeries { get; set; }
-
-        ///// <summary>
-        ///// Организация, выдавшая паспорт
-        ///// </summary>
-        //public string PasportOrganizationUnit { get; set; }
-
-        ///// <summary>
-        ///// Номер паспорта
-        ///// </summary>
-        //public string PasportNumber { get; set; }
 
         /// <summary>
         /// Номер мобильного телефона

@@ -88,6 +88,10 @@ namespace Staffinfo.Desktop.ViewModel
         /// </summary>
         private bool _wasChanged;
 
+        /// <summary>
+        /// Индекс активного таба
+        /// </summary>
+        private int _selectedTabIndex;
         #endregion
 
         #region Properties
@@ -202,28 +206,39 @@ namespace Staffinfo.Desktop.ViewModel
             }
         }
 
+
+        public int SelectedTabIndex
+        {
+            get { return _selectedTabIndex; }
+            set
+            {
+                _selectedTabIndex = value;
+                RaisePropertyChanged();
+            }
+        }
+
         #endregion
 
         #region ShowPasswordChanging command
-
-        private RelayCommand _showPasswordChanging;
-
+        /// <summary>
+        /// Перейти к изменению пароля
+        /// </summary>
         public RelayCommand ShowPasswordChanging
             => _showPasswordChanging ?? (_showPasswordChanging = new RelayCommand(ShowPasswordChangingExecute));
-
+        private RelayCommand _showPasswordChanging;
         private void ShowPasswordChangingExecute()
         {
-            var passwordChangingWindow = new PasswordChangingView();
-            passwordChangingWindow.ShowDialog();
+            SelectedTabIndex = SelectedTabIndex == 0 ? 2 : 0;
         }
 
         #endregion
 
         #region SaveChanges command
-
-        private RelayCommand _saveChanges;
+        /// <summary>
+        /// Сохранить изменения
+        /// </summary>
         public RelayCommand SaveChanges => _saveChanges ?? (_saveChanges = new RelayCommand(SaveChangesExecute));
-
+        private RelayCommand _saveChanges;
         private void SaveChangesExecute()
         {
             //Нужно сделать проверку на наличие изменений: пришить к активации команды
@@ -240,6 +255,5 @@ namespace Staffinfo.Desktop.ViewModel
         }
 
         #endregion
-
     }
 }

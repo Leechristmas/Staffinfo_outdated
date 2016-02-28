@@ -374,12 +374,7 @@ namespace Staffinfo.Desktop.ViewModel
                 WasChanged = (_flat != EmployeeViewModel.Flat);
             }
         }
-
-        ///// <summary>
-        ///// Паспортные столы
-        ///// </summary>
-        //public ListViewModel<PasportOrganizationUnitModel> PasportOrganizationList => _pasportOrganizationUnitList;
-
+        
         /// <summary>
         /// Паспорт
         /// </summary>
@@ -440,7 +435,7 @@ namespace Staffinfo.Desktop.ViewModel
                 _photo = value;
                 RaisePropertyChanged("Photo");
 
-                WasChanged = !ImageCompare(_photo, EmployeeViewModel.Photo);
+                WasChanged = !BitmapImageHelper.ImageCompare(_photo, EmployeeViewModel.Photo);
             }
         }
 
@@ -583,7 +578,7 @@ namespace Staffinfo.Desktop.ViewModel
 
                 if (fileInfo.Extension.ToLower() == ".jpg")
                 {
-                    Photo = SetSize(new BitmapImage(new Uri(fileInfo.FullName)), 600, 600); //стоит использовать менеезатратный вариант
+                    Photo = BitmapImageHelper.SetSize(new BitmapImage(new Uri(fileInfo.FullName)), 600, 600); //стоит использовать менеезатратный вариант
                  }
             }
         }
@@ -623,90 +618,7 @@ namespace Staffinfo.Desktop.ViewModel
         #endregion
 
         #region Methods
-
-        /// <summary>
-        /// Установить расширение (наверняка костыль=))
-        /// </summary>
-        /// <param name="btm">изображение</param>
-        /// <param name="height">высота,px</param>
-        /// <param name="width">ширина,px</param>
-        /// <returns></returns>
-        private BitmapImage SetSize(BitmapImage btm, int height, int width)
-        {
-            var imageBytes = ImageToByte(btm);      //конвертируем изображение в byte[]
-            
-            using (var ms = new MemoryStream(imageBytes))
-            {
-                ms.Seek(0, SeekOrigin.Begin);
-
-                BitmapImage image = new BitmapImage();
-                image.BeginInit();
-                image.StreamSource = ms;
-                image.DecodePixelHeight = height;
-                image.DecodePixelWidth = width;
-                image.CacheOption = BitmapCacheOption.OnLoad; ;
-                image.EndInit();
-
-                return image;
-            }
-        }
-
-        /// <summary>
-        /// Конвертирует из массива байт в BitmapImage 
-        /// </summary>
-        /// <param name="imageBytes">массив байт</param>
-        /// <returns></returns>
-        private BitmapImage ByteToImage(byte[] imageBytes)
-        {
-            using (var ms = new MemoryStream(imageBytes))
-            {
-                ms.Seek(0, SeekOrigin.Begin);
-
-                BitmapImage image = new BitmapImage();
-                image.BeginInit();
-                image.StreamSource = ms;
-                image.DecodePixelHeight = 100;
-                image.DecodePixelWidth = 100;
-                image.CacheOption = BitmapCacheOption.OnLoad; ;
-                image.EndInit();
-
-                return image;
-            }
-        }
-
-        /// <summary>
-        /// Конвертирует картинку в массив байт
-        /// </summary>
-        /// <param name="image">исходное изображение</param>
-        /// <returns></returns>
-        private byte[] ImageToByte(BitmapImage image)
-        {
-            if (image == null) return null;
-
-            JpegBitmapEncoder encoder = new JpegBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(image));
-
-            using (var ms = new MemoryStream())
-            {
-                encoder.Save(ms);
-                return ms.ToArray();
-            }
-        }
-
-        /// <summary>
-        /// Сравнивает 2 изображения
-        /// </summary>
-        /// <param name="btm1">первое изображение</param>
-        /// <param name="btm2">второе изображение</param>
-        /// <returns></returns>
-        private bool ImageCompare(BitmapImage btm1, BitmapImage btm2)
-        {
-            if (btm2 == null || btm1 == null) return false;
-
-            return Convert.ToBase64String(ImageToByte(btm1))
-                   == Convert.ToBase64String(ImageToByte(btm2));
-        }
-
+        
         /// <summary>
         /// Подбирает паспорт из БД по id
         /// </summary>

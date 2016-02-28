@@ -316,20 +316,23 @@
                         Background="Transparent"
                         BorderThickness="0"
                         Name="AddEmployeeBtn"
-                        Margin="5,0"
+                        Margin="5,0" 
+                        MinWidth="80"
                         Style="{StaticResource ButtonStyle}"
                         Command="{Binding AddNewEmployeeCommand}"/>
                 <Button Content="Очистить" 
                         Background="Transparent"
                         BorderThickness="0"
                         Name="ClearBtn"
-                        Margin="5,0"
+                        Margin="5,0" 
+                        MinWidth="80"
                         Style="{StaticResource ButtonStyle}"/>
                 <Button Content="Отмена" 
                         Background="Transparent"
                         BorderThickness="0"
                         Name="CancelBtn"
-                        Margin="5,0"
+                        Margin="5,0" 
+                        MinWidth="80"
                         Style="{StaticResource ButtonStyle}"
                         Command="{Binding CloseWindowCommand}"/>
             </StackPanel>

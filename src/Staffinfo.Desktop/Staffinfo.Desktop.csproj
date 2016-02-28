@@ -138,6 +138,7 @@
     <Compile Include="Data\DataTableProviders\SpecialityTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\UserTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\ViolationTableProvider.cs" />
+    <Compile Include="Helpers\BitmapImageHelper.cs" />
     <Compile Include="Helpers\CatalogObservableCollectionsList.cs" />
     <Compile Include="Helpers\PasswordHelper.cs" />
     <Compile Include="Helpers\WindowCloseHelper.cs" />
