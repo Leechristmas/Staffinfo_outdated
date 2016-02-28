@@ -509,4 +509,8 @@ ALTER TABLE VIOLATION
 		CONSTRAINT	FK_VIOLATION_EMPLOYEE
 					FOREIGN KEY (VIOLATOR_ID) REFERENCES EMPLOYEE;
 
+GO
+
+INSERT INTO USERS VALUES('ADMIN', 'admin', 1, 'Шевчук', 'Дмитрий', 'Павлович'),
+						('READER', 'reader', 0, 'Шевчук', 'Дмитрий', 'Павлович');
 

@@ -1,8 +1,3 @@
-INSERT INTO USERS VALUES('ADMIN', 'admin', 1, 'Шевчук', 'Дмитрий', 'Павлович'),
-						('READER', 'reader', 0, 'Шевчук', 'Дмитрий', 'Павлович');
-
-GO
-
 INSERT INTO EDUCATIONAL_INSTITUTION
 	VALUES('ГГУ им. Ф. Скорнины', '', 'ВУЗ'),
 		('ГГTУ им. Сухого', 'Технический ВУЗ', 'ВУЗ');
