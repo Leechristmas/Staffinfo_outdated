@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using GalaSoft.MvvmLight.Command;
@@ -36,8 +37,8 @@ namespace Staffinfo.Desktop.ViewModel
             //_pasportOrganizationUnitList = new ListViewModel<PasportOrganizationUnitModel>(DataSingleton.Instance.PasportOrganizationUnitList);
 
             //TODO
-            _catalogList = new CatalogObservableCollectionsList(
-                );
+            _catalogList = new CatalogObservableCollectionsList();
+            CatalogsInitialize();
         }
 
         public EmployeeEditViewModel(EmployeeViewModel employeeViewModel) : this()
@@ -618,7 +619,66 @@ namespace Staffinfo.Desktop.ViewModel
         #endregion
 
         #region Methods
-        
+
+        /// <summary>
+        /// Инициализация всех справочников
+        /// </summary>
+        private void CatalogsInitialize()
+        {
+            using (var prvdr = new ClasinessTableProvider())
+            {
+                CatalogList.Add(new Tuple<List<BaseModel>, string>(prvdr.Select().Cast<BaseModel>().ToList(), "Классность"));
+            }
+            using (var prvdr = new ContractTableProvider())
+            {
+                CatalogList.Add(new Tuple<List<BaseModel>, string>(prvdr.Select().Cast<BaseModel>().ToList(), "Контракты"));
+            }
+            using (var prvdr = new EducationTimeTableProvider())
+            {
+                CatalogList.Add(new Tuple<List<BaseModel>, string>(prvdr.Select().Cast<BaseModel>().ToList(), "Образование"));
+            }
+            using (var prvdr = new GratitudeTableProvider())
+            {
+                CatalogList.Add(new Tuple<List<BaseModel>, string>(prvdr.Select().Cast<BaseModel>().ToList(), "Благодарности"));
+            }
+            using (var prvdr = new HolidayTimeTableProvider())
+            {
+                CatalogList.Add(new Tuple<List<BaseModel>, string>(prvdr.Select().Cast<BaseModel>().ToList(), "Отпуска"));
+            }
+            using (var prvdr = new HospitalTimeTableProvider())
+            {
+                CatalogList.Add(new Tuple<List<BaseModel>, string>(prvdr.Select().Cast<BaseModel>().ToList(), "Больничные"));
+            }
+            using (var prvdr = new MilitaryProcessTableProvider())
+            {
+                CatalogList.Add(new Tuple<List<BaseModel>, string>(prvdr.Select().Cast<BaseModel>().ToList(), "Служба"));
+            }
+            using (var prvdr = new PostAssignmentTableProvider())
+            {
+                CatalogList.Add(new Tuple<List<BaseModel>, string>(prvdr.Select().Cast<BaseModel>().ToList(), "Присвоение должностей"));
+            }
+            using (var prvdr = new RankAssignmentTableProvider())
+            {
+                CatalogList.Add(new Tuple<List<BaseModel>, string>(prvdr.Select().Cast<BaseModel>().ToList(), "Присвоение званий"));
+            }
+            using (var prvdr = new RelativeTableProvider())
+            {
+                CatalogList.Add(new Tuple<List<BaseModel>, string>(prvdr.Select().Cast<BaseModel>().ToList(), "Родственники"));
+            }
+            using (var prvdr = new ReprimandTableProvider())
+            {
+                CatalogList.Add(new Tuple<List<BaseModel>, string>(prvdr.Select().Cast<BaseModel>().ToList(), "Выговоры"));
+            }
+            using (var prvdr = new SertificationTableProvider())
+            {
+                CatalogList.Add(new Tuple<List<BaseModel>, string>(prvdr.Select().Cast<BaseModel>().ToList(), "Аттестация"));
+            }
+            using (var prvdr = new ViolationTableProvider())
+            {
+                CatalogList.Add(new Tuple<List<BaseModel>, string>(prvdr.Select().Cast<BaseModel>().ToList(), "Нарушения"));
+            }
+        }
+
         /// <summary>
         /// Подбирает паспорт из БД по id
         /// </summary>

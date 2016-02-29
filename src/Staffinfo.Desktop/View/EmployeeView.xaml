@@ -344,15 +344,15 @@
                     <controls:MetroTabControl>
                         <StackPanel Margin="5,0">
                             <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
-                                <!--Определяет страницу редактирования доп. информ-ции о служащем-->
+                                <!--Определяет страницу редактирования доп. информ-ции о служащем // item source = "{Binding InformationModeList}"-->
                                 <ComboBox
                                     Name="InformationModeCBox" 
                                     MinWidth="200"
                                     Width="200"
                                     HorizontalAlignment="Left"
                                     FontSize="16"
-                                    ItemsSource="{Binding InformationModeList}"
-                                    SelectedIndex="{Binding ElementName=AdditionalInfoTabControl, Path=SelectedIndex}"
+                                    ItemsSource="{Binding CatalogList.CatalogsNames}"
+                                    SelectedIndex="{Binding CatalogList.SelectedIndex}"
                                     controls:TextBoxHelper.Watermark="Укажите тип данных" ></ComboBox>
                                 <Button 
                                     Name="ToAddFormBtn"
@@ -376,14 +376,15 @@
                                     Name="DataGridTab">
                                     <DataGrid
                                         Name="EmployeesDataGrid"
-                                        AutoGenerateColumns="False"
+                                        AutoGenerateColumns="True"
                                         IsReadOnly="True"
                                         CanUserAddRows="False"
                                         Style="{DynamicResource AzureDataGrid}"
                                         ScrollViewer.CanContentScroll="True"
                                         ScrollViewer.VerticalScrollBarVisibility="Auto"
                                         ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                                        GridLinesVisibility="All">
+                                        GridLinesVisibility="All"
+                                        ItemsSource="{Binding CatalogList.SelectedItem}">
                                     </DataGrid>
                                 </controls:MetroTabItem>
                                 <controls:MetroTabItem Name="EditTabs">

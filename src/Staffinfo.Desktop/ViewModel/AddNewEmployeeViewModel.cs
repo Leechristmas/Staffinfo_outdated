@@ -332,7 +332,6 @@ namespace Staffinfo.Desktop.ViewModel
                     RankId = rank.Id,
                     BornDate = BornDate,
                     JobStartDate = JobStartDate,
-                    Address = City + '#' + Street + '#' + House + '#' + Flat,
                     City = City,
                     Street = Street,
                     House = House,

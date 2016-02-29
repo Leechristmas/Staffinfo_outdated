@@ -124,7 +124,6 @@
     <Compile Include="Data\DataTableProviders\HospitalTimeTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\MilitaryProcessTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\MilitaryUnitTableProvider.cs" />
-    <Compile Include="Data\DataTableProviders\PasportOrganizationUnitTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\PasportTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\PostAssignmentTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\PostTableProvider.cs" />
@@ -298,6 +297,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Data\Scripts\create_database_staffinfo.sql" />
+    <Content Include="Data\Scripts\fill_database_with_test_data.sql" />
     <EmbeddedResource Include="Resources\Images\empty_avatar_100x100.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>

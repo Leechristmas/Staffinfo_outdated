@@ -53,8 +53,11 @@ namespace Staffinfo.Desktop.Model
         /// <summary>
         /// Адрес TODO!!!: избыточность адреса
         /// </summary>
-        public string Address { get; set; }
-        
+        public string Address //return City + '#' + Street + '#' + House + '#' + Flat; 
+        {
+            get { return City + '#' + Street + '#' + House + '#' + Flat; }
+        }
+
         /// <summary>
         /// Город
         /// </summary>

@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Staffinfo.Desktop.Data.DataTableProviders;
 using Staffinfo.Desktop.Model;
 
-    namespace Staffinfo.Tests.DataTests
+namespace Staffinfo.Tests.DataTests
 {
     [TestClass]
     public class EmployeeTableProviderTests
@@ -18,7 +18,10 @@ using Staffinfo.Desktop.Model;
                     LastName = "Петров",
                     FirstName = "Иван",
                     MiddleName = "Сергеевич",
-                    Address = "г. Гомель, ул. Советская, 97/3",
+                    City = "Гомель",
+                    Street = "Советская",
+                    Flat = "97",
+                    House = "3",
                     BornDate = DateTime.Now,
                     JobStartDate = DateTime.Now.AddDays(-1),
                     HomePhoneNumber = "99-26-25",
@@ -71,7 +74,10 @@ using Staffinfo.Desktop.Model;
                     LastName = "Изменен",
                     FirstName = "Иван",
                     MiddleName = "Сергеевич",
-                    Address = "г. Гомель, ул. Советская, 97/3",
+                    City = "Гомель",
+                    Street = "Советская",
+                    Flat = "97",
+                    House = "3",
                     BornDate = DateTime.Now,
                     JobStartDate = DateTime.Now.AddDays(-1),
                     HomePhoneNumber = "99-26-25",

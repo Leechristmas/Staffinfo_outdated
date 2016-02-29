@@ -33,11 +33,11 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             var cmd =
                 new SqlCommand($"INSERT INTO EMPLOYEE VALUES('{employee.FirstName}', '{employee.MiddleName}', '{employee.LastName}'," + 
                 $"'{employee.PersonalNumber}', {employee.PostId}, {employee.RankId}, '{employee.BornDate.Value}'," + 
-                $"'{employee.JobStartDate.Value}', '{employee.Address}', {employee.PasportId}, '{employee.MobilePhoneNumber}', '{employee.HomePhoneNumber}', '{employee.IsPensioner}', NULL); "+
+                $"'{employee.JobStartDate.Value}', '{employee.Address}', {employee.PasportId}, '{employee.MobilePhoneNumber}', '{employee.HomePhoneNumber}', '{employee.IsPensioner}', @Photo); " +
                 "SELECT MAX(ID) FROM EMPLOYEE;");
 
-            //SqlParameter param = cmd.Parameters.Add("@Photo", SqlDbType.VarBinary);
-            //param.Value = DBNull.Value;
+            var param = cmd.Parameters.Add("@Photo", SqlDbType.VarBinary);
+            param.Value = DBNull.Value;
 
             try
             {
@@ -101,7 +101,6 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                     RankId = Int64.Parse(sqlDataReader["RANK_ID"].ToString()),
                     BornDate = DateTime.Parse(sqlDataReader["BORN_DATE"].ToString()),
                     JobStartDate = DateTime.Parse(sqlDataReader["JOB_START_DATE"].ToString()),
-                    Address = address,
                     City = addressProps[0],
                     Street = addressProps[1],
                     House = addressProps[2],
@@ -166,7 +165,6 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                         RankId = Int64.Parse(sqlDataReader["RANK_ID"].ToString()),
                         BornDate = DateTime.Parse(sqlDataReader["BORN_DATE"].ToString()),
                         JobStartDate = DateTime.Parse(sqlDataReader["JOB_START_DATE"].ToString()),
-                        Address = address,
                         City = addressProps[0],
                         Street = addressProps[1],
                         House = addressProps[2],
@@ -201,12 +199,55 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             if (employee == null) throw new ArgumentNullException(nameof(employee), Resources.DatabaseConnector_parameter_cannot_be_null);
             
-            var cmd = new SqlCommand($@"UPDATE EMPLOYEE SET EMPLOYEE_FIRSTNAME='{employee.FirstName}', EMPLOYEE_MIDDLENAME='{employee.MiddleName}'," + 
-                $"EMPLOYEE_LASTNAME='{employee.LastName}', PERSONAL_KEY='{employee.PersonalNumber}', POST_ID={employee.PostId}," +
-                $"RANK_ID={employee.RankId}, BORN_DATE='{employee.BornDate.Value}', JOB_START_DATE='{employee.JobStartDate.Value}'," +
-                $"ADDRESS='{employee.Address}', PASPORT_ID={employee.PasportId}, MOBILE_PHONE_NUMBER='{employee.MobilePhoneNumber}'," +
-                $"HOME_PHONE_NUMBER='{employee.HomePhoneNumber}', IS_PENSIONER='{employee.IsPensioner}', PHOTO=@Photo " +
-                $"WHERE ID={employee.Id};");
+            var cmd = new SqlCommand($@"UPDATE EMPLOYEE SET EMPLOYEE_FIRSTNAME=@EMPLOYEE_FIRSTNAME, EMPLOYEE_MIDDLENAME=@EMPLOYEE_MIDDLENAME," + 
+                $"EMPLOYEE_LASTNAME=@EMPLOYEE_LASTNAME, PERSONAL_KEY=@PERSONAL_KEY, POST_ID=@POST_ID," +
+                $"RANK_ID=@RANK_ID, BORN_DATE=@BORN_DATE, JOB_START_DATE=@JOB_START_DATE," +
+                $"ADDRESS=@ADDRESS, PASPORT_ID=@PASPORT_ID, MOBILE_PHONE_NUMBER=@MOBILE_PHONE_NUMBER," +
+                $"HOME_PHONE_NUMBER=@HOME_PHONE_NUMBER, IS_PENSIONER=@IS_PENSIONER, PHOTO=@Photo " +
+                $"WHERE ID=@ID;");
+
+            //Инициализация параметров
+            var employeeFirstName = cmd.Parameters.Add("@EMPLOYEE_FIRSTNAME", SqlDbType.VarChar);
+            employeeFirstName.Value = employee.FirstName;
+
+            var employeeMiddleName = cmd.Parameters.Add("@EMPLOYEE_MIDDLENAME", SqlDbType.VarChar);
+            employeeMiddleName.Value = employee.MiddleName;
+
+            var employeeLastName = cmd.Parameters.Add("@EMPLOYEE_LASTNAME", SqlDbType.VarChar);
+            employeeLastName.Value = employee.LastName;
+
+            var personalKey = cmd.Parameters.Add("@PERSONAL_KEY", SqlDbType.VarChar);
+            personalKey.Value = employee.PersonalNumber;
+
+            var postId = cmd.Parameters.Add("@POST_ID", SqlDbType.Int);
+            postId.Value = employee.PostId;
+
+            var rankId = cmd.Parameters.Add("@RANK_ID", SqlDbType.Int);
+            rankId.Value = employee.RankId;
+
+            var bornDate = cmd.Parameters.Add("@BORN_DATE", SqlDbType.DateTime);
+            bornDate.Value = employee.BornDate.Value;
+
+            var jobStartDate = cmd.Parameters.Add("@JOB_START_DATE", SqlDbType.DateTime);
+            jobStartDate.Value = employee.JobStartDate.Value;
+
+            var address = cmd.Parameters.Add("@ADDRESS", SqlDbType.VarChar);
+            address.Value = employee.Address;
+
+            var pasportId = cmd.Parameters.Add("@PASPORT_ID", SqlDbType.Int);
+            pasportId.Value = employee.PasportId;
+
+            var mobilePhoneNumber = cmd.Parameters.Add("@MOBILE_PHONE_NUMBER", SqlDbType.VarChar);
+            mobilePhoneNumber.Value = employee.MobilePhoneNumber;
+
+            var homePhoneNumber = cmd.Parameters.Add("@HOME_PHONE_NUMBER", SqlDbType.VarChar);
+            homePhoneNumber.Value = employee.HomePhoneNumber;
+
+            var isPensioner = cmd.Parameters.Add("@IS_PENSIONER", SqlDbType.Bit);
+            isPensioner.Value = employee.IsPensioner;
+
+            var id = cmd.Parameters.Add("@ID", SqlDbType.Int);
+            id.Value = employee.Id;
 
             var param = cmd.Parameters.Add("@Photo", SqlDbType.VarBinary);
             if (employee.Photo == null)
