@@ -29,24 +29,27 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
-            <ColumnDefinition MinWidth="150" Width="150"/>
+            <ColumnDefinition MinWidth="100" Width="100"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="45"/>
         </Grid.RowDefinitions>
         <Grid Grid.Column="1">
-            <GroupBox Margin="-1">
+            <GroupBox Margin="-1"
+                      Header="Меню">
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Vertical">
                         <Button Name="AcceptBtn"
                                 Style="{StaticResource ButtonStyle}"
                                 Content="Принять"
+                                MinWidth="100"
                                 Command="{Binding Path=AcceptChanges}"
                                 ToolTip="Принять изменения"/>
                         <Button Name="CleanUpBtn"
                                 Style="{StaticResource ButtonStyle}"
                                 Content="Отменить"
+                                MinWidth="100"
                                 Command="{Binding Path=CleanOut}"
                                 ToolTip="Отменить все изменения"/>
                     </StackPanel>
@@ -351,23 +354,16 @@
                                     Width="200"
                                     HorizontalAlignment="Left"
                                     FontSize="16"
-                                    ItemsSource="{Binding CatalogList.CatalogsNames}"
-                                    SelectedIndex="{Binding CatalogList.SelectedIndex}"
+                                    ItemsSource="{Binding InformationModeList}"
+                                    SelectedIndex="{Binding SelectedIndex}"
                                     controls:TextBoxHelper.Watermark="Укажите тип данных" ></ComboBox>
                                 <Button 
-                                    Name="ToAddFormBtn"
+                                    Name="TabsToogleBtn"
                                     MinWidth="100"
-                                    Content="Добавить"
+                                    Content="{Binding TabsToogleTitle}"
                                     Style="{DynamicResource ChromelessButtonStyle}"
                                     FontSize="16"
-                                    Command="{Binding GoToAddTab}"/>
-                                <Button 
-                                    Name="ToBackFormBtn"
-                                    MinWidth="100"
-                                    Content="Назад"
-                                    Style="{DynamicResource ChromelessButtonStyle}"
-                                    FontSize="16"
-                                    Command="{Binding GoToDataTab}"/>
+                                    Command="{Binding TabsToggle}"/>
                             </StackPanel>
 
                             <controls:MetroTabControl Name="InfoTabControl"
@@ -384,12 +380,13 @@
                                         ScrollViewer.VerticalScrollBarVisibility="Auto"
                                         ScrollViewer.HorizontalScrollBarVisibility="Auto"
                                         GridLinesVisibility="All"
-                                        ItemsSource="{Binding CatalogList.SelectedItem}">
+                                        ItemsSource="{Binding SelectedItem}">
                                     </DataGrid>
                                 </controls:MetroTabItem>
                                 <controls:MetroTabItem Name="EditTabs">
                                     <!--Страницы редактирования доп. информ-ции-->
-                                    <controls:MetroAnimatedTabControl   Name="AdditionalInfoTabControl">
+                                    <controls:MetroAnimatedTabControl   Name="AdditionalInfoTabControl"
+                                                                        SelectedIndex="{Binding SelectedIndex}">
                                         <TabControl.ItemContainerStyle>
                                             <Style TargetType="{x:Type TabItem}">
                                                 <Setter Property="Visibility" Value="Collapsed"/>

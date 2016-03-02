@@ -123,9 +123,12 @@ DROP TABLE USERS;
 
 DROP PROCEDURE CHECK_USER;
 DROP PROCEDURE GET_ALL_USERS;
+DROP PROCEDURE ADD_EMPLOYEE;
 
 GO
-
+-------------------------------------------------------------------------
+---PROCEDURES
+-------------------------------------------------------------------------
 --ВОЗВРАЩАЕТ ВСЕХ ПОЛЬЗОВАТЕЛЕЙ
 CREATE PROCEDURE GET_ALL_USERS
 AS
@@ -143,6 +146,21 @@ AS
 
 GO
 
+CREATE PROCEDURE ADD_EMPLOYEE 
+	@FIRSTNAME VARCHAR(64), @MIDDLENAME VARCHAR(64), @LASTNAME VARCHAR(64), @PERSONAL_KEY VARCHAR(16),
+	@POST_ID INT, @RANK_ID INT, @BORN_DATE DATE, @JOB_START_DATE DATE, @ADDRESS VARCHAR(120),
+	@PASPORT_ID INT, @MOBILE_PHONE_NUMBER VARCHAR(13), @HOME_PHONE_NUMBER VARCHAR(10), @IS_PENSIONER BIT, @PHOTO IMAGE
+AS
+INSERT INTO EMPLOYEE VALUES(@FIRSTNAME, @MIDDLENAME, @LASTNAME, @PERSONAL_KEY,
+	@POST_ID, @RANK_ID, @BORN_DATE, @JOB_START_DATE, @ADDRESS,
+	@PASPORT_ID, @MOBILE_PHONE_NUMBER, @HOME_PHONE_NUMBER, @IS_PENSIONER, @PHOTO)
+SELECT MAX(ID) FROM EMPLOYEE
+
+GO
+-------------------------------------------------------------------------
+---CREATE THE NEW TABLES
+-------------------------------------------------------------------------
+--ПОЛЬЗОВАТЕЛИ
 CREATE TABLE USERS(
 	ID INT PRIMARY KEY IDENTITY,
 	USER_LOGIN VARCHAR(20) NOT NULL,
@@ -377,6 +395,9 @@ CREATE TABLE PASPORT(
 
 GO
 
+-------------------------------------------------------------------------
+---CONSTRAINTS
+-------------------------------------------------------------------------
 ALTER TABLE PASPORT
 	ADD
 		CONSTRAINT	FK_PASPORT_UNIQUE
@@ -514,3 +535,7 @@ GO
 INSERT INTO USERS VALUES('ADMIN', 'admin', 1, 'Шевчук', 'Дмитрий', 'Павлович'),
 						('READER', 'reader', 0, 'Шевчук', 'Дмитрий', 'Павлович');
 
+
+-------------------------------------------------------------------------
+---EOF
+-------------------------------------------------------------------------

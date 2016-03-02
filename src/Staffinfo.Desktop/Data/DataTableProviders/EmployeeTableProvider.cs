@@ -30,11 +30,48 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             if (employee == null) throw new ArgumentNullException(nameof(employee), Resources.DatabaseConnector_parameter_cannot_be_null);
             
-            var cmd =
-                new SqlCommand($"INSERT INTO EMPLOYEE VALUES('{employee.FirstName}', '{employee.MiddleName}', '{employee.LastName}'," + 
-                $"'{employee.PersonalNumber}', {employee.PostId}, {employee.RankId}, '{employee.BornDate.Value}'," + 
-                $"'{employee.JobStartDate.Value}', '{employee.Address}', {employee.PasportId}, '{employee.MobilePhoneNumber}', '{employee.HomePhoneNumber}', '{employee.IsPensioner}', @Photo); " +
-                "SELECT MAX(ID) FROM EMPLOYEE;");
+            var cmd = new SqlCommand(@"ADD_EMPLOYEE @FIRSTNAME, @MIDDLENAME, @LASTNAME, @PERSONAL_KEY, @POST_ID, @RANK_ID, 
+                                    @BORN_DATE, @JOB_START_DATE, @ADDRESS, @PASPORT_ID, @MOBILE_PHONE_NUMBER, @HOME_PHONE_NUMBER, @IS_PENSIONER, @PHOTO");
+
+            //Инициализация параметров
+            var employeeFirstName = cmd.Parameters.Add("@FIRSTNAME", SqlDbType.VarChar);
+            employeeFirstName.Value = employee.FirstName;
+
+            var employeeMiddleName = cmd.Parameters.Add("@MIDDLENAME", SqlDbType.VarChar);
+            employeeMiddleName.Value = employee.MiddleName;
+
+            var employeeLastName = cmd.Parameters.Add("@LASTNAME", SqlDbType.VarChar);
+            employeeLastName.Value = employee.LastName;
+
+            var personalKey = cmd.Parameters.Add("@PERSONAL_KEY", SqlDbType.VarChar);
+            personalKey.Value = employee.PersonalNumber;
+
+            var postId = cmd.Parameters.Add("@POST_ID", SqlDbType.Int);
+            postId.Value = employee.PostId;
+
+            var rankId = cmd.Parameters.Add("@RANK_ID", SqlDbType.Int);
+            rankId.Value = employee.RankId;
+
+            var bornDate = cmd.Parameters.Add("@BORN_DATE", SqlDbType.DateTime);
+            bornDate.Value = employee.BornDate.Value;
+
+            var jobStartDate = cmd.Parameters.Add("@JOB_START_DATE", SqlDbType.DateTime);
+            jobStartDate.Value = employee.JobStartDate.Value;
+
+            var address = cmd.Parameters.Add("@ADDRESS", SqlDbType.VarChar);
+            address.Value = employee.Address;
+
+            var pasportId = cmd.Parameters.Add("@PASPORT_ID", SqlDbType.Int);
+            pasportId.Value = employee.PasportId;
+
+            var mobilePhoneNumber = cmd.Parameters.Add("@MOBILE_PHONE_NUMBER", SqlDbType.VarChar);
+            mobilePhoneNumber.Value = employee.MobilePhoneNumber;
+
+            var homePhoneNumber = cmd.Parameters.Add("@HOME_PHONE_NUMBER", SqlDbType.VarChar);
+            homePhoneNumber.Value = employee.HomePhoneNumber;
+
+            var isPensioner = cmd.Parameters.Add("@IS_PENSIONER", SqlDbType.Bit);
+            isPensioner.Value = employee.IsPensioner;
 
             var param = cmd.Parameters.Add("@Photo", SqlDbType.VarBinary);
             param.Value = DBNull.Value;

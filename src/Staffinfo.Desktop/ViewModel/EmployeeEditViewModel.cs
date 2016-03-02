@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -37,8 +38,8 @@ namespace Staffinfo.Desktop.ViewModel
             //_pasportOrganizationUnitList = new ListViewModel<PasportOrganizationUnitModel>(DataSingleton.Instance.PasportOrganizationUnitList);
 
             //TODO
-            _catalogList = new CatalogObservableCollectionsList();
-            CatalogsInitialize();
+            //_catalogList = new CatalogObservableCollectionsList();
+            //CatalogsInitialize();
         }
 
         public EmployeeEditViewModel(EmployeeViewModel employeeViewModel) : this()
@@ -68,6 +69,11 @@ namespace Staffinfo.Desktop.ViewModel
         #endregion
 
         #region Fields
+
+        /// <summary>
+        /// Индекс активного листа справочника
+        /// </summary>
+        private int _selectedIndex = -1;
 
         /// <summary>
         /// Звания
@@ -197,6 +203,7 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 _selectedTabIndex = value;
                 RaisePropertyChanged();
+                RaisePropertyChanged("TabsToogleTitle");
             }
         }
 
@@ -456,15 +463,115 @@ namespace Staffinfo.Desktop.ViewModel
         public ListViewModel<ServiceModel> ServiceList => _serviceList;
 
         /// <summary>
+        /// Content кнопки-переключателя между табами
+        /// </summary>
+        public string TabsToogleTitle => SelectedTabIndex == 0 ? "Добавить" : "Назад";
+
+        /// <summary>
+        /// Индекс активного справочника
+        /// </summary>
+        public int SelectedIndex
+        {
+            get { return _selectedIndex; }
+            set
+            {
+                _selectedIndex = value;
+                RaisePropertyChanged();
+                RaisePropertyChanged("SelectedItem");
+            }
+        }
+
+        /// <summary>
+        /// Активный справочник
+        /// </summary>
+        public object SelectedItem  //Очередной гребанный костыль...стоит запилить что-то получше
+        {
+            get
+            {
+                if (SelectedIndex < 0) return null;
+                switch (SelectedIndex)
+                {
+                    case 0:
+                        using (var prvdr = new SertificationTableProvider())
+                        {
+                            return new ObservableCollection<SertificationModel>(prvdr.Select());
+                        }
+                    case 1:
+                        using (var prvdr = new GratitudeTableProvider())
+                        {
+                            return new ObservableCollection<GratitudeModel>(prvdr.Select());
+                        }
+                    case 2:
+                        using (var prvdr = new HospitalTimeTableProvider())
+                        {
+                            return new ObservableCollection<HospitalTimeModel>(prvdr.Select());
+                        }
+                    case 3:
+                        using (var prvdr = new ReprimandTableProvider())
+                        {
+                            return new ObservableCollection<ReprimandModel>(prvdr.Select());
+                        }
+                    case 4:
+                        using (var prvdr = new MilitaryProcessTableProvider())
+                        {
+                            return new ObservableCollection<MilitaryProcessModel>(prvdr.Select());
+                        }
+                    case 5:
+                        using (var prvdr = new ClasinessTableProvider())
+                        {
+                            return new ObservableCollection<ClasinessModel>(prvdr.Select());
+                        }
+                    case 6:
+                        using (var prvdr = new ContractTableProvider())
+                        {
+                            return new ObservableCollection<ContractModel>(prvdr.Select());
+                        }
+                    case 7:
+                        using (var prvdr = new ViolationTableProvider())
+                        {
+                            return new ObservableCollection<ViolationModel>(prvdr.Select());
+                        }
+                    case 8:
+                        using (var prvdr = new EducationTimeTableProvider())
+                        {
+                            return new ObservableCollection<EducationTimeModel>(prvdr.Select());
+                        }
+                    case 9:
+                        using (var prvdr = new HolidayTimeTableProvider())
+                        {
+                            return new ObservableCollection<HolidayTimeModel>(prvdr.Select());
+                        }
+                    case 10:
+                        using (var prvdr = new PostAssignmentTableProvider())
+                        {
+                            return new ObservableCollection<PostAssignmentModel>(prvdr.Select());
+                        }
+                    case 11:
+                        using (var prvdr = new RankAssignmentTableProvider())
+                        {
+                            return new ObservableCollection<RankAssignmentModel>(prvdr.Select());
+                        }
+                    case 12:
+                        using (var prvdr = new RelativeTableProvider())
+                        {
+                            return new ObservableCollection<RelativeModel>(prvdr.Select());
+                        }
+                    default:
+                        return null;
+                }
+            }
+        }
+
+        /// <summary>
         /// Режимы
         /// </summary>
-        public List<string> InformationModeList => _informationModeList ?? (_informationModeList = new List<string>
+        public List<string> InformationModeList => _informationModeList ?? (_informationModeList = new List<string> //...рука лицо: костыль на костыле...
         {
             "Аттестация",
             "Благодарности",
             "Больничные",
             "Взыскания",
-            "Вониская служба",
+            "Воинская служба",
             "Классность",
             "Контракты",
             "Нарушения",
@@ -596,32 +703,22 @@ namespace Staffinfo.Desktop.ViewModel
         }
 
         /// <summary>
-        /// Переходим на edit tabs
+        /// Переходим на edit tabs и обратно
         /// </summary>
-        private RelayCommand _goToAddTab;
-        public RelayCommand GoToAddTab => _goToAddTab ?? (_goToAddTab = new RelayCommand(GoToAddTabExecute));
+        private RelayCommand _tabsToggle;
+        public RelayCommand TabsToggle => _tabsToggle ?? (_tabsToggle = new RelayCommand(TabsToggleExecute));
 
-        private void GoToAddTabExecute()
+        private void TabsToggleExecute()
         {
-            SelectedTabIndex = 1;
+            SelectedTabIndex = SelectedTabIndex == 0 ? 1 : 0;   
         }
-
-        /// <summary>
-        /// Переходим на data tab
-        /// </summary>
-        private RelayCommand _goToDataTab;
-        public RelayCommand GoToDataTab => _goToDataTab ?? (_goToDataTab = new RelayCommand(GoToDataTabExecute));
-
-        private void GoToDataTabExecute()
-        {
-            SelectedTabIndex = 0;
-        }
+        
         #endregion
 
         #region Methods
 
         /// <summary>
-        /// Инициализация всех справочников
+        /// Инициализация всех справочников...понадобится, если вдруг решу избавится от костылей(тех, что выше) и запилить ДИКИЙ костыль
         /// </summary>
         private void CatalogsInitialize()
         {

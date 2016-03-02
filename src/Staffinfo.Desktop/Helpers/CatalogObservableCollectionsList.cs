@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
+using Staffinfo.Desktop.Data.DataTableProviders;
 using Staffinfo.Desktop.Model;
 
 namespace Staffinfo.Desktop.Helpers
@@ -65,15 +67,50 @@ namespace Staffinfo.Desktop.Helpers
         /// <summary>
         /// Выделенный справочник
         /// </summary>
-        public List<BaseModel> SelectedItem => _selectedIndex != -1 ? _catalogsCollection[_selectedIndex] : null;//ПРИВЕДЕНИЕ ТИПОВ!!!!
+        public object SelectedItem//гребанный костыль
+        {
+            get
+            {
+                if (SelectedIndex < 0) return null;
+                else if (CatalogsCollection[SelectedIndex].Count <= 0) return 0;
+                else
+                {
+                    return null;
+                    switch (SelectedIndex)
+                    {
+                        
+                    }
+
+                    //using (var prvdr = new ClasinessTableProvider())
+                    //{
+                    //    return prvdr.Select();
+                    //}
+                }
+                    //return
+                    //    actualSourceList = _catalogsCollection[SelectedIndex]
+                    //    .Select(el =>
+                    //    {
+                    //        switch (el.GetType().Name)
+                    //        {
+                    //            case "ClasinessModel":
+                    //                return el as ClasinessModel;
+                    //            default:
+                    //                return el;
+                    //        }
+                    //    })
+                    //    .ToList();
+            }
+        }
 
         /// <summary>
         /// Добавить справочник в коллекцию
         /// </summary>
         /// <param name="catalog">справочник</param>
         /// <returns></returns>
-        public ObservableCollection<List<BaseModel>> Add(Tuple<List<BaseModel>, string> catalog)    
+        public ObservableCollection<List<BaseModel>> Add(Tuple<List<BaseModel>, string> catalog)
         {
+            //var t = catalog.Item1.ElementAt(0).GetType().Name;
+
             CatalogsCollection.Add(catalog.Item1);
             CatalogsNames.Add(catalog.Item2);
 
