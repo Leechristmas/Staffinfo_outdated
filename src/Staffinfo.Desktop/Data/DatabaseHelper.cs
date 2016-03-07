@@ -21,7 +21,7 @@ namespace Staffinfo.Desktop.Data
         private static string ErrorMessage { get; set; }
 
         /// <summary>
-        /// Возвращает список всех экземпляров sql-серверов
+        /// Ищет и возвращает список всех экземпляров sql-серверов
         /// </summary>
         /// <returns></returns>
         public static List<string> GetServerInstances()
@@ -32,6 +32,30 @@ namespace Staffinfo.Desktop.Data
             var servers = instance.GetDataSources();
             return (from DataRow row in servers.Rows where row["ServerName"].ToString() != "" && row["InstanceName"].ToString() != "" select row["ServerName"].ToString() + "\\" + row["InstanceName"].ToString()).ToList();
         }
+
+        /// <summary>
+        /// Сохраняет список имен экземпляров сервера в файл
+        /// </summary>
+        public static void SaveServerInstancesIntoFile()
+        {
+            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                   $"...\\src\\Staffinfo.Desktop\\Data\\{DataSingleton.Instance.ServersFile}");
+            List<string> serverInstances = GetServerInstances();
+            File.WriteAllLines(filePath, serverInstances);
+        }
+
+        /// <summary>
+        /// Возвращает список всех экземпляров sql-серверов из .ini файла
+        /// </summary>
+        /// <returns>список имен экземпляров локального сервера</returns>
+        public static List<string> LoadServerInstances()
+        {
+            string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                $"...\\src\\Staffinfo.Desktop\\Data\\{DataSingleton.Instance.ServersFile}");
+            if (!File.Exists(filePath))
+                throw new FileNotFoundException("Файл инициализации серверов не найден");
+            return File.ReadAllLines(filePath).ToList();
+        } 
 
         /// <summary>
         /// Выполняет скрипт по соданию БД

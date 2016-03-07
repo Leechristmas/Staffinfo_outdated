@@ -6,6 +6,7 @@ using Staffinfo.Desktop.View;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using System.Windows;
@@ -242,6 +243,39 @@ namespace Staffinfo.Desktop.ViewModel
 
         #region Commands
 
+        #region RefreshServerListCommand
+
+        private RelayCommand _refreshServerListCommand;
+
+        public RelayCommand RefreshServerListCommand
+            =>
+                _refreshServerListCommand ??
+                (_refreshServerListCommand = new RelayCommand(RefreshServerListCommandExecute));
+
+        /// <summary>
+        /// Обновить список серверов
+        /// </summary>
+        private async void RefreshServerListCommandExecute()
+        {
+            SelectedTabIndex = 0;
+            ServerNamesList = await Task.Run(() =>
+            {
+                try
+                {
+                    DatabaseHelper.SaveServerInstancesIntoFile();
+                    return DatabaseHelper.LoadServerInstances();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Ошибка инициализации серверов." + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return null;
+                }
+            });
+            SelectedTabIndex = 1;
+        }
+
+        #endregion
+
         #region WindowLoadedCommand
 
         /// <summary>
@@ -255,21 +289,34 @@ namespace Staffinfo.Desktop.ViewModel
         /// <summary>
         /// Подгружаем локальные сервера (асинхронно)
         /// </summary>
-        public async void WindowLoaded()
+        private async void WindowLoaded()
         {
-            ServerNamesList = await Task.Run(() => DatabaseHelper.GetServerInstances());
-            if (ServerNamesList.Count == 0)
+            ServerNamesList = await Task.Run(() =>
+                {
+                    try
+                    {
+                        return DatabaseHelper.LoadServerInstances();
+                    }
+                    catch (FileNotFoundException fEx)
+                    {
+                        MessageBox.Show("Ошибка инициализации серверов." + fEx.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return null;
+                    }
+                });
+            SelectedTabIndex = 1;
+            if (ServerNamesList?.Count == 0)
             {
                 MessageBox.Show(
                     "Локальных серверов не найдено. Проверьте, включена ли служба \"Обозреватель SQL server\".",
                     "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 WindowsClosed = true;
             }
-            SelectedTabIndex = 1;
+
+            
         }
 
         #endregion
-        
+
         #region ShowUsers command
 
         private RelayCommand _showUsers;

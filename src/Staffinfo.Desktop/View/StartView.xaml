@@ -88,6 +88,22 @@
                                     Command="{Binding Authorization}" 
                                     IsDefault="True"/>
                         </StackPanel>
+                        <StackPanel>
+                            <Button Margin="5,5"
+                                    Style="{StaticResource ButtonStyle}"
+                                    MinWidth="20"
+                                    Command="{Binding RefreshServerListCommand}">
+                                <StackPanel>
+                                    <Rectangle  Width="20"
+                                                Height="20"
+                                                Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Stretch="Fill"  Visual="{StaticResource ResourceKey=appbar_refresh}"/>
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
                     </StackPanel>
                 </Grid>
             </Controls:MetroTabItem>

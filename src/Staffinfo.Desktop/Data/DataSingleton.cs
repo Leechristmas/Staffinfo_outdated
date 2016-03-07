@@ -138,6 +138,11 @@ namespace Staffinfo.Desktop.Data
         #region Properties
 
         /// <summary>
+        /// Возвращает имя файла, хранящего список экземпляров локального сервера
+        /// </summary>
+        public string ServersFile => "servers.txt";
+
+        /// <summary>
         /// Имя базы данных
         /// </summary>
         public string DatabaseName => "STAFFINFO_TESTS";
