@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using Staffinfo.Desktop.Data.DataTableContracts;
 using Staffinfo.Desktop.Model;
 using Staffinfo.Desktop.Properties;
+using Staffinfo.Desktop.Shared;
 
 namespace Staffinfo.Desktop.Data.DataTableProviders
 {
@@ -61,8 +62,8 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         /// <returns></returns>
         public UserModel Check(string login, string password )
         {
-            if (login == null || login.Length < 5) throw new ArgumentException(Resources.UserTableProvider_Check_Некорректный_логин,login);
-            if (password == null || password.Length < 5) throw new ArgumentException(Resources.UserTableProvider_Check_Некорректный_пароль, password);
+            if (login == null || login.Length < 5) throw new AuthorizationException(Resources.UserTableProvider_Check_Некорректный_логин);
+            if (password == null || password.Length < 5) throw new AuthorizationException(Resources.UserTableProvider_Check_Некорректный_пароль);
 
             var cmd = new SqlCommand($@"CHECK_USER '{login.ToUpper()}', '{password}';");
 
