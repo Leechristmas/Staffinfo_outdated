@@ -101,11 +101,21 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             return userModel;
         }
 
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public UserModel Save(UserModel obj)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public UserModel Select(long? id)
         {
             throw new NotImplementedException();
@@ -152,16 +162,30 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             return userList;
         }
 
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public bool Update(UserModel obj)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public bool DeleteById(long? id)
         {
             throw new NotImplementedException();
         }
-
+        /// <summary>
+        /// TODO
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ObservableCollection<UserModel> SelectByEmployeeId(long? id)
         {
             throw new NotImplementedException();

@@ -6,10 +6,17 @@
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         xmlns:local="clr-namespace:Staffinfo.Desktop"           
         xmlns:helpers="clr-namespace:Staffinfo.Desktop.Helpers"
+        xmlns:circularProgressBar="clr-namespace:CircularProgressBar;assembly=CircularProgressBar"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
         Title="{Binding Mode}" Height="350" Width="525"
         DataContext="{Binding Source={StaticResource Locator}, Path=Main}"
         helpers:WindowCloseHelper.WindowsClose="{Binding WindowsClosed}">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding WindowLoadedCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Controls:MetroWindow.RightWindowCommands>
         <Controls:WindowCommands>
             <Button Command="{Binding ShowSettings}"
@@ -31,41 +38,56 @@
         <Controls:MetroTabControl Name="StartTabControl"
                                   SelectedIndex="{Binding SelectedTabIndex}">
             <Controls:MetroTabItem>
+                <circularProgressBar:Custom Width="120" 
+                                            HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center" 
+                                            Name="ProgressBar"/>
+            </Controls:MetroTabItem>
+            <Controls:MetroTabItem>
                 <Grid>
-                    <StackPanel Orientation="Vertical"
-                                HorizontalAlignment="Center"
+                    <StackPanel Orientation="Horizontal" 
+                                HorizontalAlignment="Center" 
                                 VerticalAlignment="Center">
-                        <StackPanel Orientation="Horizontal"
+                        <StackPanel Orientation="Vertical" 
                                     Margin="0,5">
-                            <TextBlock Text="Логин"
-                                       FontSize="16"
-                                       Margin="5,0"/>
-                            <TextBox MinWidth="150"
-                                     FontSize="16"
-                                     Margin="5,0"
-                                     Height="30"
-                                     MaxLength="20"
-                                     Text="{Binding Login}"/>
+                            <TextBlock  Text="Сервер" 
+                                        FontSize="16" 
+                                        Margin="5,0"/>
+                            <TextBlock  Text="Логин" 
+                                        FontSize="16" 
+                                        Margin="5,15"/>
+                            <TextBlock  Text="Пароль" 
+                                        FontSize="16"/>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Пароль"
-                                       FontSize="16"/>
-                            <PasswordBox MinWidth="150"
-                                         FontSize="16"
-                                         Margin="5,0"
-                                         MaxLength="20"
-                                         Height="30"
-                                         PasswordChar="*"
-                                         Controls:PasswordBoxHelper.CapsLockWarningToolTip="Включен CapsLock"
-                                         helpers:PasswordHelper.Attach="True"
-                                         helpers:PasswordHelper.Password="{Binding Path=Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                        <StackPanel Orientation="Vertical" 
+                                    Margin="0,5">
+                            <ComboBox   MinWidth="145" 
+                                        Margin="5,0" 
+                                        Height="30"
+                                        ItemsSource="{Binding ServerNamesList}"
+                                        SelectedItem="{Binding SelectedServer}"/>
+                            <TextBox    MinWidth="150" 
+                                        FontSize="16" 
+                                        Margin="5,5" 
+                                        Height="30" 
+                                        MaxLength="20" 
+                                        Text="{Binding Login}"/>
+                            <PasswordBox MinWidth="150" 
+                                        FontSize="16" 
+                                        Margin="5,0" 
+                                        MaxLength="20" 
+                                        Height="30" 
+                                        PasswordChar="*" 
+                                        Controls:PasswordBoxHelper.CapsLockWarningToolTip="Включен CapsLock" 
+                                        helpers:PasswordHelper.Attach="True" 
+                                        helpers:PasswordHelper.Password="{Binding Path=Password, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                            <Button Name="SignInBtn" 
+                                    Content="Войти" 
+                                    Style="{StaticResource ButtonStyle}" 
+                                    Margin="20,10" 
+                                    Command="{Binding Authorization}" 
+                                    IsDefault="True"/>
                         </StackPanel>
-                        <Button Name="SignInBtn"
-                                Content="Войти"
-                                Style="{StaticResource ButtonStyle}"
-                                Margin="20,10"
-                                Command="{Binding Authorization}"
-                                IsDefault="True"/>
                     </StackPanel>
                 </Grid>
             </Controls:MetroTabItem>
@@ -97,7 +119,7 @@
                                 Style="{StaticResource ButtonStyle}"
                                 Command="{Binding ShowUsers}"/>
                     </StackPanel>
-                    
+
                     <Border Background="LightGray"
                             Height="25"
                             Margin="0,0,0,20"

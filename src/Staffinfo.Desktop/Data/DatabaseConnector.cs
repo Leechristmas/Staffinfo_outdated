@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.SqlClient;
 using Staffinfo.Desktop.Properties;
+using Staffinfo.Desktop.Shared;
 
 namespace Staffinfo.Desktop.Data
 {
@@ -9,25 +10,22 @@ namespace Staffinfo.Desktop.Data
     /// </summary>
     public class DatabaseConnector: IDisposable
     {
-        /// <summary>
-        /// строка соединения (notebook)
-        /// </summary>
-        //private const string UrlDataBase = @"Data Source=DESKTOP-84584PI\SQLEXPRESS; Initial Catalog = staffinfo_tests; Integrated Security=SSPI;";
-
-
-        /// <summary>
-        /// строка соединения(PC)
-        /// </summary>
-        private const string UrlDataBase = @"Data Source=DESKTOP-2B54QFI\SQLEXPRESS; Initial Catalog = staffinfo_tests; Integrated Security=SSPI;";
-
-
-        private readonly SqlConnection _sqlConnection;
-
         public DatabaseConnector()
+        { }
+
+        public DatabaseConnector(string urlDataBase)
         {
-            _sqlConnection = new SqlConnection(UrlDataBase);
+            _urlDataBase = urlDataBase;
+            _sqlConnection = new SqlConnection(_urlDataBase);
             _sqlConnection.Open();
         }
+
+        /// <summary>
+        /// строка соединения
+        /// </summary>
+        private readonly string _urlDataBase;
+        
+        private readonly SqlConnection _sqlConnection;
 
         /// <summary>
         /// Выполняет запрос и возвращает результат в виде SqlDataReader

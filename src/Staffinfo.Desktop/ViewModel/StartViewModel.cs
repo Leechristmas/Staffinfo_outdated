@@ -4,7 +4,10 @@ using Staffinfo.Desktop.Data;
 using Staffinfo.Desktop.Data.DataTableProviders;
 using Staffinfo.Desktop.View;
 using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Net;
+using System.Threading.Tasks;
 using System.Windows;
 using Staffinfo.Desktop.Model;
 using Staffinfo.Desktop.Properties;
@@ -41,9 +44,9 @@ namespace Staffinfo.Desktop.ViewModel
             ////}
             try
             {
-                DataSingleton.Instance.DataInitialize();
+                //SelectedTabIndex = 0;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show("Ошибка при загрузке данных!" + ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
@@ -64,7 +67,7 @@ namespace Staffinfo.Desktop.ViewModel
         /// Фамилия
         /// </summary>
         private string _lastName;
-        
+
         /// <summary>
         /// Уровень доступа
         /// </summary>
@@ -95,14 +98,57 @@ namespace Staffinfo.Desktop.ViewModel
         /// </summary>
         private string _mode = Resources.AuthorizationMode;
 
+        /// <summary>
+        /// Активный сервер
+        /// </summary>
+        private string _selectedServer;
+
+        /// <summary>
+        /// Список серверов
+        /// </summary>
+        private List<string> _serverNamesList;
+
         #endregion
 
         #region Properties
 
         /// <summary>
+        /// Строка соединения
+        /// </summary>
+        private string ConnectionString => "Data Source=" + SelectedServer + ';' +
+                                           $"Initial Catalog={DataSingleton.Instance.DatabaseName}; Integrated Security=SSPI;";
+
+        /// <summary>
+        /// Активный сервер
+        /// </summary>
+        public string SelectedServer
+        {
+            get { return _selectedServer; }
+            set
+            {
+                _selectedServer = value;
+                RaisePropertyChanged();
+                RaisePropertyChanged("ConnectionString");
+            }
+        }
+
+        /// <summary>
+        /// Имена серверов
+        /// </summary>
+        public List<string> ServerNamesList
+        {
+            get { return _serverNamesList; }
+            set
+            {
+                _serverNamesList = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
         /// Тип доступа
         /// </summary>
-        public string AccessType => User?.AccessLevel == (int) AccessLevelType.Reader ? "reader: ":
+        public string AccessType => User?.AccessLevel == (int)AccessLevelType.Reader ? "reader: " :
             "admin: ";
 
         /// <summary>
@@ -195,61 +241,152 @@ namespace Staffinfo.Desktop.ViewModel
         #endregion
 
         #region Commands
-        
+
+        #region WindowLoadedCommand
+
         /// <summary>
-        /// Открыть окно пользователей
+        /// Выполняется сразу после запуска стартового окна
         /// </summary>
+        private RelayCommand _windowLoadedCommand;
+
+        public RelayCommand WindowLoadedCommand
+            => _windowLoadedCommand ?? (_windowLoadedCommand = new RelayCommand(WindowLoaded));
+
+        /// <summary>
+        /// Подгружаем локальные сервера (асинхронно)
+        /// </summary>
+        public async void WindowLoaded()
+        {
+            ServerNamesList = await Task.Run(() => DatabaseHelper.GetServerInstances());
+            if (ServerNamesList.Count == 0)
+            {
+                MessageBox.Show(
+                    "Локальных серверов не найдено. Проверьте, включена ли служба \"Обозреватель SQL server\".",
+                    "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                WindowsClosed = true;
+            }
+            SelectedTabIndex = 1;
+        }
+
+        #endregion
+        
         #region ShowUsers command
 
         private RelayCommand _showUsers;
 
         public RelayCommand ShowUsers => _showUsers ?? (_showUsers = new RelayCommand(ShowUsersExecute));
-
+        
+        /// <summary>
+        /// Открыть окно пользователей
+        /// </summary>
         private void ShowUsersExecute()
         {
-            var usersView = new UsersView() {DataContext = new UserViewModel(DataSingleton.Instance.User)}; //добавить data context
+            var usersView = new UsersView() { DataContext = new UserViewModel(DataSingleton.Instance.User) }; //добавить data context
             usersView.ShowDialog();
         }
 
         #endregion
-
-        /// <summary>
-        /// Авторизация
-        /// </summary>
+        
         #region Authorization command
         private RelayCommand _authorization;
 
         public RelayCommand Authorization => _authorization ?? (_authorization = new RelayCommand(AuthorizationExecute));
 
+        /// <summary>
+        /// Авторизация
+        /// </summary>
         private void AuthorizationExecute()
         {
-            using (var prvdr = new UserTableProvider())
+            try
             {
+                //Уведомляем, если сервер не выбран
+                if (SelectedServer == null) throw new Exception("Не выбран сервер.");
                 try
                 {
-                    if ((User = prvdr.Check(Login, Password)) == null)
-                        throw new Exception("Пользователь не найден");
+                    FindDatabase(); //инициализируем данные из БД с использованием указанной connection string
+
+                    DataSingleton.Instance.DataInitialize(ConnectionString);    //подтягиваем служебныю информацию
+                    using (var prvdr = new UserTableProvider())
+                    {
+                        try
+                        {
+                            if ((User = prvdr.Check(Login, Password)) == null)  //авторизуем пользователя
+                                throw new AuthorizationException("Пользователь не найден");
+
+                            DataSingleton.Instance.User = User;
+                            Mode = Resources.MainMode; //title для окна
+                            SelectedTabIndex = 2;
+                        }
+                        catch (AuthorizationException aEx)
+                        {
+                            throw new AuthorizationException("Ошибка авторизации. " + aEx.Message, aEx);
+                        }
+                    }
                 }
-                catch (Exception ex)
+                catch (DatabaseNotFoundException dbEx)  //если не нашли БД, создаем
                 {
-                    MessageBox.Show(ex.Message, "Ошибка авторизации", MessageBoxButton.OK,
-                        MessageBoxImage.Error);
-                    return;
+                    var answer = MessageBox.Show("База данных служащих не найдена на указанном сервере.\n\t\tСоздать ее?",
+                        "База данных не найдена", MessageBoxButton.YesNo, MessageBoxImage.Error);
+                    if (answer == MessageBoxResult.No) return;
+
+                    try
+                    {
+                        DatabaseHelper.CreateDatabase("Data Source=" + SelectedServer + ';' +
+                                                      "Integrated Security=SSPI;");
+                        MessageBox.Show("База данных была успешно создана.",
+                            "База данных создана", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new DatabaseWasNotCreatedException(
+                            "Не удалось создать базу данных на этом сервере. Ошибка: " + e.Message +
+                            "Позвоните Димону или попробуйте позже.", e);
+                    }
                 }
             }
-            DataSingleton.Instance.User = User;
-            Mode = Resources.MainMode;
-            SelectedTabIndex = 1;
+            catch (DatabaseWasNotCreatedException dncEx)
+            {
+                MessageBox.Show(dncEx.Message,
+                        "Не удалось создать базу данных", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+            catch (AuthorizationException aEx)
+            {
+                MessageBox.Show(aEx.Message, "Ошибка авторизации", MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ошибка при проверке сервера на наличие необходимой базы данных." + ex.Message,
+                        "Ошибка", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+        }
+
+        /// <summary>
+        /// Проверка на существование БД
+        /// </summary>
+        private void FindDatabase()
+        {
+            using (var sqlConnection = new SqlConnection("Data Source=" + SelectedServer + ';' +
+                "Integrated Security=SSPI;"))
+            {
+                sqlConnection.Open();
+                var cmd = new SqlCommand("SELECT DB_ID('staffinfo_tests')", sqlConnection);
+                var reader = cmd.ExecuteReader();
+                reader.Read();
+                if (reader[0].ToString() == "") throw new DatabaseNotFoundException("База данных с таким именем не существует");
+                reader.Close();
+                sqlConnection.Close();
+            }
         }
 
         #endregion
+        
+        #region GoToAllEmployeesView command
+        private RelayCommand _goToAllEmployeesView;
 
         /// <summary>
         /// Переход к окну, где отображаются все служащие
         /// </summary>
-        #region GoToAllEmployeesView command
-        private RelayCommand _goToAllEmployeesView;
-
         public RelayCommand GoToAllEmployeesView
             => _goToAllEmployeesView ?? (_goToAllEmployeesView = new RelayCommand(GoToAllEmployeesViewExecute));
 
@@ -260,8 +397,7 @@ namespace Staffinfo.Desktop.ViewModel
         }
 
         #endregion
-        
+
         #endregion
-        
     }
 }

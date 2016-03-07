@@ -1,9 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
+using System.Data.Sql;
 using Staffinfo.Desktop.ViewModel;
 using Staffinfo.Desktop.Data.DataTableProviders;
 using System.Linq;
+using System.Threading.Tasks;
 using Staffinfo.Desktop.Model;
+using Staffinfo.Desktop.Shared;
 
 namespace Staffinfo.Desktop.Data
 {
@@ -12,16 +17,14 @@ namespace Staffinfo.Desktop.Data
     /// </summary>
     public class DataSingleton
     {
-        private static DataSingleton _instance;
+        public DataSingleton()
+        { }
 
-        private DataSingleton()
-        {
-            DatabaseConnector = new DatabaseConnector();
-        }
+        private static DataSingleton _instance;
 
         public static DataSingleton Instance => _instance ?? (_instance = new DataSingleton());
 
-        public DatabaseConnector DatabaseConnector { get; }
+        public DatabaseConnector DatabaseConnector { get; private set; }
 
         #region Fields
 
@@ -132,9 +135,12 @@ namespace Staffinfo.Desktop.Data
         
         #endregion
 
-
-
         #region Properties
+
+        /// <summary>
+        /// Имя базы данных
+        /// </summary>
+        public string DatabaseName => "STAFFINFO_TESTS";
 
         /// <summary>
         /// Пользователь
@@ -261,15 +267,20 @@ namespace Staffinfo.Desktop.Data
         
         #endregion
 
+        #region Methods
+
         /// <summary>
-        /// Подтягивает все данные из БД
+        /// Подтягивает из БД служебную информацию
         /// </summary>
-        public void DataInitialize()
+        public void DataInitialize(string connectionString)
         {
+            DatabaseConnector = DatabaseConnector ?? new DatabaseConnector(connectionString);   //запрет на повторную инициализацию соединения
+
             // Служащие
-            using(var prvdr = new EmployeeTableProvider())
+            using (var prvdr = new EmployeeTableProvider())
             {
-                Instance._employeeList = new ObservableCollection<EmployeeViewModel>(prvdr.Select().Select(p => new EmployeeViewModel(p)));
+                Instance._employeeList =
+                    new ObservableCollection<EmployeeViewModel>(prvdr.Select().Select(p => new EmployeeViewModel(p)));
             }
 
             //Должности
@@ -283,114 +294,15 @@ namespace Staffinfo.Desktop.Data
             {
                 Instance._rankList = prvdr.Select().ToList();
             }
-            
+
             //Службы
             using (var prvdr = new ServiceTableProvider())
             {
                 Instance._serviceList = prvdr.Select().ToList();
             }
-
-            //Классность
-            using (var prvdr = new ClasinessTableProvider())
-            {
-                Instance._clasinessList = prvdr.Select().ToList();
-            }
-
-            //Контракты
-            using (var prvdr = new ContractTableProvider())
-            {
-                Instance._contactList = prvdr.Select().ToList();
-            }
-
-            //Процессы обучения
-            using (var prvdr = new EducationTimeTableProvider())
-            {
-                Instance._educationTimeList = prvdr.Select().ToList();
-            }
-
-            //Учебные заведения
-            using (var prvdr = new EducationalInstitutonTableProvider())
-            {
-                Instance._educationalInstitutionList = prvdr.Select().ToList();
-            }
-
-            //Присвоения благодарностей
-            using (var prvdr = new GratitudeTableProvider())
-            {
-                Instance._gratitudeList = prvdr.Select().ToList();
-            }
-
-            //Отпуска
-            using (var prvdr = new HolidayTimeTableProvider())
-            {
-                Instance._holidayTimeList = prvdr.Select().ToList();
-            }
-
-            //Больничные
-            using (var prvdr = new HospitalTimeTableProvider())
-            {
-                Instance._hospitalTimeList = prvdr.Select().ToList();
-            }
-
-            //Прохождения службы
-            using (var prvdr = new MilitaryProcessTableProvider())
-            {
-                Instance._militaryProcessList = prvdr.Select().ToList();
-            }
-            
-            //Военные части
-            using (var prvdr = new MilitaryUnitTableProvider())
-            {
-                Instance._militaryUnitList = prvdr.Select().ToList();
-            }
-
-            //Присвоения должностей
-            using (var prvdr = new PostAssignmentTableProvider())
-            {
-                Instance._postAssignmentList = prvdr.Select().ToList();
-            }
-
-            //Присвоения званий
-            using (var prvdr = new RankAssignmentTableProvider())
-            {
-                Instance._rankAssignmentList = prvdr.Select().ToList();
-            }
-
-            //Родственники
-            using (var prvdr = new RelativeTableProvider())
-            {
-                Instance._relativeList = prvdr.Select().ToList();
-            }
-
-            //Типы родства
-            using (var prvdr = new RelativeTypeTableProvider())
-            {
-                Instance._relativeTypeList = prvdr.Select().ToList();
-            }
-
-            //Выговоры
-            using (var prvdr = new ReprimandTableProvider())
-            {
-                Instance._reprimandList = prvdr.Select().ToList();
-            }
-
-            //Аттестация
-            using (var prvdr = new SertificationTableProvider())
-            {
-                Instance._sertificationList = prvdr.Select().ToList();
-            }
-
-            //Специальности
-            using (var prvdr = new SpecialityTableProvider())
-            {
-                Instance._specialityList = prvdr.Select().ToList();
-            }
-
-            //Нарушения
-            using (var prvdr = new ViolationTableProvider())
-            {
-                Instance._violationList = prvdr.Select().ToList();
-            }
         }
+
+        #endregion
+
     }
 }
