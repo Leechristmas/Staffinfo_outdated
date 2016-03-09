@@ -307,12 +307,11 @@ namespace Staffinfo.Desktop.ViewModel
             if (ServerNamesList?.Count == 0)
             {
                 MessageBox.Show(
-                    "Локальных серверов не найдено. Проверьте, включена ли служба \"Обозреватель SQL server\".",
+                    "Локальных серверов не найдено. Проверьте, включена ли служба \"Обозреватель SQL server\" и обновите список серверов",
                     "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                WindowsClosed = true;
             }
 
-            
+
         }
 
         #endregion
