@@ -282,6 +282,17 @@ namespace Staffinfo.Desktop.ViewModel
             }
         }
 
+        public ServiceModel SelectedService
+        {
+            get { return ServiceList.SelectedItem; }
+            set
+            {
+                ServiceList.SelectedItem = value;
+                RaisePropertyChanged();
+                RaisePropertyChanged("PostList");
+            }
+        }
+
         /// <summary>
         /// Звания
         /// </summary>
@@ -290,7 +301,7 @@ namespace Staffinfo.Desktop.ViewModel
         /// <summary>
         /// Должности
         /// </summary>
-        public ListViewModel<PostModel> PostList => _postList;
+        public ListViewModel<PostModel> PostList => new ListViewModel<PostModel>(_postList.ModelList.Where(post => post.ServiceId == SelectedService?.Id).ToList());
 
         /// <summary>
         /// Службы

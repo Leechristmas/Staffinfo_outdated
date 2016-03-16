@@ -129,7 +129,7 @@
                               MinHeight="30"
                               Width="225"
                               Name="ServiceCBox"
-                              SelectedItem="{Binding ServiceList.SelectedItem}"
+                              SelectedItem="{Binding SelectedService}"
                               ItemsSource="{Binding ServiceList.ModelList}"
                               DisplayMemberPath="ServiceTitle"/>
                 </StackPanel>
