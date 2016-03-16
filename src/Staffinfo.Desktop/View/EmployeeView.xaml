@@ -9,7 +9,7 @@
         mc:Ignorable="d"
         helpers:WindowCloseHelper.WindowsClose="{Binding WindowsClosed}"
         Title="{Binding Path=FullName}" MinWidth="600" MinHeight="740" Height="740" Width="600">
-    
+
     <controls:MetroWindow.RightWindowCommands>
         <controls:WindowCommands>
             <Button Command="{Binding ShowSettings}">
@@ -27,36 +27,10 @@
         </controls:WindowCommands>
     </controls:MetroWindow.RightWindowCommands>
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition MinWidth="100" Width="100"/>
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="45"/>
         </Grid.RowDefinitions>
-        <Grid Grid.Column="1">
-            <GroupBox Margin="-1"
-                      Header="Меню">
-                <StackPanel Orientation="Vertical">
-                    <StackPanel Orientation="Vertical">
-                        <Button Name="AcceptBtn"
-                                Style="{StaticResource ButtonStyle}"
-                                Content="Принять"
-                                MinWidth="100"
-                                Command="{Binding Path=AcceptChanges}"
-                                ToolTip="Принять изменения"/>
-                        <Button Name="CleanUpBtn"
-                                Style="{StaticResource ButtonStyle}"
-                                Content="Отменить"
-                                MinWidth="100"
-                                Command="{Binding Path=CleanOut}"
-                                ToolTip="Отменить все изменения"/>
-                    </StackPanel>
-
-                </StackPanel>
-            </GroupBox>
-        </Grid>
         <Grid Grid.Column="0">
             <controls:MetroAnimatedTabControl>
                 <!--Общая информация-->
@@ -73,7 +47,7 @@
                                 <Image Height="200" Width="200" Margin="5,0" Source="{Binding Path=Photo}"/>
                             </Border>
                             <StackPanel Orientation="Vertical"
-                                        Margin="0,3">
+                                        Margin="50,3">
                                 <TextBox 
                                     Name="LastNameTBox" 
                                     MinWidth="200" 
@@ -181,7 +155,7 @@
                                     FontSize="16"
                                     Margin="0,6"/>
                             </StackPanel>
-                            <StackPanel Orientation="Vertical" Margin="0,20">
+                            <StackPanel Orientation="Vertical" Margin="48,20">
                                 <DatePicker 
                                     Name="BornDatePicker"
                                     MinWidth="200"
@@ -212,7 +186,9 @@
                                     Text="{Binding PersonalNumber, Mode=TwoWay}"/>
                             </StackPanel>
                         </StackPanel>
-                        <StackPanel Grid.Row="3" Orientation="Horizontal">
+                        <StackPanel Grid.Row="3" 
+                                    Orientation="Horizontal"
+                                    Margin="47,0">
                             <StackPanel Orientation="Vertical" Margin="4,0,0,0">
                                 <Expander
                                     Header="Домашний адрес"
@@ -370,17 +346,16 @@
                                                       SelectedIndex="{Binding SelectedTabIndex}">
                                 <controls:MetroTabItem
                                     Name="DataGridTab">
-                                    <DataGrid
-                                        Name="EmployeesDataGrid"
-                                        AutoGenerateColumns="True"
-                                        IsReadOnly="True"
-                                        CanUserAddRows="False"
-                                        Style="{DynamicResource AzureDataGrid}"
-                                        ScrollViewer.CanContentScroll="True"
-                                        ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                        ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                                        GridLinesVisibility="All"
-                                        ItemsSource="{Binding SelectedItem}">
+                                    <DataGrid   Name="EmployeesDataGrid"
+                                                AutoGenerateColumns="True"
+                                                IsReadOnly="True"
+                                                CanUserAddRows="False"
+                                                Style="{DynamicResource AzureDataGrid}"
+                                                ScrollViewer.CanContentScroll="True"
+                                                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                                ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                                GridLinesVisibility="All"
+                                                ItemsSource="{Binding SelectedItem}">
                                     </DataGrid>
                                 </controls:MetroTabItem>
                                 <controls:MetroTabItem Name="EditTabs">
@@ -412,6 +387,13 @@
                                                             MinWidth="150"
                                                             controls:TextBoxHelper.ClearTextButton="True"
                                                             controls:TextBoxHelper.Watermark="Описание"/>
+                                                <StackPanel Orientation="Horizontal"
+                                                            HorizontalAlignment="Right">
+                                                    <Button Name="SertificationAddBtn"
+                                                            Style="{StaticResource ButtonStyle}"
+                                                            Content="Добавить"
+                                                            MinWidth="70"/>
+                                                </StackPanel>
                                             </StackPanel>
                                         </controls:MetroTabItem>
 
@@ -436,6 +418,13 @@
                                                          MinWidth="150"
                                                          controls:TextBoxHelper.ClearTextButton="True"
                                                          controls:TextBoxHelper.Watermark="Описание"/>
+                                                <StackPanel Orientation="Horizontal"
+                                                            HorizontalAlignment="Right">
+                                                    <Button Name="GratitudeAddBtn"
+                                                            Style="{StaticResource ButtonStyle}"
+                                                            Content="Добавить"
+                                                            MinWidth="70"/>
+                                                </StackPanel>
                                             </StackPanel>
                                         </controls:MetroTabItem>
 
@@ -458,11 +447,18 @@
                                                             FontSize="16"
                                                             controls:TextBoxHelper.Watermark="Дата закрытия"/>
                                                 <TextBox Name="HospitalDescriptionTBox"
-                                                         Margin="0,2"
+                                                         Margin="0,1"
                                                          FontSize="16"
                                                          MinWidth="150"
                                                          controls:TextBoxHelper.ClearTextButton="True"
                                                          controls:TextBoxHelper.Watermark="Описание"/>
+                                                <StackPanel Orientation="Horizontal"
+                                                            HorizontalAlignment="Right">
+                                                    <Button Name="HospitalTimeAddBtn"
+                                                            Style="{StaticResource ButtonStyle}"
+                                                            Content="Добавить"
+                                                            MinWidth="70"/>
+                                                </StackPanel>
                                             </StackPanel>
                                         </controls:MetroTabItem>
 
@@ -486,11 +482,18 @@
                                                          controls:TextBoxHelper.ClearTextButton="True"
                                                          controls:TextBoxHelper.Watermark="Дата закрытия"/>
                                                 <TextBox Name="ReprimandDescriptionTBox" 
-                                                         Margin="0,2"
+                                                         Margin="0,1"
                                                          FontSize="16"
                                                          MinWidth="150"
                                                          controls:TextBoxHelper.ClearTextButton="True"
                                                          controls:TextBoxHelper.Watermark="Описание"/>
+                                                <StackPanel Orientation="Horizontal"
+                                                            HorizontalAlignment="Right">
+                                                    <Button Name="ReprimandAddBtn"
+                                                            Style="{StaticResource ButtonStyle}"
+                                                            Content="Добавить"
+                                                            MinWidth="70"/>
+                                                </StackPanel>
                                             </StackPanel>
                                         </controls:MetroTabItem>
 
@@ -499,31 +502,55 @@
                                                                 Header="Воинская служба">
                                             <StackPanel Orientation="Vertical"
                                                         Margin="10"
-                                                        MinWidth="200"
+                                                        MinWidth="240"
                                                         Width="200"
                                                         HorizontalAlignment="Left">
                                                 <DatePicker Name="MilitaryServiceStartDatePicker"  
                                                             MinWidth="150"
+                                                            HorizontalAlignment="Left"
+                                                            Width="200"
                                                             Margin="0,1"
                                                             FontSize="16"
                                                             controls:TextBoxHelper.Watermark="Дата начала"/>
                                                 <DatePicker Name="MilitaryServiceFinishDatePicker"  
                                                             MinWidth="150"
-                                                            Margin="0,2"
+                                                            HorizontalAlignment="Left"
+                                                            Width="200"
+                                                            Margin="0,1"
                                                             FontSize="16"
                                                             controls:TextBoxHelper.Watermark="Дата окончания"/>
-                                                <ComboBox Name="MilitaryServiceUnitCBox"                                                  
-                                                          MinWidth="150"
-                                                          Margin="0,2"
-                                                          FontSize="16"
-                                                          controls:TextBoxHelper.ClearTextButton="True"
-                                                          controls:TextBoxHelper.Watermark="--Воинская часть--"/>
+                                                <StackPanel Orientation="Horizontal"
+                                                            HorizontalAlignment="Left">
+                                                    <ComboBox Name="MilitaryServiceUnitCBox"                                                  
+                                                              MinWidth="150"
+                                                              Width="200"
+                                                              Margin="0,1"
+                                                              FontSize="16"
+                                                              controls:TextBoxHelper.ClearTextButton="True"
+                                                              controls:TextBoxHelper.Watermark="--Воинская часть--"/>
+                                                    <Button Name="AddMilitaryUnit"
+                                                            Content="[...]"
+                                                            MinWidth="30"
+                                                            FontSize="20"
+                                                            VerticalContentAlignment="Center"
+                                                            Style="{StaticResource ButtonStyle}"
+                                                            ToolTip="Добавить воинскую часть"/>
+                                                </StackPanel>
                                                 <TextBox Name="MilitaryServiceDescriptionTBox" 
-                                                         Margin="0,2"
+                                                         Margin="0,1"
                                                          FontSize="16"
                                                          MinWidth="150"
+                                                         HorizontalAlignment="Left"
+                                                         Width="200"
                                                          controls:TextBoxHelper.ClearTextButton="True"
                                                          controls:TextBoxHelper.Watermark="Описание"/>
+                                                <StackPanel Orientation="Horizontal"
+                                                            HorizontalAlignment="Right">
+                                                    <Button Name="MilitaryServiceAddBtn"
+                                                            Style="{StaticResource ButtonStyle}"
+                                                            Content="Добавить"
+                                                            MinWidth="70"/>
+                                                </StackPanel>
                                             </StackPanel>
                                         </controls:MetroTabItem>
 
@@ -542,7 +569,7 @@
                                                                 FontSize="16"
                                                                 controls:TextBoxHelper.Watermark="Дата начала"/>
                                                     <TextBox Name="ClasinessDescriptionTBox"
-                                                             Margin="0,2"
+                                                             Margin="0,1"
                                                              FontSize="16"
                                                              MinWidth="150"
                                                              controls:TextBoxHelper.ClearTextButton="True"
@@ -562,6 +589,13 @@
                                                                             FontSize="16"
                                                                             Minimum="0"
                                                                             controls:TextBoxHelper.Watermark="Классность"/>
+                                                    <StackPanel Orientation="Horizontal"
+                                                            HorizontalAlignment="Right">
+                                                        <Button Name="ClasinessAddBtn"
+                                                            Style="{StaticResource ButtonStyle}"
+                                                            Content="Добавить"
+                                                            MinWidth="70"/>
+                                                    </StackPanel>
                                                 </StackPanel>
                                             </StackPanel>
                                         </controls:MetroTabItem>
@@ -581,7 +615,7 @@
                                                             controls:TextBoxHelper.Watermark="Дата начала"/>
                                                 <DatePicker Name="ContractFinishDatePicker"
                                                             MinWidth="150"
-                                                            Margin="0,2"
+                                                            Margin="0,1"
                                                             FontSize="16"
                                                             controls:TextBoxHelper.Watermark="Дата окончания"/>
                                                 <TextBox Name="ContractDescriptionTBox" 
@@ -590,6 +624,13 @@
                                                          MinWidth="150"
                                                          controls:TextBoxHelper.ClearTextButton="True"
                                                          controls:TextBoxHelper.Watermark="Описание"/>
+                                                <StackPanel Orientation="Horizontal"
+                                                            HorizontalAlignment="Right">
+                                                    <Button Name="ContractAddBtn"
+                                                            Style="{StaticResource ButtonStyle}"
+                                                            Content="Добавить"
+                                                            MinWidth="70"/>
+                                                </StackPanel>
                                             </StackPanel>
                                         </controls:MetroTabItem>
 
@@ -612,6 +653,13 @@
                                                          MinWidth="150"
                                                          controls:TextBoxHelper.ClearTextButton="True"
                                                          controls:TextBoxHelper.Watermark="Описание"/>
+                                                <StackPanel Orientation="Horizontal"
+                                                            HorizontalAlignment="Right">
+                                                    <Button Name="ViolationAddBtn"
+                                                            Style="{StaticResource ButtonStyle}"
+                                                            Content="Добавить"
+                                                            MinWidth="70"/>
+                                                </StackPanel>
                                             </StackPanel>
                                         </controls:MetroTabItem>
 
@@ -644,21 +692,53 @@
                                                              controls:TextBoxHelper.Watermark="Описание"/>
                                                 </StackPanel>
                                                 <StackPanel Orientation="Vertical"
-                                                            Margin="10,0">
-                                                    <ComboBox   Name="EducationLevelCBox"
-                                                                MinWidth="150"
-                                                                FontSize="16"
-                                                                controls:TextBoxHelper.Watermark="--Уровень--"/>
-                                                    <ComboBox   Name="InstitutionCBox"
-                                                                MinWidth="150"
-                                                                FontSize="16"
-                                                                Margin="0,2,0,0"
-                                                                controls:TextBoxHelper.Watermark="--Учебное заведение--"/>
-                                                    <ComboBox   Name="SpecialityCBox"
-                                                                MinWidth="150"
-                                                                FontSize="16"                                                        
-                                                                Margin="0,2,0,0"
-                                                                controls:TextBoxHelper.Watermark="--Специальность--"/>
+                                                            Margin="10,0"
+                                                            Width="240">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <ComboBox   Name="EducationLevelCBox"
+                                                                    MinWidth="150"
+                                                                    Width="210"
+                                                                    FontSize="16"
+                                                                    controls:TextBoxHelper.Watermark="--Уровень--"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <ComboBox   Name="InstitutionCBox"
+                                                                    MinWidth="150"
+                                                                    Width="210"
+                                                                    FontSize="16"
+                                                                    Margin="0,2,0,0"
+                                                                    controls:TextBoxHelper.Watermark="--Учебное заведение--"/>
+                                                        <Button Name="AddEducationUnit"
+                                                                Content="[...]"
+                                                                MinWidth="30"
+                                                                FontSize="20"
+                                                                VerticalContentAlignment="Center"
+                                                                Style="{StaticResource ButtonStyle}"
+                                                                ToolTip="Добавить учебное заведение"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <ComboBox   Name="SpecialityCBox"
+                                                                    MinWidth="150"
+                                                                    Width="210"
+                                                                    FontSize="16"                                                        
+                                                                    Margin="0,2,0,0"
+                                                                    controls:TextBoxHelper.Watermark="--Специальность--"/>
+                                                        <Button Name="AddSpeciality"
+                                                                Content="[...]"
+                                                                MinWidth="30"
+                                                                FontSize="20"
+                                                                VerticalContentAlignment="Center"
+                                                                Style="{StaticResource ButtonStyle}"
+                                                                ToolTip="Добавить специальность"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal"
+                                                                HorizontalAlignment="Right">
+                                                        <Button Name="EducationProcessAddBtn"
+                                                                Style="{StaticResource ButtonStyle}"
+                                                                Content="Добавить"
+                                                                MinWidth="70"
+                                                                Margin="30,0"/>
+                                                    </StackPanel>
                                                 </StackPanel>
                                             </StackPanel>
                                         </controls:MetroTabItem>
@@ -692,18 +772,32 @@
         </Grid>
         <Border Height="25"
                 Grid.Row="1"
-                Grid.ColumnSpan="2"
                 Grid.Column="0"
                 VerticalAlignment="Top"
                 Background="LightGray">
+            <Grid>
+                <StackPanel Orientation="Horizontal">
+                    <Button Name="AcceptBtn"
+                                Style="{StaticResource ButtonStyle}"
+                                Content="Принять"
+                                MinWidth="100"
+                                Command="{Binding Path=AcceptChanges}"
+                                ToolTip="Принять изменения"/>
+                    <Button Name="CleanUpBtn"
+                                Style="{StaticResource ButtonStyle}"
+                                Content="Отменить"
+                                MinWidth="100"
+                                Command="{Binding Path=CleanOut}"
+                                ToolTip="Отменить все изменения"/>
+                </StackPanel>
                 <Button Name="CloseBtn"
-                        Style="{StaticResource ButtonStyle}"
-                        Content="Закрыть"
-                        HorizontalAlignment="Right"
-                        Command="{Binding CloseWindowCommand}"/>
+                    Style="{StaticResource ButtonStyle}"
+                    Content="Закрыть"
+                    HorizontalAlignment="Right"
+                    Command="{Binding CloseWindowCommand}"/>
+            </Grid>
         </Border>
         <StackPanel     Grid.Column="0"
-                        Grid.ColumnSpan="2"
                         Grid.Row="1"
                         Orientation="Horizontal"
                         Height="20"
