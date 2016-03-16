@@ -33,13 +33,6 @@ namespace Staffinfo.Desktop.ViewModel
 
             //список служб
             _serviceList = new ListViewModel<ServiceModel>(DataSingleton.Instance.ServiceList);
-
-            ////список паспортных столов
-            //_pasportOrganizationUnitList = new ListViewModel<PasportOrganizationUnitModel>(DataSingleton.Instance.PasportOrganizationUnitList);
-
-            //TODO
-            //_catalogList = new CatalogObservableCollectionsList();
-            //CatalogsInitialize();
         }
 
         public EmployeeEditViewModel(EmployeeViewModel employeeViewModel) : this()
@@ -47,7 +40,8 @@ namespace Staffinfo.Desktop.ViewModel
             EmployeeViewModel = employeeViewModel;
 
             _rankList.SelectedItem = employeeViewModel.Rank;
-            _postList.SelectedItem = employeeViewModel.Post;
+            //_postList.SelectedItem = employeeViewModel.Post;
+            SelectedPost = employeeViewModel.Post;
             _serviceList.SelectedItem = employeeViewModel.Service;
 
             BornDate = employeeViewModel.BornDate;
@@ -94,12 +88,7 @@ namespace Staffinfo.Desktop.ViewModel
         /// Тип даныых, которые будут отображаться в grid'e
         /// </summary>
         private List<string> _informationModeList;
-
-        ///// <summary>
-        ///// Список паспортных столов
-        ///// </summary>
-        //private ListViewModel<PasportOrganizationUnitModel> _pasportOrganizationUnitList;
-
+        
         /// <summary>
         /// Фото служащего
         /// </summary>
@@ -184,15 +173,15 @@ namespace Staffinfo.Desktop.ViewModel
         /// Индекс выбранного "таба"
         /// </summary>
         private int _selectedTabIndex;
+
+        /// <summary>
+        /// Выбранная должность
+        /// </summary>
+        private PostModel _selectedPost;
         #endregion
 
         #region Properties
 
-        /// <summary>
-        /// Коллекция справочников
-        /// </summary>
-        public CatalogObservableCollectionsList CatalogList => _catalogList;
-        
         /// <summary>
         /// Индекс выбранного "таба"
         /// </summary>
@@ -448,6 +437,34 @@ namespace Staffinfo.Desktop.ViewModel
         }
 
         /// <summary>
+        /// Выбранная служба
+        /// </summary>
+        public ServiceModel SelectedService
+        {
+            get { return ServiceList.SelectedItem; }
+            set
+            {
+                ServiceList.SelectedItem = value;
+                RaisePropertyChanged();
+                RaisePropertyChanged("PostList");
+            }
+        }
+
+        /// <summary>
+        /// Выбранная должность 
+        /// P.S. кривая реализация т.к. нужна селекция должностей по выбранной службе()
+        /// </summary>
+        public PostModel SelectedPost
+        {
+            get { return _selectedPost; }
+            set
+            {
+                _selectedPost = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
         /// Звания
         /// </summary>
         public ListViewModel<RankModel> RankList => _rankList;
@@ -455,7 +472,7 @@ namespace Staffinfo.Desktop.ViewModel
         /// <summary>
         /// Должности
         /// </summary>
-        public ListViewModel<PostModel> PostList => _postList;
+        public ListViewModel<PostModel> PostList => new ListViewModel<PostModel>(_postList.ModelList.Where(post => post.ServiceId == SelectedService?.Id).ToList());
 
         /// <summary>
         /// Службы
@@ -482,9 +499,74 @@ namespace Staffinfo.Desktop.ViewModel
         }
 
         /// <summary>
+        /// Аттестация
+        /// </summary>
+        public ObservableCollection<SertificationModel> Sertifications { get; set; }
+
+        /// <summary>
+        /// Больничные
+        /// </summary>
+        public ObservableCollection<HospitalTimeModel> HospitalTimes { get; set; }
+
+        /// <summary>
+        /// Благодарности
+        /// </summary>
+        public ObservableCollection<GratitudeModel> Gratitudes { get; set; }
+
+        /// <summary>
+        /// Выговоры
+        /// </summary>
+        public ObservableCollection<ReprimandModel> Reprimands { get; set; }
+
+        /// <summary>
+        /// Несение службы
+        /// </summary>
+        public ObservableCollection<MilitaryProcessModel> MilitaryProcesses { get; set; }
+
+        /// <summary>
+        /// Классности
+        /// </summary>
+        public ObservableCollection<ClasinessModel> Clasiness { get; set; }
+
+        /// <summary>
+        /// Контракты
+        /// </summary>
+        public ObservableCollection<ContractModel> Contracts { get; set; }
+
+        /// <summary>
+        /// Нарушения
+        /// </summary>
+        public ObservableCollection<ViolationModel> Violations { get; set; }
+
+        /// <summary>
+        /// Обучения
+        /// </summary>
+        public ObservableCollection<EducationTimeModel> EducationTimes { get; set; } 
+
+        /// <summary>
+        /// Отпуска
+        /// </summary>
+        public ObservableCollection<HolidayTimeModel> HolidayTimes { get; set; }
+
+        /// <summary>
+        /// Присвоения должностей
+        /// </summary>
+        public ObservableCollection<PostAssignmentModel> PostAssignments { get; set; }
+
+        /// <summary>
+        /// Присвоение званий
+        /// </summary>
+        public ObservableCollection<RankAssignmentModel> RankAssignments { get; set; }
+
+        /// <summary>
+        /// Родственники
+        /// </summary>
+        public ObservableCollection<RelativeModel> Relatives { get; set; }
+
+        /// <summary>
         /// Активный справочник
         /// </summary>
-        public object SelectedItem  //Очередной гребанный костыль...стоит запилить что-то получше
+        public object SelectedItem  //Очередной гребанный костыль...стоит запилить что-то получше.
         {
             get
             {
@@ -494,67 +576,67 @@ namespace Staffinfo.Desktop.ViewModel
                     case 0:
                         using (var prvdr = new SertificationTableProvider())
                         {
-                            return new ObservableCollection<SertificationModel>(prvdr.Select());
+                            return Sertifications ?? (Sertifications = new ObservableCollection<SertificationModel>(prvdr.Select()));
                         }
                     case 1:
                         using (var prvdr = new GratitudeTableProvider())
                         {
-                            return new ObservableCollection<GratitudeModel>(prvdr.Select());
+                            return Gratitudes ?? (Gratitudes = new ObservableCollection<GratitudeModel>(prvdr.Select()));
                         }
                     case 2:
                         using (var prvdr = new HospitalTimeTableProvider())
                         {
-                            return new ObservableCollection<HospitalTimeModel>(prvdr.Select());
+                            return HospitalTimes ?? (HospitalTimes = new ObservableCollection<HospitalTimeModel>(prvdr.Select()));
                         }
                     case 3:
                         using (var prvdr = new ReprimandTableProvider())
                         {
-                            return new ObservableCollection<ReprimandModel>(prvdr.Select());
+                            return Reprimands ?? (Reprimands = new ObservableCollection<ReprimandModel>(prvdr.Select()));
                         }
                     case 4:
                         using (var prvdr = new MilitaryProcessTableProvider())
                         {
-                            return new ObservableCollection<MilitaryProcessModel>(prvdr.Select());
+                            return MilitaryProcesses ?? (MilitaryProcesses = new ObservableCollection<MilitaryProcessModel>(prvdr.Select()));
                         }
                     case 5:
                         using (var prvdr = new ClasinessTableProvider())
                         {
-                            return new ObservableCollection<ClasinessModel>(prvdr.Select());
+                            return Clasiness ?? (Clasiness = new ObservableCollection<ClasinessModel>(prvdr.Select()));
                         }
                     case 6:
                         using (var prvdr = new ContractTableProvider())
                         {
-                            return new ObservableCollection<ContractModel>(prvdr.Select());
+                            return Contracts ?? (Contracts = new ObservableCollection<ContractModel>(prvdr.Select()));
                         }
                     case 7:
                         using (var prvdr = new ViolationTableProvider())
                         {
-                            return new ObservableCollection<ViolationModel>(prvdr.Select());
+                            return Violations ?? (Violations = new ObservableCollection<ViolationModel>(prvdr.Select()));
                         }
                     case 8:
                         using (var prvdr = new EducationTimeTableProvider())
                         {
-                            return new ObservableCollection<EducationTimeModel>(prvdr.Select());
+                            return EducationTimes ?? (EducationTimes = new ObservableCollection<EducationTimeModel>(prvdr.Select()));
                         }
                     case 9:
                         using (var prvdr = new HolidayTimeTableProvider())
                         {
-                            return new ObservableCollection<HolidayTimeModel>(prvdr.Select());
+                            return HolidayTimes ?? (HolidayTimes = new ObservableCollection<HolidayTimeModel>(prvdr.Select()));
                         }
                     case 10:
                         using (var prvdr = new PostAssignmentTableProvider())
                         {
-                            return new ObservableCollection<PostAssignmentModel>(prvdr.Select());
+                            return PostAssignments ?? (PostAssignments = new ObservableCollection<PostAssignmentModel>(prvdr.Select()));
                         }
                     case 11:
                         using (var prvdr = new RankAssignmentTableProvider())
                         {
-                            return new ObservableCollection<RankAssignmentModel>(prvdr.Select());
+                            return RankAssignments ?? (RankAssignments = new ObservableCollection<RankAssignmentModel>(prvdr.Select()));
                         }
                     case 12:
                         using (var prvdr = new RelativeTableProvider())
                         {
-                            return new ObservableCollection<RelativeModel>(prvdr.Select());
+                            return Relatives ?? (Relatives = new ObservableCollection<RelativeModel>(prvdr.Select()));
                         }
                     default:
                         return null;
@@ -600,7 +682,7 @@ namespace Staffinfo.Desktop.ViewModel
             if (accept == MessageBoxResult.No) return;
 
             EmployeeViewModel.Rank = _rankList.SelectedItem;
-            EmployeeViewModel.Post = _postList.SelectedItem;
+            EmployeeViewModel.Post = SelectedPost;
 
             EmployeeViewModel.BornDate = BornDate;
             EmployeeViewModel.JobStartDate = JobStartDate;
@@ -706,6 +788,7 @@ namespace Staffinfo.Desktop.ViewModel
         /// Переходим на edit tabs и обратно
         /// </summary>
         private RelayCommand _tabsToggle;
+        
         public RelayCommand TabsToggle => _tabsToggle ?? (_tabsToggle = new RelayCommand(TabsToggleExecute));
 
         private void TabsToggleExecute()
@@ -716,65 +799,7 @@ namespace Staffinfo.Desktop.ViewModel
         #endregion
 
         #region Methods
-
-        /// <summary>
-        /// Инициализация всех справочников...понадобится, если вдруг решу избавится от костылей(тех, что выше) и запилить ДИКИЙ костыль
-        /// </summary>
-        private void CatalogsInitialize()
-        {
-            using (var prvdr = new ClasinessTableProvider())
-            {
-                CatalogList.Add(new Tuple<List<BaseModel>, string>(prvdr.Select().Cast<BaseModel>().ToList(), "Классность"));
-            }
-            using (var prvdr = new ContractTableProvider())
-            {
-                CatalogList.Add(new Tuple<List<BaseModel>, string>(prvdr.Select().Cast<BaseModel>().ToList(), "Контракты"));
-            }
-            using (var prvdr = new EducationTimeTableProvider())
-            {
-                CatalogList.Add(new Tuple<List<BaseModel>, string>(prvdr.Select().Cast<BaseModel>().ToList(), "Образование"));
-            }
-            using (var prvdr = new GratitudeTableProvider())
-            {
-                CatalogList.Add(new Tuple<List<BaseModel>, string>(prvdr.Select().Cast<BaseModel>().ToList(), "Благодарности"));
-            }
-            using (var prvdr = new HolidayTimeTableProvider())
-            {
-                CatalogList.Add(new Tuple<List<BaseModel>, string>(prvdr.Select().Cast<BaseModel>().ToList(), "Отпуска"));
-            }
-            using (var prvdr = new HospitalTimeTableProvider())
-            {
-                CatalogList.Add(new Tuple<List<BaseModel>, string>(prvdr.Select().Cast<BaseModel>().ToList(), "Больничные"));
-            }
-            using (var prvdr = new MilitaryProcessTableProvider())
-            {
-                CatalogList.Add(new Tuple<List<BaseModel>, string>(prvdr.Select().Cast<BaseModel>().ToList(), "Служба"));
-            }
-            using (var prvdr = new PostAssignmentTableProvider())
-            {
-                CatalogList.Add(new Tuple<List<BaseModel>, string>(prvdr.Select().Cast<BaseModel>().ToList(), "Присвоение должностей"));
-            }
-            using (var prvdr = new RankAssignmentTableProvider())
-            {
-                CatalogList.Add(new Tuple<List<BaseModel>, string>(prvdr.Select().Cast<BaseModel>().ToList(), "Присвоение званий"));
-            }
-            using (var prvdr = new RelativeTableProvider())
-            {
-                CatalogList.Add(new Tuple<List<BaseModel>, string>(prvdr.Select().Cast<BaseModel>().ToList(), "Родственники"));
-            }
-            using (var prvdr = new ReprimandTableProvider())
-            {
-                CatalogList.Add(new Tuple<List<BaseModel>, string>(prvdr.Select().Cast<BaseModel>().ToList(), "Выговоры"));
-            }
-            using (var prvdr = new SertificationTableProvider())
-            {
-                CatalogList.Add(new Tuple<List<BaseModel>, string>(prvdr.Select().Cast<BaseModel>().ToList(), "Аттестация"));
-            }
-            using (var prvdr = new ViolationTableProvider())
-            {
-                CatalogList.Add(new Tuple<List<BaseModel>, string>(prvdr.Select().Cast<BaseModel>().ToList(), "Нарушения"));
-            }
-        }
+        
 
         /// <summary>
         /// Подбирает паспорт из БД по id
@@ -798,30 +823,6 @@ namespace Staffinfo.Desktop.ViewModel
             }
             return pasport;
         }
-
-        //Законсервировал до лучших времен...
-        ///// <summary>
-        ///// Подбираем паспортный стол по id
-        ///// </summary>
-        ///// <param name="id"></param>
-        ///// <returns></returns>
-        //private PasportOrganizationUnitModel GetPasportOrganizationUnit(long? id)
-        //{
-        //    PasportOrganizationUnitModel pasportOrganizationUnit = null;
-        //    try
-        //    {
-        //        using (var prvdr = new PasportOrganizationUnitTableProvider())
-        //        {
-        //            pasportOrganizationUnit = prvdr.Select(id);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show("Не удалось загрузить паспортные данные", "Ошибка", MessageBoxButton.OK,
-        //            MessageBoxImage.Error);
-        //    }
-        //    return pasportOrganizationUnit;
-        //}
         
         #endregion
     }

@@ -125,7 +125,7 @@
                                     controls:TextBoxHelper.ClearTextButton="True"
                                     FontSize="14"
                                     ToolTip="Должность"
-                                    SelectedItem="{Binding PostList.SelectedItem}"
+                                    SelectedItem="{Binding SelectedPost}"
                                     ItemsSource="{Binding PostList.ModelList}"
                                     DisplayMemberPath="PostTitle"/>
                                 <ComboBox 

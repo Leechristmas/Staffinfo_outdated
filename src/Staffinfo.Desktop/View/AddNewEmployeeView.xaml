@@ -90,7 +90,7 @@
                               MinHeight="30"
                               FontSize="14"
                               Name="PostCBox"
-                              SelectedItem="{Binding PostList.SelectedItem}"
+                              SelectedItem="{Binding SelectedPost}"
                               ItemsSource="{Binding PostList.ModelList}"
                               DisplayMemberPath="PostTitle">
                         <!--<ComboBox.ItemTemplate>

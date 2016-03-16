@@ -110,6 +110,10 @@ namespace Staffinfo.Desktop.ViewModel
         /// </summary>
         private PasportModel _pasport = new PasportModel();
 
+        /// <summary>
+        /// Выбранная должность
+        /// </summary>
+        private PostModel _selectedPost;
         #endregion
 
         #region Properties
@@ -282,6 +286,9 @@ namespace Staffinfo.Desktop.ViewModel
             }
         }
 
+        /// <summary>
+        /// Выбранная служба
+        /// </summary>
         public ServiceModel SelectedService
         {
             get { return ServiceList.SelectedItem; }
@@ -290,6 +297,20 @@ namespace Staffinfo.Desktop.ViewModel
                 ServiceList.SelectedItem = value;
                 RaisePropertyChanged();
                 RaisePropertyChanged("PostList");
+            }
+        }
+
+        /// <summary>
+        /// Выбранная должность 
+        /// P.S. кривая реализация т.к. нужна селекция должностей по выбранной службе()
+        /// </summary>
+        public PostModel SelectedPost
+        {
+            get { return _selectedPost; }
+            set
+            {
+                _selectedPost = value;
+                RaisePropertyChanged();
             }
         }
 
@@ -316,6 +337,8 @@ namespace Staffinfo.Desktop.ViewModel
         /// Добавить служащего
         /// </summary>
         private RelayCommand _addNewEmployeeCommand;
+
+
         public RelayCommand AddNewEmployeeCommand
             => _addNewEmployeeCommand ?? (_addNewEmployeeCommand = new RelayCommand(AddNewEmployeeExecute));
 
@@ -330,7 +353,7 @@ namespace Staffinfo.Desktop.ViewModel
             //сохраняем самого служащего
             using (var prvdr = new EmployeeTableProvider())
             {
-                var post = PostList.SelectedItem;
+                var post = SelectedPost;
                 var rank = RankList.SelectedItem;
                 
                 var employee = new EmployeeModel
