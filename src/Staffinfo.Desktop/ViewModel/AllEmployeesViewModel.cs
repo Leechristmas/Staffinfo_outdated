@@ -13,6 +13,10 @@ namespace Staffinfo.Desktop.ViewModel
     /// </summary>
     public class AllEmployeesViewModel: WindowViewModelBase
     {
+        public AllEmployeesViewModel()
+        {
+            AccessLevel = DataSingleton.Instance.User.AccessLevel;
+        }
 
         #region Fields
 

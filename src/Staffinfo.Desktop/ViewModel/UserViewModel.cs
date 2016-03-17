@@ -69,11 +69,6 @@ namespace Staffinfo.Desktop.ViewModel
         private string _lastName;
 
         /// <summary>
-        /// Уровень доступа
-        /// </summary>
-        private int _accessLevel;
-
-        /// <summary>
         /// Логин
         /// </summary>
         private string _login;
@@ -115,11 +110,6 @@ namespace Staffinfo.Desktop.ViewModel
         public /*readonly*/ ObservableCollectionViewModel<PartialUserViewModel> UserList { get; set; }
 
         /// <summary>
-        /// Является ли авторизованный пользователь администратором
-        /// </summary>
-        public bool IsAdmin => AccessLevel == (int) AccessLevelType.Admin;
-
-        /// <summary>
         /// Отчество
         /// </summary>
         public string MiddleName
@@ -156,21 +146,6 @@ namespace Staffinfo.Desktop.ViewModel
             set
             {
                 _lastName = value.Trim();
-                WasChanged = true;
-                RaisePropertyChanged();
-            }
-        }
-
-        /// <summary>
-        /// Уровень доступа к БД
-        /// </summary>
-        public int AccessLevel
-        {
-            get { return _accessLevel; }
-            set
-            {
-                if (value < 0 || value > 1) throw new Exception("Неверный уровень доступа");
-                _accessLevel = value;
                 WasChanged = true;
                 RaisePropertyChanged();
             }

@@ -43,6 +43,9 @@
             <!--Пробное представление-->
             <GroupBox Margin="0">
                 <Grid>
+                    <ToolBar>
+
+                    </ToolBar>
                     <ListBox ItemsSource="{Binding EmployeeList.ModelCollection}"
                              SelectedItem="{Binding EmployeeList.SelectedItem}"
                              ScrollViewer.CanContentScroll="true"
@@ -85,24 +88,56 @@
         <Grid Grid.Column="1">
             <GroupBox Margin="0">
                 <Grid>
-                    <StackPanel>
+                    <StackPanel >
                         <Button Name="AddEmployeeBtn"
                                 FontSize="16"
-                                Content="Добавить" 
+                                IsEnabled="{Binding IsAdmin}" 
                                 Style="{DynamicResource ChromelessButtonStyle}"
                                 MinHeight="20" Margin="0"
-                                Command="{Binding GoToAddingNewEmployee}"/>
-                        <Button Name="RemoveEmployeeBtn"
+                                Command="{Binding GoToAddingNewEmployee}">
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Width="10"
+                                           Height="10"
+                                           Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                                    <Rectangle.OpacityMask>
+                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_add}" />
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                                <TextBlock Text=" Добавить"/>
+                            </StackPanel>
+                        </Button>
+                            <Button Name="RemoveEmployeeBtn"
                                 FontSize="16"
-                                Content="Удалить" 
+                                IsEnabled="{Binding IsAdmin}"  
                                 Style="{DynamicResource ChromelessButtonStyle}"
                                 MinHeight="20" Margin="0"
-                                Command="{Binding RemoveEmployee}"/>
+                                Command="{Binding RemoveEmployee}">
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Width="10"
+                                           Height="10"
+                                           Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                                    <Rectangle.OpacityMask>
+                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_delete}" />
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                                <TextBlock Text=" Удалить"/>
+                            </StackPanel>
+                        </Button>
                         <Button Name="FindEmployeeBtn"
                                 FontSize="16"
-                                Content="Найти" 
                                 Style="{DynamicResource ChromelessButtonStyle}"
-                                MinHeight="20" Margin="0"/>
+                                MinHeight="20" Margin="0">
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Width="10"
+                                           Height="10"
+                                           Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                                    <Rectangle.OpacityMask>
+                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_filter}" />
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                                <TextBlock Text=" Фильтр"/>
+                            </StackPanel>
+                        </Button>
                     </StackPanel>
                 </Grid>
             </GroupBox>

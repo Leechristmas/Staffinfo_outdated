@@ -39,7 +39,7 @@ namespace Staffinfo.Desktop.Data
         public static void SaveServerInstancesIntoFile()
         {
             string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                   $"...\\src\\Staffinfo.Desktop\\Data\\{DataSingleton.Instance.ServersFile}");
+                   $"...\\...\\src\\Staffinfo.Desktop\\Data\\{DataSingleton.Instance.ServersFile}");
             List<string> serverInstances = GetServerInstances();
             File.WriteAllLines(filePath, serverInstances);
         }
@@ -51,7 +51,7 @@ namespace Staffinfo.Desktop.Data
         public static List<string> LoadServerInstances()
         {
             string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                $"...\\src\\Staffinfo.Desktop\\Data\\{DataSingleton.Instance.ServersFile}");
+                $"...\\...\\src\\Staffinfo.Desktop\\Data\\{DataSingleton.Instance.ServersFile}");
             if (!File.Exists(filePath))
                 throw new FileNotFoundException("Файл инициализации серверов не найден");
             return File.ReadAllLines(filePath).ToList();

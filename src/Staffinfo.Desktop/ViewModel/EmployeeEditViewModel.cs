@@ -33,6 +33,9 @@ namespace Staffinfo.Desktop.ViewModel
 
             //список служб
             _serviceList = new ListViewModel<ServiceModel>(DataSingleton.Instance.ServiceList);
+
+            //Определяем уровень доступа пользователя, вошедвшего в систему
+            AccessLevel = DataSingleton.Instance.User.AccessLevel;
         }
 
         public EmployeeEditViewModel(EmployeeViewModel employeeViewModel) : this()

@@ -50,7 +50,8 @@
                                         Margin="50,3">
                                 <TextBox 
                                     Name="LastNameTBox" 
-                                    MinWidth="200" 
+                                    MinWidth="200"
+                                    IsEnabled="{Binding IsAdmin}"  
                                     Height="30"
                                     Margin="10,2"
                                     controls:TextBoxHelper.Watermark="Фамилия"
@@ -61,6 +62,7 @@
                                 <TextBox 
                                     Name="FirstNameTBox"
                                     MinWidth="200"
+                                    IsEnabled="{Binding IsAdmin}" 
                                     Height="30"
                                     Margin="10,2"
                                     controls:TextBoxHelper.Watermark="Имя"
@@ -70,7 +72,8 @@
                                     Text="{Binding Path=FirstName}"/>
                                 <TextBox 
                                     Name="MiddleNameTBox" 
-                                    MinWidth="200" 
+                                    MinWidth="200"
+                                    IsEnabled="{Binding IsAdmin}"  
                                     Height="30"
                                     Margin="10,2"
                                     controls:TextBoxHelper.Watermark="Отчество"
@@ -80,7 +83,8 @@
                                     Text="{Binding Path=MiddleName}"/>
                                 <ComboBox 
                                     Name="ServiceCBox" 
-                                    MinWidth="200" 
+                                    MinWidth="200"
+                                    IsEnabled="{Binding IsAdmin}"  
                                     Height="30"
                                     Margin="10,2"
                                     controls:TextBoxHelper.Watermark="--Служба--"
@@ -92,7 +96,8 @@
                                     DisplayMemberPath="ServiceTitle"/>
                                 <ComboBox 
                                     Name="PostCBox" 
-                                    MinWidth="200" 
+                                    MinWidth="200"
+                                    IsEnabled="{Binding IsAdmin}"  
                                     Height="30"
                                     Margin="10,2"
                                     controls:TextBoxHelper.Watermark="--Должность--"
@@ -104,7 +109,8 @@
                                     DisplayMemberPath="PostTitle"/>
                                 <ComboBox 
                                     Name="RankCBox" 
-                                    MinWidth="200" 
+                                    MinWidth="200"
+                                    IsEnabled="{Binding IsAdmin}"  
                                     Height="30"
                                     Margin="10,2"
                                     controls:TextBoxHelper.Watermark="--Звание--"
@@ -121,6 +127,7 @@
                                     Orientation="Horizontal">
                             <Button Name="ChangePhotoBtn"
                                     Content="Изменить"
+                                    IsEnabled="{Binding IsAdmin}" 
                                     Width="100"
                                     MinWidth="100"
                                     Height="20"
@@ -131,6 +138,7 @@
                                     Command="{Binding ChangePhoto}"/>
                             <Button Name="DropPhotBtn"
                                     Content="Удалить фото"
+                                    IsEnabled="{Binding IsAdmin}" 
                                     Width="100"
                                     Height="20"
                                     MinWidth="100"
@@ -158,6 +166,7 @@
                             <StackPanel Orientation="Vertical" Margin="48,20">
                                 <DatePicker 
                                     Name="BornDatePicker"
+                                    IsEnabled="{Binding IsAdmin}" 
                                     MinWidth="200"
                                     controls:TextBoxHelper.Watermark="Дата рождения"
                                     FontSize="14"
@@ -167,6 +176,7 @@
                                     SelectedDate="{Binding Path=BornDate}"/>
                                 <DatePicker 
                                     Name="JobStartDatePicker"
+                                    IsEnabled="{Binding IsAdmin}" 
                                     MinWidth="200"
                                     controls:TextBoxHelper.Watermark="Начало службы"
                                     FontSize="14"
@@ -176,6 +186,7 @@
                                     SelectedDate="{Binding Path=JobStartDate}"/>
                                 <TextBox 
                                     Name="PersonalNumber"
+                                    IsEnabled="{Binding IsAdmin}" 
                                     MinWidth="200"
                                     controls:TextBoxHelper.Watermark="Личный номер"
                                     controls:TextBoxHelper.ClearTextButton="True"
@@ -199,6 +210,7 @@
                                             controls:TextBoxHelper.Watermark="Город"
                                             controls:TextBoxHelper.ClearTextButton="True"
                                             FontSize="14"
+                                            IsEnabled="{Binding IsAdmin}" 
                                             Margin="1,1"
                                             Height="30"
                                             ToolTip="Город"
@@ -208,6 +220,7 @@
                                             controls:TextBoxHelper.Watermark="Улица"
                                             controls:TextBoxHelper.ClearTextButton="True"
                                             FontSize="14"
+                                            IsEnabled="{Binding IsAdmin}" 
                                             Margin="1,1"
                                             Height="30"
                                             ToolTip="Улица"
@@ -217,6 +230,7 @@
                                             controls:TextBoxHelper.Watermark="Дом"
                                             controls:TextBoxHelper.ClearTextButton="True"
                                             FontSize="14"
+                                            IsEnabled="{Binding IsAdmin}" 
                                             Margin="1,1"
                                             Height="30"
                                             ToolTip="Номер дома"
@@ -226,6 +240,7 @@
                                             controls:TextBoxHelper.Watermark="Квартира"
                                             controls:TextBoxHelper.ClearTextButton="True"
                                             FontSize="14"
+                                            IsEnabled="{Binding IsAdmin}" 
                                             Margin="1,1"
                                             Height="30"
                                             ToolTip="Номер квартиры"
@@ -241,6 +256,7 @@
                                             controls:TextBoxHelper.Watermark="Домашний телефон"
                                             controls:TextBoxHelper.ClearTextButton="True"
                                             FontSize="14"
+                                            IsEnabled="{Binding IsAdmin}" 
                                             Margin="1,1"
                                             Height="30"
                                             ToolTip="Номер мобильного телефона"
@@ -250,6 +266,7 @@
                                             controls:TextBoxHelper.Watermark="Мобильный телефон"
                                             controls:TextBoxHelper.ClearTextButton="True"
                                             FontSize="14"
+                                            IsEnabled="{Binding IsAdmin}" 
                                             Margin="1,1"
                                             Height="30"
                                             ToolTip="Номер домашнего телефона"
@@ -268,6 +285,7 @@
                                             controls:TextBoxHelper.ClearTextButton="True"
                                             ToolTip="Организация, выдавшая паспорт"
                                             FontSize="14"
+                                            IsEnabled="{Binding IsAdmin}" 
                                             Margin="1,1"
                                             Height="30"
                                             Text="{Binding Pasport.OrganizationUnit}"/>
@@ -276,6 +294,7 @@
                                             controls:TextBoxHelper.Watermark="Серия"
                                             controls:TextBoxHelper.ClearTextButton="True"
                                             FontSize="14"
+                                            IsEnabled="{Binding IsAdmin}" 
                                             Margin="1,1"
                                             Height="30"
                                             ToolTip="Серия паспорта"
@@ -295,6 +314,7 @@
                                             controls:TextBoxHelper.Watermark="Номер паспорта"
                                             controls:TextBoxHelper.ClearTextButton="True"
                                             FontSize="14"
+                                            IsEnabled="{Binding IsAdmin}" 
                                             ToolTip="Номер паспорта"
                                             Margin="1,1"
                                             Height="30"
@@ -308,6 +328,7 @@
                                         <TextBlock
                                             Name="ServiceLengthTBlock"
                                             FontSize="14"
+                                            IsEnabled="{Binding IsAdmin}" 
                                             Margin="1,2"
                                             Text="ХХ лет ХХ месяцев ХХ дней"/>
                                     </StackPanel>
@@ -336,6 +357,7 @@
                                 <Button 
                                     Name="TabsToogleBtn"
                                     MinWidth="100"
+                                    IsEnabled="{Binding IsAdmin}" 
                                     Content="{Binding TabsToogleTitle}"
                                     Style="{DynamicResource ChromelessButtonStyle}"
                                     FontSize="16"
@@ -780,12 +802,14 @@
                     <Button Name="AcceptBtn"
                                 Style="{StaticResource ButtonStyle}"
                                 Content="Принять"
+                                IsEnabled="{Binding IsAdmin}" 
                                 MinWidth="100"
                                 Command="{Binding Path=AcceptChanges}"
                                 ToolTip="Принять изменения"/>
-                    <Button Name="CleanUpBtn"
+                    <Button     Name="CleanUpBtn"
                                 Style="{StaticResource ButtonStyle}"
                                 Content="Отменить"
+                                IsEnabled="{Binding IsAdmin}" 
                                 MinWidth="100"
                                 Command="{Binding Path=CleanOut}"
                                 ToolTip="Отменить все изменения"/>
