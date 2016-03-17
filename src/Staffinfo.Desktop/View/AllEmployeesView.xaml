@@ -3,81 +3,171 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Staffinfo.Desktop.View"
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:helpers="clr-namespace:Staffinfo.Desktop.Helpers"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
-        Title="Служащие" Height="700" Width="900">
+        Title="Служащие" Height="700" Width="900" DataContext="{Binding Source={StaticResource Locator}, Path=AllEmployee}"
+        helpers:WindowCloseHelper.WindowsClose="{Binding WindowsClosed}">
+    <controls:MetroWindow.RightWindowCommands>
+        <controls:WindowCommands>
+            <TextBox Name="SearchTBox"
+                     controls:TextBoxHelper.Watermark="Начните вводить фамилию"
+                     Margin="2"
+                     Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
+                     MaxWidth="200"/>
+            <Button Command="{Binding ShowSettings}">
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="20"
+                               Height="20"
+                               Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_settings}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                    <TextBlock Text=" настройки"/>
+                </StackPanel>
+            </Button>
+        </controls:WindowCommands>
+    </controls:MetroWindow.RightWindowCommands>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="150"/>
         </Grid.ColumnDefinitions>
-    <Grid Grid.Column="0">
-     <!--Пробное представление-->
-        <GroupBox Margin="0">
-        <StackPanel>
-                <ListView ItemsSource="{Binding EmployeeList}" 
-                          ScrollViewer.CanContentScroll="true"
-                          ScrollViewer.VerticalScrollBarVisibility="Auto"
-                          ScrollViewer.HorizontalScrollBarVisibility="Auto" 
-                          BorderThickness="0"
-                          ItemContainerStyle="{StaticResource ListViewItemStyle}">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <Border BorderBrush="DodgerBlue" BorderThickness="2" Margin="1" >
-                            <StackPanel
-                                Orientation="Horizontal"
-                                Height="50">
-                                    <StackPanel>
-                                        <Border BorderBrush="Black" BorderThickness="1" Margin="0,0,10,0">
-                                            <Image
-                                                Height="50"
-                                                Width="50"
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="45"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Column="0">
+            <!--Пробное представление-->
+            <GroupBox Margin="0">
+                <Grid>
+                    <ToolBar>
+
+                    </ToolBar>
+                    <ListBox ItemsSource="{Binding EmployeeList.ModelCollection}"
+                             SelectedItem="{Binding EmployeeList.SelectedItem}"
+                             ScrollViewer.CanContentScroll="true"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                             ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+                             BorderThickness="0"
+                             ItemContainerStyle="{StaticResource ListViewItemStyle}"
+                             Height="{Binding ElementName=AllEmployeesView}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseDoubleClick">
+                                <i:InvokeCommandAction Command="{Binding ShowEmployee}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="DodgerBlue" BorderThickness="2" Margin="1" >
+                                    <StackPanel Orientation="Horizontal"
+                                                Height="100">
+                                        <StackPanel>
+                                            <Border BorderBrush="Black" BorderThickness="1" Margin="0,0,10,0">
+                                                <Image
+                                                Height="100"
+                                                Width="100"
                                                 Source="{Binding Photo}"/>
-                                        </Border>
+                                            </Border>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding LastName}" FontWeight="Bold" FontSize="16" Margin="5" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding FirstName}" FontWeight="Bold" FontSize="16" Margin="5" VerticalAlignment="Center"/>
+                                            <TextBlock Text="{Binding MiddleName}" FontWeight="Bold" FontSize="16" Margin="5" VerticalAlignment="Center"/>
+                                        </StackPanel>
                                     </StackPanel>
-                                <StackPanel
-                                    Orientation="Horizontal">
-                                    <TextBlock Text="{Binding LastName}" FontWeight="Bold" FontSize="16" Margin="5" VerticalAlignment="Center"/>
-                                    <TextBlock Text="{Binding FirstName}" FontWeight="Bold" FontSize="16" Margin="5" VerticalAlignment="Center"/>
-                                    <TextBlock Text="{Binding MiddleName}" FontWeight="Bold" FontSize="16" Margin="5" VerticalAlignment="Center"/>
-                                </StackPanel>
-                            </StackPanel>
-                        </Border>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
-        </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
             </GroupBox>
         </Grid>
         <Grid Grid.Column="1">
-                <GroupBox Margin="0">
-                    <Grid>
-                        <StackPanel>
+            <GroupBox Margin="0">
+                <Grid>
+                    <StackPanel >
                         <Button Name="AddEmployeeBtn"
                                 FontSize="16"
-                                Content="Добавить" 
+                                IsEnabled="{Binding IsAdmin}" 
                                 Style="{DynamicResource ChromelessButtonStyle}"
-                                MinHeight="20" Margin="0"/>
-                        <Button Name="RemoveEmployeeBtn"
+                                MinHeight="20" Margin="0"
+                                Command="{Binding GoToAddingNewEmployee}">
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Width="10"
+                                           Height="10"
+                                           Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                                    <Rectangle.OpacityMask>
+                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_add}" />
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                                <TextBlock Text=" Добавить"/>
+                            </StackPanel>
+                        </Button>
+                            <Button Name="RemoveEmployeeBtn"
                                 FontSize="16"
-                                Content="Удалить" 
+                                IsEnabled="{Binding IsAdmin}"  
                                 Style="{DynamicResource ChromelessButtonStyle}"
-                                MinHeight="20" Margin="0"/>
+                                MinHeight="20" Margin="0"
+                                Command="{Binding RemoveEmployee}">
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Width="10"
+                                           Height="10"
+                                           Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                                    <Rectangle.OpacityMask>
+                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_delete}" />
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                                <TextBlock Text=" Удалить"/>
+                            </StackPanel>
+                        </Button>
                         <Button Name="FindEmployeeBtn"
                                 FontSize="16"
-                                Content="Найти" 
                                 Style="{DynamicResource ChromelessButtonStyle}"
-                                MinHeight="20" Margin="0"/>    
-                        </StackPanel>
-                        <Button Name="CloseBtn"
-                                FontSize="16"
-                                Content="Закрыть" 
-                                VerticalAlignment="Bottom"
-                                Style="{DynamicResource ChromelessButtonStyle}"
-                                MinHeight="20" Margin="0"/>
-                    </Grid>
-                </GroupBox>
+                                MinHeight="20" Margin="0">
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Width="10"
+                                           Height="10"
+                                           Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                                    <Rectangle.OpacityMask>
+                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_filter}" />
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                                <TextBlock Text=" Фильтр"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </GroupBox>
         </Grid>
+
+        <StackPanel Grid.Row="1"
+                    Grid.ColumnSpan="2"
+                    Grid.Column="0"
+                    Height="25"
+                    VerticalAlignment="Top">
+            <Border Background="LightGray"
+                    Height="25">
+                <Button Name="CloseBtn"
+                    FontSize="16"
+                    Content="Закрыть"
+                    VerticalAlignment="Bottom"
+                    Style="{StaticResource ButtonStyle}"
+                    MinHeight="20" 
+                    Margin="0"
+                    Command="{Binding CloseWindowCommand}"
+                    HorizontalAlignment="Right"/>
+            </Border>
+        </StackPanel>
+        <StackPanel Orientation="Vertical"
+                    Height="20"
+                    Grid.Row="1"
+                    Grid.ColumnSpan="2"
+                    Grid.Column="0"
+                    Background="#41B1E1"
+                    VerticalAlignment="Bottom">
+        </StackPanel>
     </Grid>
 </controls:MetroWindow>

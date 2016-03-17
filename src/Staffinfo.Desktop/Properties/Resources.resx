@@ -117,12 +117,27 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="DatabaseConnector_ExecuteReader_parameter_cannot_be_null_" xml:space="preserve">
+  <data name="AuthorizationMode" xml:space="preserve">
+    <value>Авторизация</value>
+  </data>
+  <data name="DatabaseConnector_operation_error" xml:space="preserve">
+    <value>Ошибка выполнения операции.</value>
+  </data>
+  <data name="DatabaseConnector_parameter_cannot_be_null" xml:space="preserve">
     <value>parameter cannot be null.</value>
     <comment>параметр = null</comment>
   </data>
-  <data name="DatabaseConnector_ExecuteReader_QueryError" xml:space="preserve">
-    <value>Ошибка выполнения запроса</value>
+  <data name="DatabaseConnector_query_has_some_errors" xml:space="preserve">
+    <value>Ошибка выполнения запроса.</value>
     <comment>Ошибка выполнения запроса: вероятно, некорректный запрос</comment>
+  </data>
+  <data name="MainMode" xml:space="preserve">
+    <value>Главное меню</value>
+  </data>
+  <data name="UserTableProvider_Check_Некорректный_логин" xml:space="preserve">
+    <value>Некорректный логин</value>
+  </data>
+  <data name="UserTableProvider_Check_Некорректный_пароль" xml:space="preserve">
+    <value>Некорректный пароль</value>
   </data>
 </root>

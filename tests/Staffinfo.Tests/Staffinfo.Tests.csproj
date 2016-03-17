@@ -35,7 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
+    <Reference Include="System.Windows" />
   </ItemGroup>
   <Choose>
     <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
@@ -50,7 +52,22 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="DataTests\ClasinessTableProviderTests.cs" />
+    <Compile Include="DataTests\ContractTableProviderTests.cs" />
+    <Compile Include="DataTests\EducationalInstitutionTableProviderTests.cs" />
+    <Compile Include="DataTests\EducationTimeTableProviderTests.cs" />
+    <Compile Include="DataTests\EmployeeTableProviderTests.cs" />
+    <Compile Include="DataTests\PasportTableProviderTests.cs" />
+    <Compile Include="DataTests\PostTableProviderTest.cs" />
+    <Compile Include="DataTests\RankTableProviderTests.cs" />
+    <Compile Include="DataTests\ServiceTableProviderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Staffinfo.Desktop\Staffinfo.Desktop.csproj">
+      <Project>{c5c2d0b2-fc59-4d39-b843-d4590487f074}</Project>
+      <Name>Staffinfo.Desktop</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

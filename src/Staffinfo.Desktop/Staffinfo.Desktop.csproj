@@ -9,18 +9,34 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Staffinfo.Desktop</RootNamespace>
     <AssemblyName>Staffinfo.Desktop</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\build\</OutputPath>
+    <OutputPath>..\..\build\debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -29,12 +45,27 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\..\build\release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>
+    </ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <Win32Resource>
+    </Win32Resource>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CircularProgressBar">
+      <HintPath>..\packages\CircularProgressBar\CircularProgressBar.dll</HintPath>
+    </Reference>
     <Reference Include="GalaSoft.MvvmLight, Version=5.2.0.37222, Culture=neutral, PublicKeyToken=e7570ab207bcb616, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmLightLibs.5.2.0.0\lib\net45\GalaSoft.MvvmLight.dll</HintPath>
       <Private>True</Private>
@@ -55,10 +86,11 @@
       <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\MahApps.Metro.1.2.4.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <HintPath>..\packages\MvvmLightLibs.5.2.0.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Xml" />
@@ -79,11 +111,45 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\NewConverters.cs" />
     <Compile Include="Data\DatabaseConnector.cs" />
+    <Compile Include="Data\DatabaseHelper.cs" />
     <Compile Include="Data\DataSingleton.cs" />
+    <Compile Include="Data\DataTableContracts\IReadOnlyTableContract.cs" />
+    <Compile Include="Data\DataTableContracts\IWritableDirectoryTableContract.cs" />
+    <Compile Include="Data\DataTableContracts\IWritableTableContract.cs" />
+    <Compile Include="Data\DataTableProviders\ClasinessTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\ContractTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\EducationalInstitutonTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\EducationTimeTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\EmployeeTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\GratitudeTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\HolidayTimeTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\HospitalTimeTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\MilitaryProcessTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\MilitaryUnitTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\PasportTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\PostAssignmentTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\PostTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\RankAssignmentTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\RankTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\RelativeTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\RelativeTypeTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\ReprimandTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\SertificationTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\ServiceTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\SpecialityTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\UserTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\ViolationTableProvider.cs" />
+    <Compile Include="Helpers\BitmapImageHelper.cs" />
+    <Compile Include="Helpers\CatalogObservableCollectionsList.cs" />
+    <Compile Include="Helpers\PasswordHelper.cs" />
+    <Compile Include="Helpers\WindowCloseHelper.cs" />
+    <Compile Include="Shared\AccessLevelType.cs" />
+    <Compile Include="Model\BaseModel.cs" />
     <Compile Include="Model\ClasinessModel.cs" />
     <Compile Include="Model\ContractModel.cs" />
-    <Compile Include="Model\EducationalInstituitionModel.cs" />
+    <Compile Include="Model\EducationalInstitutionModel.cs" />
     <Compile Include="Model\EducationTimeModel.cs" />
     <Compile Include="Model\EmployeeModel.cs" />
     <Compile Include="Model\GratitudeModel.cs" />
@@ -91,6 +157,8 @@
     <Compile Include="Model\HospitalTimeModel.cs" />
     <Compile Include="Model\MilitaryProcessModel.cs" />
     <Compile Include="Model\MilitaryUnitModel.cs" />
+    <Compile Include="Model\PasportModel.cs" />
+    <Compile Include="Model\PasportOrganizationUnitModel.cs" />
     <Compile Include="Model\PostAssignmentModel.cs" />
     <Compile Include="Model\PostModel.cs" />
     <Compile Include="Model\RankAssignmentModel.cs" />
@@ -101,19 +169,39 @@
     <Compile Include="Model\SertificationModel.cs" />
     <Compile Include="Model\ServiceModel.cs" />
     <Compile Include="Model\SpecialityModel.cs" />
+    <Compile Include="Model\UserModel.cs" />
     <Compile Include="Model\ViolationModel.cs" />
+    <Compile Include="Shared\AuthorizationException.cs" />
+    <Compile Include="Shared\DatabaseNotFoundException.cs" />
+    <Compile Include="Shared\DatabaseWasNotCreatedException.cs" />
     <Compile Include="ViewModel\AddNewEmployeeViewModel.cs" />
     <Compile Include="ViewModel\AllEmployeesViewModel.cs" />
+    <Compile Include="ViewModel\AllUsersViewModel.cs" />
+    <Compile Include="ViewModel\DictionaryViewModelBase.cs" />
+    <Compile Include="ViewModel\EmployeeEditViewModel.cs" />
     <Compile Include="ViewModel\EmployeeViewModel.cs" />
     <Compile Include="ViewModel\ListViewModel.cs" />
+    <Compile Include="ViewModel\ObservableCollectionViewModel.cs" />
+    <Compile Include="ViewModel\PartialUserViewModel.cs" />
     <Compile Include="ViewModel\StartViewModel.cs" />
+    <Compile Include="ViewModel\UserViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ViewModel\WindowViewModelBase.cs" />
+    <Compile Include="View\AddEducationalInstitutionView.xaml.cs">
+      <DependentUpon>AddEducationalInstitutionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AddMilitaryUnitView.xaml.cs">
+      <DependentUpon>AddMilitaryUnitView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\AddNewEmployeeView.xaml.cs">
       <DependentUpon>AddNewEmployeeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AddSpecialityView.xaml.cs">
+      <DependentUpon>AddSpecialityView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\AllEmployeesView.xaml.cs">
       <DependentUpon>AllEmployeesView.xaml</DependentUpon>
@@ -121,11 +209,17 @@
     <Compile Include="View\EmployeeView.xaml.cs">
       <DependentUpon>EmployeeView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\PasswordChangingView.xaml.cs">
+      <DependentUpon>PasswordChangingView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\StartView.xaml.cs">
       <DependentUpon>StartView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\UsersView.xaml.cs">
+      <DependentUpon>UsersView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -145,6 +239,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -157,18 +252,30 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\Images\empty_avatar_150x100.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Resource>
-  </ItemGroup>
-  <ItemGroup>
+    <Page Include="Resources\Icons.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Resources\MetroResource.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Page>
+    <Page Include="View\AddEducationalInstitutionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\AddMilitaryUnitView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\AddNewEmployeeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\AddSpecialityView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\AllEmployeesView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -178,6 +285,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="View\PasswordChangingView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\SettingsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -186,7 +297,32 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="View\UsersView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Data\Scripts\create_and_init_database_staffinfo.sql" />
+    <Content Include="Data\Scripts\drop_database_staffinfo.sql" />
+    <Content Include="Data\Scripts\fill_database_with_test_data.sql" />
+    <EmbeddedResource Include="Resources\Images\empty_avatar_100x100.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

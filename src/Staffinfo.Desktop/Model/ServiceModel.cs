@@ -3,18 +3,12 @@
     /// <summary>
     /// Служба
     /// </summary>
-    public class ServiceModel
+    public class ServiceModel: BaseModel
     {
-        public ServiceModel()
-        {
-                
-        }
-
-        #region Properties
-
-        public long Id { get; set; }
+        /// <summary>
+        /// Название службы
+        /// </summary>
         public string ServiceTitle { get; set; }
 
-        #endregion
     }
 }

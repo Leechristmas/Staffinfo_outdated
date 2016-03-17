@@ -5,15 +5,34 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:local="clr-namespace:Staffinfo.Desktop.View"
+        xmlns:converters="clr-namespace:Staffinfo.Desktop.Converters"
+        xmlns:helpers="clr-namespace:Staffinfo.Desktop.Helpers"
         mc:Ignorable="d"
-        Title="Добавление служащего" MinWidth="520" Width="520" Height="510" MinHeight="510"
-                     DataContext="{Binding Source={StaticResource Locator}, Path=AddEmployee}">
+        Title="Добавление служащего" MinWidth="580" Width="580" Height="510" MinHeight="510"
+                      DataContext="{Binding Source={StaticResource Locator}, Path=AddNewEmploye}"
+                      helpers:WindowCloseHelper.WindowsClose="{Binding WindowsClosed}">
+    <Controls:MetroWindow.RightWindowCommands>
+        <Controls:WindowCommands>
+            <Button Command="{Binding ShowSettings}">
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Width="20"
+                               Height="20"
+                               Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_settings}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                    <TextBlock Text=" настройки"/>
+                </StackPanel>
+            </Button>
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.RightWindowCommands>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition MinHeight="135"/>
-            <RowDefinition MinHeight="105"/>
-            <RowDefinition MinHeight="105"/>
-            <RowDefinition MinHeight="80"/>
+            <RowDefinition Height="145"/>
+            <RowDefinition Height="115"/>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="80"/>
             <RowDefinition MinHeight="30"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -22,204 +41,265 @@
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
 
-        <GroupBox
-            Header="Общее"
-            Grid.ColumnSpan="3">
-            <StackPanel
-                Orientation="Horizontal">
-                <StackPanel
-                    Orientation="Vertical"
-                    HorizontalAlignment="Left"
-                    Margin="5,0">
-                    <TextBox
-                        Controls:TextBoxHelper.Watermark="Фамилия"
-                        Controls:TextBoxHelper.ClearTextButton="True"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Left"
-                        Margin="0,1"
-                        MinWidth="150"
-                        Name="LastNameTBox"/>
-                    <TextBox
-                        Controls:TextBoxHelper.Watermark="Имя"
-                        Controls:TextBoxHelper.ClearTextButton="True"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Left"
-                        Margin="0,1"
-                        MinWidth="150"
-                        Name="FirstNameTBox"/>
-                    <TextBox
-                        Controls:TextBoxHelper.Watermark="Отчество"
-                        Controls:TextBoxHelper.ClearTextButton="True"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Left"
-                        Margin="0,1"
-                        MinWidth="150"
-                        Name="MiddleNameTBox"/>
+        <GroupBox Header="Общее"
+                  Grid.ColumnSpan="3">
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Vertical"
+                            HorizontalAlignment="Left"
+                            Margin="5,0">
+                    <TextBox Controls:TextBoxHelper.Watermark="Фамилия"
+                             Controls:TextBoxHelper.ClearTextButton="True"
+                             VerticalAlignment="Top"
+                             HorizontalAlignment="Left"
+                             MinHeight="30"
+                             Margin="0,1"
+                             MinWidth="150"
+                             FontSize="14"
+                             Name="LastNameTBox"
+                             Text ="{Binding LastName}"/>
+                    <TextBox Controls:TextBoxHelper.Watermark="Имя"
+                             Controls:TextBoxHelper.ClearTextButton="True"
+                             VerticalAlignment="Top"
+                             HorizontalAlignment="Left"
+                             MinHeight="30"
+                             Margin="0,1"
+                             MinWidth="150"
+                             FontSize="14"
+                             Name="FirstNameTBox"
+                             Text="{Binding FirstName}"/>
+                    <TextBox Controls:TextBoxHelper.Watermark="Отчество"
+                             Controls:TextBoxHelper.ClearTextButton="True"
+                             VerticalAlignment="Top"
+                             HorizontalAlignment="Left"
+                             MinHeight="30"
+                             Margin="0,1"
+                             MinWidth="150"
+                             FontSize="14"
+                             Name="MiddleNameTBox"
+                             Text="{Binding MiddleName}"/>
                 </StackPanel>
-                <StackPanel
-                    Orientation="Vertical"
-                    HorizontalAlignment="Left"
-                    Margin="5,0">
-                    <ComboBox
-                        Controls:TextBoxHelper.Watermark="--Должность--"
-                        Controls:TextBoxHelper.ClearTextButton="True"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Left"
-                        Margin="0,1"
-                        MinWidth="150"
-                        Name="PostCBox"
-                        SelectedItem="{Binding RankList.SelectedItem}"
-                        ItemsSource="{Binding RankList.ModelList}"
-                        DisplayMemberPath="RankTitle"/>
-                    <ComboBox
-                        Controls:TextBoxHelper.Watermark="--Звание--"
-                        Controls:TextBoxHelper.ClearTextButton="True"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Left"
-                        Margin="0,1"
-                        MinWidth="150"
-                        Name="RankCBox"/>
-                    <ComboBox
-                        Controls:TextBoxHelper.Watermark="--Служба--"
-                        Controls:TextBoxHelper.ClearTextButton="True"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Left"
-                        Margin="0,1"
-                        MinWidth="150"
-                        Name="ServiceCBox"/>
+                <StackPanel Orientation="Vertical"
+                            HorizontalAlignment="Left"
+                            Margin="5,0">
+                    <ComboBox Controls:TextBoxHelper.Watermark="--Должность--"
+                              Controls:TextBoxHelper.ClearTextButton="True"
+                              VerticalAlignment="Top"
+                              HorizontalAlignment="Left"
+                              Margin="0,1"
+                              Width="225"
+                              MinHeight="30"
+                              FontSize="14"
+                              Name="PostCBox"
+                              SelectedItem="{Binding SelectedPost}"
+                              ItemsSource="{Binding PostList.ModelList}"
+                              DisplayMemberPath="PostTitle">
+                        <!--<ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <TextBlock Text="{Binding PostTitle}"/>
+                                    <Grid.Visibility>
+                                        <Binding Path="SelectedItem" ElementName="ServiceCBox">
+                                            <Binding.Converter>
+                                                <converters:NewConverters Param="{Binding}"/>
+                                            </Binding.Converter>
+                                        </Binding>
+                                    </Grid.Visibility>
+                                </Grid>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>-->
+                    </ComboBox>
+                    <ComboBox Controls:TextBoxHelper.Watermark="--Звание--"
+                              Controls:TextBoxHelper.ClearTextButton="True"
+                              VerticalAlignment="Top"
+                              HorizontalAlignment="Left"
+                              Margin="0,1"
+                              Width="225"
+                              MinHeight="30"
+                              FontSize="14"
+                              Name="RankCBox"
+                              SelectedItem="{Binding RankList.SelectedItem}"
+                              ItemsSource="{Binding RankList.ModelList}"
+                              DisplayMemberPath="RankTitle"/>
+                    <ComboBox Controls:TextBoxHelper.Watermark="--Служба--"
+                              Controls:TextBoxHelper.ClearTextButton="True"
+                              VerticalAlignment="Top"
+                              HorizontalAlignment="Left"
+                              Margin="0,1"
+                              FontSize="14"
+                              MinHeight="30"
+                              Width="225"
+                              Name="ServiceCBox"
+                              SelectedItem="{Binding SelectedService}"
+                              ItemsSource="{Binding ServiceList.ModelList}"
+                              DisplayMemberPath="ServiceTitle"/>
                 </StackPanel>
-                <StackPanel
-                    Orientation="Vertical"
-                    HorizontalAlignment="Left"
-                    Margin="5,0">
-                    <DatePicker
-                        Controls:TextBoxHelper.Watermark="Дата рождения"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Left"
-                        Margin="0,1"
-                        MinWidth="150"
-                        Name="BornDatePicker"/>
-                    <DatePicker
-                        Controls:TextBoxHelper.Watermark="Начало службы"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Left"
-                        Margin="0,1"
-                        MinWidth="150"
-                        Name="JobStartDatePicker"/>
-                    <TextBox
-                        Controls:TextBoxHelper.Watermark="Личный номер"
-                        Controls:TextBoxHelper.ClearTextButton="True"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Left"
-                        Margin="0,1"
-                        MinWidth="150"
-                        Name="PersonalNumberTBox"/>
-                </StackPanel>
-            </StackPanel>
-        </GroupBox>
-        <GroupBox
-            Grid.Column="0"
-            Grid.Row="1"
-            Grid.ColumnSpan="3"
-            Header="Адрес">
-            <StackPanel
-                Orientation="Horizontal">
-                <StackPanel 
-                    Orientation="Vertical"
-                    Margin="5,0">
-                    <TextBox
-                        Controls:TextBoxHelper.Watermark="Город"
-                        Controls:TextBoxHelper.ClearTextButton="True"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Left"
-                        Margin="0,1"
-                        MinWidth="150"
-                        Name="CityTBox"/>
-                    <TextBox
-                        Controls:TextBoxHelper.Watermark="Улица"
-                        Controls:TextBoxHelper.ClearTextButton="True"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Left"
-                        Margin="0,1"
-                        MinWidth="150"
-                        Name="StreetTBox"/>
-                </StackPanel>
-                <StackPanel
-                    Margin="5,0">
-                    <TextBox
-                        Controls:TextBoxHelper.Watermark="Дом"
-                        Controls:TextBoxHelper.ClearTextButton="True"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Left"
-                        Margin="0,1"
-                        MinWidth="150"
-                        Name="HouseTBox"/>
-                    <TextBox
-                        Controls:TextBoxHelper.ClearTextButton="True"
-                        Controls:TextBoxHelper.Watermark="Квартира"
-                        VerticalAlignment="Top"
-                        HorizontalAlignment="Left"
-                        Margin="0,1"
-                        MinWidth="150"
-                        Name="FlatTBox"/>
+                <StackPanel Orientation="Vertical"
+                            HorizontalAlignment="Left"
+                            Margin="5,0">
+                    <DatePicker Controls:TextBoxHelper.Watermark="Дата рождения"
+                                VerticalAlignment="Top"
+                                HorizontalAlignment="Left"
+                                Margin="0,1"
+                                FontSize="14"
+                                MinHeight="30"
+                                MinWidth="150"
+                                Name="BornDatePicker"
+                                SelectedDate="{Binding BornDate}"/>
+                    <DatePicker Controls:TextBoxHelper.Watermark="Начало службы"
+                                VerticalAlignment="Top"
+                                HorizontalAlignment="Left"
+                                Margin="0,1"
+                                FontSize="14"
+                                MinHeight="30"
+                                MinWidth="150"
+                                Name="JobStartDatePicker"
+                                SelectedDate="{Binding JobStartDate}"/>
+                    <TextBox Controls:TextBoxHelper.Watermark="Личный номер"
+                             Controls:TextBoxHelper.ClearTextButton="True"
+                             VerticalAlignment="Top"
+                             HorizontalAlignment="Left"
+                             Margin="0,1"
+                             MinHeight="30"
+                             FontSize="14"
+                             MinWidth="150"
+                             Name="PersonalNumberTBox"
+                             Text="{Binding PersonalNumber}"/>
                 </StackPanel>
             </StackPanel>
         </GroupBox>
-        <GroupBox
-            Grid.Row="2"
-            Grid.ColumnSpan="3"
-            Header="Паспортные данные">
-            <StackPanel
-                Orientation="Horizontal"
-                Margin="5,0">
+        <GroupBox Grid.Column="0"
+                  Grid.Row="1"
+                  Grid.ColumnSpan="3"
+                  Header="Адрес">
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Vertical"
+                            Margin="5,0">
+                    <TextBox Controls:TextBoxHelper.Watermark="Город"
+                             Controls:TextBoxHelper.ClearTextButton="True"
+                             VerticalAlignment="Top"
+                             HorizontalAlignment="Left"
+                             Margin="0,1"
+                             MinHeight="30"
+                             FontSize="14"
+                             MinWidth="170"
+                             Name="CityTBox"
+                             Text="{Binding City}"/>
+                    <TextBox Controls:TextBoxHelper.Watermark="Улица"
+                             Controls:TextBoxHelper.ClearTextButton="True"
+                             VerticalAlignment="Top"
+                             HorizontalAlignment="Left"
+                             Margin="0,1"
+                             MinHeight="30"
+                             FontSize="14"
+                             MinWidth="170"
+                             Name="StreetTBox"
+                             Text="{Binding Street}"/>
+                </StackPanel>
+                <StackPanel Margin="5,0">
+                    <TextBox Controls:TextBoxHelper.Watermark="Дом"
+                             Controls:TextBoxHelper.ClearTextButton="True"
+                             VerticalAlignment="Top"
+                             HorizontalAlignment="Left"
+                             Margin="0,1"
+                             FontSize="14"
+                             MinHeight="30"
+                             MinWidth="150"
+                             Name="HouseTBox"
+                             Text="{Binding House}"/>
+                    <TextBox Controls:TextBoxHelper.ClearTextButton="True"
+                             Controls:TextBoxHelper.Watermark="Квартира"
+                             VerticalAlignment="Top"
+                             HorizontalAlignment="Left"
+                             Margin="0,1"
+                             FontSize="14"
+                             MinHeight="30"
+                             MinWidth="150"
+                             Name="FlatTBox"
+                             Text="{Binding Flat}"/>
+                </StackPanel>
+            </StackPanel>
+        </GroupBox>
+        <GroupBox Grid.Column="0"
+                  Grid.Row="2"
+                  Grid.ColumnSpan="3"
+                  Header="Паспортные данные">
+            <StackPanel Orientation="Horizontal"
+                        Margin="5,0">
                 <StackPanel>
-                    <ComboBox
-                        MinWidth="150"
-                        Name="PasportSeriesCBox"
-                        Controls:TextBoxHelper.Watermark="--Серия--"
-                        Controls:TextBoxHelper.ClearTextButton="True"
-                        Margin="0,1"/>
-                    <ComboBox
-                        MinWidth="150"
-                        Name="PasportOrganizationCBox"
-                        Controls:TextBoxHelper.Watermark="--Организация--"
-                        Controls:TextBoxHelper.ClearTextButton="True"
-                        Margin="0,1"/>
+                    <!--указать на item-->
+                    <ComboBox MinWidth="150"
+                              Name="PasportSeriesCBox"
+                              Controls:TextBoxHelper.Watermark="--Серия--"
+                              Controls:TextBoxHelper.ClearTextButton="True"
+                              Margin="0,1"
+                              MinHeight="30"
+                              FontSize="14"
+                              Text="{Binding Pasport.Series}">
+                        <ComboBoxItem Content="AB"/>
+                        <ComboBoxItem Content="BM"/>
+                        <ComboBoxItem Content="HB"/>
+                        <ComboBoxItem Content="KH"/>
+                        <ComboBoxItem Content="MP"/>
+                        <ComboBoxItem Content="MC"/>
+                        <ComboBoxItem Content="KB"/>
+                        <ComboBoxItem Content="PP"/>
+                    </ComboBox>
                 </StackPanel>
-                <StackPanel
-                    Margin="5,0">
-                    <TextBox
-                        MinWidth="150"
-                        Name="PasportNumberTBox"
-                        Controls:TextBoxHelper.Watermark="--Номер паспорта--"
-                        Controls:TextBoxHelper.ClearTextButton="True"
-                        Margin="0,1"/>
+                <StackPanel Margin="5,0">
+                    <TextBox MinWidth="150"
+                             Name="PasportNumberTBox"
+                             Controls:TextBoxHelper.Watermark="--Номер паспорта--"
+                             Controls:TextBoxHelper.ClearTextButton="True"
+                             Margin="0,1"
+                             MinHeight="30"
+                             FontSize="14"
+                             Text="{Binding Pasport.Number}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBox MinWidth="150"
+                              Name="PasportOrganizationTBox"
+                              Controls:TextBoxHelper.Watermark="--Организация--"
+                              Controls:TextBoxHelper.ClearTextButton="True"
+                              Margin="0,1,0,0"
+                              MinHeight="30"
+                              FontSize="14"
+                              Text="{Binding Pasport.OrganizationUnit}">
+                    </TextBox>
+                    <!--Кнопка вызова редактора справочника-->
+                    <!--<Button Name="AddNewOrganizationUnit"
+                            Content="..."
+                            Style="{StaticResource ButtonStyle}"
+                            MinWidth="10"
+                            FontSize="26"
+                            Margin="5,0"
+                            Command="{Binding AddNewOrganizationUnit}"/>-->
                 </StackPanel>
             </StackPanel>
         </GroupBox>
-        <GroupBox
-            Grid.Row="3"
-            Grid.ColumnSpan="3"
-            Header="Телефон">
-            <StackPanel
-                Orientation="Horizontal">
-                <StackPanel
-                    Margin="5,0">
-                    <TextBox
-                        MinWidth="150"
-                        Name="MobileNumberTBox"
-                        Controls:TextBoxHelper.Watermark="Мобильный номер"
-                        Controls:TextBoxHelper.ClearTextButton="True"
-                        Margin="0,1"/>
+        <GroupBox Grid.Column="0"
+                  Grid.Row="3"
+                  Grid.ColumnSpan="3"
+                  Header="Телефон">
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Margin="5,0">
+                    <TextBox MinWidth="170"
+                             Name="MobileNumberTBox"
+                             Controls:TextBoxHelper.Watermark="Мобильный номер"
+                             Controls:TextBoxHelper.ClearTextButton="True"
+                             Margin="0,1"
+                             MinHeight="30"
+                             FontSize="14"
+                             Text="{Binding MobilePhoneNumber}"/>
                 </StackPanel>
-                <StackPanel
-                    Margin="5,0">
-                    <TextBox
-                        MinWidth="150"
-                        Name="HomeNumberTBox"
-                        Controls:TextBoxHelper.Watermark="Домашний номер"
-                        Controls:TextBoxHelper.ClearTextButton="True"
-                        Margin="0,1"/>
+                <StackPanel Margin="5,0">
+                    <TextBox MinWidth="170"
+                             Name="HomeNumberTBox"
+                             Controls:TextBoxHelper.Watermark="Домашний номер"
+                             Controls:TextBoxHelper.ClearTextButton="True"
+                             Margin="0,1"
+                             MinHeight="30"
+                             FontSize="14"
+                             Text="{Binding HomePhoneNumber}"/>
                 </StackPanel>
             </StackPanel>
         </GroupBox>
@@ -230,34 +310,33 @@
                     VerticalAlignment="Bottom">
             <StackPanel HorizontalAlignment="Right"
                         Orientation="Horizontal"
-                        Grid.Row="4"
-                        Grid.Column="0"
-                        Grid.ColumnSpan="3"
                         VerticalAlignment="Bottom"
                         Margin="0,1">
                 <Button Content="Добавить" 
                         Background="Transparent"
                         BorderThickness="0"
                         Name="AddEmployeeBtn"
-                        Margin="5,0"
-                        Style="{StaticResource ButtonStyle}"/>
+                        Margin="5,0" 
+                        MinWidth="80"
+                        Style="{StaticResource ButtonStyle}"
+                        Command="{Binding AddNewEmployeeCommand}"/>
                 <Button Content="Очистить" 
                         Background="Transparent"
                         BorderThickness="0"
                         Name="ClearBtn"
-                        Margin="5,0"
+                        Margin="5,0" 
+                        MinWidth="80"
                         Style="{StaticResource ButtonStyle}"/>
                 <Button Content="Отмена" 
                         Background="Transparent"
                         BorderThickness="0"
                         Name="CancelBtn"
-                        Margin="5,0"
-                        Style="{StaticResource ButtonStyle}"/>
+                        Margin="5,0" 
+                        MinWidth="80"
+                        Style="{StaticResource ButtonStyle}"
+                        Command="{Binding CloseWindowCommand}"/>
             </StackPanel>
-            <StackPanel Grid.Row="4"
-                        Grid.Column="0"
-                        Grid.ColumnSpan="3"
-                        Orientation="Horizontal"
+            <StackPanel Orientation="Horizontal"
                         Height="20"
                         VerticalAlignment="Bottom"
                         Background="DodgerBlue">
@@ -267,6 +346,5 @@
                         Foreground="Red"/>
             </StackPanel>
         </StackPanel>
-
     </Grid>
 </Controls:MetroWindow>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.SqlClient;
 using Staffinfo.Desktop.Properties;
+using Staffinfo.Desktop.Shared;
 
 namespace Staffinfo.Desktop.Data
 {
@@ -9,18 +10,22 @@ namespace Staffinfo.Desktop.Data
     /// </summary>
     public class DatabaseConnector: IDisposable
     {
+        public DatabaseConnector()
+        { }
+
+        public DatabaseConnector(string urlDataBase)
+        {
+            _urlDataBase = urlDataBase;
+            _sqlConnection = new SqlConnection(_urlDataBase);
+            _sqlConnection.Open();
+        }
+
         /// <summary>
         /// строка соединения
         /// </summary>
-        private const string UrlDataBase = @"Data Source=DESKTOP-QV3R6NU\SQLEXPRESS; Initial Catalog = staffinfo; Integrated Security=SSPI;";
-
+        private readonly string _urlDataBase;
+        
         private readonly SqlConnection _sqlConnection;
-
-        public DatabaseConnector()
-        {
-            _sqlConnection = new SqlConnection(UrlDataBase);
-            _sqlConnection.Open();
-        }
 
         /// <summary>
         /// Выполняет запрос и возвращает результат в виде SqlDataReader
@@ -29,7 +34,7 @@ namespace Staffinfo.Desktop.Data
         /// <returns></returns>
         public SqlDataReader ExecuteReader(string sqlCommand)
         {
-            if (sqlCommand == null) throw new ArgumentNullException(nameof(sqlCommand), Resources.DatabaseConnector_ExecuteReader_parameter_cannot_be_null_);
+            if (sqlCommand == null) throw new ArgumentNullException(nameof(sqlCommand), Resources.DatabaseConnector_parameter_cannot_be_null);
 
             var sqlCommandToExecute = new SqlCommand(sqlCommand, _sqlConnection);
 
@@ -39,9 +44,9 @@ namespace Staffinfo.Desktop.Data
             {
                 sqlDataReader = sqlCommandToExecute.ExecuteReader();
             }
-            catch
+            catch(Exception ex)
             {
-                throw new Exception(Resources.DatabaseConnector_ExecuteReader_QueryError);
+                throw new Exception(Resources.DatabaseConnector_query_has_some_errors + ex.Message);
             }
 
             return sqlDataReader;
@@ -54,7 +59,7 @@ namespace Staffinfo.Desktop.Data
         /// <returns></returns>
         public SqlDataReader ExecuteReader(SqlCommand sqlCommand)
         {
-            if (sqlCommand == null) throw new ArgumentNullException(nameof(sqlCommand), Resources.DatabaseConnector_ExecuteReader_parameter_cannot_be_null_);
+            if (sqlCommand == null) throw new ArgumentNullException(nameof(sqlCommand), Resources.DatabaseConnector_parameter_cannot_be_null);
 
             sqlCommand.Connection = _sqlConnection;
 
@@ -64,9 +69,9 @@ namespace Staffinfo.Desktop.Data
             {
                 sqlDataReader = sqlCommand.ExecuteReader();
             }
-            catch
+            catch(Exception ex)
             {
-                throw new Exception(Resources.DatabaseConnector_ExecuteReader_QueryError);
+                throw new Exception(Resources.DatabaseConnector_query_has_some_errors + ex.Message);
             }
 
             return sqlDataReader;
@@ -78,7 +83,7 @@ namespace Staffinfo.Desktop.Data
         /// <param name="sqlCommand">SQL-запрос</param>
         public void Execute(string sqlCommand)
         {
-            if (sqlCommand == null) throw new ArgumentNullException(nameof(sqlCommand), Resources.DatabaseConnector_ExecuteReader_parameter_cannot_be_null_);
+            if (sqlCommand == null) throw new ArgumentNullException(nameof(sqlCommand), Resources.DatabaseConnector_parameter_cannot_be_null);
 
             var sqlCommandToExecute = new SqlCommand(sqlCommand, _sqlConnection);
 
@@ -86,9 +91,9 @@ namespace Staffinfo.Desktop.Data
             {
                 sqlCommandToExecute.ExecuteNonQuery();
             }
-            catch
+            catch(Exception ex)
             {
-                throw new Exception(Resources.DatabaseConnector_ExecuteReader_QueryError);
+                throw new Exception(Resources.DatabaseConnector_query_has_some_errors + ex.Message);
             }
         }
 
@@ -98,52 +103,19 @@ namespace Staffinfo.Desktop.Data
         /// <param name="sqlCommand">SQL-запрос</param>
         public void Execute(SqlCommand sqlCommand)
         {
-            if (sqlCommand == null) throw new ArgumentNullException(nameof(sqlCommand), Resources.DatabaseConnector_ExecuteReader_parameter_cannot_be_null_);
+            if (sqlCommand == null) throw new ArgumentNullException(nameof(sqlCommand), Resources.DatabaseConnector_parameter_cannot_be_null);
 
             sqlCommand.Connection = _sqlConnection;
-
+            
             try
             {
                 sqlCommand.ExecuteNonQuery();
             }
-            catch
+            catch(Exception ex)
             {
-                throw new Exception(Resources.DatabaseConnector_ExecuteReader_QueryError);
+                throw new Exception(Resources.DatabaseConnector_query_has_some_errors + ex.Message);
             }
         }
-
-        /// <summary>
-        /// Возвращает список view models для служащих из БД
-        /// </summary>
-        //public ObservableCollection<EmployeeViewModel> GetEmployeeViewModels()
-        //{
-        //    var cmd = new SqlCommand("SELECT * FROM EMPLOYEE", _sqlConnection);
-
-        //    SqlDataReader reader = cmd.ExecuteReader();
-
-        //    var employeeViewModels = new ObservableCollection<EmployeeViewModel>();
-
-        //    while (reader.Read())
-        //    {
-        //        //var employeeModel = new EmployeeModel(
-        //        //    Int64.Parse(reader["ID"].ToString()),
-        //        //    reader["EMPLOYEE_FIRSTNAME"].ToString(),
-        //        //    reader["EMPLOYEE_MIDDLENAME"].ToString(),
-        //        //    reader["EMPLOYEE_LASTNAME"].ToString(),
-        //        //    reader["PERSONAL_KEY"].ToString(),
-        //        //    Int64.Parse(reader["POST_ID"].ToString()),
-        //        //    Int64.Parse(reader["RANK_ID"].ToString()),
-        //        //    DateTime.Parse(reader["BORN_DATE"].ToString()),
-        //        //    DateTime.Parse(reader["JOB_START_DATE"].ToString()),
-        //        //    reader["ADDRESS"].ToString(),
-        //        //    reader["PASPORT"].ToString(),
-        //        //    reader["PHONE_NUMBER"].ToString());
-
-        //        //employeeViewModels.Add(new EmployeeViewModel(employeeModel));
-        //    }
-
-        //    return employeeViewModels;
-        //}
 
         #region IDisposable implementation
 

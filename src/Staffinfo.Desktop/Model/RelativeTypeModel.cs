@@ -3,16 +3,13 @@
     /// <summary>
     /// Тип родства
     /// </summary>
-    public class RelativeTypeModel
+    public class RelativeTypeModel: BaseModel
     {
-        public RelativeTypeModel()
-        {
-                
-        }
-
         #region Properties
 
-        public long Id { get; set; }
+        /// <summary>
+        /// Тип родства
+        /// </summary>
         public string RelativeType { get; set; }
 
         #endregion

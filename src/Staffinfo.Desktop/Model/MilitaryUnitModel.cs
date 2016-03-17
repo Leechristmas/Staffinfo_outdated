@@ -3,17 +3,19 @@
     /// <summary>
     /// Воинская часть
     /// </summary>
-    public class MilitaryUnitModel
+    public class MilitaryUnitModel: BaseModel
     {
-        public MilitaryUnitModel()
-        {
-                
-        }
 
         #region Properties
-
-        public long Id { get; set; }
+        
+        /// <summary>
+        /// Название(номер) части
+        /// </summary>
         public string MilitaryName { get; set; }
+
+        /// <summary>
+        /// Описание
+        /// </summary>
         public string Description { get; set; }
 
         #endregion

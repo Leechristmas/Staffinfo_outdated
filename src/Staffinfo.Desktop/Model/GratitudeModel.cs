@@ -5,20 +5,26 @@ namespace Staffinfo.Desktop.Model
     /// <summary>
     /// Модель благодарности
     /// </summary>
-    public class GratitudeModel
+    public class GratitudeModel: BaseModel
     {
-        public GratitudeModel()
-        {
-
-        }
 
         #region Properties
-
-        public long Id { get; set; }
+        
+        /// <summary>
+        /// Код служащего
+        /// </summary>
         public long EmployeeId { get; set; }
+
+        /// <summary>
+        /// Описание
+        /// </summary>
         public string Description { get; set; }
 
+        /// <summary>
+        /// Дата вынесения благодарности
+        /// </summary>
         public DateTime GratitudeDate { get; set; }
+
         #endregion
 
     }

@@ -1,0 +1,50 @@
+﻿<Window x:Class="Staffinfo.Desktop.View.AddMilitaryUnitView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Staffinfo.Desktop.View"
+        mc:Ignorable="d"
+        Title="Добавить воинскую часть" Height="140" Width="400">
+    <Grid>
+        <StackPanel Orientation="Horizontal"
+                    Margin="5">
+            <StackPanel Orientation="Vertical"
+                        Margin="5">
+                <TextBlock Text="Название/номер части:"
+                           FontSize="14"
+                           VerticalAlignment="Center"/>
+                <TextBlock Text="Описание:"
+                           FontSize="14"
+                           VerticalAlignment="Center"
+                           Margin="0,15"/>
+            </StackPanel>
+            <StackPanel Orientation="Vertical"
+                        Margin="5">
+                <TextBox Name="MilitaryUnitTBox"
+                         Margin="10,0"
+                         MinWidth="200"
+                         FontSize="14"/>
+                <TextBox Name="DescriptionTBox"
+                         Margin="10,5"
+                         MinWidth="200"
+                         FontSize="14"/>
+            </StackPanel>
+        </StackPanel>
+        <Border Background="LightGray"
+                    Height="25"
+                VerticalAlignment="Bottom">
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                <Button Name="AddMilitaryUnit"
+                        Content="Добавить"
+                        MinWidth="80"
+                        Style="{StaticResource ButtonStyle}"/>
+                <Button Name="CloseBtn"
+                        Content="Закрыть"
+                        MinWidth="80"
+                        Style="{StaticResource ButtonStyle}"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

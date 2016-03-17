@@ -5,20 +5,11 @@ namespace Staffinfo.Desktop.Model
 {
     /// <summary>
     /// Набор полей, описывающих служащго
-    /// P.S. вряд ли можно назвать "моделью" =)
     /// </summary>
-    public class EmployeeModel
+    public class EmployeeModel: BaseModel
     {
-        #region Constructor
-        public EmployeeModel()
-        {
-        }
-        #endregion
-
         #region Properties
-
-        public long Id { get; set; }
-        
+                
         /// <summary>
         /// Имя служащего
         /// </summary>
@@ -60,14 +51,37 @@ namespace Staffinfo.Desktop.Model
         public DateTime? JobStartDate { get; set; }
 
         /// <summary>
-        /// Адрес
+        /// Адрес TODO!!!: избыточность адреса
         /// </summary>
-        public string Address { get; set; }
-        
+        public string Address //return City + '#' + Street + '#' + House + '#' + Flat; 
+        {
+            get { return City + '#' + Street + '#' + House + '#' + Flat; }
+        }
+
         /// <summary>
-        /// Паспортные данные
+        /// Город
         /// </summary>
-        public string Pasport { get; set; }
+        public string City { get; set; }
+
+        /// <summary>
+        /// Улица
+        /// </summary>
+        public string Street { get; set; }
+
+        /// <summary>
+        /// Номер дома
+        /// </summary>
+        public string House { get; set; }
+
+        /// <summary>
+        /// Номер квартиры
+        /// </summary>
+        public string Flat { get; set; }
+
+        /// <summary>
+        /// Код паспорта
+        /// </summary>
+        public long? PasportId { get; set; }
 
         /// <summary>
         /// Номер мобильного телефона
@@ -87,6 +101,5 @@ namespace Staffinfo.Desktop.Model
         public bool IsPensioner { get; set; }
                 
         #endregion
-
     }
 }

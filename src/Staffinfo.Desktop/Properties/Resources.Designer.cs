@@ -61,20 +61,65 @@ namespace Staffinfo.Desktop.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to parameter cannot be null..
+        ///   Looks up a localized string similar to Авторизация.
         /// </summary>
-        internal static string DatabaseConnector_ExecuteReader_parameter_cannot_be_null_ {
+        internal static string AuthorizationMode {
             get {
-                return ResourceManager.GetString("DatabaseConnector_ExecuteReader_parameter_cannot_be_null_", resourceCulture);
+                return ResourceManager.GetString("AuthorizationMode", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ошибка выполнения запроса.
+        ///   Looks up a localized string similar to Ошибка выполнения операции..
         /// </summary>
-        internal static string DatabaseConnector_ExecuteReader_QueryError {
+        internal static string DatabaseConnector_operation_error {
             get {
-                return ResourceManager.GetString("DatabaseConnector_ExecuteReader_QueryError", resourceCulture);
+                return ResourceManager.GetString("DatabaseConnector_operation_error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to parameter cannot be null..
+        /// </summary>
+        internal static string DatabaseConnector_parameter_cannot_be_null {
+            get {
+                return ResourceManager.GetString("DatabaseConnector_parameter_cannot_be_null", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ошибка выполнения запроса..
+        /// </summary>
+        internal static string DatabaseConnector_query_has_some_errors {
+            get {
+                return ResourceManager.GetString("DatabaseConnector_query_has_some_errors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Главное меню.
+        /// </summary>
+        internal static string MainMode {
+            get {
+                return ResourceManager.GetString("MainMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Некорректный логин.
+        /// </summary>
+        internal static string UserTableProvider_Check_Некорректный_логин {
+            get {
+                return ResourceManager.GetString("UserTableProvider_Check_Некорректный_логин", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Некорректный пароль.
+        /// </summary>
+        internal static string UserTableProvider_Check_Некорректный_пароль {
+            get {
+                return ResourceManager.GetString("UserTableProvider_Check_Некорректный_пароль", resourceCulture);
             }
         }
     }
