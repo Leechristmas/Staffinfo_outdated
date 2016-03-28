@@ -26,6 +26,16 @@ namespace Staffinfo.Desktop.Data
 
         public DatabaseConnector DatabaseConnector { get; private set; }
 
+        /// <summary>
+        /// Файл логирования чтения из БД
+        /// </summary>
+        public static string DataLogFile = "DataLog.log";
+        
+        /// <summary>
+        /// Файл логирования
+        /// </summary>
+        public static string AppLogFile = "AppLog.log";
+
         #region Fields
 
         /// <summary>

@@ -53,20 +53,36 @@
                              HorizontalAlignment="Left"
                              MinHeight="30"
                              Margin="0,1"
-                             MinWidth="150"
+                             Width="150"
                              FontSize="14"
-                             Name="LastNameTBox"
-                             Text ="{Binding LastName}"/>
+                             Name="LastNameTBox">
+                        <TextBox.Text>
+                            <Binding Path="LastName"
+                                     UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <DataErrorValidationRule/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
                     <TextBox Controls:TextBoxHelper.Watermark="Имя"
                              Controls:TextBoxHelper.ClearTextButton="True"
                              VerticalAlignment="Top"
                              HorizontalAlignment="Left"
                              MinHeight="30"
                              Margin="0,1"
-                             MinWidth="150"
+                             Width="150"
                              FontSize="14"
-                             Name="FirstNameTBox"
-                             Text="{Binding FirstName}"/>
+                             Name="FirstNameTBox">
+                        <TextBox.Text>
+                            <Binding Path="FirstName"
+                                     UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <DataErrorValidationRule/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
                     <TextBox Controls:TextBoxHelper.Watermark="Отчество"
                              Controls:TextBoxHelper.ClearTextButton="True"
                              VerticalAlignment="Top"
@@ -75,8 +91,16 @@
                              Margin="0,1"
                              MinWidth="150"
                              FontSize="14"
-                             Name="MiddleNameTBox"
-                             Text="{Binding MiddleName}"/>
+                             Name="MiddleNameTBox">
+                        <TextBox.Text>
+                            <Binding Path="MiddleName"
+                                     UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <DataErrorValidationRule/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
                 </StackPanel>
                 <StackPanel Orientation="Vertical"
                             HorizontalAlignment="Left"
@@ -90,23 +114,16 @@
                               MinHeight="30"
                               FontSize="14"
                               Name="PostCBox"
-                              SelectedItem="{Binding SelectedPost}"
                               ItemsSource="{Binding PostList.ModelList}"
                               DisplayMemberPath="PostTitle">
-                        <!--<ComboBox.ItemTemplate>
-                            <DataTemplate>
-                                <Grid>
-                                    <TextBlock Text="{Binding PostTitle}"/>
-                                    <Grid.Visibility>
-                                        <Binding Path="SelectedItem" ElementName="ServiceCBox">
-                                            <Binding.Converter>
-                                                <converters:NewConverters Param="{Binding}"/>
-                                            </Binding.Converter>
-                                        </Binding>
-                                    </Grid.Visibility>
-                                </Grid>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>-->
+                        <ComboBox.SelectedItem>
+                            <Binding Path="SelectedPost"
+                                     UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <DataErrorValidationRule/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </ComboBox.SelectedItem>
                     </ComboBox>
                     <ComboBox Controls:TextBoxHelper.Watermark="--Звание--"
                               Controls:TextBoxHelper.ClearTextButton="True"
@@ -117,9 +134,17 @@
                               MinHeight="30"
                               FontSize="14"
                               Name="RankCBox"
-                              SelectedItem="{Binding RankList.SelectedItem}"
                               ItemsSource="{Binding RankList.ModelList}"
-                              DisplayMemberPath="RankTitle"/>
+                              DisplayMemberPath="RankTitle">
+                        <ComboBox.SelectedItem>
+                            <Binding Path="SelectedRank"
+                                     UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <DataErrorValidationRule/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </ComboBox.SelectedItem>
+                    </ComboBox>
                     <ComboBox Controls:TextBoxHelper.Watermark="--Служба--"
                               Controls:TextBoxHelper.ClearTextButton="True"
                               VerticalAlignment="Top"
@@ -129,9 +154,17 @@
                               MinHeight="30"
                               Width="225"
                               Name="ServiceCBox"
-                              SelectedItem="{Binding SelectedService}"
                               ItemsSource="{Binding ServiceList.ModelList}"
-                              DisplayMemberPath="ServiceTitle"/>
+                              DisplayMemberPath="ServiceTitle">
+                        <ComboBox.SelectedItem>
+                            <Binding Path="SelectedService"
+                                     UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <DataErrorValidationRule/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </ComboBox.SelectedItem>
+                    </ComboBox>
                 </StackPanel>
                 <StackPanel Orientation="Vertical"
                             HorizontalAlignment="Left"
@@ -143,8 +176,16 @@
                                 FontSize="14"
                                 MinHeight="30"
                                 MinWidth="150"
-                                Name="BornDatePicker"
-                                SelectedDate="{Binding BornDate}"/>
+                                Name="BornDatePicker">
+                        <DatePicker.SelectedDate>
+                            <Binding Path="BornDate"
+                                     UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <DataErrorValidationRule/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </DatePicker.SelectedDate>
+                    </DatePicker>
                     <DatePicker Controls:TextBoxHelper.Watermark="Начало службы"
                                 VerticalAlignment="Top"
                                 HorizontalAlignment="Left"
@@ -152,8 +193,16 @@
                                 FontSize="14"
                                 MinHeight="30"
                                 MinWidth="150"
-                                Name="JobStartDatePicker"
-                                SelectedDate="{Binding JobStartDate}"/>
+                                Name="JobStartDatePicker">
+                        <DatePicker.SelectedDate>
+                            <Binding Path="JobStartDate"
+                                     UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <DataErrorValidationRule/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </DatePicker.SelectedDate>
+                    </DatePicker>
                     <TextBox Controls:TextBoxHelper.Watermark="Личный номер"
                              Controls:TextBoxHelper.ClearTextButton="True"
                              VerticalAlignment="Top"
@@ -162,8 +211,16 @@
                              MinHeight="30"
                              FontSize="14"
                              MinWidth="150"
-                             Name="PersonalNumberTBox"
-                             Text="{Binding PersonalNumber}"/>
+                             Name="PersonalNumberTBox">
+                        <TextBox.Text>
+                            <Binding Path="PersonalNumber"
+                                     UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <DataErrorValidationRule/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
                 </StackPanel>
             </StackPanel>
         </GroupBox>
@@ -182,8 +239,16 @@
                              MinHeight="30"
                              FontSize="14"
                              MinWidth="170"
-                             Name="CityTBox"
-                             Text="{Binding City}"/>
+                             Name="CityTBox">
+                        <TextBox.Text>
+                            <Binding Path="City"
+                                     UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <DataErrorValidationRule/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
                     <TextBox Controls:TextBoxHelper.Watermark="Улица"
                              Controls:TextBoxHelper.ClearTextButton="True"
                              VerticalAlignment="Top"
@@ -192,8 +257,16 @@
                              MinHeight="30"
                              FontSize="14"
                              MinWidth="170"
-                             Name="StreetTBox"
-                             Text="{Binding Street}"/>
+                             Name="StreetTBox">
+                        <TextBox.Text>
+                            <Binding Path="Street"
+                                     UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <DataErrorValidationRule/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
                 </StackPanel>
                 <StackPanel Margin="5,0">
                     <TextBox Controls:TextBoxHelper.Watermark="Дом"
@@ -204,8 +277,16 @@
                              FontSize="14"
                              MinHeight="30"
                              MinWidth="150"
-                             Name="HouseTBox"
-                             Text="{Binding House}"/>
+                             Name="HouseTBox">
+                        <TextBox.Text>
+                            <Binding Path="House"
+                                     UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <DataErrorValidationRule/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
                     <TextBox Controls:TextBoxHelper.ClearTextButton="True"
                              Controls:TextBoxHelper.Watermark="Квартира"
                              VerticalAlignment="Top"
@@ -214,8 +295,16 @@
                              FontSize="14"
                              MinHeight="30"
                              MinWidth="150"
-                             Name="FlatTBox"
-                             Text="{Binding Flat}"/>
+                             Name="FlatTBox">
+                        <TextBox.Text>
+                            <Binding Path="Flat"
+                                     UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <DataErrorValidationRule/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
                 </StackPanel>
             </StackPanel>
         </GroupBox>
@@ -233,8 +322,7 @@
                               Controls:TextBoxHelper.ClearTextButton="True"
                               Margin="0,1"
                               MinHeight="30"
-                              FontSize="14"
-                              Text="{Binding Pasport.Series}">
+                              FontSize="14">
                         <ComboBoxItem Content="AB"/>
                         <ComboBoxItem Content="BM"/>
                         <ComboBoxItem Content="HB"/>
@@ -243,6 +331,14 @@
                         <ComboBoxItem Content="MC"/>
                         <ComboBoxItem Content="KB"/>
                         <ComboBoxItem Content="PP"/>
+                        <ComboBox.SelectedItem>
+                            <Binding Path="SelectedPasportSeries"
+                                     UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <DataErrorValidationRule/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </ComboBox.SelectedItem>
                     </ComboBox>
                 </StackPanel>
                 <StackPanel Margin="5,0">
@@ -252,27 +348,34 @@
                              Controls:TextBoxHelper.ClearTextButton="True"
                              Margin="0,1"
                              MinHeight="30"
-                             FontSize="14"
-                             Text="{Binding Pasport.Number}"/>
+                             FontSize="14">
+                        <TextBox.Text>
+                            <Binding Path="SelectedPasportNumber"
+                                     UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <DataErrorValidationRule/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
-                    <TextBox MinWidth="150"
-                              Name="PasportOrganizationTBox"
-                              Controls:TextBoxHelper.Watermark="--Организация--"
-                              Controls:TextBoxHelper.ClearTextButton="True"
-                              Margin="0,1,0,0"
-                              MinHeight="30"
-                              FontSize="14"
-                              Text="{Binding Pasport.OrganizationUnit}">
+                    <TextBox    MinWidth="150"
+                                Name="PasportOrganizationTBox"
+                                Controls:TextBoxHelper.Watermark="--Организация--"
+                                Controls:TextBoxHelper.ClearTextButton="True"
+                                Margin="0,1,0,0"
+                                MinHeight="30"
+                                FontSize="14">
+                        <TextBox.Text>
+                            <Binding Path="SelectedPasportOrganization"
+                                     UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <DataErrorValidationRule/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
                     </TextBox>
-                    <!--Кнопка вызова редактора справочника-->
-                    <!--<Button Name="AddNewOrganizationUnit"
-                            Content="..."
-                            Style="{StaticResource ButtonStyle}"
-                            MinWidth="10"
-                            FontSize="26"
-                            Margin="5,0"
-                            Command="{Binding AddNewOrganizationUnit}"/>-->
                 </StackPanel>
             </StackPanel>
         </GroupBox>
@@ -288,8 +391,16 @@
                              Controls:TextBoxHelper.ClearTextButton="True"
                              Margin="0,1"
                              MinHeight="30"
-                             FontSize="14"
-                             Text="{Binding MobilePhoneNumber}"/>
+                             FontSize="14">
+                        <TextBox.Text>
+                            <Binding Path="MobilePhoneNumber"
+                                     UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <DataErrorValidationRule/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
                 </StackPanel>
                 <StackPanel Margin="5,0">
                     <TextBox MinWidth="170"
@@ -298,8 +409,16 @@
                              Controls:TextBoxHelper.ClearTextButton="True"
                              Margin="0,1"
                              MinHeight="30"
-                             FontSize="14"
-                             Text="{Binding HomePhoneNumber}"/>
+                             FontSize="14">
+                        <TextBox.Text>
+                            <Binding Path="HomePhoneNumber"
+                                     UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <DataErrorValidationRule/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </TextBox.Text>
+                    </TextBox>
                 </StackPanel>
             </StackPanel>
         </GroupBox>

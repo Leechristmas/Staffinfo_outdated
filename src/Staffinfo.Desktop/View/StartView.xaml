@@ -17,6 +17,22 @@
             <i:InvokeCommandAction Command="{Binding WindowLoadedCommand}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
+    <!--<Controls:MetroWindow.IconTemplate>
+        <DataTemplate>
+            <Grid Width="{TemplateBinding Width}"
+                  Height="{TemplateBinding Height}"
+                  Margin="4"
+                  Background="Transparent"
+                  RenderOptions.EdgeMode="Aliased"
+                  RenderOptions.BitmapScalingMode="HighQuality">
+                <Rectangle>
+                    <Rectangle.Fill>
+                        <VisualBrush  Visual="{StaticResource appbar_database}" />
+                    </Rectangle.Fill>
+                </Rectangle>
+            </Grid>
+        </DataTemplate>
+    </Controls:MetroWindow.IconTemplate>-->
     <Controls:MetroWindow.RightWindowCommands>
         <Controls:WindowCommands>
             <Button Command="{Binding ShowSettings}"
@@ -71,7 +87,7 @@
                                         Margin="5,5" 
                                         Height="30" 
                                         MaxLength="20" 
-                                        Text="{Binding Login}"/>
+                                        Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}"/>
                             <PasswordBox MinWidth="150" 
                                         FontSize="16" 
                                         Margin="5,0" 

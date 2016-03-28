@@ -86,19 +86,23 @@ namespace Staffinfo.Desktop.ViewModel
         /// Удалить служащего
         /// </summary>
         private RelayCommand _removeEmployee;
-
         public RelayCommand RemoveEmployee
             => _removeEmployee ?? (_removeEmployee = new RelayCommand(RemoveEmployeeExecute));
 
         private void RemoveEmployeeExecute()
         {
+            var item = EmployeeList.SelectedItem;
+            if (item == null)
+            {
+                MessageBox.Show("Запись не выбрана.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error,
+                    MessageBoxResult.OK);
+                return;
+            }
+
             var remove = MessageBox.Show("Будет удалена вся ниформация о служащем. Вы уверены?", "Удаление", MessageBoxButton.YesNo,
                 MessageBoxImage.Question, MessageBoxResult.No);
 
             if (remove == MessageBoxResult.No) return;
-
-            //var index = EmployeeList.SelectedIndex;
-            var item = EmployeeList.SelectedItem;//ModelCollection[index];
             
             using (var prvdr = new EmployeeTableProvider())
             {
@@ -115,7 +119,6 @@ namespace Staffinfo.Desktop.ViewModel
         /// Открыть окно с информацией по выбранному служащему
         /// </summary>
         private RelayCommand _showEmployee;
-
         public RelayCommand ShowEmployee => _showEmployee ?? (_showEmployee = new RelayCommand(ShowEmployeeExecute));
 
         private void ShowEmployeeExecute()
