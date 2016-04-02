@@ -30,7 +30,7 @@
             </Button>
         </controls:WindowCommands>
     </controls:MetroWindow.RightWindowCommands>
-    <Grid>
+    <Grid IsEnabled="{Binding ViewIsEnable}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="150"/>
@@ -46,8 +46,8 @@
                     <ToolBar>
 
                     </ToolBar>
-                    <ListBox ItemsSource="{Binding EmployeeList.ModelCollection}"
-                             SelectedItem="{Binding EmployeeList.SelectedItem}"
+                    <ListBox ItemsSource="{Binding Employees}"
+                             SelectedItem="{Binding SelectedEmployee}"
                              ScrollViewer.CanContentScroll="true"
                              ScrollViewer.VerticalScrollBarVisibility="Auto"
                              ScrollViewer.HorizontalScrollBarVisibility="Auto" 

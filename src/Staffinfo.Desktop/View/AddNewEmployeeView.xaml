@@ -364,9 +364,8 @@
                                 Name="PasportOrganizationTBox"
                                 Controls:TextBoxHelper.Watermark="--Организация--"
                                 Controls:TextBoxHelper.ClearTextButton="True"
-                                Margin="0,1,0,0"
                                 MinHeight="30"
-                                FontSize="14">
+                                FontSize="14" Height="30" VerticalAlignment="Bottom">
                         <TextBox.Text>
                             <Binding Path="SelectedPasportOrganization"
                                      UpdateSourceTrigger="PropertyChanged">

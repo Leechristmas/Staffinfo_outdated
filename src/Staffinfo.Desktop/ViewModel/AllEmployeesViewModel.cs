@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using Staffinfo.Desktop.Data;
@@ -23,45 +24,75 @@ namespace Staffinfo.Desktop.ViewModel
         private ObservableCollectionViewModel<EmployeeViewModel> _employeeList =
             new ObservableCollectionViewModel<EmployeeViewModel>(DataSingleton.Instance.EmployeeList);
 
-        private string _searchText;
+        /// <summary>
+        /// блокировка интерфейса
+        /// </summary>
+        private bool _viewIsEnable = true;
 
+        /// <summary>
+        /// текст поиска
+        /// </summary>
+        private string _searchText = String.Empty;
+
+        /// <summary>
+        /// выбранные служащий
+        /// </summary>
+        private EmployeeViewModel _selectedEmployee;
         #endregion
 
         #region Properties
 
         /// <summary>
-        /// Служащие
+        /// Блокировка интерфейса
         /// </summary>
-        public ObservableCollectionViewModel<EmployeeViewModel> EmployeeList
+        public bool ViewIsEnable
         {
-            get
+            get { return _viewIsEnable; }
+            set
             {
-
-                //if(SearchText == null) return EmployeeList;//x.ToUpper().StartsWith(SearchText.ToUpper())
-
-                //var filtered = from emp in EmployeeList.ModelCollection
-                //    let lname = emp.LastName
-                //    where lname.StartsWith(SearchText.ToUpper())
-                //    select emp;
-
-                //return filtered;
-
-
-                //return new ObservableCollectionViewModel<EmployeeViewModel>(EmployeeList.ModelCollection.Where(x => x.LastName.ToUpper().StartsWith(SearchText.ToUpper())).ToList());
-
-                return _employeeList;
+                _viewIsEnable = value;
+                RaisePropertyChanged(nameof(ViewIsEnable));
             }
         }
 
-        public string SearchText
+        /// <summary>
+        /// Служащие
+        /// </summary>
+        public ObservableCollection<EmployeeViewModel> Employees
         {
-            get { return _searchText; }
+            get
+            {
+                return new ObservableCollection<EmployeeViewModel>(DataSingleton.Instance.EmployeeList.Where(e => e.LastName.ToLower().StartsWith(SearchText)));
+            }
+        }
+
+        /// <summary>
+        /// Выбранный сотрудник
+        /// </summary>
+        public EmployeeViewModel SelectedEmployee
+        {
+            get { return _selectedEmployee; }
             set
             {
+                _selectedEmployee = value; 
+                RaisePropertyChanged(nameof(SelectedEmployee));
+            }
+        }
+
+        /// <summary>
+        /// Текст из строки поиска
+        /// </summary>
+        public string SearchText
+        {
+            get { return _searchText.ToLower(); }
+            set
+            {
+                ViewIsEnable = false;
                 _searchText = value;
                 
                 RaisePropertyChanged("SearchText");
-                RaisePropertyChanged("EmployeeList");
+                RaisePropertyChanged("Employees");
+                ViewIsEnable = true;
             }
         }
 
@@ -91,7 +122,7 @@ namespace Staffinfo.Desktop.ViewModel
 
         private void RemoveEmployeeExecute()
         {
-            var item = EmployeeList.SelectedItem;
+            var item = SelectedEmployee;
             if (item == null)
             {
                 MessageBox.Show("Запись не выбрана.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error,
@@ -111,7 +142,7 @@ namespace Staffinfo.Desktop.ViewModel
                     MessageBox.Show("Ошибка удаления!" + prvdr.ErrorInfo, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-                EmployeeList.ModelCollection.Remove(item);
+                Employees.Remove(item);
             }
         }
 
@@ -123,7 +154,7 @@ namespace Staffinfo.Desktop.ViewModel
 
         private void ShowEmployeeExecute()
         {
-            var employeeView = new EmployeeView {DataContext = new EmployeeEditViewModel(EmployeeList.SelectedItem) };
+            var employeeView = new EmployeeView {DataContext = new EmployeeEditViewModel(SelectedEmployee) };
             employeeView.ShowDialog();
         }
 

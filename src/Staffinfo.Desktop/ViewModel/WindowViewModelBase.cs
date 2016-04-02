@@ -9,7 +9,7 @@ namespace Staffinfo.Desktop.ViewModel
     /// <summary>
     /// Базовый для view models, которые привязываются к окну
     /// </summary>
-    public class WindowViewModelBase : ViewModelBase
+    public abstract class WindowViewModelBase : ViewModelBase
     {
         /// <summary>
         /// true - закрыть окно
@@ -52,6 +52,15 @@ namespace Staffinfo.Desktop.ViewModel
         /// Является ли авторизованный пользователь администратором
         /// </summary>
         public bool IsAdmin => AccessLevel == (int)AccessLevelType.Admin;
+        
+        /// <summary>
+        /// Валидация view
+        /// </summary>
+        /// <returns></returns>
+        protected virtual bool Validate
+        {
+            get { return true; }
+        }
 
         #region CloseCommand
 
