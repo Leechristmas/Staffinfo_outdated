@@ -9,21 +9,29 @@
             <Setter Property="Button.MinWidth" Value="150"/>
         </Style.Setters>
     </Style>
+
+    <Style x:Key="ListBoxStyle" TargetType="ListBox">
+        <Style.Resources>
+            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
+        </Style.Resources>
+    </Style>
     
-    <Style x:Key="ListViewItemStyle"
+    <!--<Style x:Key="ListBoxItemStyle"
            TargetType="ListBoxItem"
            BasedOn="{StaticResource {x:Type ListBoxItem}}">
         <Style.Setters>
-            <!--Setters-->
+            --><!--Setters--><!--
         </Style.Setters>
-        
+        <Style.Resources>
+            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
+        </Style.Resources>
         <Style.Triggers>
             <Trigger Property="IsSelected" Value="True">
-                <Setter Property="Background" Value="CadetBlue"/>
+                --><!--<Setter Property="Background" Value="CadetBlue"/>--><!--
             </Trigger>
             
 
-            <!--<EventTrigger RoutedEvent="MouseMove">
+            --><!--<EventTrigger RoutedEvent="MouseMove">
                 <EventTrigger.Actions>
                     <BeginStoryboard>
                         <Storyboard>
@@ -31,7 +39,30 @@
                         </Storyboard>
                     </BeginStoryboard>
                 </EventTrigger.Actions>
-            </EventTrigger>-->
+            </EventTrigger>--><!--
+        </Style.Triggers>
+    </Style>-->
+    <Style TargetType="ListBoxItem"
+           x:Key="ListBoxItemStyle">
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True" >
+                <Setter Property="FontWeight" Value="Bold" />
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="Foreground" Value="Black" />
+            </Trigger>
+        </Style.Triggers>
+        <Style.Resources>
+            <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent"/>
+        </Style.Resources>
+    </Style>
+
+    <Style TargetType="ListBoxItem"
+           x:Key="ReportListStyle"
+           BasedOn="{StaticResource ListBoxItemStyle}">
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True" >
+                <Setter Property="FontSize" Value="18" />
+            </Trigger>
         </Style.Triggers>
     </Style>
     

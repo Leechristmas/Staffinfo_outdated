@@ -25,11 +25,6 @@ namespace Staffinfo.Desktop.ViewModel
             new ObservableCollectionViewModel<EmployeeViewModel>(DataSingleton.Instance.EmployeeList);
 
         /// <summary>
-        /// блокировка интерфейса
-        /// </summary>
-        private bool _viewIsEnable = true;
-
-        /// <summary>
         /// текст поиска
         /// </summary>
         private string _searchText = String.Empty;
@@ -38,22 +33,65 @@ namespace Staffinfo.Desktop.ViewModel
         /// выбранные служащий
         /// </summary>
         private EmployeeViewModel _selectedEmployee;
+
+        /// <summary>
+        /// Ширина бокового меню
+        /// </summary>
+        private int _menuWidth = 150;
+
+        ///// <summary>
+        ///// Ширина рабочей области
+        ///// </summary>
+        //private int _dataWidth;
+
+        ///// <summary>
+        ///// Ширина окна
+        ///// </summary>
+        //private int _windowWidth;
+
+
         #endregion
 
         #region Properties
 
         /// <summary>
-        /// Блокировка интерфейса
+        /// Ширина бокового меню
         /// </summary>
-        public bool ViewIsEnable
+        public int MenuWidth
         {
-            get { return _viewIsEnable; }
+            get { return _menuWidth; }
             set
             {
-                _viewIsEnable = value;
-                RaisePropertyChanged(nameof(ViewIsEnable));
+                _menuWidth = value;
+                RaisePropertyChanged(nameof(MenuWidth));
             }
         }
+
+        ///// <summary>
+        ///// Ширина бокового меню
+        ///// </summary>
+        //public int DataWidth
+        //{
+        //    get { return _dataWidth; }
+        //    set
+        //    {
+        //        _dataWidth = value;
+        //        RaisePropertyChanged(nameof(DataWidth));
+        //    }
+        //}
+
+        ///// <summary>
+        ///// Ширина бокового меню
+        ///// </summary>
+        //public int WindowWidth
+        //{
+        //    get { return _windowWidth; }
+        //    set
+        //    {
+        //        _windowWidth = value;
+        //        RaisePropertyChanged(nameof(WindowWidth));
+        //    }
+        //}
 
         /// <summary>
         /// Служащие
@@ -156,6 +194,18 @@ namespace Staffinfo.Desktop.ViewModel
         {
             var employeeView = new EmployeeView {DataContext = new EmployeeEditViewModel(SelectedEmployee) };
             employeeView.ShowDialog();
+        }
+
+        /// <summary>
+        /// Свернуть/развернуть ширину бокового меню
+        /// </summary>
+        private RelayCommand _toggleMenuWidth;
+        public RelayCommand ToggleMenuWidth
+            => _toggleMenuWidth ?? (_toggleMenuWidth = new RelayCommand(ToggleMenuWidthExecute));
+
+        private void ToggleMenuWidthExecute()
+        {
+            MenuWidth = MenuWidth == 150 ? 35 : 150;
         }
 
         #endregion

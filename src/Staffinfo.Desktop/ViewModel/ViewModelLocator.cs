@@ -45,23 +45,17 @@ namespace Staffinfo.Desktop.ViewModel
             SimpleIoc.Default.Register<StartViewModel>();
             SimpleIoc.Default.Register<AllEmployeesViewModel>();
             SimpleIoc.Default.Register<AddNewEmployeeViewModel>();
+            SimpleIoc.Default.Register<ReportsViewModel>();
         }
 
-        public AddNewEmployeeViewModel AddNewEmploye 
-        {
-            get { return ServiceLocator.Current.GetInstance<AddNewEmployeeViewModel>(); }
-        }
+        public ReportsViewModel Reports => ServiceLocator.Current.GetInstance<ReportsViewModel>();
 
-        public AllEmployeesViewModel AllEmployee
-        {
-            get { return ServiceLocator.Current.GetInstance<AllEmployeesViewModel>(); }
-        }
+        public AddNewEmployeeViewModel AddNewEmploye => ServiceLocator.Current.GetInstance<AddNewEmployeeViewModel>();
 
-        public StartViewModel Main
-        {
-            get { return ServiceLocator.Current.GetInstance<StartViewModel>(); }
-        }
-        
+        public AllEmployeesViewModel AllEmployee => ServiceLocator.Current.GetInstance<AllEmployeesViewModel>();
+
+        public StartViewModel Main => ServiceLocator.Current.GetInstance<StartViewModel>();
+
         public static void Cleanup()
         {
             // TODO Clear the ViewModels

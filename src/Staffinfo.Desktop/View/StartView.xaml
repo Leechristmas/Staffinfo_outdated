@@ -144,7 +144,8 @@
                         <Button Name="ReportBtn"
                                 Content="Отчеты"
                                 VerticalAlignment="Center"
-                                Style="{StaticResource ButtonStyle}"/>
+                                Style="{StaticResource ButtonStyle}"
+                                Command="{Binding GoToReports}"/>
                         <Button Name="UsersBtn"
                                 Content="Пользователи"
                                 VerticalAlignment="Center"

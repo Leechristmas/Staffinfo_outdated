@@ -15,18 +15,11 @@ namespace Staffinfo.Desktop.ViewModel
         /// true - закрыть окно
         /// </summary>
         private bool _windowsClosed;
-
-        public bool WindowsClosed
-        {
-            get { return _windowsClosed; }
-            set
-            {
-                if (_windowsClosed == value)
-                    return;
-                _windowsClosed = value;
-                RaisePropertyChanged("WindowsClosed");
-            }
-        }
+        
+        /// <summary>
+        /// блокировка интерфейса
+        /// </summary>
+        private bool _viewIsEnable = true;
 
         /// <summary>
         /// Уровень доступа
@@ -54,12 +47,40 @@ namespace Staffinfo.Desktop.ViewModel
         public bool IsAdmin => AccessLevel == (int)AccessLevelType.Admin;
         
         /// <summary>
+        /// Окно закрыто
+        /// </summary>
+        public bool WindowsClosed
+        {
+            get { return _windowsClosed; }
+            set
+            {
+                if (_windowsClosed == value)
+                    return;
+                _windowsClosed = value;
+                RaisePropertyChanged("WindowsClosed");
+            }
+        }
+
+        /// <summary>
         /// Валидация view
         /// </summary>
         /// <returns></returns>
         protected virtual bool Validate
         {
             get { return true; }
+        }
+
+        /// <summary>
+        /// Блокировка интерфейса
+        /// </summary>
+        public bool ViewIsEnable
+        {
+            get { return _viewIsEnable; }
+            set
+            {
+                _viewIsEnable = value;
+                RaisePropertyChanged(nameof(ViewIsEnable));
+            }
         }
 
         #region CloseCommand
