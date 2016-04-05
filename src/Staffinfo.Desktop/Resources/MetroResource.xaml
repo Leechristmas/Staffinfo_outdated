@@ -4,7 +4,7 @@
            BasedOn="{StaticResource ChromelessButtonStyle}"
            TargetType="Button">
         <Style.Setters>
-            <Setter Property="Button.FontSize" Value="14"/>
+            <Setter Property="Button.FontSize" Value="18"/>
             <Setter Property="Button.MinHeight" Value="25"/>
             <Setter Property="Button.MinWidth" Value="150"/>
         </Style.Setters>

@@ -35,7 +35,7 @@ namespace Staffinfo.Desktop.Data
         /// Файл логирования
         /// </summary>
         public static string AppLogFile = "AppLog.log";
-
+        
         #region Fields
 
         /// <summary>
@@ -158,7 +158,7 @@ namespace Staffinfo.Desktop.Data
         public string DatabaseName => "STAFFINFO_TESTS";
 
         /// <summary>
-        /// Пользователь
+        /// Активный пользователь
         /// </summary>
         public UserModel User { get; set; }
 

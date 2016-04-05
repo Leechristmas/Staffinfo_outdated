@@ -218,13 +218,22 @@
                     HorizontalAlignment="Right"/>
             </Border>
         </StackPanel>
-        <StackPanel Orientation="Vertical"
+        <StackPanel VerticalAlignment="Bottom"
+                    Orientation="Horizontal"
+                    Background="#41B1E1"
                     Height="20"
                     Grid.Row="1"
                     Grid.ColumnSpan="2"
-                    Grid.Column="0"
-                    Background="#41B1E1"
-                    VerticalAlignment="Bottom">
+                    Grid.Column="0">
+            <TextBlock Name="AccessLevelTBlock"
+                                   Text="{Binding AccessType}"
+                                   Foreground="White"
+                                   FontSize="14"
+                                   Margin="5,0"/>
+            <TextBlock Name="FullNameTBlock"
+                                   Text="{Binding FullName}"
+                                   Foreground="White"
+                                   FontSize="14"/>
         </StackPanel>
     </Grid>
 </controls:MetroWindow>

@@ -150,7 +150,6 @@ namespace Staffinfo.Desktop.ViewModel
                 _lastName = value == "" ? null : value;
                 RaisePropertyChanged("LastName");
                 var val = Validate;
-                //RaisePropertyChanged("Validate");
                 RaisePropertyChanged("AddNewEmployeeCommand");
             }
         }
@@ -165,7 +164,6 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 _firstName = value == "" ? null : value;
                 RaisePropertyChanged("FirstName");
-               // RaisePropertyChanged("Validate");
                 RaisePropertyChanged("AddNewEmployeeCommand");
             }
         }
@@ -180,7 +178,6 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 _middleName = value == "" ? null : value;
                 RaisePropertyChanged("MiddleName");
-               // RaisePropertyChanged("Validate");
                 RaisePropertyChanged("AddNewEmployeeCommand");
             }
         }
@@ -432,18 +429,32 @@ namespace Staffinfo.Desktop.ViewModel
         #region Commands
 
         /// <summary>
-        /// Добавить служащего
+        /// Добавить служащего TODO:validation
         /// </summary>
         private RelayCommand _addNewEmployeeCommand;
         public RelayCommand AddNewEmployeeCommand
-            => _addNewEmployeeCommand ?? (_addNewEmployeeCommand = new RelayCommand(AddNewEmployeeExecute, () => Validate));
+            => _addNewEmployeeCommand ?? (_addNewEmployeeCommand = new RelayCommand(AddNewEmployeeExecute));
 
         private void AddNewEmployeeExecute()
         {
+            //блокируем интерфейс
+            ViewIsEnable = false;   
+
+            //валидация
+            if (!Validate)
+            {
+                ViewIsEnable = true;
+                return;
+            }
+            
             //сохраняем паспорт
             using (var prvdr = new PasportTableProvider())
             {
-                Pasport = prvdr.Save(Pasport);
+                if ((Pasport = prvdr.Save(Pasport)) == null)
+                {
+                    MessageBox.Show("Не удалось сохранить паспортные данные! " + prvdr.ErrorInfo);
+                    return;
+                }
             }
 
             //сохраняем самого служащего
@@ -474,11 +485,23 @@ namespace Staffinfo.Desktop.ViewModel
                 employee = prvdr.Save(employee);
 
                 if (employee == null)
+                {
+                    using (var pasportPrvdr = new PasportTableProvider())
+                    {
+                        pasportPrvdr.DeleteById(Pasport.Id);
+                    }
                     MessageBox.Show("Не удалось сохранить служащего!" + prvdr.ErrorInfo, "Ошибка!", MessageBoxButton.OK,
                         MessageBoxImage.Error);
+                }
+                    
                 else
                     DataSingleton.Instance.EmployeeList.Add(new EmployeeViewModel(employee));
             }
+            
+            //открываем интерфейс
+            ViewIsEnable = true;
+
+            //закрываем окно
             WindowsClosed = true;
         }
 
@@ -586,6 +609,9 @@ namespace Staffinfo.Desktop.ViewModel
             }
         }
         
+        /// <summary>
+        /// Текст ошибки
+        /// </summary>
         public string Error
         {
             get { return _error; }
@@ -593,7 +619,6 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 _error = value;
                 RaisePropertyChanged();
-                RaisePropertyChanged("AddNewEmployeeCommand");
             }
         }
 
@@ -603,21 +628,42 @@ namespace Staffinfo.Desktop.ViewModel
         /// Валидация view (через индексатор, который возвращает текст ошибки)
         /// </summary>
         /// <returns></returns>
-        protected override bool Validate =>
-            this[nameof(LastName)] != "" &&
-            this[nameof(FirstName)] != "" &&
-            this[nameof(MiddleName)] != "";// && 
-            //this[nameof(SelectedPost)] != "" && 
-            //this[nameof(SelectedRank)] != "" && 
-            //this[nameof(SelectedService)] != "" && 
-            //this[nameof(BornDate)] != "" && 
-            //this[nameof(JobStartDate)] != "" && 
-            //this[nameof(City)] != "" && 
-            //this[nameof(Street)] != "" && 
-            //this[nameof(House)] != "" && 
-            //this[nameof(Flat)] != "" && 
-            //this[nameof(SelectedPasportSeries)] != "" && 
-            //this[nameof(SelectedPasportNumber)] != "" && 
-            //this[nameof(SelectedPasportOrganization)] != "";
+        protected override bool Validate
+        {
+            get
+            {
+                if (this[nameof(LastName)] != "") return false;
+                if (this[nameof(FirstName)] != "") return false;
+                if (this[nameof(MiddleName)] != "") return false;
+                if (this[nameof(SelectedPost)] != "") return false;
+                if (this[nameof(SelectedRank)] != "") return false;
+                if (this[nameof(SelectedService)] != "") return false;
+                if (this[nameof(BornDate)] != "") return false;
+                if (this[nameof(JobStartDate)] != "") return false;
+                if (this[nameof(PersonalNumber)] != "") return false;
+                if (this[nameof(City)] != "") return false;
+                if (this[nameof(Street)] != "") return false;
+                if (this[nameof(House)] != "") return false;
+                if (this[nameof(Flat)] != "") return false;
+                if (this[nameof(SelectedPasportSeries)] != "") return false;
+                if (this[nameof(SelectedPasportNumber)] != "") return false;
+                return this[nameof(SelectedPasportOrganization)] == "";
+            }
+        }
+        //this[nameof(LastName)] != "" &&
+        //this[nameof(FirstName)] != "" &&
+        //this[nameof(MiddleName)] != "" && 
+        //this[nameof(SelectedPost)] != "" && 
+        //this[nameof(SelectedRank)] != "" && 
+        //this[nameof(SelectedService)] != "" && 
+        //this[nameof(BornDate)] != "" && 
+        //this[nameof(JobStartDate)] != "" && 
+        //this[nameof(City)] != "" && 
+        //this[nameof(Street)] != "" && 
+        //this[nameof(House)] != "" && 
+        //this[nameof(Flat)] != "" && 
+        //this[nameof(SelectedPasportSeries)] != "" && 
+        //this[nameof(SelectedPasportNumber)] != "" && 
+        //this[nameof(SelectedPasportOrganization)] != "";
     }
 }

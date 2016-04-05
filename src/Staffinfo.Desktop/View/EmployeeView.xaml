@@ -821,16 +821,21 @@
                     Command="{Binding CloseWindowCommand}"/>
             </Grid>
         </Border>
-        <StackPanel     Grid.Column="0"
-                        Grid.Row="1"
-                        Orientation="Horizontal"
-                        Height="20"
-                        VerticalAlignment="Bottom"
-                        Background="DodgerBlue">
-            <Label  Name="ErrorText"
-                        HorizontalAlignment="Right"
-                        FontWeight="Bold"
-                        Foreground="Red"/>
+        <StackPanel VerticalAlignment="Bottom"
+                    Orientation="Horizontal"
+                    Background="#41B1E1"
+                    Height="20"
+                    Grid.Column="0"
+                    Grid.Row="1">
+            <TextBlock Name="AccessLevelTBlock"
+                       Text="{Binding AccessType}"
+                       Foreground="White"
+                       FontSize="14"
+                       Margin="5,0"/>
+            <TextBlock Name="FullNameTBlock"
+                       Text="{Binding FullName}"
+                       Foreground="White"
+                       FontSize="14"/>
         </StackPanel>
     </Grid>
 </controls:MetroWindow>

@@ -7,6 +7,7 @@
         xmlns:local="clr-namespace:Staffinfo.Desktop.View"
         xmlns:converters="clr-namespace:Staffinfo.Desktop.Converters"
         xmlns:helpers="clr-namespace:Staffinfo.Desktop.Helpers"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="Добавление служащего" MinWidth="580" Width="580" Height="510" MinHeight="510"
                       DataContext="{Binding Source={StaticResource Locator}, Path=AddNewEmploye}"
@@ -323,14 +324,18 @@
                               Margin="0,1"
                               MinHeight="30"
                               FontSize="14">
-                        <ComboBoxItem Content="AB"/>
-                        <ComboBoxItem Content="BM"/>
-                        <ComboBoxItem Content="HB"/>
-                        <ComboBoxItem Content="KH"/>
-                        <ComboBoxItem Content="MP"/>
-                        <ComboBoxItem Content="MC"/>
-                        <ComboBoxItem Content="KB"/>
-                        <ComboBoxItem Content="PP"/>
+                        <ComboBox.ItemsSource>
+                            <x:Array Type="{x:Type sys:String}">
+                                <sys:String>AB</sys:String>
+                                <sys:String>BM</sys:String>
+                                <sys:String>HB</sys:String>
+                                <sys:String>KH</sys:String>
+                                <sys:String>MP</sys:String>
+                                <sys:String>MC</sys:String>
+                                <sys:String>KB</sys:String>
+                                <sys:String>PP</sys:String>
+                            </x:Array>
+                        </ComboBox.ItemsSource>
                         <ComboBox.SelectedItem>
                             <Binding Path="SelectedPasportSeries"
                                      UpdateSourceTrigger="PropertyChanged">
@@ -422,46 +427,61 @@
             </StackPanel>
         </GroupBox>
         <StackPanel Orientation="Vertical"
+                    VerticalAlignment="Bottom"
                     Grid.Row="4"
                     Grid.Column="0"
-                    Grid.ColumnSpan="3"
-                    VerticalAlignment="Bottom">
-            <StackPanel HorizontalAlignment="Right"
+                    Grid.ColumnSpan="3">
+            <Border Height="25"
+                    VerticalAlignment="Top"
+                    Background="LightGray">
+                    <Grid Margin="0,1">
+                        <TextBlock Foreground="Red"
+                                   Text="{Binding Error}"
+                                   HorizontalAlignment="Left"
+                                   FontSize="16"
+                                   FontWeight="DemiBold"/>
+                        <Button Content="Добавить" 
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Name="AddEmployeeBtn"
+                                Margin="5,0,180,0" 
+                                MinWidth="80"
+                                Style="{StaticResource ButtonStyle}"
+                                Command="{Binding AddNewEmployeeCommand}"
+                                HorizontalAlignment="Right"/>
+                        <Button Content="Очистить" 
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Name="ClearBtn"
+                                Margin="5,0,90,0" 
+                                MinWidth="80"
+                                Style="{StaticResource ButtonStyle}"
+                                HorizontalAlignment="Right"/>
+                        <Button Content="Отмена" 
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Name="CancelBtn"
+                                Margin="5,0" 
+                                MinWidth="80"
+                                Width="80"
+                                Style="{StaticResource ButtonStyle}"
+                                Command="{Binding CloseWindowCommand}"
+                                HorizontalAlignment="Right"/>
+                    </Grid>
+            </Border>
+            <StackPanel VerticalAlignment="Bottom"
                         Orientation="Horizontal"
-                        VerticalAlignment="Bottom"
-                        Margin="0,1">
-                <Button Content="Добавить" 
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Name="AddEmployeeBtn"
-                        Margin="5,0" 
-                        MinWidth="80"
-                        Style="{StaticResource ButtonStyle}"
-                        Command="{Binding AddNewEmployeeCommand}"/>
-                <Button Content="Очистить" 
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Name="ClearBtn"
-                        Margin="5,0" 
-                        MinWidth="80"
-                        Style="{StaticResource ButtonStyle}"/>
-                <Button Content="Отмена" 
-                        Background="Transparent"
-                        BorderThickness="0"
-                        Name="CancelBtn"
-                        Margin="5,0" 
-                        MinWidth="80"
-                        Style="{StaticResource ButtonStyle}"
-                        Command="{Binding CloseWindowCommand}"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal"
-                        Height="20"
-                        VerticalAlignment="Bottom"
-                        Background="DodgerBlue">
-                <Label  Name="ErrorText"
-                        HorizontalAlignment="Right"
-                        FontWeight="Bold"
-                        Foreground="Red"/>
+                        Background="#41B1E1"
+                        Height="20">
+                <TextBlock Name="AccessLevelTBlock"
+                           Text="{Binding AccessType}"
+                           Foreground="White"
+                           FontSize="14"
+                           Margin="5,0"/>
+                <TextBlock Name="FullNameTBlock"
+                           Text="{Binding FullName}"
+                           Foreground="White"
+                           FontSize="14"/>
             </StackPanel>
         </StackPanel>
     </Grid>

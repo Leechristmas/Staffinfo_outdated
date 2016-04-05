@@ -1,6 +1,8 @@
 ﻿using System;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using Staffinfo.Desktop.Data;
+using Staffinfo.Desktop.Model;
 using Staffinfo.Desktop.Shared;
 using Staffinfo.Desktop.View;
 
@@ -45,7 +47,35 @@ namespace Staffinfo.Desktop.ViewModel
         /// Является ли авторизованный пользователь администратором
         /// </summary>
         public bool IsAdmin => AccessLevel == (int)AccessLevelType.Admin;
-        
+
+        /// <summary>
+        /// Уровень доступа
+        /// </summary>
+        public string AccessType => User?.AccessLevel == (int)AccessLevelType.Reader ? "reader: " :
+            "admin: ";
+
+        /// <summary>
+        /// Полное имя пользователя
+        /// </summary>
+        public string FullName => User?.LastName + ' ' + User?.FirstName + ' ' + User?.MiddleName;
+
+        /// <summary>
+        /// Пользователь
+        /// </summary>
+        public UserModel User
+        {
+            get { return DataSingleton.Instance.User; }
+            set
+            {
+                DataSingleton.Instance.User = value;
+
+                RaisePropertyChanged();
+                RaisePropertyChanged("SettingVisibility");
+                RaisePropertyChanged("FullName");
+                RaisePropertyChanged("AccessType");
+            }
+        }
+
         /// <summary>
         /// Окно закрыто
         /// </summary>

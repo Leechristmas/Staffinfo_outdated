@@ -12,7 +12,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
-            <RowDefinition Height="20"/>
+            <RowDefinition Height="45"/>
         </Grid.RowDefinitions>
         <controls:MetroTabControl Name="UserTabCtrl"
                                   SelectedIndex="{Binding SelectedTabIndex}">
@@ -141,7 +141,7 @@
                              ScrollViewer.HorizontalScrollBarVisibility="Auto" 
                              BorderThickness="0"
                              Margin="5"
-                             ItemContainerStyle="{StaticResource ListViewItemStyle}">
+                             ItemContainerStyle="{StaticResource ListBoxItemStyle}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="MouseDoubleClick">
                                 <i:InvokeCommandAction Command="{Binding ShowUser}"/>
@@ -217,28 +217,45 @@
                 </StackPanel>
             </controls:MetroTabItem>
         </controls:MetroTabControl>
-        <Border Grid.Row="1"
-                Background="LightGray">
-            <StackPanel VerticalAlignment="Bottom"
-                        Grid.Row="1"
-                        Orientation="Horizontal"
-                        HorizontalAlignment="Right">
-                <Button Content="Сохранить"
-                        Height="20"
-                        MinWidth="80"
-                        Style="{StaticResource ButtonStyle}"
-                        VerticalAlignment="Bottom"
-                        HorizontalAlignment="Right"
-                        IsEnabled="{Binding IsAdmin}"
-                        Command="{Binding SaveChanges}"/>
-                <Button Content="Закрыть"
-                        Height="20"
-                        MinWidth="80"
-                        Style="{StaticResource ButtonStyle}"
-                        VerticalAlignment="Bottom"
-                        HorizontalAlignment="Right"
-                        Command="{Binding CloseWindowCommand}"/>
+            <StackPanel Orientation="Vertical"
+                        VerticalAlignment="Top"
+                        Grid.Row="1">
+                <Border VerticalAlignment="Bottom"
+                        Background="LightGray"
+                        Height="25">
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Right">
+                    <Button Content="Сохранить"
+                            Height="2"
+                            MinWidth="80"
+                            Style="{StaticResource ButtonStyle}"
+                            VerticalAlignment="Bottom"
+                            HorizontalAlignment="Right"
+                            IsEnabled="{Binding IsAdmin}"
+                            Command="{Binding SaveChanges}"/>
+                    <Button Content="Закрыть"
+                            Height="20"
+                            MinWidth="80"
+                            Style="{StaticResource ButtonStyle}"
+                            VerticalAlignment="Bottom"
+                            HorizontalAlignment="Right"
+                            Command="{Binding CloseWindowCommand}"/>
+                </StackPanel>
+                </Border>
+                <StackPanel VerticalAlignment="Bottom"
+                            Orientation="Horizontal"
+                            Background="#41B1E1"
+                            Height="20">
+                    <TextBlock Name="AccessLevelTBlock"
+                               Text="{Binding AccessType}"
+                               Foreground="White"
+                               FontSize="14"
+                               Margin="5,0"/>
+                    <TextBlock Name="FullNameTBlock"
+                               Text="{Binding FullName}"
+                               Foreground="White"
+                               FontSize="14"/>
+                </StackPanel>
             </StackPanel>
-        </Border>
     </Grid>
 </controls:MetroWindow>
