@@ -439,7 +439,8 @@
                                    Text="{Binding Error}"
                                    HorizontalAlignment="Left"
                                    FontSize="16"
-                                   FontWeight="DemiBold"/>
+                                   FontWeight="DemiBold"
+                                   Margin="5,0"/>
                         <Button Content="Добавить" 
                                 Background="Transparent"
                                 BorderThickness="0"

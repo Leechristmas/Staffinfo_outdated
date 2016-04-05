@@ -17,12 +17,18 @@ namespace Staffinfo.Desktop.ViewModel
         public AllEmployeesViewModel()
         {
             AccessLevel = DataSingleton.Instance.User.AccessLevel;
+            Employees = DataSingleton.Instance.EmployeeList;
         }
-
+        
         #region Fields
 
-        private ObservableCollectionViewModel<EmployeeViewModel> _employeeList =
-            new ObservableCollectionViewModel<EmployeeViewModel>(DataSingleton.Instance.EmployeeList);
+        //private ObservableCollectionViewModel<EmployeeViewModel> _employeeList =
+        //    new ObservableCollectionViewModel<EmployeeViewModel>(DataSingleton.Instance.EmployeeList);
+
+        /// <summary>
+        /// Служащие
+        /// </summary>
+        private ObservableCollection<EmployeeViewModel> _employees;
 
         /// <summary>
         /// текст поиска
@@ -98,9 +104,11 @@ namespace Staffinfo.Desktop.ViewModel
         /// </summary>
         public ObservableCollection<EmployeeViewModel> Employees
         {
-            get
+            get { return _employees; }
+            set
             {
-                return new ObservableCollection<EmployeeViewModel>(DataSingleton.Instance.EmployeeList.Where(e => e.LastName.ToLower().StartsWith(SearchText)));
+                _employees = value;
+                RaisePropertyChanged("Employees");
             }
         }
 
@@ -129,7 +137,8 @@ namespace Staffinfo.Desktop.ViewModel
                 _searchText = value;
                 
                 RaisePropertyChanged("SearchText");
-                RaisePropertyChanged("Employees");
+                Employees = new ObservableCollection<EmployeeViewModel>(DataSingleton.Instance.EmployeeList.Where(e => e.LastName.ToLower().StartsWith(SearchText)));
+
                 ViewIsEnable = true;
             }
         }

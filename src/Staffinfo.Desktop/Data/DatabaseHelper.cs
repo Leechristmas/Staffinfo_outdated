@@ -70,7 +70,7 @@ namespace Staffinfo.Desktop.Data
                 //парсим скрипт
                 string[] scriptParts =
                     ParseSqlSqript(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                        "...\\src\\Staffinfo.Desktop\\Data\\Scripts\\create_and_init_database_staffinfo.sql"));
+                        "...\\...\\src\\Staffinfo.Desktop\\Data\\Scripts\\create_and_init_database_staffinfo.sql"));
                 //количество операторов скрипта
                 int scriptPartsCount = scriptParts.Length;
                 //выполняемая в настоящий момент часть скрипта
