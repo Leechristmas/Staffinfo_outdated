@@ -195,20 +195,7 @@ namespace Staffinfo.Desktop.ViewModel
                 RaisePropertyChanged("JobStartDate");
             }
         }
-
-        /// <summary>
-        /// Адрес
-        /// </summary>
-        //public string Address
-        //{
-        //    get { return _empModel.Address; }
-        //    set
-        //    {
-        //        _empModel.Address = value; 
-        //        RaisePropertyChanged("Address");
-        //    }
-        //}
-
+        
         /// <summary>
         /// Город
         /// </summary>

@@ -43,12 +43,13 @@
         </Style.Triggers>
     </Style>-->
     <Style TargetType="ListBoxItem"
-           x:Key="ListBoxItemStyle">
+           x:Key="EmployeesListItemStyle">
         <Style.Triggers>
             <Trigger Property="IsSelected" Value="True" >
                 <Setter Property="FontWeight" Value="Bold" />
                 <Setter Property="Background" Value="Transparent" />
                 <Setter Property="Foreground" Value="Black" />
+                <Setter Property="FontSize" Value="20"></Setter>
             </Trigger>
         </Style.Triggers>
         <Style.Resources>
@@ -58,12 +59,24 @@
 
     <Style TargetType="ListBoxItem"
            x:Key="ReportListStyle"
-           BasedOn="{StaticResource ListBoxItemStyle}">
+           BasedOn="{StaticResource EmployeesListItemStyle}">
         <Style.Triggers>
             <Trigger Property="IsSelected" Value="True" >
                 <Setter Property="FontSize" Value="18" />
             </Trigger>
         </Style.Triggers>
     </Style>
-    
+
+    <!--<Style TargetType="{x:Type DatePickerTextBox}">
+        <Setter Property="Control.Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <TextBox x:Name="PART_TextBox"
+     Text="{Binding Path=SelectedDate, StringFormat='dd MMM yyyy', 
+     RelativeSource={RelativeSource AncestorType={x:Type DatePicker}}}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>-->
+
 </ResourceDictionary>

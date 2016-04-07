@@ -176,6 +176,7 @@
     <Compile Include="Shared\DatabaseNotFoundException.cs" />
     <Compile Include="Shared\DatabaseWasNotCreatedException.cs" />
     <Compile Include="ViewModel\AddNewEmployeeViewModel.cs" />
+    <Compile Include="ViewModel\AddNewMilitaryUnitViewModel.cs" />
     <Compile Include="ViewModel\AllEmployeesViewModel.cs" />
     <Compile Include="ViewModel\AllUsersViewModel.cs" />
     <Compile Include="ViewModel\DictionaryViewModelBase.cs" />

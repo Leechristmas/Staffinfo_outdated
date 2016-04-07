@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.Data.SqlClient;
 using Staffinfo.Desktop.Data.DataTableContracts;
 using Staffinfo.Desktop.Model;
@@ -25,8 +26,22 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             if (hospitalTime == null) throw new ArgumentNullException(nameof(hospitalTime), Resources.DatabaseConnector_parameter_cannot_be_null);
 
+            
+
             var cmd =
-                new SqlCommand($@"INSERT INTO HOSPITAL_TIME VALUES({hospitalTime.EmployeeId}, '{hospitalTime.Description}', '{hospitalTime.StartDate}', '{hospitalTime.FinishDate}'); SELECT MAX(ID) FROM HOSPITAL_TIME;");
+                new SqlCommand($@"INSERT INTO HOSPITAL_TIME VALUES(@EMPLOYEE_ID, @DESCRIPTION, @START_DATE, @FINISH_DATE); SELECT MAX(ID) FROM HOSPITAL_TIME;");
+
+            var employeeId = cmd.Parameters.Add("@EMPLOYEE_ID", SqlDbType.Int);
+            employeeId.Value = hospitalTime.EmployeeId;
+
+            var description = cmd.Parameters.Add("@DESCRIPTION", SqlDbType.VarChar);
+            description.Value = hospitalTime.Description;
+
+            var startDate = cmd.Parameters.Add("@START_DATE", SqlDbType.DateTime);
+            startDate.Value = hospitalTime.StartDate;
+
+            var finishDate = cmd.Parameters.Add("@FINISH_DATE", SqlDbType.DateTime);
+            finishDate.Value = hospitalTime.FinishDate;
 
             try
             {
@@ -64,7 +79,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             {
                 var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
                 sqlDataReader.Read();
-
+                
                 hospitalTimeModel = new HospitalTimeModel
                 {
                     Id = Int64.Parse(sqlDataReader[0].ToString()),

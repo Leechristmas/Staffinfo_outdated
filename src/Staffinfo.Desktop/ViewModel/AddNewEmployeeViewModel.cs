@@ -134,8 +134,6 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 _personalNumber = value;
                 RaisePropertyChanged("PersonalNumber");
-                RaisePropertyChanged("Validate");
-                RaisePropertyChanged("AddNewEmployeeCommand");
             }
         }
 
@@ -150,7 +148,6 @@ namespace Staffinfo.Desktop.ViewModel
                 _lastName = value == "" ? null : value;
                 RaisePropertyChanged("LastName");
                 var val = Validate;
-                RaisePropertyChanged("AddNewEmployeeCommand");
             }
         }
 
@@ -164,7 +161,6 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 _firstName = value == "" ? null : value;
                 RaisePropertyChanged("FirstName");
-                RaisePropertyChanged("AddNewEmployeeCommand");
             }
         }
 
@@ -178,7 +174,6 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 _middleName = value == "" ? null : value;
                 RaisePropertyChanged("MiddleName");
-                RaisePropertyChanged("AddNewEmployeeCommand");
             }
         }
 
@@ -192,8 +187,6 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 _bornDate = value;
                 RaisePropertyChanged("BornDate");
-                RaisePropertyChanged("Validate");
-                RaisePropertyChanged("AddNewEmployeeCommand");
             }
         }
 
@@ -207,8 +200,6 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 _jobStartDate = value;
                 RaisePropertyChanged("JobStartDate");
-                RaisePropertyChanged("Validate");
-                RaisePropertyChanged("AddNewEmployeeCommand");
             }
         }
 
@@ -222,8 +213,6 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 _city = value;
                 RaisePropertyChanged("City");
-                RaisePropertyChanged("Validate");
-                RaisePropertyChanged("AddNewEmployeeCommand");
             }
         }
 
@@ -237,8 +226,6 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 _street = value;
                 RaisePropertyChanged("Street");
-                RaisePropertyChanged("Validate");
-                RaisePropertyChanged("AddNewEmployeeCommand");
             }
         }
 
@@ -252,8 +239,6 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 _house = value;
                 RaisePropertyChanged("House");
-                RaisePropertyChanged("Validate");
-                RaisePropertyChanged("AddNewEmployeeCommand");
             }
         }
 
@@ -267,8 +252,6 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 _flat = value;
                 RaisePropertyChanged("Flat");
-                RaisePropertyChanged("Validate");
-                RaisePropertyChanged("AddNewEmployeeCommand");
             }
         }
 
@@ -282,8 +265,6 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 _pasport = value;
                 RaisePropertyChanged("Pasport");
-                RaisePropertyChanged("Validate");
-                RaisePropertyChanged("AddNewEmployeeCommand");
             }
         }
 
@@ -298,8 +279,6 @@ namespace Staffinfo.Desktop.ViewModel
                 Pasport.Series = value;
                 RaisePropertyChanged();
                 RaisePropertyChanged("Pasport");
-                RaisePropertyChanged("Validate");
-                RaisePropertyChanged("AddNewEmployeeCommand");
             }
         }
 
@@ -314,8 +293,6 @@ namespace Staffinfo.Desktop.ViewModel
                 Pasport.Number = value;
                 RaisePropertyChanged();
                 RaisePropertyChanged("Pasport");
-                RaisePropertyChanged("Validate");
-                RaisePropertyChanged("AddNewEmployeeCommand");
             }
         }
 
@@ -330,8 +307,6 @@ namespace Staffinfo.Desktop.ViewModel
                 Pasport.OrganizationUnit = value;
                 RaisePropertyChanged();
                 RaisePropertyChanged("Pasport");
-                RaisePropertyChanged("Validate");
-                RaisePropertyChanged("AddNewEmployeeCommand");
             }
         }
 
@@ -372,8 +347,6 @@ namespace Staffinfo.Desktop.ViewModel
                 ServiceList.SelectedItem = value;
                 RaisePropertyChanged();
                 RaisePropertyChanged("PostList");
-                RaisePropertyChanged("Validate");
-                RaisePropertyChanged("AddNewEmployeeCommand");
             }
         }
 
@@ -388,8 +361,6 @@ namespace Staffinfo.Desktop.ViewModel
                 RankList.SelectedItem = value;
                 RaisePropertyChanged();
                 RaisePropertyChanged("RankList");
-                RaisePropertyChanged("Validate");
-                RaisePropertyChanged("AddNewEmployeeCommand");
             }
         }
 
@@ -404,8 +375,6 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 _selectedPost = value;
                 RaisePropertyChanged();
-                RaisePropertyChanged("Validate");
-                RaisePropertyChanged("AddNewEmployeeCommand");
             }
         }
 
@@ -650,20 +619,5 @@ namespace Staffinfo.Desktop.ViewModel
                 return this[nameof(SelectedPasportOrganization)] == "";
             }
         }
-        //this[nameof(LastName)] != "" &&
-        //this[nameof(FirstName)] != "" &&
-        //this[nameof(MiddleName)] != "" && 
-        //this[nameof(SelectedPost)] != "" && 
-        //this[nameof(SelectedRank)] != "" && 
-        //this[nameof(SelectedService)] != "" && 
-        //this[nameof(BornDate)] != "" && 
-        //this[nameof(JobStartDate)] != "" && 
-        //this[nameof(City)] != "" && 
-        //this[nameof(Street)] != "" && 
-        //this[nameof(House)] != "" && 
-        //this[nameof(Flat)] != "" && 
-        //this[nameof(SelectedPasportSeries)] != "" && 
-        //this[nameof(SelectedPasportNumber)] != "" && 
-        //this[nameof(SelectedPasportOrganization)] != "";
     }
 }

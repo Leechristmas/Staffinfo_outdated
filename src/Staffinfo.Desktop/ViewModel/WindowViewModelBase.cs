@@ -57,7 +57,7 @@ namespace Staffinfo.Desktop.ViewModel
         /// <summary>
         /// Полное имя пользователя
         /// </summary>
-        public string FullName => User?.LastName + ' ' + User?.FirstName + ' ' + User?.MiddleName;
+        public string FullUserName => User?.LastName + ' ' + User?.FirstName + ' ' + User?.MiddleName;
 
         /// <summary>
         /// Пользователь
@@ -87,7 +87,7 @@ namespace Staffinfo.Desktop.ViewModel
                 if (_windowsClosed == value)
                     return;
                 _windowsClosed = value;
-                RaisePropertyChanged("WindowsClosed");
+                RaisePropertyChanged();
             }
         }
 
