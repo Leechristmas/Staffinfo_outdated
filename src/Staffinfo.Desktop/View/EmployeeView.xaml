@@ -621,37 +621,45 @@
                                                         HorizontalAlignment="Left">
                                                 <StackPanel Orientation="Vertical">
                                                     <DatePicker Name="ClasinessDatePicker"  
-                                                                MinWidth="150"
+                                                                Width="150"
                                                                 Margin="0,1"
                                                                 FontSize="16"
-                                                                controls:TextBoxHelper.Watermark="Дата начала"/>
+                                                                controls:TextBoxHelper.Watermark="Дата"
+                                                                SelectedDate="{Binding ClasinessDate}"
+/>
                                                     <TextBox Name="ClasinessDescriptionTBox"
                                                              Margin="0,1"
                                                              FontSize="16"
-                                                             MinWidth="150"
+                                                             Width="150"
                                                              controls:TextBoxHelper.ClearTextButton="True"
-                                                             controls:TextBoxHelper.Watermark="Описание"/>
+                                                             controls:TextBoxHelper.Watermark="Описание"
+                                                             Text="{Binding ClasinessDescription}"/>
                                                 </StackPanel>
                                                 <StackPanel Orientation="Vertical"
                                                             Margin="5,0">
                                                     <controls:NumericUpDown Name="ClasinessOrderNumberUpDown"
-                                                                            MinWidth="150"
+                                                                            Width="150"
                                                                             Margin="0,1"
                                                                             FontSize="16"
                                                                             Minimum="0"
-                                                                            controls:TextBoxHelper.Watermark="№ приказа"/>
+                                                                            Maximum="1000000"
+                                                                            controls:TextBoxHelper.Watermark="№ приказа"
+                                                                            Value="{Binding ClasinessOrderNumber}"/>
                                                     <controls:NumericUpDown Name="ClasinessGradeUpDown"
-                                                                            MinWidth="150"
+                                                                            Width="150"
                                                                             Margin="0,1"
                                                                             FontSize="16"
                                                                             Minimum="0"
-                                                                            controls:TextBoxHelper.Watermark="Классность"/>
+                                                                            Maximum="10"
+                                                                            controls:TextBoxHelper.Watermark="Классность"
+                                                                            Value="{Binding ClasinessDegree}"/>
                                                     <StackPanel Orientation="Horizontal"
                                                             HorizontalAlignment="Right">
                                                         <Button Name="ClasinessAddBtn"
-                                                            Style="{StaticResource ButtonStyle}"
-                                                            Content="Добавить"
-                                                            MinWidth="70"/>
+                                                                Style="{StaticResource ButtonStyle}"
+                                                                Content="Принять"
+                                                                MinWidth="70"
+                                                                Command="{Binding AddClasiness}"/>
                                                     </StackPanel>
                                                 </StackPanel>
                                             </StackPanel>

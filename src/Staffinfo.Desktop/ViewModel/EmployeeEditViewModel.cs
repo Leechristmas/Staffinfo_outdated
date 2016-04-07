@@ -186,7 +186,7 @@ namespace Staffinfo.Desktop.ViewModel
         #region Properties
 
         /// <summary>
-        /// Индекс выбранного "таба"
+        /// Индекс выбранного "таба" (datagrid или добавление/редактирование pfgbcb)
         /// </summary>
         public int SelectedTabIndex
         {
@@ -196,6 +196,9 @@ namespace Staffinfo.Desktop.ViewModel
                 _selectedTabIndex = value;
                 RaisePropertyChanged();
                 RaisePropertyChanged("TabsToogleTitle");
+                
+                //обнуляем текст ошибки при переходе между табами
+                CatalogTextError = String.Empty;
             }
         }
 
@@ -495,6 +498,9 @@ namespace Staffinfo.Desktop.ViewModel
                 _selectedCatalogIndex = value;
                 RaisePropertyChanged();
                 RaisePropertyChanged("SelectedItem");
+
+                //обнуляем текст ошибки при переходе между справочниками
+                CatalogTextError = String.Empty;
             }
         }
 
@@ -1559,6 +1565,143 @@ namespace Staffinfo.Desktop.ViewModel
             addWindow.ShowDialog();
         }
 
+        #endregion
+
+        #region Clasiness
+
+        /// <summary>
+        /// Дата получения/подтверждения классности
+        /// </summary>
+        private DateTime? _clasinessDate = null;
+
+        /// <summary>
+        /// Номер приказа
+        /// </summary>
+        private int? _clasinessOrderNumber = null;
+
+        /// <summary>
+        /// Описание
+        /// </summary>
+        private string _clasinessDescription = String.Empty;
+
+        /// <summary>
+        /// Степень классности
+        /// </summary>
+        private int? _clasinessDegree = null;
+
+        /// <summary>
+        /// Дата получения/подтверждения классности
+        /// </summary>
+        public DateTime? ClasinessDate
+        {
+            get { return _clasinessDate; }
+            set
+            {
+                _clasinessDate = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Номер приказа
+        /// </summary>
+        public int? ClasinessOrderNumber
+        {
+            get { return _clasinessOrderNumber; }
+            set
+            {
+                _clasinessOrderNumber = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Описание к классности
+        /// </summary>
+        public string ClasinessDescription
+        {
+            get { return _clasinessDescription; }
+            set
+            {
+                _clasinessDescription = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Уровень классности
+        /// </summary>
+        public int? ClasinessDegree
+        {
+            get { return _clasinessDegree; }
+            set
+            {
+                _clasinessDegree = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Добавить классность
+        /// </summary>
+        private RelayCommand _addClasiness;
+        public RelayCommand AddClasiness => _addClasiness ?? (_addClasiness = new RelayCommand(AddClasinessExecute));
+
+        private void AddClasinessExecute()
+        {
+            var date = ClasinessDate;
+            var desc = ClasinessDescription;
+            var order = ClasinessOrderNumber;
+            var level = ClasinessDegree;
+
+            CatalogTextError = String.Empty;
+
+            if (ClasinessDate == null || ClasinessDate.Value.Date > DateTime.Now.Date)
+            {
+                CatalogTextError = "Дата не указана или указана неверно";
+                return;
+            }
+            if (ClasinessDescription.Length > 200)
+            {
+                CatalogTextError = "Слишком длинное описание";
+                return;
+            }
+            if (ClasinessOrderNumber == null)
+            {
+                CatalogTextError = "Не указан номер приказа";
+                return;
+            }
+            if (ClasinessDegree == null)
+            {
+                CatalogTextError = "Не указана классность";
+                return;
+            }
+            using (ClasinessTableProvider cPrvdr = new ClasinessTableProvider())
+            {
+                var clasiness = cPrvdr.Save(new ClasinessModel
+                {
+                    EmployeeId = EmployeeViewModel.Id.Value,
+                    ClasinessDate = ClasinessDate.Value,
+                    ClasinessLevel = ClasinessDegree.Value,
+                    OrderNumber = ClasinessOrderNumber.Value,
+                    Description = ClasinessDescription
+                });
+                if (clasiness == null)
+                {
+                    MessageBox.Show("Не удалось сохранить запись о классности: " + cPrvdr.ErrorInfo, "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                Clasiness.Add(clasiness);
+
+                ClasinessDate = null;
+                ClasinessOrderNumber = null;
+                ClasinessDegree = null;
+                ClasinessDescription = String.Empty;
+
+                TabsToggleExecute();
+            }
+        }
         #endregion
 
 

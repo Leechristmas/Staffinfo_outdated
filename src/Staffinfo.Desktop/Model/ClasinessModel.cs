@@ -19,7 +19,7 @@ namespace Staffinfo.Desktop.Model
         /// Номер приказа
         /// </summary>
         [DisplayName("Номер приказа")]
-        public ushort OrderNumber { get; set; }
+        public int OrderNumber { get; set; }
 
         /// <summary>
         /// Дата подтверждения классности
@@ -31,7 +31,7 @@ namespace Staffinfo.Desktop.Model
         /// Уровень классности
         /// </summary>
         [DisplayName("Уровень классности")]
-        public byte ClasinessLevel { get; set; }
+        public int ClasinessLevel { get; set; }
 
         /// <summary>
         /// Описание

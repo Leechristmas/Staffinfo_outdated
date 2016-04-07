@@ -65,7 +65,7 @@ namespace Staffinfo.Desktop.Data
         {
             using (var sqlConn = new SqlConnection(connectionString))
             {
-                var createDbCmd = new SqlCommand($"CREATE DATABASE {DataSingleton.Instance.DatabaseName}", sqlConn);
+                var createDbCmd = new SqlCommand($"CREATE DATABASE {DataSingleton.DatabaseName}", sqlConn);
                 sqlConn.Open();
                 //парсим скрипт
                 string[] scriptParts =

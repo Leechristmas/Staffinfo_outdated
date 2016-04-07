@@ -43,7 +43,11 @@ namespace Staffinfo.Desktop.Data
         /// Файл логирования
         /// </summary>
         public static string AppLogFile = "AppLog.log";
-        
+
+        /// <summary>
+        /// Имя базы данных
+        /// </summary>
+        public static string DatabaseName => "STAFFINFO_TESTS";
         #region Fields
 
         /// <summary>
@@ -96,12 +100,7 @@ namespace Staffinfo.Desktop.Data
         /// Возвращает имя файла, хранящего список экземпляров локального сервера
         /// </summary>
         public string ServersFile => "servers.txt";
-
-        /// <summary>
-        /// Имя базы данных
-        /// </summary>
-        public string DatabaseName => "STAFFINFO_TESTS";
-
+        
         /// <summary>
         /// Активный пользователь
         /// </summary>
