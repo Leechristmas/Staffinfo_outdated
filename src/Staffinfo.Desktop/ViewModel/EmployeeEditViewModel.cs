@@ -577,7 +577,7 @@ namespace Staffinfo.Desktop.ViewModel
         /// <summary>
         /// Специальности
         /// </summary>
-        public ObservableCollection<SpecialityModel> Specialities => DataSingleton.Instance.SpecialityList;
+        public ObservableCollection<SpecialityModel> Specialities => DataSingleton.Instance.SpecialityList.GetSorted();
 
         /// <summary>
         /// Учебные заведения
@@ -741,6 +741,8 @@ namespace Staffinfo.Desktop.ViewModel
                         MessageBoxImage.Error);
 
             }
+            
+            CloseWindow();
         }
 
         /// <summary>
@@ -1703,6 +1705,406 @@ namespace Staffinfo.Desktop.ViewModel
             }
         }
         #endregion
+
+        #region Contracts
+
+        /// <summary>
+        /// Дата подписания контракта
+        /// </summary>
+        private DateTime? _startContractDate = null;
+
+        /// <summary>
+        /// Дата окончания контракта
+        /// </summary>
+        private DateTime? _finishContractDate = null;
+
+        /// <summary>
+        /// Заметка к контракту
+        /// </summary>
+        private string _contractDescription = String.Empty;
+
+        /// <summary>
+        /// Дата подписания контракта
+        /// </summary>
+        public DateTime? StartContractDate
+        {
+            get { return _startContractDate; }
+            set
+            {
+                _startContractDate = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Дата окончания контракта
+        /// </summary>
+        public DateTime? FinishContractDate
+        {
+            get { return _finishContractDate; }
+            set
+            {
+                _finishContractDate = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Заметка к контракту
+        /// </summary>
+        public string ContractDescription
+        {
+            get { return _contractDescription; }
+            set
+            {
+                _contractDescription = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Добавить контракт
+        /// </summary>
+        private RelayCommand _addContract;
+
+        public RelayCommand AddContract
+            => _addContract ?? (_addContract = new RelayCommand(AddContractExecute));
+
+        private void AddContractExecute()
+        {
+            //зануляем текст ошибки
+            CatalogTextError = String.Empty;
+            if (StartContractDate == null || StartContractDate > DateTime.Now.Date)
+            {
+                //если ошибка валидации - указываем текст ошибки
+                CatalogTextError = "Дата открытия контракта не указана или указана неверно";
+                return;
+            }
+            if (FinishContractDate < StartContractDate ||
+                FinishContractDate == null)
+            {
+                //если ошибка валидации - указываем текст ошибки
+                CatalogTextError = "Дата окончания контракта не указана или указана неверно";
+                return;
+            }
+            if (ContractDescription.Length > 200)
+            {
+                CatalogTextError = "Слишком длинное описание";
+                return;
+            }
+
+            //заносим контракт в бд и список
+            using (ContractTableProvider cTPrvdr = new ContractTableProvider())
+            {
+                var contract = cTPrvdr.Save(new ContractModel()
+                {
+                    EmployeeId = EmployeeViewModel.Id.Value,
+                    StartDate = StartContractDate.Value,
+                    FinishDate = FinishContractDate.Value,
+                    Description = ContractDescription
+                });
+
+                if (contract == null)
+                {
+                    MessageBox.Show("Не удалось сохранить контракт: " + cTPrvdr.ErrorInfo, "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                Contracts.Add(contract);
+            }
+
+            StartContractDate = null;
+            FinishContractDate = null;
+            ContractDescription = String.Empty;
+
+            TabsToggleExecute();
+        }
+
+        #endregion
+
+        #region Violations
+
+        /// <summary>
+        /// Дата нарушения
+        /// </summary>
+        private DateTime? _violationDate = null;
+
+        /// <summary>
+        /// Заметка к нарушению
+        /// </summary>
+        private string _violationDescription = String.Empty;
+
+        /// <summary>
+        /// Дата нарушения
+        /// </summary>
+        public DateTime? ViolationDate
+        {
+            get { return _violationDate; }
+            set
+            {
+                _violationDate = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Заметка к нарушению
+        /// </summary>
+        public string ViolationDescription
+        {
+            get { return _violationDescription; }
+            set
+            {
+                _violationDescription = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Добавить нарушение
+        /// </summary>
+        private RelayCommand _addViolation;
+
+        public RelayCommand AddViolation
+            => _addViolation ?? (_addViolation = new RelayCommand(AddViolationExecute));
+
+        private void AddViolationExecute()
+        {
+            //зануляем текст ошибки
+            CatalogTextError = String.Empty;
+            if (ViolationDate == null || ViolationDate > DateTime.Now.Date)
+            {
+                //если ошибка валидации - указываем текст ошибки
+                CatalogTextError = "Дата не указана или указана неверно";
+                return;
+            }
+            if (ViolationDescription.Length == 0)
+            {
+                //если ошибка валидации - указываем текст ошибки
+                CatalogTextError = "Нарушение не указано";
+                return;
+            }
+            if (ViolationDescription.Length > 200)
+            {
+                //если ошибка валидации - указываем текст ошибки
+                CatalogTextError = "Слишком длинное описание нарушения";
+                return;
+            }
+
+            //заносим нарушение в бд и список
+            using (ViolationTableProvider vPrvdr = new ViolationTableProvider())
+            {
+                var violation = vPrvdr.Save(new ViolationModel()
+                {
+                    EmployeeId = EmployeeViewModel.Id.Value,
+                    ViolationDate = ViolationDate.Value,
+                    Description = ViolationDescription
+                });
+
+                if (violation == null)
+                {
+                    MessageBox.Show("Не удалось сохранить нарушение: " + vPrvdr.ErrorInfo, "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                Violations.Add(violation);
+            }
+
+            ViolationDate = null;
+            ViolationDescription = String.Empty;
+
+            TabsToggleExecute();
+        }
+
+        #endregion
+
+        #region Studying
+
+        /// <summary>
+        /// Дата начала обучения
+        /// </summary>
+        private DateTime? _educationStartDate = null;
+
+        /// <summary>
+        /// Дата окончания обучения
+        /// </summary>
+        private DateTime? _educationFinishDate = null;
+
+        /// <summary>
+        /// уч. заведение
+        /// </summary>
+        private EducationalInstitutionModel _educationalInstitution;
+
+        /// <summary>
+        /// специальность
+        /// </summary>
+        private SpecialityModel _speciality;
+        
+        /// <summary>
+        /// Описание
+        /// </summary>
+        private string _educationDescription = String.Empty;
+
+        /// <summary>
+        /// Дата начала обучения
+        /// </summary>
+        public DateTime? EducationStartDate
+        {
+            get { return _educationStartDate; }
+            set
+            {
+                _educationStartDate = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Дата окончания обучения
+        /// </summary>
+        public DateTime? EducationFinishDate
+        {
+            get { return _educationFinishDate; }
+            set
+            {
+                _educationFinishDate = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Выбранное уч. заведение
+        /// </summary>
+        public EducationalInstitutionModel EducationalInstitution
+        {
+            get { return _educationalInstitution; }
+            set
+            {
+                _educationalInstitution = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Специальность
+        /// </summary>
+        public SpecialityModel Speciality
+        {
+            get { return _speciality; }
+            set
+            {
+                _speciality = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Описание
+        /// </summary>
+        public string EducationDescription
+        {
+            get { return _educationDescription; }
+            set
+            {
+                _educationDescription = value;
+                RaisePropertyChanged();
+            }
+        }
+        /// <summary>
+        /// Добавить обучение
+        /// </summary>
+        private RelayCommand _addEducation;
+        public RelayCommand AddEducation
+            => _addEducation ?? (_addEducation = new RelayCommand(AddEducationExecute));
+
+        private void AddEducationExecute()
+        {
+            CatalogTextError = String.Empty;
+            if (EducationStartDate == null || EducationStartDate.Value.Date > DateTime.Now)
+            {
+                CatalogTextError = "Дата начала обучения не указана или указана неверно";
+                return;
+            }
+            if (EducationFinishDate == null ||
+                EducationFinishDate.Value.Date < EducationStartDate.Value.Date)
+            {
+                CatalogTextError = "Дата окончания обучения не указана или указана неверно";
+                return;
+            }
+            if (EducationalInstitution == null)
+            {
+                CatalogTextError = "Учебное заведение не указано";
+                return;
+            }
+            if (Speciality == null)
+            {
+                CatalogTextError = "Специальность не указана";
+                return;
+            }
+            if (EducationDescription.Length > 200)
+            {
+                CatalogTextError = "Слишком длинное описание";
+            }
+            using (EducationTimeTableProvider ePrvdr = new EducationTimeTableProvider())
+            {
+                var education = ePrvdr.Save(new EducationTimeModel()
+                {
+                    EmployeeId = EmployeeViewModel.Id.Value,
+                    StartDate = EducationStartDate.Value,
+                    FinishDate = EducationFinishDate.Value,
+                    InstitutionId = EducationalInstitution.Id.Value,
+                    SpecialityId = Speciality.Id.Value,
+                    Description = EducationDescription
+                });
+                if (education == null)
+                {
+                    MessageBox.Show("Не удалось сохранить запись об обучении: " + ePrvdr.ErrorInfo, "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                EducationTimes.Add(education);
+
+                EducationStartDate = null;
+                EducationFinishDate = null;
+                EducationalInstitution = null;
+                Speciality = null;
+                EducationDescription = String.Empty;
+
+                TabsToggleExecute();
+            }
+        }
+
+        /// <summary>
+        /// Открыть окно добавления учебного заведения
+        /// </summary>
+        private RelayCommand _addEducationUnit;
+
+        public RelayCommand AddEducationUnit
+            => _addEducationUnit ?? (_addEducationUnit = new RelayCommand(AddEducationUnitExecute));
+
+        private void AddEducationUnitExecute()
+        {
+            AddEducationalInstitutionView addWindow = new AddEducationalInstitutionView();
+            addWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            addWindow.ShowDialog();
+        }
+
+        /// <summary>
+        /// Открыть окно добавления специальности
+        /// </summary>
+        private RelayCommand _addSpeciality;
+
+        public RelayCommand AddSpeciality
+            => _addSpeciality ?? (_addSpeciality = new RelayCommand(AddSpecialityExecute));
+
+        private void AddSpecialityExecute()
+        {
+            AddSpecialityView addWindow = new AddSpecialityView();
+            addWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            addWindow.ShowDialog();
+        }
+
+        #endregion
+
 
 
         #endregion

@@ -677,24 +677,28 @@
                                                             MinWidth="150"
                                                             FontSize="16"
                                                             Margin="0,1"
-                                                            controls:TextBoxHelper.Watermark="Дата начала"/>
+                                                            controls:TextBoxHelper.Watermark="Дата начала"
+                                                            SelectedDate="{Binding StartContractDate}"/>
                                                 <DatePicker Name="ContractFinishDatePicker"
                                                             MinWidth="150"
                                                             Margin="0,1"
                                                             FontSize="16"
-                                                            controls:TextBoxHelper.Watermark="Дата окончания"/>
+                                                            controls:TextBoxHelper.Watermark="Дата окончания"
+                                                            SelectedDate="{Binding FinishContractDate}"/>
                                                 <TextBox Name="ContractDescriptionTBox" 
                                                          Margin="0,1"
                                                          FontSize="16"
                                                          MinWidth="150"
                                                          controls:TextBoxHelper.ClearTextButton="True"
-                                                         controls:TextBoxHelper.Watermark="Описание"/>
+                                                         controls:TextBoxHelper.Watermark="Описание"
+                                                         Text="{Binding ContractDescription}"/>
                                                 <StackPanel Orientation="Horizontal"
                                                             HorizontalAlignment="Right">
                                                     <Button Name="ContractAddBtn"
                                                             Style="{StaticResource ButtonStyle}"
-                                                            Content="Добавить"
-                                                            MinWidth="70"/>
+                                                            Content="Принять"
+                                                            MinWidth="70"
+                                                            Command="{Binding AddContract}"/>
                                                 </StackPanel>
                                             </StackPanel>
                                         </controls:MetroTabItem>
@@ -711,19 +715,22 @@
                                                             MinWidth="150"
                                                             FontSize="16"
                                                             Margin="0,1"
-                                                            controls:TextBoxHelper.Watermark="Дата"/>
+                                                            controls:TextBoxHelper.Watermark="Дата"
+                                                            SelectedDate="{Binding ViolationDate}"/>
                                                 <TextBox Name="ViolationDescriptionTBox" 
                                                          Margin="0,1"
                                                          FontSize="16"
                                                          MinWidth="150"
                                                          controls:TextBoxHelper.ClearTextButton="True"
-                                                         controls:TextBoxHelper.Watermark="Описание"/>
+                                                         controls:TextBoxHelper.Watermark="Описание"
+                                                         Text="{Binding ViolationDescription}"/>
                                                 <StackPanel Orientation="Horizontal"
                                                             HorizontalAlignment="Right">
                                                     <Button Name="ViolationAddBtn"
                                                             Style="{StaticResource ButtonStyle}"
-                                                            Content="Добавить"
-                                                            MinWidth="70"/>
+                                                            Content="Принять"
+                                                            MinWidth="70"
+                                                            Command="{Binding AddViolation}"/>
                                                 </StackPanel>
                                             </StackPanel>
                                         </controls:MetroTabItem>
@@ -741,45 +748,45 @@
                                                                 MinWidth="150"
                                                                 Height="15"
                                                                 FontSize="16"
-                                                                controls:TextBoxHelper.Watermark="Дата начала"/>
-                                                    <DatePicker Name="EducationProcessDatePicker"
+                                                                controls:TextBoxHelper.Watermark="Дата начала"
+                                                                SelectedDate="{Binding EducationStartDate}"/>
+                                                    <DatePicker Name="EducationProcessFinishDatePicker"
                                                                 MinWidth="150"
                                                                 Margin="0,2,0,0"
                                                                 Height="15"
                                                                 FontSize="16"
-                                                                controls:TextBoxHelper.Watermark="Дата окончания"/>
+                                                                controls:TextBoxHelper.Watermark="Дата окончания"
+                                                                SelectedDate="{Binding EducationFinishDate}"/>
                                                     <TextBox Name="EducationProcessDescriptionTBox"
                                                              Margin="0,2,0,0"
                                                              Height="15"
                                                              FontSize="16"
                                                              MinWidth="150"
                                                              controls:TextBoxHelper.ClearTextButton="True"
-                                                             controls:TextBoxHelper.Watermark="Описание"/>
+                                                             controls:TextBoxHelper.Watermark="Описание"
+                                                             Text="{Binding EducationDescription}"/>
                                                 </StackPanel>
                                                 <StackPanel Orientation="Vertical"
                                                             Margin="10,0"
                                                             Width="240">
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <ComboBox   Name="EducationLevelCBox"
-                                                                    MinWidth="150"
-                                                                    Width="210"
-                                                                    FontSize="16"
-                                                                    controls:TextBoxHelper.Watermark="--Уровень--"/>
-                                                    </StackPanel>
                                                     <StackPanel Orientation="Horizontal">
                                                         <ComboBox   Name="InstitutionCBox"
                                                                     MinWidth="150"
                                                                     Width="210"
                                                                     FontSize="16"
                                                                     Margin="0,2,0,0"
-                                                                    controls:TextBoxHelper.Watermark="--Учебное заведение--"/>
+                                                                    controls:TextBoxHelper.Watermark="--Учебное заведение--"
+                                                                    DisplayMemberPath="FullName"
+                                                                    ItemsSource="{Binding EducationalInstitutions}"
+                                                                    SelectedItem="{Binding EducationalInstitution}"/>
                                                         <Button Name="AddEducationUnit"
                                                                 Content="[...]"
                                                                 MinWidth="30"
                                                                 FontSize="20"
                                                                 VerticalContentAlignment="Center"
                                                                 Style="{StaticResource ButtonStyle}"
-                                                                ToolTip="Добавить учебное заведение"/>
+                                                                ToolTip="Добавить учебное заведение"
+                                                                Command="{Binding AddEducationUnit}"/>
                                                     </StackPanel>
                                                     <StackPanel Orientation="Horizontal">
                                                         <ComboBox   Name="SpecialityCBox"
@@ -787,22 +794,27 @@
                                                                     Width="210"
                                                                     FontSize="16"                                                        
                                                                     Margin="0,2,0,0"
-                                                                    controls:TextBoxHelper.Watermark="--Специальность--"/>
+                                                                    controls:TextBoxHelper.Watermark="--Специальность--"
+                                                                    DisplayMemberPath="Speciality"
+                                                                    ItemsSource="{Binding Specialities}"
+                                                                    SelectedItem="{Binding Speciality}"/>
                                                         <Button Name="AddSpeciality"
                                                                 Content="[...]"
                                                                 MinWidth="30"
                                                                 FontSize="20"
                                                                 VerticalContentAlignment="Center"
                                                                 Style="{StaticResource ButtonStyle}"
+                                                                Command="{Binding AddSpeciality}"
                                                                 ToolTip="Добавить специальность"/>
                                                     </StackPanel>
                                                     <StackPanel Orientation="Horizontal"
                                                                 HorizontalAlignment="Right">
                                                         <Button Name="EducationProcessAddBtn"
                                                                 Style="{StaticResource ButtonStyle}"
-                                                                Content="Добавить"
+                                                                Content="Принять"
                                                                 MinWidth="70"
-                                                                Margin="30,0"/>
+                                                                Margin="30,0"
+                                                                Command="{Binding AddEducation}"/>
                                                     </StackPanel>
                                                 </StackPanel>
                                             </StackPanel>

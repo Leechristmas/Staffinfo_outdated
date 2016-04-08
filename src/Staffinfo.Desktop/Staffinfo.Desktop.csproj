@@ -143,6 +143,7 @@
     <Compile Include="Data\DataTableProviders\ViolationTableProvider.cs" />
     <Compile Include="Helpers\BitmapImageHelper.cs" />
     <Compile Include="Helpers\CatalogObservableCollectionsList.cs" />
+    <Compile Include="Helpers\Extentions.cs" />
     <Compile Include="Helpers\PasswordHelper.cs" />
     <Compile Include="Helpers\WindowCloseHelper.cs" />
     <Compile Include="Model\Report.cs" />
@@ -175,8 +176,10 @@
     <Compile Include="Shared\AuthorizationException.cs" />
     <Compile Include="Shared\DatabaseNotFoundException.cs" />
     <Compile Include="Shared\DatabaseWasNotCreatedException.cs" />
+    <Compile Include="ViewModel\AddNewEducationalInstitutionViewModel.cs" />
     <Compile Include="ViewModel\AddNewEmployeeViewModel.cs" />
     <Compile Include="ViewModel\AddNewMilitaryUnitViewModel.cs" />
+    <Compile Include="ViewModel\AddNewSpecialityViewModel.cs" />
     <Compile Include="ViewModel\AllEmployeesViewModel.cs" />
     <Compile Include="ViewModel\AllUsersViewModel.cs" />
     <Compile Include="ViewModel\DictionaryViewModelBase.cs" />

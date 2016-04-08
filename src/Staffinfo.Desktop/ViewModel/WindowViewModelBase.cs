@@ -123,9 +123,10 @@ namespace Staffinfo.Desktop.ViewModel
         public RelayCommand CloseWindowCommand
             => _closeWindowCommand ?? (_closeWindowCommand = new RelayCommand(CloseWindow));
 
-        private void CloseWindow()
+        protected void CloseWindow()
         {
-            WindowsClosed = true;
+            WindowsClosed = true;   //закрываем окно
+            WindowsClosed = false;  //разрешаем открывать окно снова
         }
 
         #endregion

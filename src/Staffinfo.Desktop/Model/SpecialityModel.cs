@@ -1,9 +1,11 @@
-﻿namespace Staffinfo.Desktop.Model
+﻿using System;
+
+namespace Staffinfo.Desktop.Model
 {
     /// <summary>
     /// Специальность
     /// </summary>
-    public class SpecialityModel: BaseModel
+    public class SpecialityModel: BaseModel, IComparable
     {
 
         #region Properties
@@ -20,5 +22,16 @@
 
         #endregion
 
+        public int CompareTo(object obj)
+        {
+            var speciality = obj as SpecialityModel;
+
+            if (speciality == null)
+            {
+                throw new ArgumentException("Передан объект неподходящего типа");
+            }
+
+            return String.CompareOrdinal(Speciality, speciality.Speciality);
+        }
     }
 }

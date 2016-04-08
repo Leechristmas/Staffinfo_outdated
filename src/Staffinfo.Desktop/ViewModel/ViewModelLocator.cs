@@ -47,6 +47,8 @@ namespace Staffinfo.Desktop.ViewModel
             SimpleIoc.Default.Register<AddNewEmployeeViewModel>();
             SimpleIoc.Default.Register<ReportsViewModel>();
             SimpleIoc.Default.Register<AddNewMilitaryUnitViewModel>();
+            SimpleIoc.Default.Register<AddNewEducationalInstitutionViewModel>();
+            SimpleIoc.Default.Register<AddNewSpecialityViewModel>();
         }
         /// <summary>
         /// Отчеты
@@ -73,6 +75,18 @@ namespace Staffinfo.Desktop.ViewModel
         /// </summary>
         public AddNewMilitaryUnitViewModel AddMilitaryUnit
             => ServiceLocator.Current.GetInstance<AddNewMilitaryUnitViewModel>();
+
+        /// <summary>
+        /// Добавление учебного заведения
+        /// </summary>
+        public AddNewEducationalInstitutionViewModel AddNewEducationalUnit
+            => ServiceLocator.Current.GetInstance<AddNewEducationalInstitutionViewModel>();
+
+        /// <summary>
+        /// Добавление специальности
+        /// </summary>
+        public AddNewSpecialityViewModel AddNewSpeciality
+            => ServiceLocator.Current.GetInstance<AddNewSpecialityViewModel>();
 
         public static void Cleanup()
         {

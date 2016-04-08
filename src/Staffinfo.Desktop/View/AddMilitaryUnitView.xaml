@@ -10,7 +10,7 @@
                         Title="Добавить воинскую часть" Height="190" Width="450" FontSize="18"
                         DataContext="{Binding Source={StaticResource Locator}, Path=AddMilitaryUnit}"
                         helpers:WindowCloseHelper.WindowsClose="{Binding WindowsClosed}">
-    <StackPanel>
+    <StackPanel IsEnabled="{Binding ViewIsEnable}">
         <StackPanel Orientation="Horizontal"
                     Margin="5">
             <StackPanel Orientation="Vertical"

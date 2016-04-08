@@ -3,6 +3,7 @@ using System.Windows;
 using GalaSoft.MvvmLight.Command;
 using Staffinfo.Desktop.Data;
 using Staffinfo.Desktop.Data.DataTableProviders;
+using Staffinfo.Desktop.Helpers;
 using Staffinfo.Desktop.Model;
 
 namespace Staffinfo.Desktop.ViewModel
@@ -92,6 +93,8 @@ namespace Staffinfo.Desktop.ViewModel
                 return;
             }
 
+            ViewIsEnable = false;
+
             using (MilitaryUnitTableProvider mPrvdr = new MilitaryUnitTableProvider())
             {
                 var militaryUnit = mPrvdr.Save(new MilitaryUnitModel
@@ -105,9 +108,13 @@ namespace Staffinfo.Desktop.ViewModel
                         MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-                DataSingleton.Instance.MilitaryUnitList.Add(militaryUnit);
-                WindowsClosed = true;
+                DataSingleton.Instance.MilitaryUnitList.Add(militaryUnit);  //добавляем элемент
+                DataSingleton.Instance.MilitaryUnitList.Sort();             //сортируем новый список
+
             }
+            ViewIsEnable = true;
+
+            CloseWindow();
         }
 
     }

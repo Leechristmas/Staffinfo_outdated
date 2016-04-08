@@ -471,7 +471,7 @@ namespace Staffinfo.Desktop.ViewModel
             ViewIsEnable = true;
 
             //закрываем окно
-            WindowsClosed = true;
+            CloseWindow();
         }
 
         #endregion
