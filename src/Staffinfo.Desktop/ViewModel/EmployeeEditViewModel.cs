@@ -1295,7 +1295,7 @@ namespace Staffinfo.Desktop.ViewModel
 
                 if (hospitalTime == null)
                 {
-                    MessageBox.Show("Не удалось сохранить вынесение благодарности: " + hTPrvdr.ErrorInfo, "Ошибка",
+                    MessageBox.Show("Не удалось сохранить больничный: " + hTPrvdr.ErrorInfo, "Ошибка",
                         MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
@@ -2105,7 +2105,689 @@ namespace Staffinfo.Desktop.ViewModel
 
         #endregion
 
+        #region Holiday times
 
+        /// <summary>
+        /// Дата открытия отпуска
+        /// </summary>
+        private DateTime? _startHolidayDate = null;
+
+        /// <summary>
+        /// Дата закрытия отпуска
+        /// </summary>
+        private DateTime? _finishHolidayDate = null;
+
+        /// <summary>
+        /// Заметка к отпуску
+        /// </summary>
+        private string _holidayTimeDescription = String.Empty;
+
+        /// <summary>
+        /// Дата открытия отпуска
+        /// </summary>
+        public DateTime? StartHolidayDate
+        {
+            get { return _startHolidayDate; }
+            set
+            {
+                _startHolidayDate = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Дата закрытия отпуска
+        /// </summary>
+        public DateTime? FinishHolidayDate
+        {
+            get { return _finishHolidayDate; }
+            set
+            {
+                _finishHolidayDate = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Заметка к отпуску
+        /// </summary>
+        public string HolidayTimeDescription
+        {
+            get { return _holidayTimeDescription; }
+            set
+            {
+                _holidayTimeDescription = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Добавить отпуск
+        /// </summary>
+        private RelayCommand _addHolidayTime;
+
+        public RelayCommand AddHolidayTime
+            => _addHolidayTime ?? (_addHolidayTime = new RelayCommand(AddHolidayTimeExecute));
+
+        private void AddHolidayTimeExecute()
+        {
+            //зануляем текст ошибки
+            CatalogTextError = String.Empty;
+            if (StartHolidayDate == null || StartHolidayDate > DateTime.Now.Date)
+            {
+                //если ошибка валидации - указываем текст ошибки
+                CatalogTextError = "Дата открытия отпуска не указана или указана неверно";
+                return;
+            }
+            if (FinishHolidayDate > DateTime.Now.Date || FinishHolidayDate < StartHolidayDate ||
+                FinishHolidayDate == null)
+            {
+                //если ошибка валидации - указываем текст ошибки
+                CatalogTextError = "Дата закрытия отпуска не указана или указана неверно";
+                return;
+            }
+
+            //заносим отпуск в бд и список
+            using (HolidayTimeTableProvider hTPrvdr = new HolidayTimeTableProvider())
+            {
+                var holidayTime = hTPrvdr.Save(new HolidayTimeModel()
+                {
+                    EmployeeId = EmployeeViewModel.Id.Value,
+                    StartDate = StartHolidayDate.Value,
+                    FinishDate = FinishHolidayDate.Value,
+                    Description = HolidayTimeDescription
+                });
+
+                if (holidayTime == null)
+                {
+                    MessageBox.Show("Не удалось сохранить отпуск: " + hTPrvdr.ErrorInfo, "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                HolidayTimes.Add(holidayTime);
+            }
+
+            StartHolidayDate = null;
+            FinishHolidayDate = null;
+            HolidayTimeDescription = String.Empty;
+
+            TabsToggleExecute();
+        }
+
+        #endregion
+
+        #region PostAssignment
+
+        #region Fields
+
+        /// <summary>
+        /// Дата присвоения должности
+        /// </summary>
+        private DateTime? _postAssignmentDate = null;
+
+        /// <summary>
+        /// Номер приказа
+        /// </summary>
+        private int? _postAssignmentOrderNumber = null;
+
+        /// <summary>
+        /// Описание
+        /// </summary>
+        private string _postAssignmentDescription = String.Empty;
+
+        /// <summary>
+        /// Выбранная служба
+        /// </summary>
+        private ServiceModel _postAssignmentService;
+
+        /// <summary>
+        /// Старая должность
+        /// </summary>
+        private PostModel _postAssignmentOldPost;
+
+        /// <summary>
+        /// Новая должность
+        /// </summary>
+        private PostModel _postAssignmentNewPost;
+
+        /// <summary>
+        /// "Активная служба"
+        /// </summary>
+        private readonly ServiceModel _postAssignmenService;
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Дата присвоения должности
+        /// </summary>
+        public DateTime? PostAssignmentDate
+        {
+            get { return _postAssignmentDate; }
+            set
+            {
+                _postAssignmentDate = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Номер приказа
+        /// </summary>
+        public int? PostAssignmentOrderNumber
+        {
+            get { return _postAssignmentOrderNumber; }
+            set
+            {
+                _postAssignmentOrderNumber = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Описание
+        /// </summary>
+        public string PostAssignmentDescription
+        {
+            get { return _postAssignmentDescription; }
+            set
+            {
+                _postAssignmentDescription = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Выбранная служба
+        /// </summary>
+        public ServiceModel PostAssignmentService
+        {
+            get { return _postAssignmentService; }
+            set
+            {
+                _postAssignmentService = value;
+                RaisePropertyChanged();
+                RaisePropertyChanged("PostAssignmentPostList");
+            }
+        }
+
+        /// <summary>
+        /// Старая должность
+        /// </summary>
+        public PostModel PostAssignmentOldPost
+        {
+            get { return _postAssignmentOldPost; }
+            set
+            {
+                _postAssignmentOldPost = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Новая должность
+        /// </summary>
+        public PostModel PostAssignmentNewPost
+        {
+            get { return _postAssignmentNewPost; }
+            set
+            {
+                _postAssignmentNewPost = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Должности (для учета всех присвоений)
+        /// </summary>
+        public ListViewModel<PostModel> PostAssignmentPostList => new ListViewModel<PostModel>(_postList.ModelList.Where(post => post.ServiceId == PostAssignmentService?.Id).ToList());
+
+        #endregion
+
+        /// <summary>
+        /// Добавить присвоение должности
+        /// </summary>
+        private RelayCommand _addPostAssignment;
+
+        public RelayCommand AddPostAssignment
+            => _addPostAssignment ?? (_addPostAssignment = new RelayCommand(AddPostAssignmentExecute));
+
+        private void AddPostAssignmentExecute()
+        {
+            //зануляем текст ошибки
+            CatalogTextError = String.Empty;
+            if (PostAssignmentDate == null || PostAssignmentDate > DateTime.Now.Date)
+            {
+                //если ошибка валидации - указываем текст ошибки
+                CatalogTextError = "Дата присвоения должности не указана или указана неверно";
+                return;
+            }
+            if (PostAssignmentOrderNumber == null)
+            {
+                //если ошибка валидации - указываем текст ошибки
+                CatalogTextError = "Не указан номер приказа";
+                return;
+            }
+            if (PostAssignmentDescription.Length > 200)
+            {
+                CatalogTextError = "Слишком длинное описание";
+            }
+            if (PostAssignmentOldPost == null)
+            {
+                CatalogTextError = "Не указана текущая должность";
+                return;
+            }
+            if (PostAssignmentNewPost == null)
+            {
+                CatalogTextError = "Не указана новая должность";
+                return;
+            }
+            if (PostAssignmentNewPost.Id == PostAssignmentOldPost.Id)
+            {
+                CatalogTextError = "Не может быть выбрана та же должность";
+                return;
+            }
+
+            //заносим присвоение должности в бд и список
+            using (PostAssignmentTableProvider pAPrvdr = new PostAssignmentTableProvider())
+            {
+                var postAssignment = pAPrvdr.Save(new PostAssignmentModel()
+                {
+                    EmployeeId = EmployeeViewModel.Id.Value,
+                    AssignmentDate = PostAssignmentDate.Value,
+                    OrderNumber = PostAssignmentOrderNumber.Value,
+                    PreviousPostId = PostAssignmentOldPost.Id.Value,
+                    NewPostId = PostAssignmentNewPost.Id.Value,
+                    Description = PostAssignmentDescription
+                });
+
+                if (postAssignment == null)
+                {
+                    MessageBox.Show("Не удалось сохранить запись: " + pAPrvdr.ErrorInfo, "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                PostAssignments.Add(postAssignment);
+            }
+
+            PostAssignmentDate = null;
+            PostAssignmentOrderNumber = null;
+            PostAssignmentOldPost = null;
+            PostAssignmentNewPost = null;
+
+            PostAssignmentDescription = String.Empty;
+
+            TabsToggleExecute();
+        }
+
+        #endregion
+
+        #region RankAssignment
+
+        #region Fields
+
+        /// <summary>
+        /// Дата присвоения звания
+        /// </summary>
+        private DateTime? _rankAssignmentDate = null;
+
+        /// <summary>
+        /// Номер приказа
+        /// </summary>
+        private int? _rankAssignmentOrderNumber = null;
+
+        /// <summary>
+        /// Описание
+        /// </summary>
+        private string _rankAssignmentDescription = String.Empty;
+        
+        /// <summary>
+        /// Старое звание
+        /// </summary>
+        private RankModel _rankAssignmentOldRank;
+
+        /// <summary>
+        /// Новое звание
+        /// </summary>
+        private RankModel _rankAssignmentNewRank;
+        
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Дата присвоения 
+        /// </summary>
+        public DateTime? RankAssignmentDate
+        {
+            get { return _rankAssignmentDate; }
+            set
+            {
+                _rankAssignmentDate = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Номер приказа
+        /// </summary>
+        public int? RankAssignmentOrderNumber
+        {
+            get { return _rankAssignmentOrderNumber; }
+            set
+            {
+                _rankAssignmentOrderNumber = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Описание
+        /// </summary>
+        public string RankAssignmentDescription
+        {
+            get { return _rankAssignmentDescription; }
+            set
+            {
+                _rankAssignmentDescription = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Старое звание
+        /// </summary>
+        public RankModel RankAssignmentOldRank
+        {
+            get { return _rankAssignmentOldRank; }
+            set
+            {
+                _rankAssignmentOldRank = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Новое звание
+        /// </summary>
+        public RankModel RankAssignmentNewRank
+        {
+            get { return _rankAssignmentNewRank; }
+            set
+            {
+                _rankAssignmentNewRank = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion
+
+        /// <summary>
+        /// Добавить присвоение звания
+        /// </summary>
+        private RelayCommand _addRankAssignment;
+        public RelayCommand AddRankAssignment
+            => _addRankAssignment ?? (_addRankAssignment = new RelayCommand(AddRankAssignmentExecute));
+
+        private void AddRankAssignmentExecute()
+        {
+            //зануляем текст ошибки
+            CatalogTextError = String.Empty;
+            if (RankAssignmentDate == null || PostAssignmentDate > DateTime.Now.Date)
+            {
+                //если ошибка валидации - указываем текст ошибки
+                CatalogTextError = "Дата присвоения звания не указана или указана неверно";
+                return;
+            }
+            if (RankAssignmentOrderNumber == null)
+            {
+                //если ошибка валидации - указываем текст ошибки
+                CatalogTextError = "Не указан номер приказа";
+                return;
+            }
+            if (RankAssignmentDescription.Length > 200)
+            {
+                CatalogTextError = "Слишком длинное описание";
+            }
+            if (RankAssignmentOldRank == null)
+            {
+                CatalogTextError = "Не указано текущее звание";
+                return;
+            }
+            if (RankAssignmentNewRank == null)
+            {
+                CatalogTextError = "Не указано новое звание";
+                return;
+            }
+            if (RankAssignmentOldRank.Id == RankAssignmentNewRank.Id)
+            {
+                CatalogTextError = "Не может быть выбрано то же звание";
+                return;
+            }
+
+            //заносим присвоение должности в бд и список
+            using (RankAssignmentTableProvider rAPrvdr = new RankAssignmentTableProvider())
+            {
+                var rankAssignment = rAPrvdr.Save(new RankAssignmentModel()
+                {
+                    EmployeeId = EmployeeViewModel.Id.Value,
+                    AssignmentDate = RankAssignmentDate.Value,
+                    OrderNumber = RankAssignmentOrderNumber.Value,
+                    PreviousRankId = RankAssignmentOldRank.Id.Value,
+                    NewRankId = RankAssignmentNewRank.Id.Value,
+                    Description = RankAssignmentDescription
+                });
+
+                if (rankAssignment == null)
+                {
+                    MessageBox.Show("Не удалось сохранить запись: " + rAPrvdr.ErrorInfo, "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                RankAssignments.Add(rankAssignment);
+            }
+
+            RankAssignmentDate = null;
+            RankAssignmentOrderNumber = null;
+            RankAssignmentOldRank = null;
+            RankAssignmentNewRank = null;
+
+            RankAssignmentDescription = String.Empty;
+
+            TabsToggleExecute();
+        }
+
+        #endregion
+
+        #region Relatives
+        
+        /// <summary>
+        /// Имя родственника
+        /// </summary>
+        private string _relativeFirstName = String.Empty;
+
+        /// <summary>
+        /// Фамилия родственника
+        /// </summary>
+        private string _relativeLastName = String.Empty;
+
+        /// <summary>
+        /// Отчество родственника
+        /// </summary>
+        private string _relativeMiddleName = String.Empty;
+
+        /// <summary>
+        /// Тип родства
+        /// </summary>
+        private string _relativeType;
+
+        /// <summary>
+        /// Дата рождения родственника
+        /// </summary>
+        private DateTime? _relativeBornDate;
+
+        /// <summary>
+        /// Описание
+        /// </summary>
+        private string _relativeDescription = String.Empty;
+
+        /// <summary>
+        /// Имя родственника
+        /// </summary>
+        public string RelativeFirstName
+        {
+            get { return _relativeFirstName; }
+            set
+            {
+                _relativeFirstName = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Фамилия родственника
+        /// </summary>
+        public string RelativeLastName
+        {
+            get { return _relativeLastName; }
+            set
+            {
+                _relativeLastName = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Отчество родственника
+        /// </summary>
+        public string RelativeMiddleName
+        {
+            get { return _relativeMiddleName; }
+            set
+            {
+                _relativeMiddleName = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Тип родства
+        /// </summary>
+        public string RelativeType
+        {
+            get { return _relativeType; }
+            set
+            {
+                _relativeType = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Дата рождения родственника
+        /// </summary>
+        public DateTime? RelativeBornDate
+        {
+            get { return _relativeBornDate; }
+            set
+            {
+                _relativeBornDate = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Описание
+        /// </summary>
+        public string RelativeDescription
+        {
+            get { return _relativeDescription; }
+            set
+            {
+                _relativeDescription = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Добавить родственника
+        /// </summary>
+        private RelayCommand _addRelative;
+        public RelayCommand AddRelative
+            => _addRelative ?? (_addRelative = new RelayCommand(AddRelativeExecute));
+
+        private void AddRelativeExecute()
+        {
+            //зануляем текст ошибки
+            CatalogTextError = String.Empty;
+
+            if (RelativeFirstName == String.Empty || RelativeFirstName.Length > 60)
+            {
+                CatalogTextError = "Имя не указано или имеет слишком большую длину";
+                return;
+            }
+            if (RelativeLastName == String.Empty || RelativeLastName.Length > 60)
+            {
+                CatalogTextError = "Фамилия не указана или имеет слишком большую длину";
+                return;
+            }
+            if (RelativeMiddleName == String.Empty || RelativeMiddleName.Length > 60)
+            {
+                CatalogTextError = "Отчество не указано или имеет слишком большую длину";
+                return;
+            }
+            if (RelativeType == null)
+            {
+                CatalogTextError = "Не указано родство";
+                return;
+            }
+            if (RelativeBornDate == null || PostAssignmentDate > DateTime.Now.Date)
+            {
+                //если ошибка валидации - указываем текст ошибки
+                CatalogTextError = "Дата рождения не указана или указана неверно";
+                return;
+            }
+            if (RelativeDescription.Length > 200)
+            {
+                CatalogTextError = "Слишком длинное описание";
+                return;
+            }
+
+            //заносим присвоение должности в бд и список
+            using (RelativeTableProvider rPrvdr = new RelativeTableProvider())
+            {
+                var relative = rPrvdr.Save(new RelativeModel()
+                {
+                    EmployeeId = EmployeeViewModel.Id.Value,
+                    FirstName = RelativeFirstName,
+                    LastName = RelativeLastName,
+                    MiddleName = RelativeMiddleName,
+                    RelationType = RelativeType,
+                    BornDate = RelativeBornDate.Value,
+                    Description = RelativeDescription
+                });
+
+                if (relative == null)
+                {
+                    MessageBox.Show("Не удалось сохранить запись: " + rPrvdr.ErrorInfo, "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                Relatives.Add(relative);
+            }
+
+            RelativeFirstName = String.Empty;
+            RelativeLastName = String.Empty;
+            RelativeMiddleName = String.Empty;
+            RelativeType = null;
+            RelativeBornDate = null;
+
+            RelativeDescription = String.Empty;
+
+            TabsToggleExecute();
+        }
+
+        #endregion
 
         #endregion
 

@@ -18,7 +18,7 @@ namespace Staffinfo.Desktop.Model
         /// <summary>
         /// Тип родства
         /// </summary>
-        public long RelationTypeId { get; set; }
+        public string RelationType { get; set; }
 
         /// <summary>
         /// Фамилия

@@ -71,7 +71,7 @@ namespace Staffinfo.Desktop.ViewModel
 
                 RaisePropertyChanged();
                 RaisePropertyChanged("SettingVisibility");
-                RaisePropertyChanged("FullName");
+                RaisePropertyChanged("FullUserName");
                 RaisePropertyChanged("AccessType");
             }
         }

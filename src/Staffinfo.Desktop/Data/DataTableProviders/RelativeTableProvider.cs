@@ -26,7 +26,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             if (relativeModel == null) throw new ArgumentNullException(nameof(relativeModel), Resources.DatabaseConnector_parameter_cannot_be_null);
 
             var cmd =
-                new SqlCommand($@"INSERT INTO RELATIVE VALUES({relativeModel.EmployeeId}, {relativeModel.RelationTypeId},'{relativeModel.FirstName}', '{relativeModel.MiddleName}', '{relativeModel.LastName}', '{relativeModel.BornDate}', '{relativeModel.Description}'); SELECT MAX(ID) FROM RELATIVE;");
+                new SqlCommand($@"INSERT INTO RELATIVE VALUES({relativeModel.EmployeeId}, '{relativeModel.RelationType}','{relativeModel.FirstName}', '{relativeModel.MiddleName}', '{relativeModel.LastName}', '{relativeModel.BornDate}', '{relativeModel.Description}'); SELECT MAX(ID) FROM RELATIVE;");
 
             try
             {
@@ -69,7 +69,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 {
                     Id = Int64.Parse(sqlDataReader[0].ToString()),
                     EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
-                    RelationTypeId = int.Parse(sqlDataReader[2].ToString()),
+                    RelationType = sqlDataReader[2].ToString(),
                     FirstName = sqlDataReader[3].ToString(),
                     MiddleName = sqlDataReader[4].ToString(),
                     LastName = sqlDataReader[5].ToString(),
@@ -109,7 +109,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                     {
                         Id = Int64.Parse(sqlDataReader[0].ToString()),
                         EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
-                        RelationTypeId = int.Parse(sqlDataReader[2].ToString()),
+                        RelationType = sqlDataReader[2].ToString(),
                         FirstName = sqlDataReader[3].ToString(),
                         MiddleName = sqlDataReader[4].ToString(),
                         LastName = sqlDataReader[5].ToString(),
@@ -141,7 +141,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             if (relativeModel == null) throw new ArgumentNullException(nameof(relativeModel), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($"UPDATE RELATIVE SET EMPLOYEE_ID={relativeModel.EmployeeId}, RELATION_TYPE_ID={relativeModel.RelationTypeId}, " +
+            var cmd = new SqlCommand($"UPDATE RELATIVE SET EMPLOYEE_ID={relativeModel.EmployeeId}, RELATION_TYPE='{relativeModel.RelationType}', " +
                                      $"FIRST_NAME='{relativeModel.FirstName}', MIDDLE_NAME='{relativeModel.MiddleName}', LAST_NAME='{relativeModel.LastName}', " +
                                      $"BORN_DATE='{relativeModel.BornDate}', DESCRIPTION='{relativeModel.Description}' WHERE ID={relativeModel.Id};");
 
@@ -205,7 +205,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                     {
                         Id = int.Parse(sqlDataReader[0].ToString()),
                         EmployeeId = int.Parse(sqlDataReader[1].ToString()),
-                        RelationTypeId = int.Parse(sqlDataReader[2].ToString()),
+                        RelationType = sqlDataReader[2].ToString(),
                         FirstName = sqlDataReader[3].ToString(),
                         MiddleName = sqlDataReader[4].ToString(),
                         LastName = sqlDataReader[5].ToString(),
