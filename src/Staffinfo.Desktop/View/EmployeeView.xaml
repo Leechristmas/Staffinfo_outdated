@@ -384,6 +384,22 @@
                                                     GridLinesVisibility="All"
                                                     ItemsSource="{Binding SelectedItem}"
                                                     SelectedIndex="{Binding SelectedCatalogRecordIndex}">
+                                        <!--<DataGrid.ColumnHeaderStyle>
+                                            <Style TargetType="DataGridColumnHeader">
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="DataGridColumnHeader">
+                                                                <TextBlock Text="{TemplateBinding Content, Converter={StaticResource DataGridHeaderConverter}}"
+                                                                           FontSize="16"
+                                                                           FontWeight="DemiBold"
+                                                                           TextAlignment="Center"
+                                                                           HorizontalAlignment="Center"
+                                                                           Foreground="Black"/>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </DataGrid.ColumnHeaderStyle>-->
                                         </DataGrid>
                                         <Button Width="100"
                                                 HorizontalAlignment="Right"
@@ -418,7 +434,6 @@
                                                             controls:TextBoxHelper.Watermark="Укажите дату"
                                                             SelectedDate="{Binding Path=SertificationDate}" 
                                                             SelectedDateFormat="Short"/>
-                                                <!--, StringFormat='{}{0:dd/MM/yyyy}'-->
                                                 <TextBox    Name="SertificationDescriptionTBox" 
                                                             Margin="0,1"
                                                             FontSize="16"

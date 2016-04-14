@@ -111,6 +111,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\DataGridHeaderConverter.cs" />
     <Compile Include="Converters\NewConverters.cs" />
     <Compile Include="Data\DatabaseConnector.cs" />
     <Compile Include="Data\DatabaseHelper.cs" />
@@ -147,6 +148,7 @@
     <Compile Include="Helpers\PasswordHelper.cs" />
     <Compile Include="Helpers\WindowCloseHelper.cs" />
     <Compile Include="Model\Report.cs" />
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Shared\AccessLevelType.cs" />
     <Compile Include="Model\BaseModel.cs" />
     <Compile Include="Model\ClasinessModel.cs" />
@@ -189,6 +191,7 @@
     <Compile Include="ViewModel\ObservableCollectionViewModel.cs" />
     <Compile Include="ViewModel\PartialUserViewModel.cs" />
     <Compile Include="ViewModel\ReportsViewModel.cs" />
+    <Compile Include="ViewModel\SertificationViewModel.cs" />
     <Compile Include="ViewModel\StartViewModel.cs" />
     <Compile Include="ViewModel\UserViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
