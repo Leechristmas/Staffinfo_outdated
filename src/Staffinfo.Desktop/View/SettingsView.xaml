@@ -1,13 +1,38 @@
-﻿<controls:MetroWindow x:Class="Staffinfo.Desktop.View.SettingsView"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Staffinfo.Desktop.View"
-        xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
-        mc:Ignorable="d"
-        Title="Настройки" Height="300" Width="300">
-    <Grid>
-        
+﻿<controls:MetroWindow   x:Class="Staffinfo.Desktop.View.SettingsView"
+                        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                        xmlns:local="clr-namespace:Staffinfo.Desktop.View"
+                        xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+                        xmlns:helpers="clr-namespace:Staffinfo.Desktop.Helpers"
+                        mc:Ignorable="d"
+                        Title="Настройки" Height="600" Width="500" DataContext="{Binding Source={StaticResource Locator}, Path=Settings}"
+                        helpers:WindowCloseHelper.WindowsClose="{Binding WindowsClosed}">
+    <Grid IsEnabled="{Binding ViewIsEnable}">
+        <controls:MetroTabControl SelectedIndex="{Binding SelectedTab}">
+            <!--Управление справочниками-->
+            <controls:MetroTabItem Header="Справочники">
+                <!--TODO-->
+            </controls:MetroTabItem>
+            <controls:MetroTabItem Header="Журнал">
+                <DataGrid AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          CanUserAddRows="False"
+                          Style="{DynamicResource AzureDataGrid}"
+                          ScrollViewer.CanContentScroll="True"
+                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                          ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                          GridLinesVisibility="All"
+                          ItemsSource="{Binding LogRecords}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Время" 
+                                            Binding="{Binding OperationTime}"/>
+                        <DataGridTextColumn Header="Операция" 
+                                            Binding="{Binding Description}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </controls:MetroTabItem>
+        </controls:MetroTabControl>
     </Grid>
 </controls:MetroWindow>

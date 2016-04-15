@@ -127,6 +127,7 @@
     <Compile Include="Data\DataTableProviders\GratitudeTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\HolidayTimeTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\HospitalTimeTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\LogTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\MilitaryProcessTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\MilitaryUnitTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\PasportTableProvider.cs" />
@@ -147,6 +148,7 @@
     <Compile Include="Helpers\Extentions.cs" />
     <Compile Include="Helpers\PasswordHelper.cs" />
     <Compile Include="Helpers\WindowCloseHelper.cs" />
+    <Compile Include="Model\DbLogRecord.cs" />
     <Compile Include="Model\Report.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Shared\AccessLevelType.cs" />
@@ -192,6 +194,7 @@
     <Compile Include="ViewModel\PartialUserViewModel.cs" />
     <Compile Include="ViewModel\ReportsViewModel.cs" />
     <Compile Include="ViewModel\SertificationViewModel.cs" />
+    <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="ViewModel\StartViewModel.cs" />
     <Compile Include="ViewModel\UserViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />

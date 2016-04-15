@@ -49,7 +49,14 @@ namespace Staffinfo.Desktop.ViewModel
             SimpleIoc.Default.Register<AddNewMilitaryUnitViewModel>();
             SimpleIoc.Default.Register<AddNewEducationalInstitutionViewModel>();
             SimpleIoc.Default.Register<AddNewSpecialityViewModel>();
+            SimpleIoc.Default.Register<SettingsViewModel>();
         }
+
+        /// <summary>
+        /// Настройки
+        /// </summary>
+        public SettingsViewModel Settings => ServiceLocator.Current.GetInstance<SettingsViewModel>();
+
         /// <summary>
         /// Отчеты
         /// </summary>

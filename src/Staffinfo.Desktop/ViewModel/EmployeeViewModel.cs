@@ -109,6 +109,21 @@ namespace Staffinfo.Desktop.ViewModel
                 RaisePropertyChanged("FirstName");
             }
         }
+        
+        /// <summary>
+        /// Название службы
+        /// </summary>
+        public string ServiceName => Service?.ServiceTitle;
+
+        /// <summary>
+        /// Название должности
+        /// </summary>
+        public string PostName => Post?.PostTitle;
+
+        /// <summary>
+        /// Звание
+        /// </summary>
+        public string RankName => Rank?.RankTitle;
 
         /// <summary>
         /// Id
@@ -146,6 +161,7 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 _empModel.PostId = value.Id; 
                 RaisePropertyChanged("Post");
+                RaisePropertyChanged("PostName");
             }
         }
 
@@ -159,6 +175,7 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 _empModel.RankId = value.Id;
                 RaisePropertyChanged("Rank");
+                RaisePropertyChanged("RankName");
             }
         }
 
@@ -180,6 +197,7 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 _empModel.BornDate = value; 
                 RaisePropertyChanged("BornDate");
+                RaisePropertyChanged("Age");
             }
         }
 
@@ -286,7 +304,25 @@ namespace Staffinfo.Desktop.ViewModel
                 RaisePropertyChanged("HomePhoneNumber");
             }
         }
-        
+
+        /// <summary>
+        /// Возраст
+        /// </summary>
+        public int? Age
+        {
+            get
+            {
+                DateTime nowDate = DateTime.Today;
+                if (BornDate != null)
+                {
+                    int age = nowDate.Year - BornDate.Value.Year;
+                    if (BornDate > nowDate.AddYears(-age)) age--;
+                    return age;
+                }
+                return null;
+            }
+        }
+
         /// <summary>
         /// Режимы
         /// </summary>
