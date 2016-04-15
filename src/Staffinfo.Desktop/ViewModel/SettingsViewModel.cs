@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using GalaSoft.MvvmLight.Command;
 using Staffinfo.Desktop.Data.DataTableProviders;
 using Staffinfo.Desktop.Model;
 
@@ -78,6 +79,27 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 ViewIsEnable = true;
             }
-        } 
+        }
+
+        /// <summary>
+        /// При закрытии окна
+        /// </summary>
+        private RelayCommand _windowClosing;
+        public RelayCommand WindowClosing => _windowClosing ?? (_windowClosing = new RelayCommand(WindowClosingExecute));
+
+        private void WindowClosingExecute()
+        {
+            //указываем стартовый таб
+            SelectedTab = 0;
+        }
+        
+
+        protected override void CloseWindow()
+        {
+            //указываем стартовый таб
+            SelectedTab = 0;
+            base.CloseWindow();  
+        }
+
     }
 }

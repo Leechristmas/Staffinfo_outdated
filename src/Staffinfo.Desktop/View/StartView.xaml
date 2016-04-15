@@ -77,7 +77,8 @@
                         </StackPanel>
                         <StackPanel Orientation="Vertical" 
                                     Margin="0,5">
-                            <ComboBox   MinWidth="145" 
+                            <ComboBox   MinWidth="145"
+                                        MaxWidth="250"
                                         Margin="5,0" 
                                         Height="30"
                                         ItemsSource="{Binding ServerNamesList}"

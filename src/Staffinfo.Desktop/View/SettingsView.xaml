@@ -6,9 +6,16 @@
                         xmlns:local="clr-namespace:Staffinfo.Desktop.View"
                         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
                         xmlns:helpers="clr-namespace:Staffinfo.Desktop.Helpers"
+                        xmlns:command="http://www.galasoft.ch/mvvmlight"
+                        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                         mc:Ignorable="d"
                         Title="Настройки" Height="600" Width="500" DataContext="{Binding Source={StaticResource Locator}, Path=Settings}"
                         helpers:WindowCloseHelper.WindowsClose="{Binding WindowsClosed}">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing">
+            <command:EventToCommand Command="{Binding WindowClosing}" PassEventArgsToCommand="True" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid IsEnabled="{Binding ViewIsEnable}">
         <controls:MetroTabControl SelectedIndex="{Binding SelectedTab}">
             <!--Управление справочниками-->
