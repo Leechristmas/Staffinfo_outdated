@@ -131,6 +131,8 @@ namespace Staffinfo.Desktop.ViewModel
             SelectedTab = 0;
             //сбрасываем период для журнала
             SelectedPeriod = null;
+            //зануляем журнал лога
+            LogRecords = null;
         }
 
         //нужные действия произведены в WindowClosingExecute
