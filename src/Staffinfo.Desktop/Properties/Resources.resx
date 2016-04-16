@@ -131,8 +131,14 @@
     <value>Ошибка выполнения запроса.</value>
     <comment>Ошибка выполнения запроса: вероятно, некорректный запрос</comment>
   </data>
+  <data name="Description" xml:space="preserve">
+    <value>ОПИСАНИЕ</value>
+  </data>
   <data name="MainMode" xml:space="preserve">
     <value>Главное меню</value>
+  </data>
+  <data name="SertificationDate" xml:space="preserve">
+    <value>ДАТА АТТЕСТАЦИИ</value>
   </data>
   <data name="UserTableProvider_Check_Некорректный_логин" xml:space="preserve">
     <value>Некорректный логин</value>

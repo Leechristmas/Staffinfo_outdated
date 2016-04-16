@@ -46,15 +46,54 @@ namespace Staffinfo.Desktop.ViewModel
             SimpleIoc.Default.Register<AllEmployeesViewModel>();
             SimpleIoc.Default.Register<AddNewEmployeeViewModel>();
             SimpleIoc.Default.Register<ReportsViewModel>();
+            SimpleIoc.Default.Register<AddNewMilitaryUnitViewModel>();
+            SimpleIoc.Default.Register<AddNewEducationalInstitutionViewModel>();
+            SimpleIoc.Default.Register<AddNewSpecialityViewModel>();
+            SimpleIoc.Default.Register<SettingsViewModel>();
         }
 
+        /// <summary>
+        /// Настройки
+        /// </summary>
+        public SettingsViewModel Settings => ServiceLocator.Current.GetInstance<SettingsViewModel>();
+
+        /// <summary>
+        /// Отчеты
+        /// </summary>
         public ReportsViewModel Reports => ServiceLocator.Current.GetInstance<ReportsViewModel>();
 
+        /// <summary>
+        /// Добавление сотрудника
+        /// </summary>
         public AddNewEmployeeViewModel AddNewEmploye => ServiceLocator.Current.GetInstance<AddNewEmployeeViewModel>();
 
+        /// <summary>
+        /// Все сотрудники
+        /// </summary>
         public AllEmployeesViewModel AllEmployee => ServiceLocator.Current.GetInstance<AllEmployeesViewModel>();
 
+        /// <summary>
+        /// Start-view
+        /// </summary>
         public StartViewModel Main => ServiceLocator.Current.GetInstance<StartViewModel>();
+
+        /// <summary>
+        /// Добавление воинской части
+        /// </summary>
+        public AddNewMilitaryUnitViewModel AddMilitaryUnit
+            => ServiceLocator.Current.GetInstance<AddNewMilitaryUnitViewModel>();
+
+        /// <summary>
+        /// Добавление учебного заведения
+        /// </summary>
+        public AddNewEducationalInstitutionViewModel AddNewEducationalUnit
+            => ServiceLocator.Current.GetInstance<AddNewEducationalInstitutionViewModel>();
+
+        /// <summary>
+        /// Добавление специальности
+        /// </summary>
+        public AddNewSpecialityViewModel AddNewSpeciality
+            => ServiceLocator.Current.GetInstance<AddNewSpecialityViewModel>();
 
         public static void Cleanup()
         {

@@ -16,13 +16,19 @@ namespace Staffinfo.Desktop.ViewModel
     {
         public AllEmployeesViewModel()
         {
+            //инициализируем уровень доступа пользователя к view
             AccessLevel = DataSingleton.Instance.User.AccessLevel;
-        }
 
+            //инициализируем список сотрудников
+            Employees = DataSingleton.Instance.EmployeeList;
+        }
+        
         #region Fields
 
-        private ObservableCollectionViewModel<EmployeeViewModel> _employeeList =
-            new ObservableCollectionViewModel<EmployeeViewModel>(DataSingleton.Instance.EmployeeList);
+        /// <summary>
+        /// Служащие
+        /// </summary>
+        private ObservableCollection<EmployeeViewModel> _employees;
 
         /// <summary>
         /// текст поиска
@@ -30,7 +36,7 @@ namespace Staffinfo.Desktop.ViewModel
         private string _searchText = String.Empty;
 
         /// <summary>
-        /// выбранные служащий
+        /// выбранный служащий
         /// </summary>
         private EmployeeViewModel _selectedEmployee;
 
@@ -98,9 +104,11 @@ namespace Staffinfo.Desktop.ViewModel
         /// </summary>
         public ObservableCollection<EmployeeViewModel> Employees
         {
-            get
+            get { return _employees; }
+            set
             {
-                return new ObservableCollection<EmployeeViewModel>(DataSingleton.Instance.EmployeeList.Where(e => e.LastName.ToLower().StartsWith(SearchText)));
+                _employees = value;
+                RaisePropertyChanged("Employees");
             }
         }
 
@@ -122,14 +130,19 @@ namespace Staffinfo.Desktop.ViewModel
         /// </summary>
         public string SearchText
         {
-            get { return _searchText.ToLower(); }
+            get { return _searchText; }
             set
             {
+                //блокируем интерфейс
                 ViewIsEnable = false;
+
                 _searchText = value;
-                
                 RaisePropertyChanged("SearchText");
-                RaisePropertyChanged("Employees");
+
+                //селекция сотрудников согласно введенному тексту
+                Employees = new ObservableCollection<EmployeeViewModel>(DataSingleton.Instance.EmployeeList.Where(e => e.LastName.ToLower().StartsWith(SearchText.ToLower())));
+
+                //открываем интерфейс
                 ViewIsEnable = true;
             }
         }

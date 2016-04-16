@@ -97,11 +97,29 @@ namespace Staffinfo.Desktop.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ОПИСАНИЕ.
+        /// </summary>
+        internal static string Description {
+            get {
+                return ResourceManager.GetString("Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Главное меню.
         /// </summary>
         internal static string MainMode {
             get {
                 return ResourceManager.GetString("MainMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ДАТА АТТЕСТАЦИИ.
+        /// </summary>
+        internal static string SertificationDate {
+            get {
+                return ResourceManager.GetString("SertificationDate", resourceCulture);
             }
         }
         

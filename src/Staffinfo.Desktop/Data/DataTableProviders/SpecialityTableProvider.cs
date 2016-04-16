@@ -26,7 +26,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             if (speciality == null) throw new ArgumentNullException(nameof(speciality), Resources.DatabaseConnector_parameter_cannot_be_null);
 
             var cmd =
-                new SqlCommand($@"INSERT INTO SPECIALITY VALUES({speciality.Speciality}, '{speciality.Description}'); SELECT MAX(ID) FROM SPECIALITY;");
+                new SqlCommand($@"INSERT INTO SPECIALITY VALUES('{speciality.Speciality}', '{speciality.Description}'); SELECT MAX(ID) FROM SPECIALITY;");
 
             try
             {

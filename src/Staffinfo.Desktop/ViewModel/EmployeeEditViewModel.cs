@@ -12,6 +12,7 @@ using Staffinfo.Desktop.Data;
 using Staffinfo.Desktop.Data.DataTableProviders;
 using Staffinfo.Desktop.Helpers;
 using Staffinfo.Desktop.Model;
+using Staffinfo.Desktop.View;
 
 
 namespace Staffinfo.Desktop.ViewModel
@@ -43,7 +44,6 @@ namespace Staffinfo.Desktop.ViewModel
             EmployeeViewModel = employeeViewModel;
 
             _rankList.SelectedItem = employeeViewModel.Rank;
-            //_postList.SelectedItem = employeeViewModel.Post;
             SelectedPost = employeeViewModel.Post;
             _serviceList.SelectedItem = employeeViewModel.Service;
 
@@ -70,7 +70,7 @@ namespace Staffinfo.Desktop.ViewModel
         /// <summary>
         /// Индекс активного листа справочника
         /// </summary>
-        private int _selectedIndex = -1;
+        private int _selectedCatalogIndex = -1;
 
         /// <summary>
         /// Звания
@@ -186,7 +186,7 @@ namespace Staffinfo.Desktop.ViewModel
         #region Properties
 
         /// <summary>
-        /// Индекс выбранного "таба"
+        /// Индекс выбранного "таба" (datagrid или добавление/редактирование pfgbcb)
         /// </summary>
         public int SelectedTabIndex
         {
@@ -196,6 +196,9 @@ namespace Staffinfo.Desktop.ViewModel
                 _selectedTabIndex = value;
                 RaisePropertyChanged();
                 RaisePropertyChanged("TabsToogleTitle");
+                
+                //обнуляем текст ошибки при переходе между табами
+                CatalogTextError = String.Empty;
             }
         }
 
@@ -226,7 +229,7 @@ namespace Staffinfo.Desktop.ViewModel
             set
             {
                 _personalNumber = value;
-                RaisePropertyChanged("PersonalNumber");
+                RaisePropertyChanged();
 
                 WasChanged = (_personalNumber != EmployeeViewModel.PersonalNumber);
             }
@@ -235,10 +238,7 @@ namespace Staffinfo.Desktop.ViewModel
         /// <summary>
         /// Полное имя служащего
         /// </summary>
-        public string FullName
-        {
-            get { return LastName + ' ' + FirstName + ' ' + MiddleName; }
-        }
+        public string FullName => LastName + ' ' + FirstName + ' ' + MiddleName;
 
         /// <summary>
         /// Фамилия
@@ -249,7 +249,7 @@ namespace Staffinfo.Desktop.ViewModel
             set
             {
                 _lastName = value;
-                RaisePropertyChanged("LastName");
+                RaisePropertyChanged();
 
                 WasChanged = (_lastName != EmployeeViewModel.LastName);
             }
@@ -264,7 +264,7 @@ namespace Staffinfo.Desktop.ViewModel
             set
             {
                 _firstName = value;
-                RaisePropertyChanged("FirstName");
+                RaisePropertyChanged();
 
                 WasChanged = (_firstName != EmployeeViewModel.FirstName);
             }
@@ -279,7 +279,7 @@ namespace Staffinfo.Desktop.ViewModel
             set
             {
                 _middleName = value;
-                RaisePropertyChanged("MiddleName");
+                RaisePropertyChanged();
 
                 WasChanged = (_middleName != EmployeeViewModel.MiddleName);
             }
@@ -294,7 +294,7 @@ namespace Staffinfo.Desktop.ViewModel
             set
             {
                 _bornDate = value;
-                RaisePropertyChanged("BornDate");
+                RaisePropertyChanged();
 
                 WasChanged = (_bornDate != EmployeeViewModel.BornDate);
             }
@@ -309,7 +309,7 @@ namespace Staffinfo.Desktop.ViewModel
             set
             {
                 _jobStartDate = value;
-                RaisePropertyChanged("JobStartDate");
+                RaisePropertyChanged();
 
                 WasChanged = (_jobStartDate != EmployeeViewModel.JobStartDate);
             }
@@ -324,7 +324,7 @@ namespace Staffinfo.Desktop.ViewModel
             set
             {
                 _city = value;
-                RaisePropertyChanged("City");
+                RaisePropertyChanged();
 
                 WasChanged = (_city != EmployeeViewModel.City);
             }
@@ -339,7 +339,7 @@ namespace Staffinfo.Desktop.ViewModel
             set
             {
                 _street = value;
-                RaisePropertyChanged("Street");
+                RaisePropertyChanged();
 
                 WasChanged = (_street != EmployeeViewModel.Street);
             }
@@ -354,7 +354,7 @@ namespace Staffinfo.Desktop.ViewModel
             set
             {
                 _house = value;
-                RaisePropertyChanged("House");
+                RaisePropertyChanged();
 
                 WasChanged = (_house != EmployeeViewModel.House);
             }
@@ -369,7 +369,7 @@ namespace Staffinfo.Desktop.ViewModel
             set
             {
                 _flat = value;
-                RaisePropertyChanged("Flat");
+                RaisePropertyChanged();
 
                 WasChanged = (_flat != EmployeeViewModel.Flat);
             }
@@ -384,7 +384,7 @@ namespace Staffinfo.Desktop.ViewModel
             set
             {
                 _pasport = value;
-                RaisePropertyChanged("Pasport");
+                RaisePropertyChanged();
             }
         }
 
@@ -397,7 +397,7 @@ namespace Staffinfo.Desktop.ViewModel
             set
             {
                 _mobilePhoneNumber = value;
-                RaisePropertyChanged("MobilePhoneNumber");
+                RaisePropertyChanged();
 
                 WasChanged = (_mobilePhoneNumber != EmployeeViewModel.MobilePhoneNumber);
             }
@@ -412,7 +412,7 @@ namespace Staffinfo.Desktop.ViewModel
             set
             {
                 _homePhoneNumber = value;
-                RaisePropertyChanged("HomePhoneNumber");
+                RaisePropertyChanged();
 
                 WasChanged = _homePhoneNumber != EmployeeViewModel.HomePhoneNumber;
             }
@@ -433,7 +433,7 @@ namespace Staffinfo.Desktop.ViewModel
             set
             {
                 _photo = value;
-                RaisePropertyChanged("Photo");
+                RaisePropertyChanged();
 
                 WasChanged = !BitmapImageHelper.ImageCompare(_photo, EmployeeViewModel.Photo);
             }
@@ -490,14 +490,17 @@ namespace Staffinfo.Desktop.ViewModel
         /// <summary>
         /// Индекс активного справочника
         /// </summary>
-        public int SelectedIndex
+        public int SelectedCatalogIndex
         {
-            get { return _selectedIndex; }
+            get { return _selectedCatalogIndex; }
             set
             {
-                _selectedIndex = value;
+                _selectedCatalogIndex = value;
                 RaisePropertyChanged();
                 RaisePropertyChanged("SelectedItem");
+
+                //обнуляем текст ошибки при переходе между справочниками
+                CatalogTextError = String.Empty;
             }
         }
 
@@ -567,14 +570,34 @@ namespace Staffinfo.Desktop.ViewModel
         public ObservableCollection<RelativeModel> Relatives { get; set; }
 
         /// <summary>
+        /// Воинские части
+        /// </summary>
+        public ObservableCollection<MilitaryUnitModel> MilitaryUnits => DataSingleton.Instance.MilitaryUnitList;
+        
+        /// <summary>
+        /// Специальности
+        /// </summary>
+        public ObservableCollection<SpecialityModel> Specialities => DataSingleton.Instance.SpecialityList.GetSorted();
+
+        /// <summary>
+        /// Учебные заведения
+        /// </summary>
+        public ObservableCollection<EducationalInstitutionModel> EducationalInstitutions => DataSingleton.Instance.EducationalInstitutionList;
+
+        /// <summary>
+        /// Типы родства
+        /// </summary>
+        public ObservableCollection<RelativeTypeModel> RelativeTypes => DataSingleton.Instance.RelativeTypeList;
+
+        /// <summary>
         /// Активный справочник
         /// </summary>
         public object SelectedItem  //Очередной гребанный костыль...стоит запилить что-то получше.
         {
             get
             {
-                if (SelectedIndex < 0) return null;
-                switch (SelectedIndex)
+                if (SelectedCatalogIndex < 0) return null;
+                switch (SelectedCatalogIndex)
                 {
                     case 0:
                         using (var prvdr = new SertificationTableProvider())
@@ -718,6 +741,8 @@ namespace Staffinfo.Desktop.ViewModel
                         MessageBoxImage.Error);
 
             }
+            
+            CloseWindow();
         }
 
         /// <summary>
@@ -826,7 +851,1945 @@ namespace Staffinfo.Desktop.ViewModel
             }
             return pasport;
         }
+
+        #endregion
+
+        #region Catalogs
+
+        #region Common fields
+
+        /// <summary>
+        /// Текст ошибки при работе со справочниками
+        /// </summary>
+        private string _catalogErrorText = String.Empty;
+
+        /// <summary>
+        /// Индекс выделенной записи справочника
+        /// </summary>
+        private int _selectedCatalogRecordIndex = -1;
+
+        #endregion
+
+        #region Common properties
+
+        /// <summary>
+        /// Индекс выделенной записи справочника
+        /// </summary>
+        public int SelectedCatalogRecordIndex
+        {
+            get { return _selectedCatalogRecordIndex; }
+            set
+            {
+                _selectedCatalogRecordIndex = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Текст ошибки при работе со справочниками
+        /// </summary>
+        public string CatalogTextError
+        {
+            get { return _catalogErrorText; }
+            set
+            {
+                _catalogErrorText = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        #endregion
+
+        #region Common commands
+        /// <summary>
+        /// Удаление записи
+        /// </summary>
+        private RelayCommand _removeItem;
+        public RelayCommand RemoveItem => _removeItem ?? (_removeItem = new RelayCommand(RemoveItemExecute));
+
+        private void RemoveItemExecute()
+        {
+            CatalogTextError = String.Empty;
+            if (SelectedCatalogRecordIndex < 0)
+            {
+                CatalogTextError = "Запись не выбрана";
+                return;
+            }
+            
+            try
+            {
+                switch (SelectedCatalogIndex)
+                {
+                    case 0:     //аттестация
+                        using (SertificationTableProvider sPrvdr = new SertificationTableProvider())
+                        {
+                            var sertificationId = Sertifications.ElementAt(SelectedCatalogRecordIndex).Id;
+                            if (!sPrvdr.DeleteById(sertificationId)) throw new Exception(sPrvdr.ErrorInfo); //если удалить не удалось, бросаем exception
+                        }
+                        Sertifications.RemoveAt(SelectedCatalogRecordIndex);
+                        break;
+                    case 1:     //благодарности
+                        using (GratitudeTableProvider gPrvdr = new GratitudeTableProvider())
+                        {
+                            var gratitudeId = Gratitudes.ElementAt(SelectedCatalogRecordIndex).Id;
+                            if (!gPrvdr.DeleteById(gratitudeId)) throw new Exception(gPrvdr.ErrorInfo);
+                        }
+                        Gratitudes.RemoveAt(SelectedCatalogRecordIndex);
+                        break;
+                    case 2:     //больничные
+                        using (HospitalTimeTableProvider hTPrvdr = new HospitalTimeTableProvider())
+                        {
+                            var hospitalTimeId = HospitalTimes.ElementAt(SelectedCatalogRecordIndex).Id;
+                            if (!hTPrvdr.DeleteById(hospitalTimeId)) throw new Exception(hTPrvdr.ErrorInfo);
+                        }
+                        HospitalTimes.RemoveAt(SelectedCatalogRecordIndex);
+                        break;
+                    case 3:     //взыскания
+                        using (ReprimandTableProvider rPrvdr = new ReprimandTableProvider())
+                        {
+                            var reprimandId = Reprimands.ElementAt(SelectedCatalogRecordIndex).Id;
+                            if (!rPrvdr.DeleteById(reprimandId)) throw new Exception(rPrvdr.ErrorInfo);
+                        }
+                        Reprimands.RemoveAt(SelectedCatalogRecordIndex);
+                        break;
+                    case 4:     //воинская служба
+                        using (MilitaryProcessTableProvider mPrvdr = new MilitaryProcessTableProvider())
+                        {
+                            var militaryId = MilitaryProcesses.ElementAt(SelectedCatalogRecordIndex).Id;
+                            if (!mPrvdr.DeleteById(militaryId)) throw new Exception(mPrvdr.ErrorInfo);
+                        }
+                        MilitaryProcesses.RemoveAt(SelectedCatalogRecordIndex);
+                        break;
+                    case 5:     //классность
+                        using (ClasinessTableProvider cPrvdr = new ClasinessTableProvider())
+                        {
+                            var clasinessId = Clasiness.ElementAt(SelectedCatalogRecordIndex).Id;
+                            if (!cPrvdr.DeleteById(clasinessId)) throw new Exception(cPrvdr.ErrorInfo);
+                        }
+                        Clasiness.RemoveAt(SelectedCatalogRecordIndex);
+                        break;
+                    case 6:     //классность
+                        using (ContractTableProvider cPrvdr = new ContractTableProvider())
+                        {
+                            var contractId = Contracts.ElementAt(SelectedCatalogRecordIndex).Id;
+                            if (!cPrvdr.DeleteById(contractId)) throw new Exception(cPrvdr.ErrorInfo);
+                        }
+                        Contracts.RemoveAt(SelectedCatalogRecordIndex);
+                        break;
+                    case 7:     //нарушения
+                        using (ViolationTableProvider vPrvdr = new ViolationTableProvider())
+                        {
+                            var violationId = Violations.ElementAt(SelectedCatalogRecordIndex).Id;
+                            if (!vPrvdr.DeleteById(violationId)) throw new Exception(vPrvdr.ErrorInfo);
+                        }
+                        Violations.RemoveAt(SelectedCatalogRecordIndex);
+                        break;
+                    case 8:     //образование
+                        using (EducationTimeTableProvider ePrvdr = new EducationTimeTableProvider())
+                        {
+                            var educationId = EducationTimes.ElementAt(SelectedCatalogRecordIndex).Id;
+                            if (!ePrvdr.DeleteById(educationId)) throw new Exception(ePrvdr.ErrorInfo);
+                        }
+                        EducationTimes.RemoveAt(SelectedCatalogRecordIndex);
+                        break;
+                    case 9:     //отпуска
+                        using (HolidayTimeTableProvider hPrvdr = new HolidayTimeTableProvider())
+                        {
+                            var holidayId = HolidayTimes.ElementAt(SelectedCatalogRecordIndex).Id;
+                            if (!hPrvdr.DeleteById(holidayId)) throw new Exception(hPrvdr.ErrorInfo);
+                        }
+                        HolidayTimes.RemoveAt(SelectedCatalogRecordIndex);
+                        break;
+                    case 10:    //присвоение должностей
+                        using (PostAssignmentTableProvider pPrvdr = new PostAssignmentTableProvider())
+                        {
+                            var assignmentId = PostAssignments.ElementAt(SelectedCatalogRecordIndex).Id;
+                            if (!pPrvdr.DeleteById(assignmentId)) throw new Exception(pPrvdr.ErrorInfo);
+                        }
+                        PostAssignments.RemoveAt(SelectedCatalogRecordIndex);
+                        break;
+                    case 11:    //присвоение званий
+                        using (RankAssignmentTableProvider rPrvdr = new RankAssignmentTableProvider())
+                        {
+                            var assignmentId = RankAssignments.ElementAt(SelectedCatalogRecordIndex).Id;
+                            if (!rPrvdr.DeleteById(assignmentId)) throw new Exception(rPrvdr.ErrorInfo);
+                        }
+                        RankAssignments.RemoveAt(SelectedCatalogRecordIndex);
+                        break;
+                    case 12:    //родственники
+                        using (RelativeTableProvider rPrvdr = new RelativeTableProvider())
+                        {
+                            var relativeId = Relatives.ElementAt(SelectedCatalogRecordIndex).Id;
+                            if (!rPrvdr.DeleteById(relativeId)) throw new Exception(rPrvdr.ErrorInfo);
+                        }
+                        Relatives.RemoveAt(SelectedCatalogRecordIndex);
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Не удалось удалить запись: " + e.Message, "Ошибка", MessageBoxButton.OK,
+                    MessageBoxImage.Error, MessageBoxResult.OK);
+            }
+
+        }
+
+        #endregion
+
+        #region Sertifications
+
+        /// <summary>
+        /// Дата аттестации
+        /// </summary>
+        private DateTime? _sertificationDate = null;
+
+        /// <summary>
+        /// Заметка к 
+        /// </summary>
+        private string _sertificationDescription = String.Empty;
+
+        /// <summary>
+        /// Дата аттестации
+        /// </summary>
+        public DateTime? SertificationDate
+        {
+            get { return _sertificationDate; }
+            set
+            {
+                _sertificationDate = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Заметка к аттестации
+        /// </summary>
+        public string SertificationDescription
+        {
+            get { return _sertificationDescription; }
+            set
+            {
+                _sertificationDescription = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Добавить аттестацию
+        /// </summary>
+        private RelayCommand _addSertification;
+        public RelayCommand AddSertification
+            => _addSertification ?? (_addSertification = new RelayCommand(AddSertificationExecute));
+
+        private void AddSertificationExecute()
+        {
+            //зануляем текст ошибки
+            CatalogTextError = String.Empty;
+            if (SertificationDate == null)  //SertificationDate > DateTime.Now.Date - позволяем вводить аттестации с датой > Now, чтобы отслеживать следующее прохождение аттестации
+            {
+                //если ошибка валидации - указываем текст ошибки
+                CatalogTextError = "Дата не указана или указана неверно";
+                return;
+            }
+
+            //заносим аттестацию в бд и список
+            using (SertificationTableProvider sPrvdr = new SertificationTableProvider())
+            {
+                var sertification = sPrvdr.Save(new SertificationModel()
+                {
+                    EmployeeId = EmployeeViewModel.Id.Value,
+                    SertificationDate = SertificationDate.Value,
+                    Description = SertificationDescription
+                });
+
+                if (sertification == null)
+                {
+                    MessageBox.Show("Не удалось сохранить аттестацию: " + sPrvdr.ErrorInfo, "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                Sertifications.Add(sertification);
+            }
+
+            SertificationDate = null;
+            SertificationDescription = String.Empty;
+
+            TabsToggleExecute();
+        }
+
+        #endregion
+
+        #region Gratitudes
+
+        /// <summary>
+        /// Дата вынесения благодарности
+        /// </summary>
+        private DateTime? _gratitudeionDate = null;
+
+        /// <summary>
+        /// Заметка к благодарности
+        /// </summary>
+        private string _gratitudeDescription = String.Empty;
+
+        /// <summary>
+        /// Дата вынесения благодарности
+        /// </summary>
+        public DateTime? GratitudeDate
+        {
+            get { return _gratitudeionDate; }
+            set
+            {
+                _gratitudeionDate = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Заметка к вынесению благодарности
+        /// </summary>
+        public string GratitudeDescription
+        {
+            get { return _gratitudeDescription; }
+            set
+            {
+                _gratitudeDescription = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Добавить вынесение благодарности
+        /// </summary>
+        private RelayCommand _addGratitude;
+        public RelayCommand AddGratitude
+            => _addGratitude ?? (_addGratitude = new RelayCommand(AddGratitudeExecute));
+
+        private void AddGratitudeExecute()
+        {
+            //зануляем текст ошибки
+            CatalogTextError = String.Empty;
+            if (GratitudeDate == null || GratitudeDate > DateTime.Now.Date)
+            {
+                //если ошибка валидации - указываем текст ошибки
+                CatalogTextError = "Дата не указана или указана неверно";
+                return;
+            }
+
+            //заносим благодарность в бд и список
+            using (GratitudeTableProvider sPrvdr = new GratitudeTableProvider())
+            {
+                var gratitude = sPrvdr.Save(new GratitudeModel()
+                {
+                    EmployeeId = EmployeeViewModel.Id.Value,
+                    GratitudeDate = GratitudeDate.Value,
+                    Description = GratitudeDescription
+                });
+
+                if (gratitude == null)
+                {
+                    MessageBox.Show("Не удалось сохранить вынесение благодарности: " + sPrvdr.ErrorInfo, "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                Gratitudes.Add(gratitude);
+            }
+
+            GratitudeDate = null;
+            GratitudeDescription = String.Empty;
+
+            TabsToggleExecute();
+        }
+
+        #endregion
+
+        #region Hospital times
+
+        /// <summary>
+        /// Дата открытия больничного
+        /// </summary>
+        private DateTime? _startHospitalDate = null;
+
+        /// <summary>
+        /// Дата закрытия больничного
+        /// </summary>
+        private DateTime? _finishHospitalDate = null;
+
+        /// <summary>
+        /// Заметка к больничному
+        /// </summary>
+        private string _hospitalTimeDescription = String.Empty;
+
+        /// <summary>
+        /// Дата открытия больничного
+        /// </summary>
+        public DateTime? StartHospitalDate
+        {
+            get { return _startHospitalDate; }
+            set
+            {
+                _startHospitalDate = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Дата закрытия больничного
+        /// </summary>
+        public DateTime? FinishHospitalDate
+        {
+            get { return _finishHospitalDate; }
+            set
+            {
+                _finishHospitalDate = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Заметка к больничному
+        /// </summary>
+        public string  HospitalTimeDescription
+        {
+            get { return _hospitalTimeDescription; }
+            set
+            {
+                _hospitalTimeDescription = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Добавить больничный
+        /// </summary>
+        private RelayCommand _addHospitalTime;
+        public RelayCommand AddHospitalTime
+            => _addHospitalTime ?? (_addHospitalTime = new RelayCommand(AddHospitalTimeExecute));
+
+        private void AddHospitalTimeExecute()
+        {
+            //зануляем текст ошибки
+            CatalogTextError = String.Empty;
+            if (StartHospitalDate == null || StartHospitalDate > DateTime.Now.Date)
+            {
+                //если ошибка валидации - указываем текст ошибки
+                CatalogTextError = "Дата открытия больничного не указана или указана неверно";
+                return;
+            }
+            if (FinishHospitalDate > DateTime.Now.Date || FinishHospitalDate < StartHospitalDate || FinishHospitalDate == null)
+            {
+                //если ошибка валидации - указываем текст ошибки
+                CatalogTextError = "Дата закрытия больничного не указана или указана неверно";
+                return;
+            }
+
+            //заносим больничный в бд и список
+            using (HospitalTimeTableProvider hTPrvdr = new HospitalTimeTableProvider())
+            {
+                var hospitalTime = hTPrvdr.Save(new HospitalTimeModel()
+                {
+                    EmployeeId = EmployeeViewModel.Id.Value,
+                    StartDate = StartHospitalDate.Value,
+                    FinishDate = FinishHospitalDate.Value,
+                    Description = GratitudeDescription
+                });
+
+                if (hospitalTime == null)
+                {
+                    MessageBox.Show("Не удалось сохранить больничный: " + hTPrvdr.ErrorInfo, "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                HospitalTimes.Add(hospitalTime);
+            }
+
+            StartHospitalDate = null;
+            FinishHospitalDate = null;
+            HospitalTimeDescription = String.Empty;
+
+            TabsToggleExecute();
+        }
+
+        #endregion
+
+        #region Reprimands
+
+        /// <summary>
+        /// Дата вынесения выговора
+        /// </summary>
+        private DateTime? _reprimandDate = null;
+
+        /// <summary>
+        /// Сумма взыскания
+        /// </summary>
+        private string _reprimanSum;
+
+        /// <summary>
+        /// Заметка к выговору
+        /// </summary>
+        private string _reprimandDescription;
+
+        /// <summary>
+        /// Дата вынесения выговора
+        /// </summary>
+        public DateTime? ReprimandDate
+        {
+            get { return _reprimandDate; }
+            set
+            {
+                _reprimandDate = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Сумма взыскания
+        /// </summary>
+        public string ReprimandSum
+        {
+            get { return _reprimanSum; }
+            set
+            {
+                _reprimanSum = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Заметка к выговору
+        /// </summary>
+        public string ReprimandDescription
+        {
+            get { return _reprimandDescription; }
+            set
+            {
+                _reprimandDescription = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Добавить выговор
+        /// </summary>
+        private RelayCommand _addReprimand;
+
+        public RelayCommand AddReprimand
+            => _addReprimand ?? (_addReprimand = new RelayCommand(AddReprimandExecute));
+
+        private void AddReprimandExecute()
+        {
+            //зануляем текст ошибки
+            CatalogTextError = String.Empty;
+            if (ReprimandDate == null || ReprimandDate.Value.Date > DateTime.Now.Date)
+            {
+                //если ошибка валидации - указываем текст ошибки
+                CatalogTextError = "Дата вынесения выговора не указана или указана неверно";
+                return;
+            }
+            //введенная сумма выговора
+            decimal reprimandSum;
+            if (!Decimal.TryParse(ReprimandSum, out reprimandSum))
+            {
+                //если ошибка валидации - указываем текст ошибки
+                CatalogTextError = "Сумма взыскания не указана или указана неверно";
+                return;
+            }
+
+            using (ReprimandTableProvider rPrvdr = new ReprimandTableProvider())
+            {
+                var reprimand = rPrvdr.Save(new ReprimandModel
+                {
+                    EmployeeId = EmployeeViewModel.Id.Value,
+                    ReprimandDate = ReprimandDate.Value,
+                    ReprimandSum = reprimandSum,
+                    Description = ReprimandDescription
+                });
+
+                if (reprimand == null)
+                {
+                    MessageBox.Show("Не удалось сохранить вынесение выговора: " + rPrvdr.ErrorInfo, "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                Reprimands.Add(reprimand);
+            }
+
+            ReprimandDate = null;
+            ReprimandDescription = String.Empty;
+            ReprimandSum = String.Empty;
+
+            TabsToggleExecute();
+        }
+
+        #endregion
+
+        #region Military
+        
+        /// <summary>
+        /// Дата начала службы
+        /// </summary>
+        private DateTime? _militaryStartDate = null;
+
+        /// <summary>
+        /// Дата окончания службы
+        /// </summary>
+        private DateTime? _militaryFinishDate = null;
+
+        /// <summary>
+        /// Выделенная воинская часть
+        /// </summary>
+        private MilitaryUnitModel _militaryUnit;
+
+        /// <summary>
+        /// Описание
+        /// </summary>
+        private string _militaryDescription = String.Empty;
+
+        /// <summary>
+        /// Дата начала службы
+        /// </summary>
+        public DateTime? MilitaryStartDate
+        {
+            get { return _militaryStartDate; }
+            set
+            {
+                _militaryStartDate = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Дата окончания службы
+        /// </summary>
+        public DateTime? MilitaryFinishDate
+        {
+            get { return _militaryFinishDate; }
+            set
+            {
+                _militaryFinishDate = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Выделенная воинская часть
+        /// </summary>
+        public MilitaryUnitModel MilitaryUnit
+        {
+            get { return _militaryUnit; }
+            set
+            {
+                _militaryUnit = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Описание
+        /// </summary>
+        public string MilitaryDescription
+        {
+            get { return _militaryDescription; }
+            set
+            {
+                _militaryDescription = value;
+                RaisePropertyChanged();
+            }
+        }
+        /// <summary>
+        /// Добавить прохождение службы
+        /// </summary>
+        private RelayCommand _addMilitaryProcess;
+        public RelayCommand AddMilitaryProcess
+            => _addMilitaryProcess ?? (_addMilitaryProcess = new RelayCommand(AddMilitaryProcessExecute));
+
+        private void AddMilitaryProcessExecute()
+        {
+            CatalogTextError = String.Empty;
+            if (MilitaryStartDate == null || MilitaryStartDate.Value.Date > DateTime.Now)
+            {
+                CatalogTextError = "Дата начала службы не указана или указана неверно";
+                return;
+            }
+            if (MilitaryFinishDate == null || 
+                MilitaryFinishDate.Value.Date < MilitaryStartDate.Value.Date ||
+                MilitaryFinishDate.Value.Date > DateTime.Now.Date)
+            {
+                CatalogTextError = "Дата окончания службы не указана или указана неверно";
+                return;
+            }
+            if (MilitaryUnit == null)
+            {
+                CatalogTextError = "Воинская часть не указана";
+                return;
+            }
+            if (MilitaryDescription.Length > 200)
+            {
+                CatalogTextError = "Слишком длинное описание";
+            }
+            using (MilitaryProcessTableProvider mPrvdr = new MilitaryProcessTableProvider())
+            {
+                var militaryProcess = mPrvdr.Save(new MilitaryProcessModel
+                {
+                    EmployeeId = EmployeeViewModel.Id.Value,
+                    StartDate = MilitaryStartDate.Value,
+                    FinishDate = MilitaryFinishDate.Value,
+                    MilitaryUnitId = MilitaryUnit.Id.Value,
+                    Description = MilitaryDescription
+                });
+                if (militaryProcess == null)
+                {
+                    MessageBox.Show("Не удалось сохранить запись о несении воинской службы: " + mPrvdr.ErrorInfo, "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                MilitaryProcesses.Add(militaryProcess);
+
+                MilitaryStartDate = null;
+                MilitaryFinishDate = null;
+                MilitaryUnit = null;
+                MilitaryDescription = String.Empty;
+
+                TabsToggleExecute();
+            }
+        }
+
+        /// <summary>
+        /// Перейти к добавлению воинской части
+        /// </summary>
+        private RelayCommand _toMilitaryUnitAddOn;
+        public RelayCommand ToMilitaryUnitAddOn
+            => _toMilitaryUnitAddOn ?? (_toMilitaryUnitAddOn = new RelayCommand(ToMilitaryUnitAddOnExecute));
+
+        private void ToMilitaryUnitAddOnExecute()
+        {
+            AddMilitaryUnitView addWindow = new AddMilitaryUnitView();
+            addWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            addWindow.ShowDialog();
+        }
+
+        #endregion
+
+        #region Clasiness
+
+        /// <summary>
+        /// Дата получения/подтверждения классности
+        /// </summary>
+        private DateTime? _clasinessDate = null;
+
+        /// <summary>
+        /// Номер приказа
+        /// </summary>
+        private int? _clasinessOrderNumber = null;
+
+        /// <summary>
+        /// Описание
+        /// </summary>
+        private string _clasinessDescription = String.Empty;
+
+        /// <summary>
+        /// Степень классности
+        /// </summary>
+        private int? _clasinessDegree = null;
+
+        /// <summary>
+        /// Дата получения/подтверждения классности
+        /// </summary>
+        public DateTime? ClasinessDate
+        {
+            get { return _clasinessDate; }
+            set
+            {
+                _clasinessDate = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Номер приказа
+        /// </summary>
+        public int? ClasinessOrderNumber
+        {
+            get { return _clasinessOrderNumber; }
+            set
+            {
+                _clasinessOrderNumber = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Описание к классности
+        /// </summary>
+        public string ClasinessDescription
+        {
+            get { return _clasinessDescription; }
+            set
+            {
+                _clasinessDescription = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Уровень классности
+        /// </summary>
+        public int? ClasinessDegree
+        {
+            get { return _clasinessDegree; }
+            set
+            {
+                _clasinessDegree = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Добавить классность
+        /// </summary>
+        private RelayCommand _addClasiness;
+        public RelayCommand AddClasiness => _addClasiness ?? (_addClasiness = new RelayCommand(AddClasinessExecute));
+
+        private void AddClasinessExecute()
+        {
+            var date = ClasinessDate;
+            var desc = ClasinessDescription;
+            var order = ClasinessOrderNumber;
+            var level = ClasinessDegree;
+
+            CatalogTextError = String.Empty;
+
+            if (ClasinessDate == null || ClasinessDate.Value.Date > DateTime.Now.Date)
+            {
+                CatalogTextError = "Дата не указана или указана неверно";
+                return;
+            }
+            if (ClasinessDescription.Length > 200)
+            {
+                CatalogTextError = "Слишком длинное описание";
+                return;
+            }
+            if (ClasinessOrderNumber == null)
+            {
+                CatalogTextError = "Не указан номер приказа";
+                return;
+            }
+            if (ClasinessDegree == null)
+            {
+                CatalogTextError = "Не указана классность";
+                return;
+            }
+            using (ClasinessTableProvider cPrvdr = new ClasinessTableProvider())
+            {
+                var clasiness = cPrvdr.Save(new ClasinessModel
+                {
+                    EmployeeId = EmployeeViewModel.Id.Value,
+                    ClasinessDate = ClasinessDate.Value,
+                    ClasinessLevel = ClasinessDegree.Value,
+                    OrderNumber = ClasinessOrderNumber.Value,
+                    Description = ClasinessDescription
+                });
+                if (clasiness == null)
+                {
+                    MessageBox.Show("Не удалось сохранить запись о классности: " + cPrvdr.ErrorInfo, "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                Clasiness.Add(clasiness);
+
+                ClasinessDate = null;
+                ClasinessOrderNumber = null;
+                ClasinessDegree = null;
+                ClasinessDescription = String.Empty;
+
+                TabsToggleExecute();
+            }
+        }
+        #endregion
+
+        #region Contracts
+
+        /// <summary>
+        /// Дата подписания контракта
+        /// </summary>
+        private DateTime? _startContractDate = null;
+
+        /// <summary>
+        /// Дата окончания контракта
+        /// </summary>
+        private DateTime? _finishContractDate = null;
+
+        /// <summary>
+        /// Заметка к контракту
+        /// </summary>
+        private string _contractDescription = String.Empty;
+
+        /// <summary>
+        /// Дата подписания контракта
+        /// </summary>
+        public DateTime? StartContractDate
+        {
+            get { return _startContractDate; }
+            set
+            {
+                _startContractDate = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Дата окончания контракта
+        /// </summary>
+        public DateTime? FinishContractDate
+        {
+            get { return _finishContractDate; }
+            set
+            {
+                _finishContractDate = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Заметка к контракту
+        /// </summary>
+        public string ContractDescription
+        {
+            get { return _contractDescription; }
+            set
+            {
+                _contractDescription = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Добавить контракт
+        /// </summary>
+        private RelayCommand _addContract;
+
+        public RelayCommand AddContract
+            => _addContract ?? (_addContract = new RelayCommand(AddContractExecute));
+
+        private void AddContractExecute()
+        {
+            //зануляем текст ошибки
+            CatalogTextError = String.Empty;
+            if (StartContractDate == null || StartContractDate > DateTime.Now.Date)
+            {
+                //если ошибка валидации - указываем текст ошибки
+                CatalogTextError = "Дата открытия контракта не указана или указана неверно";
+                return;
+            }
+            if (FinishContractDate < StartContractDate ||
+                FinishContractDate == null)
+            {
+                //если ошибка валидации - указываем текст ошибки
+                CatalogTextError = "Дата окончания контракта не указана или указана неверно";
+                return;
+            }
+            if (ContractDescription.Length > 200)
+            {
+                CatalogTextError = "Слишком длинное описание";
+                return;
+            }
+
+            //заносим контракт в бд и список
+            using (ContractTableProvider cTPrvdr = new ContractTableProvider())
+            {
+                var contract = cTPrvdr.Save(new ContractModel()
+                {
+                    EmployeeId = EmployeeViewModel.Id.Value,
+                    StartDate = StartContractDate.Value,
+                    FinishDate = FinishContractDate.Value,
+                    Description = ContractDescription
+                });
+
+                if (contract == null)
+                {
+                    MessageBox.Show("Не удалось сохранить контракт: " + cTPrvdr.ErrorInfo, "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                Contracts.Add(contract);
+            }
+
+            StartContractDate = null;
+            FinishContractDate = null;
+            ContractDescription = String.Empty;
+
+            TabsToggleExecute();
+        }
+
+        #endregion
+
+        #region Violations
+
+        /// <summary>
+        /// Дата нарушения
+        /// </summary>
+        private DateTime? _violationDate = null;
+
+        /// <summary>
+        /// Заметка к нарушению
+        /// </summary>
+        private string _violationDescription = String.Empty;
+
+        /// <summary>
+        /// Дата нарушения
+        /// </summary>
+        public DateTime? ViolationDate
+        {
+            get { return _violationDate; }
+            set
+            {
+                _violationDate = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Заметка к нарушению
+        /// </summary>
+        public string ViolationDescription
+        {
+            get { return _violationDescription; }
+            set
+            {
+                _violationDescription = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Добавить нарушение
+        /// </summary>
+        private RelayCommand _addViolation;
+
+        public RelayCommand AddViolation
+            => _addViolation ?? (_addViolation = new RelayCommand(AddViolationExecute));
+
+        private void AddViolationExecute()
+        {
+            //зануляем текст ошибки
+            CatalogTextError = String.Empty;
+            if (ViolationDate == null || ViolationDate > DateTime.Now.Date)
+            {
+                //если ошибка валидации - указываем текст ошибки
+                CatalogTextError = "Дата не указана или указана неверно";
+                return;
+            }
+            if (ViolationDescription.Length == 0)
+            {
+                //если ошибка валидации - указываем текст ошибки
+                CatalogTextError = "Нарушение не указано";
+                return;
+            }
+            if (ViolationDescription.Length > 200)
+            {
+                //если ошибка валидации - указываем текст ошибки
+                CatalogTextError = "Слишком длинное описание нарушения";
+                return;
+            }
+
+            //заносим нарушение в бд и список
+            using (ViolationTableProvider vPrvdr = new ViolationTableProvider())
+            {
+                var violation = vPrvdr.Save(new ViolationModel()
+                {
+                    EmployeeId = EmployeeViewModel.Id.Value,
+                    ViolationDate = ViolationDate.Value,
+                    Description = ViolationDescription
+                });
+
+                if (violation == null)
+                {
+                    MessageBox.Show("Не удалось сохранить нарушение: " + vPrvdr.ErrorInfo, "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                Violations.Add(violation);
+            }
+
+            ViolationDate = null;
+            ViolationDescription = String.Empty;
+
+            TabsToggleExecute();
+        }
+
+        #endregion
+
+        #region Studying
+
+        /// <summary>
+        /// Дата начала обучения
+        /// </summary>
+        private DateTime? _educationStartDate = null;
+
+        /// <summary>
+        /// Дата окончания обучения
+        /// </summary>
+        private DateTime? _educationFinishDate = null;
+
+        /// <summary>
+        /// уч. заведение
+        /// </summary>
+        private EducationalInstitutionModel _educationalInstitution;
+
+        /// <summary>
+        /// специальность
+        /// </summary>
+        private SpecialityModel _speciality;
+        
+        /// <summary>
+        /// Описание
+        /// </summary>
+        private string _educationDescription = String.Empty;
+
+        /// <summary>
+        /// Дата начала обучения
+        /// </summary>
+        public DateTime? EducationStartDate
+        {
+            get { return _educationStartDate; }
+            set
+            {
+                _educationStartDate = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Дата окончания обучения
+        /// </summary>
+        public DateTime? EducationFinishDate
+        {
+            get { return _educationFinishDate; }
+            set
+            {
+                _educationFinishDate = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Выбранное уч. заведение
+        /// </summary>
+        public EducationalInstitutionModel EducationalInstitution
+        {
+            get { return _educationalInstitution; }
+            set
+            {
+                _educationalInstitution = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Специальность
+        /// </summary>
+        public SpecialityModel Speciality
+        {
+            get { return _speciality; }
+            set
+            {
+                _speciality = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Описание
+        /// </summary>
+        public string EducationDescription
+        {
+            get { return _educationDescription; }
+            set
+            {
+                _educationDescription = value;
+                RaisePropertyChanged();
+            }
+        }
+        /// <summary>
+        /// Добавить обучение
+        /// </summary>
+        private RelayCommand _addEducation;
+        public RelayCommand AddEducation
+            => _addEducation ?? (_addEducation = new RelayCommand(AddEducationExecute));
+
+        private void AddEducationExecute()
+        {
+            CatalogTextError = String.Empty;
+            if (EducationStartDate == null || EducationStartDate.Value.Date > DateTime.Now)
+            {
+                CatalogTextError = "Дата начала обучения не указана или указана неверно";
+                return;
+            }
+            if (EducationFinishDate == null ||
+                EducationFinishDate.Value.Date < EducationStartDate.Value.Date)
+            {
+                CatalogTextError = "Дата окончания обучения не указана или указана неверно";
+                return;
+            }
+            if (EducationalInstitution == null)
+            {
+                CatalogTextError = "Учебное заведение не указано";
+                return;
+            }
+            if (Speciality == null)
+            {
+                CatalogTextError = "Специальность не указана";
+                return;
+            }
+            if (EducationDescription.Length > 200)
+            {
+                CatalogTextError = "Слишком длинное описание";
+            }
+            using (EducationTimeTableProvider ePrvdr = new EducationTimeTableProvider())
+            {
+                var education = ePrvdr.Save(new EducationTimeModel()
+                {
+                    EmployeeId = EmployeeViewModel.Id.Value,
+                    StartDate = EducationStartDate.Value,
+                    FinishDate = EducationFinishDate.Value,
+                    InstitutionId = EducationalInstitution.Id.Value,
+                    SpecialityId = Speciality.Id.Value,
+                    Description = EducationDescription
+                });
+                if (education == null)
+                {
+                    MessageBox.Show("Не удалось сохранить запись об обучении: " + ePrvdr.ErrorInfo, "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                EducationTimes.Add(education);
+
+                EducationStartDate = null;
+                EducationFinishDate = null;
+                EducationalInstitution = null;
+                Speciality = null;
+                EducationDescription = String.Empty;
+
+                TabsToggleExecute();
+            }
+        }
+
+        /// <summary>
+        /// Открыть окно добавления учебного заведения
+        /// </summary>
+        private RelayCommand _addEducationUnit;
+
+        public RelayCommand AddEducationUnit
+            => _addEducationUnit ?? (_addEducationUnit = new RelayCommand(AddEducationUnitExecute));
+
+        private void AddEducationUnitExecute()
+        {
+            AddEducationalInstitutionView addWindow = new AddEducationalInstitutionView();
+            addWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            addWindow.ShowDialog();
+        }
+
+        /// <summary>
+        /// Открыть окно добавления специальности
+        /// </summary>
+        private RelayCommand _addSpeciality;
+
+        public RelayCommand AddSpeciality
+            => _addSpeciality ?? (_addSpeciality = new RelayCommand(AddSpecialityExecute));
+
+        private void AddSpecialityExecute()
+        {
+            AddSpecialityView addWindow = new AddSpecialityView();
+            addWindow.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            addWindow.ShowDialog();
+        }
+
+        #endregion
+
+        #region Holiday times
+
+        /// <summary>
+        /// Дата открытия отпуска
+        /// </summary>
+        private DateTime? _startHolidayDate = null;
+
+        /// <summary>
+        /// Дата закрытия отпуска
+        /// </summary>
+        private DateTime? _finishHolidayDate = null;
+
+        /// <summary>
+        /// Заметка к отпуску
+        /// </summary>
+        private string _holidayTimeDescription = String.Empty;
+
+        /// <summary>
+        /// Дата открытия отпуска
+        /// </summary>
+        public DateTime? StartHolidayDate
+        {
+            get { return _startHolidayDate; }
+            set
+            {
+                _startHolidayDate = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Дата закрытия отпуска
+        /// </summary>
+        public DateTime? FinishHolidayDate
+        {
+            get { return _finishHolidayDate; }
+            set
+            {
+                _finishHolidayDate = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Заметка к отпуску
+        /// </summary>
+        public string HolidayTimeDescription
+        {
+            get { return _holidayTimeDescription; }
+            set
+            {
+                _holidayTimeDescription = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Добавить отпуск
+        /// </summary>
+        private RelayCommand _addHolidayTime;
+
+        public RelayCommand AddHolidayTime
+            => _addHolidayTime ?? (_addHolidayTime = new RelayCommand(AddHolidayTimeExecute));
+
+        private void AddHolidayTimeExecute()
+        {
+            //зануляем текст ошибки
+            CatalogTextError = String.Empty;
+            if (StartHolidayDate == null || StartHolidayDate > DateTime.Now.Date)
+            {
+                //если ошибка валидации - указываем текст ошибки
+                CatalogTextError = "Дата открытия отпуска не указана или указана неверно";
+                return;
+            }
+            if (FinishHolidayDate > DateTime.Now.Date || FinishHolidayDate < StartHolidayDate ||
+                FinishHolidayDate == null)
+            {
+                //если ошибка валидации - указываем текст ошибки
+                CatalogTextError = "Дата закрытия отпуска не указана или указана неверно";
+                return;
+            }
+
+            //заносим отпуск в бд и список
+            using (HolidayTimeTableProvider hTPrvdr = new HolidayTimeTableProvider())
+            {
+                var holidayTime = hTPrvdr.Save(new HolidayTimeModel()
+                {
+                    EmployeeId = EmployeeViewModel.Id.Value,
+                    StartDate = StartHolidayDate.Value,
+                    FinishDate = FinishHolidayDate.Value,
+                    Description = HolidayTimeDescription
+                });
+
+                if (holidayTime == null)
+                {
+                    MessageBox.Show("Не удалось сохранить отпуск: " + hTPrvdr.ErrorInfo, "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                HolidayTimes.Add(holidayTime);
+            }
+
+            StartHolidayDate = null;
+            FinishHolidayDate = null;
+            HolidayTimeDescription = String.Empty;
+
+            TabsToggleExecute();
+        }
+
+        #endregion
+
+        #region PostAssignment
+
+        #region Fields
+
+        /// <summary>
+        /// Дата присвоения должности
+        /// </summary>
+        private DateTime? _postAssignmentDate = null;
+
+        /// <summary>
+        /// Номер приказа
+        /// </summary>
+        private int? _postAssignmentOrderNumber = null;
+
+        /// <summary>
+        /// Описание
+        /// </summary>
+        private string _postAssignmentDescription = String.Empty;
+
+        /// <summary>
+        /// Выбранная служба
+        /// </summary>
+        private ServiceModel _postAssignmentService;
+
+        /// <summary>
+        /// Старая должность
+        /// </summary>
+        private PostModel _postAssignmentOldPost;
+
+        /// <summary>
+        /// Новая должность
+        /// </summary>
+        private PostModel _postAssignmentNewPost;
+
+        /// <summary>
+        /// "Активная служба"
+        /// </summary>
+        private readonly ServiceModel _postAssignmenService;
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Дата присвоения должности
+        /// </summary>
+        public DateTime? PostAssignmentDate
+        {
+            get { return _postAssignmentDate; }
+            set
+            {
+                _postAssignmentDate = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Номер приказа
+        /// </summary>
+        public int? PostAssignmentOrderNumber
+        {
+            get { return _postAssignmentOrderNumber; }
+            set
+            {
+                _postAssignmentOrderNumber = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Описание
+        /// </summary>
+        public string PostAssignmentDescription
+        {
+            get { return _postAssignmentDescription; }
+            set
+            {
+                _postAssignmentDescription = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Выбранная служба
+        /// </summary>
+        public ServiceModel PostAssignmentService
+        {
+            get { return _postAssignmentService; }
+            set
+            {
+                _postAssignmentService = value;
+                RaisePropertyChanged();
+                RaisePropertyChanged("PostAssignmentPostList");
+            }
+        }
+
+        /// <summary>
+        /// Старая должность
+        /// </summary>
+        public PostModel PostAssignmentOldPost
+        {
+            get { return _postAssignmentOldPost; }
+            set
+            {
+                _postAssignmentOldPost = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Новая должность
+        /// </summary>
+        public PostModel PostAssignmentNewPost
+        {
+            get { return _postAssignmentNewPost; }
+            set
+            {
+                _postAssignmentNewPost = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Должности (для учета всех присвоений)
+        /// </summary>
+        public ListViewModel<PostModel> PostAssignmentPostList => new ListViewModel<PostModel>(_postList.ModelList.Where(post => post.ServiceId == PostAssignmentService?.Id).ToList());
+
+        #endregion
+
+        /// <summary>
+        /// Добавить присвоение должности
+        /// </summary>
+        private RelayCommand _addPostAssignment;
+
+        public RelayCommand AddPostAssignment
+            => _addPostAssignment ?? (_addPostAssignment = new RelayCommand(AddPostAssignmentExecute));
+
+        private void AddPostAssignmentExecute()
+        {
+            //зануляем текст ошибки
+            CatalogTextError = String.Empty;
+            if (PostAssignmentDate == null || PostAssignmentDate > DateTime.Now.Date)
+            {
+                //если ошибка валидации - указываем текст ошибки
+                CatalogTextError = "Дата присвоения должности не указана или указана неверно";
+                return;
+            }
+            if (PostAssignmentOrderNumber == null)
+            {
+                //если ошибка валидации - указываем текст ошибки
+                CatalogTextError = "Не указан номер приказа";
+                return;
+            }
+            if (PostAssignmentDescription.Length > 200)
+            {
+                CatalogTextError = "Слишком длинное описание";
+            }
+            if (PostAssignmentOldPost == null)
+            {
+                CatalogTextError = "Не указана текущая должность";
+                return;
+            }
+            if (PostAssignmentNewPost == null)
+            {
+                CatalogTextError = "Не указана новая должность";
+                return;
+            }
+            if (PostAssignmentNewPost.Id == PostAssignmentOldPost.Id)
+            {
+                CatalogTextError = "Не может быть выбрана та же должность";
+                return;
+            }
+
+            //заносим присвоение должности в бд и список
+            using (PostAssignmentTableProvider pAPrvdr = new PostAssignmentTableProvider())
+            {
+                var postAssignment = pAPrvdr.Save(new PostAssignmentModel()
+                {
+                    EmployeeId = EmployeeViewModel.Id.Value,
+                    AssignmentDate = PostAssignmentDate.Value,
+                    OrderNumber = PostAssignmentOrderNumber.Value,
+                    PreviousPostId = PostAssignmentOldPost.Id.Value,
+                    NewPostId = PostAssignmentNewPost.Id.Value,
+                    Description = PostAssignmentDescription
+                });
+
+                if (postAssignment == null)
+                {
+                    MessageBox.Show("Не удалось сохранить запись: " + pAPrvdr.ErrorInfo, "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                PostAssignments.Add(postAssignment);
+            }
+
+            PostAssignmentDate = null;
+            PostAssignmentOrderNumber = null;
+            PostAssignmentOldPost = null;
+            PostAssignmentNewPost = null;
+
+            PostAssignmentDescription = String.Empty;
+
+            TabsToggleExecute();
+        }
+
+        #endregion
+
+        #region RankAssignment
+
+        #region Fields
+
+        /// <summary>
+        /// Дата присвоения звания
+        /// </summary>
+        private DateTime? _rankAssignmentDate = null;
+
+        /// <summary>
+        /// Номер приказа
+        /// </summary>
+        private int? _rankAssignmentOrderNumber = null;
+
+        /// <summary>
+        /// Описание
+        /// </summary>
+        private string _rankAssignmentDescription = String.Empty;
+        
+        /// <summary>
+        /// Старое звание
+        /// </summary>
+        private RankModel _rankAssignmentOldRank;
+
+        /// <summary>
+        /// Новое звание
+        /// </summary>
+        private RankModel _rankAssignmentNewRank;
         
         #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Дата присвоения 
+        /// </summary>
+        public DateTime? RankAssignmentDate
+        {
+            get { return _rankAssignmentDate; }
+            set
+            {
+                _rankAssignmentDate = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Номер приказа
+        /// </summary>
+        public int? RankAssignmentOrderNumber
+        {
+            get { return _rankAssignmentOrderNumber; }
+            set
+            {
+                _rankAssignmentOrderNumber = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Описание
+        /// </summary>
+        public string RankAssignmentDescription
+        {
+            get { return _rankAssignmentDescription; }
+            set
+            {
+                _rankAssignmentDescription = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Старое звание
+        /// </summary>
+        public RankModel RankAssignmentOldRank
+        {
+            get { return _rankAssignmentOldRank; }
+            set
+            {
+                _rankAssignmentOldRank = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Новое звание
+        /// </summary>
+        public RankModel RankAssignmentNewRank
+        {
+            get { return _rankAssignmentNewRank; }
+            set
+            {
+                _rankAssignmentNewRank = value;
+                RaisePropertyChanged();
+            }
+        }
+        #endregion
+
+        /// <summary>
+        /// Добавить присвоение звания
+        /// </summary>
+        private RelayCommand _addRankAssignment;
+        public RelayCommand AddRankAssignment
+            => _addRankAssignment ?? (_addRankAssignment = new RelayCommand(AddRankAssignmentExecute));
+
+        private void AddRankAssignmentExecute()
+        {
+            //зануляем текст ошибки
+            CatalogTextError = String.Empty;
+            if (RankAssignmentDate == null || PostAssignmentDate > DateTime.Now.Date)
+            {
+                //если ошибка валидации - указываем текст ошибки
+                CatalogTextError = "Дата присвоения звания не указана или указана неверно";
+                return;
+            }
+            if (RankAssignmentOrderNumber == null)
+            {
+                //если ошибка валидации - указываем текст ошибки
+                CatalogTextError = "Не указан номер приказа";
+                return;
+            }
+            if (RankAssignmentDescription.Length > 200)
+            {
+                CatalogTextError = "Слишком длинное описание";
+            }
+            if (RankAssignmentOldRank == null)
+            {
+                CatalogTextError = "Не указано текущее звание";
+                return;
+            }
+            if (RankAssignmentNewRank == null)
+            {
+                CatalogTextError = "Не указано новое звание";
+                return;
+            }
+            if (RankAssignmentOldRank.Id == RankAssignmentNewRank.Id)
+            {
+                CatalogTextError = "Не может быть выбрано то же звание";
+                return;
+            }
+
+            //заносим присвоение должности в бд и список
+            using (RankAssignmentTableProvider rAPrvdr = new RankAssignmentTableProvider())
+            {
+                var rankAssignment = rAPrvdr.Save(new RankAssignmentModel()
+                {
+                    EmployeeId = EmployeeViewModel.Id.Value,
+                    AssignmentDate = RankAssignmentDate.Value,
+                    OrderNumber = RankAssignmentOrderNumber.Value,
+                    PreviousRankId = RankAssignmentOldRank.Id.Value,
+                    NewRankId = RankAssignmentNewRank.Id.Value,
+                    Description = RankAssignmentDescription
+                });
+
+                if (rankAssignment == null)
+                {
+                    MessageBox.Show("Не удалось сохранить запись: " + rAPrvdr.ErrorInfo, "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                RankAssignments.Add(rankAssignment);
+            }
+
+            RankAssignmentDate = null;
+            RankAssignmentOrderNumber = null;
+            RankAssignmentOldRank = null;
+            RankAssignmentNewRank = null;
+
+            RankAssignmentDescription = String.Empty;
+
+            TabsToggleExecute();
+        }
+
+        #endregion
+
+        #region Relatives
+        
+        /// <summary>
+        /// Имя родственника
+        /// </summary>
+        private string _relativeFirstName = String.Empty;
+
+        /// <summary>
+        /// Фамилия родственника
+        /// </summary>
+        private string _relativeLastName = String.Empty;
+
+        /// <summary>
+        /// Отчество родственника
+        /// </summary>
+        private string _relativeMiddleName = String.Empty;
+
+        /// <summary>
+        /// Тип родства
+        /// </summary>
+        private string _relativeType;
+
+        /// <summary>
+        /// Дата рождения родственника
+        /// </summary>
+        private DateTime? _relativeBornDate;
+
+        /// <summary>
+        /// Описание
+        /// </summary>
+        private string _relativeDescription = String.Empty;
+
+        /// <summary>
+        /// Имя родственника
+        /// </summary>
+        public string RelativeFirstName
+        {
+            get { return _relativeFirstName; }
+            set
+            {
+                _relativeFirstName = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Фамилия родственника
+        /// </summary>
+        public string RelativeLastName
+        {
+            get { return _relativeLastName; }
+            set
+            {
+                _relativeLastName = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Отчество родственника
+        /// </summary>
+        public string RelativeMiddleName
+        {
+            get { return _relativeMiddleName; }
+            set
+            {
+                _relativeMiddleName = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Тип родства
+        /// </summary>
+        public string RelativeType
+        {
+            get { return _relativeType; }
+            set
+            {
+                _relativeType = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Дата рождения родственника
+        /// </summary>
+        public DateTime? RelativeBornDate
+        {
+            get { return _relativeBornDate; }
+            set
+            {
+                _relativeBornDate = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Описание
+        /// </summary>
+        public string RelativeDescription
+        {
+            get { return _relativeDescription; }
+            set
+            {
+                _relativeDescription = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Добавить родственника
+        /// </summary>
+        private RelayCommand _addRelative;
+        public RelayCommand AddRelative
+            => _addRelative ?? (_addRelative = new RelayCommand(AddRelativeExecute));
+
+        private void AddRelativeExecute()
+        {
+            //зануляем текст ошибки
+            CatalogTextError = String.Empty;
+
+            if (RelativeFirstName == String.Empty || RelativeFirstName.Length > 60)
+            {
+                CatalogTextError = "Имя не указано или имеет слишком большую длину";
+                return;
+            }
+            if (RelativeLastName == String.Empty || RelativeLastName.Length > 60)
+            {
+                CatalogTextError = "Фамилия не указана или имеет слишком большую длину";
+                return;
+            }
+            if (RelativeMiddleName == String.Empty || RelativeMiddleName.Length > 60)
+            {
+                CatalogTextError = "Отчество не указано или имеет слишком большую длину";
+                return;
+            }
+            if (RelativeType == null)
+            {
+                CatalogTextError = "Не указано родство";
+                return;
+            }
+            if (RelativeBornDate == null || PostAssignmentDate > DateTime.Now.Date)
+            {
+                //если ошибка валидации - указываем текст ошибки
+                CatalogTextError = "Дата рождения не указана или указана неверно";
+                return;
+            }
+            if (RelativeDescription.Length > 200)
+            {
+                CatalogTextError = "Слишком длинное описание";
+                return;
+            }
+
+            //заносим присвоение должности в бд и список
+            using (RelativeTableProvider rPrvdr = new RelativeTableProvider())
+            {
+                var relative = rPrvdr.Save(new RelativeModel()
+                {
+                    EmployeeId = EmployeeViewModel.Id.Value,
+                    FirstName = RelativeFirstName,
+                    LastName = RelativeLastName,
+                    MiddleName = RelativeMiddleName,
+                    RelationType = RelativeType,
+                    BornDate = RelativeBornDate.Value,
+                    Description = RelativeDescription
+                });
+
+                if (relative == null)
+                {
+                    MessageBox.Show("Не удалось сохранить запись: " + rPrvdr.ErrorInfo, "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+                Relatives.Add(relative);
+            }
+
+            RelativeFirstName = String.Empty;
+            RelativeLastName = String.Empty;
+            RelativeMiddleName = String.Empty;
+            RelativeType = null;
+            RelativeBornDate = null;
+
+            RelativeDescription = String.Empty;
+
+            TabsToggleExecute();
+        }
+
+        #endregion
+
+        #endregion
+
     }
 }

@@ -137,7 +137,7 @@
                                     HorizontalAlignment="Left"
                                     Command="{Binding ChangePhoto}"/>
                             <Button Name="DropPhotBtn"
-                                    Content="Удалить фото"
+                                    Content="Удалить"
                                     IsEnabled="{Binding IsAdmin}" 
                                     Width="100"
                                     Height="20"
@@ -345,45 +345,74 @@
                         <StackPanel Margin="5,0">
                             <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
                                 <!--Определяет страницу редактирования доп. информ-ции о служащем // item source = "{Binding InformationModeList}"-->
-                                <ComboBox
-                                    Name="InformationModeCBox" 
-                                    MinWidth="200"
-                                    Width="200"
-                                    HorizontalAlignment="Left"
-                                    FontSize="16"
-                                    ItemsSource="{Binding InformationModeList}"
-                                    SelectedIndex="{Binding SelectedIndex}"
-                                    controls:TextBoxHelper.Watermark="Укажите тип данных" ></ComboBox>
-                                <Button 
-                                    Name="TabsToogleBtn"
-                                    MinWidth="100"
-                                    IsEnabled="{Binding IsAdmin}" 
-                                    Content="{Binding TabsToogleTitle}"
-                                    Style="{DynamicResource ChromelessButtonStyle}"
-                                    FontSize="16"
-                                    Command="{Binding TabsToggle}"/>
+                                <ComboBox   Name="InformationModeCBox" 
+                                            MinWidth="200"
+                                            Width="200"
+                                            HorizontalAlignment="Left"
+                                            FontSize="16"
+                                            ItemsSource="{Binding InformationModeList}"
+                                            SelectedIndex="{Binding SelectedCatalogIndex}"
+                                            controls:TextBoxHelper.Watermark="Укажите тип данных" ></ComboBox>
+                                <Button Name="TabsToogleBtn"
+                                        MinWidth="100"
+                                        IsEnabled="{Binding IsAdmin}" 
+                                        Content="{Binding TabsToogleTitle}"
+                                        Style="{DynamicResource ChromelessButtonStyle}"
+                                        FontSize="16"
+                                        Command="{Binding TabsToggle}"/>
                             </StackPanel>
-
+                            
+                            <!--Текст ошибки-->
+                            <TextBlock  Foreground="Red"
+                                        FontSize="14"
+                                        FontWeight="DemiBold"
+                                        Text="{Binding CatalogTextError}"
+                                        Margin="10,0"/>
+                            
                             <controls:MetroTabControl Name="InfoTabControl"
                                                       SelectedIndex="{Binding SelectedTabIndex}">
-                                <controls:MetroTabItem
-                                    Name="DataGridTab">
-                                    <DataGrid   Name="EmployeesDataGrid"
-                                                AutoGenerateColumns="True"
-                                                IsReadOnly="True"
-                                                CanUserAddRows="False"
-                                                Style="{DynamicResource AzureDataGrid}"
-                                                ScrollViewer.CanContentScroll="True"
-                                                ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                                ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                                                GridLinesVisibility="All"
-                                                ItemsSource="{Binding SelectedItem}">
-                                    </DataGrid>
+                                <controls:MetroTabItem Name="DataGridTab"> 
+                                    <StackPanel Orientation="Vertical">
+                                        <DataGrid   Name="EmployeesDataGrid"
+                                                    AutoGenerateColumns="True"
+                                                    IsReadOnly="True"
+                                                    CanUserAddRows="False"
+                                                    Style="{DynamicResource AzureDataGrid}"
+                                                    ScrollViewer.CanContentScroll="True"
+                                                    ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                                    ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                                    GridLinesVisibility="All"
+                                                    ItemsSource="{Binding SelectedItem}"
+                                                    SelectedIndex="{Binding SelectedCatalogRecordIndex}">
+                                        <!--<DataGrid.ColumnHeaderStyle>
+                                            <Style TargetType="DataGridColumnHeader">
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="DataGridColumnHeader">
+                                                                <TextBlock Text="{TemplateBinding Content, Converter={StaticResource DataGridHeaderConverter}}"
+                                                                           FontSize="16"
+                                                                           FontWeight="DemiBold"
+                                                                           TextAlignment="Center"
+                                                                           HorizontalAlignment="Center"
+                                                                           Foreground="Black"/>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </DataGrid.ColumnHeaderStyle>-->
+                                        </DataGrid>
+                                        <Button Width="100"
+                                                HorizontalAlignment="Right"
+                                                Style="{DynamicResource ButtonStyle}"
+                                                Content="Удалить"
+                                                Command="{Binding RemoveItem}"
+                                                ToolTip="Удалить выбранную запись"/>
+                                    </StackPanel>
                                 </controls:MetroTabItem>
                                 <controls:MetroTabItem Name="EditTabs">
                                     <!--Страницы редактирования доп. информ-ции-->
                                     <controls:MetroAnimatedTabControl   Name="AdditionalInfoTabControl"
-                                                                        SelectedIndex="{Binding SelectedIndex}">
+                                                                        SelectedIndex="{Binding SelectedCatalogIndex}">
                                         <TabControl.ItemContainerStyle>
                                             <Style TargetType="{x:Type TabItem}">
                                                 <Setter Property="Visibility" Value="Collapsed"/>
@@ -402,19 +431,23 @@
                                                             MinWidth="150"
                                                             Margin="0,1"
                                                             FontSize="16"
-                                                            controls:TextBoxHelper.Watermark="Укажите дату"/>
+                                                            controls:TextBoxHelper.Watermark="Укажите дату"
+                                                            SelectedDate="{Binding Path=SertificationDate}" 
+                                                            SelectedDateFormat="Short"/>
                                                 <TextBox    Name="SertificationDescriptionTBox" 
                                                             Margin="0,1"
                                                             FontSize="16"
                                                             MinWidth="150"
                                                             controls:TextBoxHelper.ClearTextButton="True"
-                                                            controls:TextBoxHelper.Watermark="Описание"/>
+                                                            controls:TextBoxHelper.Watermark="Описание"
+                                                            Text="{Binding SertificationDescription}"/>
                                                 <StackPanel Orientation="Horizontal"
                                                             HorizontalAlignment="Right">
                                                     <Button Name="SertificationAddBtn"
                                                             Style="{StaticResource ButtonStyle}"
-                                                            Content="Добавить"
-                                                            MinWidth="70"/>
+                                                            Content="Принять"
+                                                            MinWidth="70"
+                                                            Command="{Binding AddSertification}"/>
                                                 </StackPanel>
                                             </StackPanel>
                                         </controls:MetroTabItem>
@@ -422,30 +455,31 @@
                                         <!--Благодарности-->
                                         <controls:MetroTabItem  Name="GratitudeTab"
                                                                 Header="Благодарности">
-                                            <StackPanel 
-                                                Orientation="Vertical"
-                                                Margin="10"
-                                                MinWidth="200"
-                                                Width="200"
-                                                HorizontalAlignment="Left">
-                                                <DatePicker 
-                                                    Name="GratitudeDatePicker"  
-                                                    MinWidth="150"
-                                                    Margin="0,1"
-                                                    FontSize="16"
-                                                    controls:TextBoxHelper.Watermark="Укажите дату"/>
+                                            <StackPanel Orientation="Vertical"
+                                                        Margin="10"
+                                                        MinWidth="200"
+                                                        Width="200"
+                                                        HorizontalAlignment="Left">
+                                                <DatePicker Name="GratitudeDatePicker"  
+                                                            MinWidth="150"
+                                                            Margin="0,1"
+                                                            FontSize="16"
+                                                            controls:TextBoxHelper.Watermark="Укажите дату"
+                                                            SelectedDate="{Binding GratitudeDate}"/>
                                                 <TextBox Name="GratitudeDescriptionTBox" 
                                                          Margin="0,1"
                                                          FontSize="16"
                                                          MinWidth="150"
                                                          controls:TextBoxHelper.ClearTextButton="True"
-                                                         controls:TextBoxHelper.Watermark="Описание"/>
+                                                         controls:TextBoxHelper.Watermark="Описание"
+                                                         Text="{Binding GratitudeDescription}"/>
                                                 <StackPanel Orientation="Horizontal"
                                                             HorizontalAlignment="Right">
                                                     <Button Name="GratitudeAddBtn"
                                                             Style="{StaticResource ButtonStyle}"
-                                                            Content="Добавить"
-                                                            MinWidth="70"/>
+                                                            Content="Принять"
+                                                            MinWidth="70"
+                                                            Command="{Binding AddGratitude}"/>
                                                 </StackPanel>
                                             </StackPanel>
                                         </controls:MetroTabItem>
@@ -462,24 +496,28 @@
                                                             MinWidth="150"
                                                             Margin="0,1"
                                                             FontSize="16"
-                                                            controls:TextBoxHelper.Watermark="Дата открытия"/>
+                                                            controls:TextBoxHelper.Watermark="Дата открытия"
+                                                            SelectedDate="{Binding StartHospitalDate}"/>
                                                 <DatePicker Name="FinishHospitalTimeDatePicker"  
                                                             MinWidth="150"
                                                             Margin="0,1"
                                                             FontSize="16"
-                                                            controls:TextBoxHelper.Watermark="Дата закрытия"/>
+                                                            controls:TextBoxHelper.Watermark="Дата закрытия"
+                                                            SelectedDate="{Binding FinishHospitalDate}"/>
                                                 <TextBox Name="HospitalDescriptionTBox"
                                                          Margin="0,1"
                                                          FontSize="16"
                                                          MinWidth="150"
                                                          controls:TextBoxHelper.ClearTextButton="True"
-                                                         controls:TextBoxHelper.Watermark="Описание"/>
+                                                         controls:TextBoxHelper.Watermark="Описание"
+                                                         Text="{Binding HospitalTimeDescription}"/>
                                                 <StackPanel Orientation="Horizontal"
                                                             HorizontalAlignment="Right">
                                                     <Button Name="HospitalTimeAddBtn"
                                                             Style="{StaticResource ButtonStyle}"
-                                                            Content="Добавить"
-                                                            MinWidth="70"/>
+                                                            Content="Принять"
+                                                            MinWidth="70"
+                                                            Command="{Binding AddHospitalTime}"/>
                                                 </StackPanel>
                                             </StackPanel>
                                         </controls:MetroTabItem>
@@ -496,25 +534,29 @@
                                                             MinWidth="150"
                                                             Margin="0,1"
                                                             FontSize="16"
-                                                            controls:TextBoxHelper.Watermark="Дата открытия"/>
+                                                            controls:TextBoxHelper.Watermark="Дата"
+                                                            SelectedDate="{Binding ReprimandDate}"/>
                                                 <TextBox Name="ReprimandSumTBox"  
                                                          MinWidth="150"
                                                          Margin="0,1"
                                                          FontSize="16"
                                                          controls:TextBoxHelper.ClearTextButton="True"
-                                                         controls:TextBoxHelper.Watermark="Дата закрытия"/>
+                                                         controls:TextBoxHelper.Watermark="Сумма взыскания"
+                                                         Text="{Binding ReprimandSum}"/>
                                                 <TextBox Name="ReprimandDescriptionTBox" 
                                                          Margin="0,1"
                                                          FontSize="16"
                                                          MinWidth="150"
                                                          controls:TextBoxHelper.ClearTextButton="True"
-                                                         controls:TextBoxHelper.Watermark="Описание"/>
+                                                         controls:TextBoxHelper.Watermark="Описание"
+                                                         Text="{Binding ReprimandDescription}"/>
                                                 <StackPanel Orientation="Horizontal"
                                                             HorizontalAlignment="Right">
                                                     <Button Name="ReprimandAddBtn"
                                                             Style="{StaticResource ButtonStyle}"
-                                                            Content="Добавить"
-                                                            MinWidth="70"/>
+                                                            Content="Принять"
+                                                            MinWidth="70"
+                                                            Command="{Binding AddReprimand}"/>
                                                 </StackPanel>
                                             </StackPanel>
                                         </controls:MetroTabItem>
@@ -533,14 +575,16 @@
                                                             Width="200"
                                                             Margin="0,1"
                                                             FontSize="16"
-                                                            controls:TextBoxHelper.Watermark="Дата начала"/>
+                                                            controls:TextBoxHelper.Watermark="Дата начала"
+                                                            SelectedDate="{Binding MilitaryStartDate}"/>
                                                 <DatePicker Name="MilitaryServiceFinishDatePicker"  
                                                             MinWidth="150"
                                                             HorizontalAlignment="Left"
                                                             Width="200"
                                                             Margin="0,1"
                                                             FontSize="16"
-                                                            controls:TextBoxHelper.Watermark="Дата окончания"/>
+                                                            controls:TextBoxHelper.Watermark="Дата окончания"
+                                                            SelectedDate="{Binding MilitaryFinishDate}"/>
                                                 <StackPanel Orientation="Horizontal"
                                                             HorizontalAlignment="Left">
                                                     <ComboBox Name="MilitaryServiceUnitCBox"                                                  
@@ -549,14 +593,18 @@
                                                               Margin="0,1"
                                                               FontSize="16"
                                                               controls:TextBoxHelper.ClearTextButton="True"
-                                                              controls:TextBoxHelper.Watermark="--Воинская часть--"/>
+                                                              controls:TextBoxHelper.Watermark="--Воинская часть--"
+                                                              ItemsSource="{Binding MilitaryUnits}"
+                                                              DisplayMemberPath="MilitaryName"
+                                                              SelectedItem="{Binding MilitaryUnit}"/>
                                                     <Button Name="AddMilitaryUnit"
                                                             Content="[...]"
                                                             MinWidth="30"
                                                             FontSize="20"
                                                             VerticalContentAlignment="Center"
                                                             Style="{StaticResource ButtonStyle}"
-                                                            ToolTip="Добавить воинскую часть"/>
+                                                            ToolTip="Добавить воинскую часть"
+                                                            Command="{Binding ToMilitaryUnitAddOn}"/>
                                                 </StackPanel>
                                                 <TextBox Name="MilitaryServiceDescriptionTBox" 
                                                          Margin="0,1"
@@ -565,13 +613,15 @@
                                                          HorizontalAlignment="Left"
                                                          Width="200"
                                                          controls:TextBoxHelper.ClearTextButton="True"
-                                                         controls:TextBoxHelper.Watermark="Описание"/>
+                                                         controls:TextBoxHelper.Watermark="Описание"
+                                                         Text="{Binding MilitaryDescription}"/>
                                                 <StackPanel Orientation="Horizontal"
                                                             HorizontalAlignment="Right">
                                                     <Button Name="MilitaryServiceAddBtn"
                                                             Style="{StaticResource ButtonStyle}"
-                                                            Content="Добавить"
-                                                            MinWidth="70"/>
+                                                            Content="Принять"
+                                                            MinWidth="70"
+                                                            Command="{Binding AddMilitaryProcess}"/>
                                                 </StackPanel>
                                             </StackPanel>
                                         </controls:MetroTabItem>
@@ -586,37 +636,45 @@
                                                         HorizontalAlignment="Left">
                                                 <StackPanel Orientation="Vertical">
                                                     <DatePicker Name="ClasinessDatePicker"  
-                                                                MinWidth="150"
+                                                                Width="150"
                                                                 Margin="0,1"
                                                                 FontSize="16"
-                                                                controls:TextBoxHelper.Watermark="Дата начала"/>
+                                                                controls:TextBoxHelper.Watermark="Дата"
+                                                                SelectedDate="{Binding ClasinessDate}"
+/>
                                                     <TextBox Name="ClasinessDescriptionTBox"
                                                              Margin="0,1"
                                                              FontSize="16"
-                                                             MinWidth="150"
+                                                             Width="150"
                                                              controls:TextBoxHelper.ClearTextButton="True"
-                                                             controls:TextBoxHelper.Watermark="Описание"/>
+                                                             controls:TextBoxHelper.Watermark="Описание"
+                                                             Text="{Binding ClasinessDescription}"/>
                                                 </StackPanel>
                                                 <StackPanel Orientation="Vertical"
                                                             Margin="5,0">
                                                     <controls:NumericUpDown Name="ClasinessOrderNumberUpDown"
-                                                                            MinWidth="150"
+                                                                            Width="150"
                                                                             Margin="0,1"
                                                                             FontSize="16"
                                                                             Minimum="0"
-                                                                            controls:TextBoxHelper.Watermark="№ приказа"/>
+                                                                            Maximum="1000000"
+                                                                            controls:TextBoxHelper.Watermark="№ приказа"
+                                                                            Value="{Binding ClasinessOrderNumber}"/>
                                                     <controls:NumericUpDown Name="ClasinessGradeUpDown"
-                                                                            MinWidth="150"
+                                                                            Width="150"
                                                                             Margin="0,1"
                                                                             FontSize="16"
                                                                             Minimum="0"
-                                                                            controls:TextBoxHelper.Watermark="Классность"/>
+                                                                            Maximum="10"
+                                                                            controls:TextBoxHelper.Watermark="Классность"
+                                                                            Value="{Binding ClasinessDegree}"/>
                                                     <StackPanel Orientation="Horizontal"
                                                             HorizontalAlignment="Right">
                                                         <Button Name="ClasinessAddBtn"
-                                                            Style="{StaticResource ButtonStyle}"
-                                                            Content="Добавить"
-                                                            MinWidth="70"/>
+                                                                Style="{StaticResource ButtonStyle}"
+                                                                Content="Принять"
+                                                                MinWidth="70"
+                                                                Command="{Binding AddClasiness}"/>
                                                     </StackPanel>
                                                 </StackPanel>
                                             </StackPanel>
@@ -634,24 +692,28 @@
                                                             MinWidth="150"
                                                             FontSize="16"
                                                             Margin="0,1"
-                                                            controls:TextBoxHelper.Watermark="Дата начала"/>
+                                                            controls:TextBoxHelper.Watermark="Дата начала"
+                                                            SelectedDate="{Binding StartContractDate}"/>
                                                 <DatePicker Name="ContractFinishDatePicker"
                                                             MinWidth="150"
                                                             Margin="0,1"
                                                             FontSize="16"
-                                                            controls:TextBoxHelper.Watermark="Дата окончания"/>
+                                                            controls:TextBoxHelper.Watermark="Дата окончания"
+                                                            SelectedDate="{Binding FinishContractDate}"/>
                                                 <TextBox Name="ContractDescriptionTBox" 
                                                          Margin="0,1"
                                                          FontSize="16"
                                                          MinWidth="150"
                                                          controls:TextBoxHelper.ClearTextButton="True"
-                                                         controls:TextBoxHelper.Watermark="Описание"/>
+                                                         controls:TextBoxHelper.Watermark="Описание"
+                                                         Text="{Binding ContractDescription}"/>
                                                 <StackPanel Orientation="Horizontal"
                                                             HorizontalAlignment="Right">
                                                     <Button Name="ContractAddBtn"
                                                             Style="{StaticResource ButtonStyle}"
-                                                            Content="Добавить"
-                                                            MinWidth="70"/>
+                                                            Content="Принять"
+                                                            MinWidth="70"
+                                                            Command="{Binding AddContract}"/>
                                                 </StackPanel>
                                             </StackPanel>
                                         </controls:MetroTabItem>
@@ -668,19 +730,22 @@
                                                             MinWidth="150"
                                                             FontSize="16"
                                                             Margin="0,1"
-                                                            controls:TextBoxHelper.Watermark="Дата"/>
+                                                            controls:TextBoxHelper.Watermark="Дата"
+                                                            SelectedDate="{Binding ViolationDate}"/>
                                                 <TextBox Name="ViolationDescriptionTBox" 
                                                          Margin="0,1"
                                                          FontSize="16"
                                                          MinWidth="150"
                                                          controls:TextBoxHelper.ClearTextButton="True"
-                                                         controls:TextBoxHelper.Watermark="Описание"/>
+                                                         controls:TextBoxHelper.Watermark="Описание"
+                                                         Text="{Binding ViolationDescription}"/>
                                                 <StackPanel Orientation="Horizontal"
                                                             HorizontalAlignment="Right">
                                                     <Button Name="ViolationAddBtn"
                                                             Style="{StaticResource ButtonStyle}"
-                                                            Content="Добавить"
-                                                            MinWidth="70"/>
+                                                            Content="Принять"
+                                                            MinWidth="70"
+                                                            Command="{Binding AddViolation}"/>
                                                 </StackPanel>
                                             </StackPanel>
                                         </controls:MetroTabItem>
@@ -698,45 +763,45 @@
                                                                 MinWidth="150"
                                                                 Height="15"
                                                                 FontSize="16"
-                                                                controls:TextBoxHelper.Watermark="Дата начала"/>
-                                                    <DatePicker Name="EducationProcessDatePicker"
+                                                                controls:TextBoxHelper.Watermark="Дата начала"
+                                                                SelectedDate="{Binding EducationStartDate}"/>
+                                                    <DatePicker Name="EducationProcessFinishDatePicker"
                                                                 MinWidth="150"
                                                                 Margin="0,2,0,0"
                                                                 Height="15"
                                                                 FontSize="16"
-                                                                controls:TextBoxHelper.Watermark="Дата окончания"/>
+                                                                controls:TextBoxHelper.Watermark="Дата окончания"
+                                                                SelectedDate="{Binding EducationFinishDate}"/>
                                                     <TextBox Name="EducationProcessDescriptionTBox"
                                                              Margin="0,2,0,0"
                                                              Height="15"
                                                              FontSize="16"
                                                              MinWidth="150"
                                                              controls:TextBoxHelper.ClearTextButton="True"
-                                                             controls:TextBoxHelper.Watermark="Описание"/>
+                                                             controls:TextBoxHelper.Watermark="Описание"
+                                                             Text="{Binding EducationDescription}"/>
                                                 </StackPanel>
                                                 <StackPanel Orientation="Vertical"
                                                             Margin="10,0"
                                                             Width="240">
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <ComboBox   Name="EducationLevelCBox"
-                                                                    MinWidth="150"
-                                                                    Width="210"
-                                                                    FontSize="16"
-                                                                    controls:TextBoxHelper.Watermark="--Уровень--"/>
-                                                    </StackPanel>
                                                     <StackPanel Orientation="Horizontal">
                                                         <ComboBox   Name="InstitutionCBox"
                                                                     MinWidth="150"
                                                                     Width="210"
                                                                     FontSize="16"
                                                                     Margin="0,2,0,0"
-                                                                    controls:TextBoxHelper.Watermark="--Учебное заведение--"/>
+                                                                    controls:TextBoxHelper.Watermark="--Учебное заведение--"
+                                                                    DisplayMemberPath="FullName"
+                                                                    ItemsSource="{Binding EducationalInstitutions}"
+                                                                    SelectedItem="{Binding EducationalInstitution}"/>
                                                         <Button Name="AddEducationUnit"
                                                                 Content="[...]"
                                                                 MinWidth="30"
                                                                 FontSize="20"
                                                                 VerticalContentAlignment="Center"
                                                                 Style="{StaticResource ButtonStyle}"
-                                                                ToolTip="Добавить учебное заведение"/>
+                                                                ToolTip="Добавить учебное заведение"
+                                                                Command="{Binding AddEducationUnit}"/>
                                                     </StackPanel>
                                                     <StackPanel Orientation="Horizontal">
                                                         <ComboBox   Name="SpecialityCBox"
@@ -744,22 +809,27 @@
                                                                     Width="210"
                                                                     FontSize="16"                                                        
                                                                     Margin="0,2,0,0"
-                                                                    controls:TextBoxHelper.Watermark="--Специальность--"/>
+                                                                    controls:TextBoxHelper.Watermark="--Специальность--"
+                                                                    DisplayMemberPath="Speciality"
+                                                                    ItemsSource="{Binding Specialities}"
+                                                                    SelectedItem="{Binding Speciality}"/>
                                                         <Button Name="AddSpeciality"
                                                                 Content="[...]"
                                                                 MinWidth="30"
                                                                 FontSize="20"
                                                                 VerticalContentAlignment="Center"
                                                                 Style="{StaticResource ButtonStyle}"
+                                                                Command="{Binding AddSpeciality}"
                                                                 ToolTip="Добавить специальность"/>
                                                     </StackPanel>
                                                     <StackPanel Orientation="Horizontal"
                                                                 HorizontalAlignment="Right">
                                                         <Button Name="EducationProcessAddBtn"
                                                                 Style="{StaticResource ButtonStyle}"
-                                                                Content="Добавить"
+                                                                Content="Принять"
                                                                 MinWidth="70"
-                                                                Margin="30,0"/>
+                                                                Margin="30,0"
+                                                                Command="{Binding AddEducation}"/>
                                                     </StackPanel>
                                                 </StackPanel>
                                             </StackPanel>
@@ -768,21 +838,275 @@
                                         <!--Отпуска-->
                                         <controls:MetroTabItem  Name="HolidayTimeTab"
                                                                 Header="Отпуска">
+                                                <StackPanel Orientation="Vertical"
+                                                            Margin="10"
+                                                            MinWidth="200"
+                                                            Width="200"
+                                                            HorizontalAlignment="Left">
+                                                <DatePicker Name="StartHolidayTimeDatePicker"  
+                                                            MinWidth="150"
+                                                            Margin="0,1"
+                                                            FontSize="16"
+                                                            controls:TextBoxHelper.Watermark="Дата открытия"
+                                                            SelectedDate="{Binding StartHolidayDate}"/>
+                                                <DatePicker Name="FinishHolidayTimeDatePicker"  
+                                                            MinWidth="150"
+                                                            Margin="0,1"
+                                                            FontSize="16"
+                                                            controls:TextBoxHelper.Watermark="Дата закрытия"
+                                                            SelectedDate="{Binding FinishHolidayDate}"/>
+                                                <TextBox Name="HolidayDescriptionTBox"
+                                                         Margin="0,1"
+                                                         FontSize="16"
+                                                         MinWidth="150"
+                                                         controls:TextBoxHelper.ClearTextButton="True"
+                                                         controls:TextBoxHelper.Watermark="Описание"
+                                                         Text="{Binding HolidayTimeDescription}"/>
+                                                    <StackPanel Orientation="Horizontal"
+                                                            HorizontalAlignment="Right">
+                                                    <Button Name="HolidayTimeAddBtn"
+                                                            Style="{StaticResource ButtonStyle}"
+                                                            Content="Принять"
+                                                            MinWidth="70"
+                                                            Command="{Binding AddHolidayTime}"/>
+                                                    </StackPanel>
+                                                </StackPanel>
                                         </controls:MetroTabItem>
 
                                         <!--Присвоение должностей-->
                                         <controls:MetroTabItem  Name="PostAssignTab"
                                                                 Header="Присвоение должностей">
+                                            <StackPanel Orientation="Horizontal"
+                                                        MinWidth="400"
+                                                        Width="400"
+                                                        HorizontalAlignment="Left"
+                                                        Margin="10,0">
+                                                <StackPanel Orientation="Vertical">
+                                                    <DatePicker Name="PostAssignmentDatePicker"
+                                                                MinWidth="150"
+                                                                FontSize="16"
+                                                                Height="30"
+                                                                controls:TextBoxHelper.Watermark="Дата"
+                                                                SelectedDate="{Binding PostAssignmentDate}"/>
+                                                    <controls:NumericUpDown Name="PostAssignmentOrderNumberUpDown"
+                                                                            Width="150"
+                                                                            Margin="0,2"
+                                                                            FontSize="16"
+                                                                            Height="30"
+                                                                            Minimum="0"
+                                                                            Maximum="1000000"
+                                                                            controls:TextBoxHelper.Watermark="№ приказа"
+                                                                            Value="{Binding PostAssignmentOrderNumber}"/>
+                                                    <TextBox Name="PostAssignmentDescriptionTBox"
+                                                             Margin="0"
+                                                             Height="30"
+                                                             FontSize="16"
+                                                             MinWidth="150"
+                                                             controls:TextBoxHelper.ClearTextButton="True"
+                                                             controls:TextBoxHelper.Watermark="Описание"
+                                                             Text="{Binding PostAssignmentDescription}"/>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Vertical"
+                                                            Margin="10,0"
+                                                            Width="240">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <ComboBox   Name="ServiceCBoxCBox"
+                                                                    MinWidth="150"
+                                                                    Width="210"
+                                                                    FontSize="16"
+                                                                    Height="30"
+                                                                    Margin="0"
+                                                                    controls:TextBoxHelper.Watermark="--Служба--"
+                                                                    DisplayMemberPath="ServiceTitle"
+                                                                    ItemsSource="{Binding ServiceList.ModelList}"
+                                                                    SelectedItem="{Binding PostAssignmentService}"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <ComboBox   Name="PrevPostCBox"
+                                                                    MinWidth="150"
+                                                                    Width="210"
+                                                                    FontSize="16" 
+                                                                    Height="30"
+                                                                    Margin="0,2,0,0"
+                                                                    controls:TextBoxHelper.Watermark="--Старая должность--"
+                                                                    DisplayMemberPath="PostTitle"
+                                                                    ItemsSource="{Binding PostAssignmentPostList.ModelList}"
+                                                                    SelectedItem="{Binding PostAssignmentOldPost}"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <ComboBox   Name="NewPostCBoxCBox"
+                                                                    MinWidth="150"
+                                                                    Width="210"
+                                                                    FontSize="16" 
+                                                                    Height="30"
+                                                                    Margin="0,2,0,0"
+                                                                    controls:TextBoxHelper.Watermark="--Новая должность--"
+                                                                    DisplayMemberPath="PostTitle"
+                                                                    ItemsSource="{Binding PostAssignmentPostList.ModelList}"
+                                                                    SelectedItem="{Binding PostAssignmentNewPost}"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal"
+                                                                HorizontalAlignment="Right">
+                                                        <Button Name="PostAssignmentAddBtn"
+                                                                Style="{StaticResource ButtonStyle}"
+                                                                Content="Принять"
+                                                                MinWidth="70"
+                                                                Margin="30,0"
+                                                                Command="{Binding AddPostAssignment}"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </StackPanel>
                                         </controls:MetroTabItem>
 
                                         <!--Присвоение званий-->
                                         <controls:MetroTabItem  Name="RankAssignTab"
                                                                 Header="Присвоение званий">
+                                            <StackPanel Orientation="Horizontal"
+                                                        MinWidth="400"
+                                                        Width="400"
+                                                        HorizontalAlignment="Left"
+                                                        Margin="10,0">
+                                                <StackPanel Orientation="Vertical">
+                                                    <DatePicker Name="RankAssignmentDatePicker"
+                                                                MinWidth="150"
+                                                                FontSize="16"
+                                                                Height="30"
+                                                                controls:TextBoxHelper.Watermark="Дата"
+                                                                SelectedDate="{Binding RankAssignmentDate}"/>
+                                                    <controls:NumericUpDown Name="RankAssignmentOrderNumberUpDown"
+                                                                            Width="150"
+                                                                            Margin="0,2"
+                                                                            FontSize="16"
+                                                                            Height="30"
+                                                                            Minimum="0"
+                                                                            Maximum="1000000"
+                                                                            controls:TextBoxHelper.Watermark="№ приказа"
+                                                                            Value="{Binding RankAssignmentOrderNumber}"/>
+                                                    <TextBox Name="RankAssignmentDescriptionTBox"
+                                                             Margin="0"
+                                                             Height="30"
+                                                             FontSize="16"
+                                                             MinWidth="150"
+                                                             controls:TextBoxHelper.ClearTextButton="True"
+                                                             controls:TextBoxHelper.Watermark="Описание"
+                                                             Text="{Binding RankAssignmentDescription}"/>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Vertical"
+                                                            Margin="10,0"
+                                                            Width="240">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <ComboBox   Name="PrevRankCBox"
+                                                                    MinWidth="150"
+                                                                    Width="210"
+                                                                    FontSize="16" 
+                                                                    Height="30"
+                                                                    Margin="0,2,0,0"
+                                                                    controls:TextBoxHelper.Watermark="--Текущее звание--"
+                                                                    DisplayMemberPath="RankTitle"
+                                                                    ItemsSource="{Binding RankList.ModelList}"
+                                                                    SelectedItem="{Binding RankAssignmentOldRank}"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <ComboBox   Name="NewRankCBoxCBox"
+                                                                    MinWidth="150"
+                                                                    Width="210"
+                                                                    FontSize="16" 
+                                                                    Height="30"
+                                                                    Margin="0,2,0,0"
+                                                                    controls:TextBoxHelper.Watermark="--Новое звание--"
+                                                                    DisplayMemberPath="RankTitle"
+                                                                    ItemsSource="{Binding RankList.ModelList}"
+                                                                    SelectedItem="{Binding RankAssignmentNewRank}"/>
+                                                    </StackPanel>
+                                                    <StackPanel Orientation="Horizontal"
+                                                                HorizontalAlignment="Right">
+                                                        <Button Name="RankAssignmentAddBtn"
+                                                                Style="{StaticResource ButtonStyle}"
+                                                                Content="Принять"
+                                                                MinWidth="70"
+                                                                Margin="30,0"
+                                                                Command="{Binding AddRankAssignment}"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </StackPanel>
                                         </controls:MetroTabItem>
 
                                         <!--Родственники-->
                                         <controls:MetroTabItem  Name="RelativeTab"
                                                                 Header="Родствениики">
+                                            <StackPanel Orientation="Horizontal"
+                                                        MaxWidth="400"
+                                                        Width="400"
+                                                        HorizontalAlignment="Left"
+                                                        Margin="10,0">
+                                                <StackPanel Orientation="Vertical">
+                                                    <TextBox Margin="0"
+                                                             Height="30"
+                                                             FontSize="16"
+                                                             MinWidth="150"
+                                                             controls:TextBoxHelper.ClearTextButton="True"
+                                                             controls:TextBoxHelper.Watermark="Имя"
+                                                             Text="{Binding RelativeFirstName}"/>
+                                                    <TextBox Margin="0,2"
+                                                             Height="30"
+                                                             FontSize="16"
+                                                             MinWidth="150"
+                                                             controls:TextBoxHelper.ClearTextButton="True"
+                                                             controls:TextBoxHelper.Watermark="Фамилия"
+                                                             Text="{Binding RelativeLastName}"/>
+                                                    <TextBox Margin="0"
+                                                             Height="30"
+                                                             FontSize="16"
+                                                             MinWidth="150"
+                                                             controls:TextBoxHelper.ClearTextButton="True"
+                                                             controls:TextBoxHelper.Watermark="Отчество"
+                                                             Text="{Binding RelativeMiddleName}"/>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Vertical"
+                                                            Margin="10,0"
+                                                            Width="210">
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <ComboBox   MinWidth="150"
+                                                                    Width="210"
+                                                                    FontSize="16" 
+                                                                    Height="30"
+                                                                    controls:TextBoxHelper.Watermark="--Тип родства--"
+                                                                    SelectedValue="{Binding Path=RelativeType}"
+                                                                    SelectedValuePath="Content">
+                                                            <ComboBoxItem Content="Отец"/>
+                                                            <ComboBoxItem Content="Мать"/>
+                                                            <ComboBoxItem Content="Сын"/>
+                                                            <ComboBoxItem Content="Дочь"/>
+                                                            <ComboBoxItem Content="Супруг(-а)"/>
+                                                            <ComboBoxItem Content="Брат"/>
+                                                            <ComboBoxItem Content="Сестра"/>
+                                                        </ComboBox>
+                                                        
+                                                    </StackPanel>
+
+                                                    <DatePicker MinWidth="150"
+                                                                FontSize="16"
+                                                                Height="30"
+                                                                Margin="0,2"
+                                                                controls:TextBoxHelper.Watermark="Дата рождения"
+                                                                SelectedDate="{Binding RelativeBornDate}"/>
+                                                    <TextBox Margin="0"
+                                                             Height="30"
+                                                             FontSize="16"
+                                                             MinWidth="150"
+                                                             controls:TextBoxHelper.ClearTextButton="True"
+                                                             controls:TextBoxHelper.Watermark="Описание"
+                                                             Text="{Binding RelativeDescription}"/>
+                                                    <StackPanel Orientation="Horizontal"
+                                                                HorizontalAlignment="Right">
+                                                        <Button Style="{StaticResource ButtonStyle}"
+                                                                Content="Принять"
+                                                                MinWidth="70"
+                                                                Margin="30,0"
+                                                                Command="{Binding AddRelative}"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </StackPanel>
                                         </controls:MetroTabItem>
                                     </controls:MetroAnimatedTabControl>
                                 </controls:MetroTabItem>
@@ -821,16 +1145,21 @@
                     Command="{Binding CloseWindowCommand}"/>
             </Grid>
         </Border>
-        <StackPanel     Grid.Column="0"
-                        Grid.Row="1"
-                        Orientation="Horizontal"
-                        Height="20"
-                        VerticalAlignment="Bottom"
-                        Background="DodgerBlue">
-            <Label  Name="ErrorText"
-                        HorizontalAlignment="Right"
-                        FontWeight="Bold"
-                        Foreground="Red"/>
+        <StackPanel VerticalAlignment="Bottom"
+                    Orientation="Horizontal"
+                    Background="#41B1E1"
+                    Height="20"
+                    Grid.Column="0"
+                    Grid.Row="1">
+            <TextBlock Name="AccessLevelTBlock"
+                       Text="{Binding AccessType}"
+                       Foreground="White"
+                       FontSize="14"
+                       Margin="5,0"/>
+            <TextBlock Name="FullNameTBlock"
+                       Text="{Binding FullUserName}"
+                       Foreground="White"
+                       FontSize="14"/>
         </StackPanel>
     </Grid>
 </controls:MetroWindow>

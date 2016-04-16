@@ -65,12 +65,12 @@ namespace Staffinfo.Desktop.Data
         {
             using (var sqlConn = new SqlConnection(connectionString))
             {
-                var createDbCmd = new SqlCommand($"CREATE DATABASE {DataSingleton.Instance.DatabaseName}", sqlConn);
+                var createDbCmd = new SqlCommand($"CREATE DATABASE {DataSingleton.DatabaseName}", sqlConn);
                 sqlConn.Open();
                 //парсим скрипт
                 string[] scriptParts =
                     ParseSqlSqript(Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
-                        "...\\src\\Staffinfo.Desktop\\Data\\Scripts\\create_and_init_database_staffinfo.sql"));
+                        "...\\...\\src\\Staffinfo.Desktop\\Data\\Scripts\\create_and_init_database_staffinfo.sql"));
                 //количество операторов скрипта
                 int scriptPartsCount = scriptParts.Length;
                 //выполняемая в настоящий момент часть скрипта
