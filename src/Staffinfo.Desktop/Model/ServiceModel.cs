@@ -10,5 +10,9 @@
         /// </summary>
         public string ServiceTitle { get; set; }
 
+        /// <summary>
+        /// Id группы служб
+        /// </summary>
+        public int GroupId { get; set; }
     }
 }

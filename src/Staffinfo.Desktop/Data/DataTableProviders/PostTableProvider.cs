@@ -38,7 +38,8 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 {
                     Id = Int64.Parse(sqlDataReader[0].ToString()),
                     PostTitle = sqlDataReader[1].ToString(),
-                    ServiceId = Int64.Parse(sqlDataReader[2].ToString())
+                    ServiceId = Int64.Parse(sqlDataReader[2].ToString()),
+                    PostWeight = Int32.Parse(sqlDataReader[3].ToString())
                 };
                 sqlDataReader.Close();
 
@@ -73,7 +74,8 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                     {
                         Id = Int64.Parse(sqlDataReader[0].ToString()),
                         PostTitle = sqlDataReader[1].ToString(),
-                        ServiceId = Int64.Parse(sqlDataReader[2].ToString())
+                        ServiceId = Int64.Parse(sqlDataReader[2].ToString()),
+                        PostWeight = Int32.Parse(sqlDataReader[3].ToString())
                     };
 
                     postList.Add(postModel);

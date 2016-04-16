@@ -37,7 +37,8 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 serviceModel = new ServiceModel
                 {
                     Id = Int64.Parse(sqlDataReader[0].ToString()),
-                    ServiceTitle = sqlDataReader[1].ToString()
+                    ServiceTitle = sqlDataReader[1].ToString(),
+                    GroupId = Int32.Parse(sqlDataReader[2].ToString()),
                 };
                 sqlDataReader.Close();
 
@@ -71,7 +72,8 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                     var serviceModel = new ServiceModel
                     {
                         Id = Int64.Parse(sqlDataReader[0].ToString()),
-                        ServiceTitle = sqlDataReader[1].ToString()
+                        ServiceTitle = sqlDataReader[1].ToString(),
+                        GroupId = Int32.Parse(sqlDataReader[2].ToString()),
                     };
 
                     serviceList.Add(serviceModel);
