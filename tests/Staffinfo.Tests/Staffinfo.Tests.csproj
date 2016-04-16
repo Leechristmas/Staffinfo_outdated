@@ -61,6 +61,7 @@
     <Compile Include="DataTests\PostTableProviderTest.cs" />
     <Compile Include="DataTests\RankTableProviderTests.cs" />
     <Compile Include="DataTests\ServiceTableProviderTests.cs" />
+    <Compile Include="ExpirienceTimeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

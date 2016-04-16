@@ -1,9 +1,11 @@
-﻿namespace Staffinfo.Desktop.Model
+﻿using System;
+
+namespace Staffinfo.Desktop.Model
 {
     /// <summary>
     /// Модель учреждения образования
     /// </summary>
-    public class EducationalInstitutionModel: BaseModel
+    public class EducationalInstitutionModel: BaseModel, IComparable
     {
 
         #region Properties
@@ -23,6 +25,21 @@
         /// </summary>
         public string InstituitionType { get; set; }
 
+        /// <summary>
+        /// Название учебного заведения для view
+        /// </summary>
+        public string FullName => InstituitionTitle + " - " + InstituitionType;
+
         #endregion
+
+        public int CompareTo(object obj)
+        {
+            var educationInstitution = obj as EducationalInstitutionModel;
+
+            if (educationInstitution == null)
+                throw new ArgumentException("Передан объект неподходящего типа");
+
+            return String.CompareOrdinal(InstituitionTitle, educationInstitution.InstituitionTitle);
+        }
     }
 }

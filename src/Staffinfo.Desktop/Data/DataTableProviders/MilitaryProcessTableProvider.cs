@@ -26,7 +26,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             if (militaryProcess == null) throw new ArgumentNullException(nameof(militaryProcess), Resources.DatabaseConnector_parameter_cannot_be_null);
 
             var cmd =
-                new SqlCommand($@"INSERT INTO MILITARY_PROCESS VALUES({militaryProcess.EmployeeId}, '{militaryProcess.Description}', '{militaryProcess.StartDate}', '{militaryProcess.FinishDate}', {militaryProcess.MilitaryUnitId}); SELECT MAX(ID) FROM MILITARY_UNIT_ID;");
+                new SqlCommand($@"INSERT INTO MILITARY_PROCESS VALUES({militaryProcess.EmployeeId}, '{militaryProcess.Description}', '{militaryProcess.StartDate}', '{militaryProcess.FinishDate}', {militaryProcess.MilitaryUnitId}); SELECT MAX(ID) FROM MILITARY_PROCESS;");
 
             try
             {

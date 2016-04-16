@@ -37,7 +37,9 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 rankModel = new RankModel
                 {
                     Id = Int64.Parse(sqlDataReader[0].ToString()),
-                    RankTitle = sqlDataReader[1].ToString()
+                    RankTitle = sqlDataReader[1].ToString(),
+                    RankWeight = Int32.Parse(sqlDataReader[2].ToString()),
+                    Period = Double.Parse(sqlDataReader[3].ToString())
                 };
                 sqlDataReader.Close();
 
@@ -71,7 +73,9 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                     var rankModel = new RankModel()
                     {
                         Id = Int64.Parse(sqlDataReader[0].ToString()),
-                        RankTitle = sqlDataReader[1].ToString()
+                        RankTitle = sqlDataReader[1].ToString(),
+                        RankWeight = Int32.Parse(sqlDataReader[2].ToString()),
+                        Period = Double.Parse(sqlDataReader[3].ToString())
                     };
 
                     rankList.Add(rankModel);

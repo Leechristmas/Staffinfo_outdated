@@ -20,7 +20,7 @@ namespace Staffinfo.Desktop.ViewModel
         
         //private const string SelectedItemPropertyName = "SelectedItem";
 
-        private T _selectedItem = new T();
+        private T _selectedItem = default(T);
 
         public T SelectedItem
         {

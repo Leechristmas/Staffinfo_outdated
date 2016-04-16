@@ -16,11 +16,11 @@ using MahApps.Metro.Controls;
 namespace Staffinfo.Desktop.View
 {
     /// <summary>
-    /// Interaction logic for AddSpecialityView.xaml
+    /// Interaction logic for ReportsView.xaml
     /// </summary>
-    public partial class AddSpecialityView : MetroWindow
+    public partial class ReportsView : MetroWindow
     {
-        public AddSpecialityView()
+        public ReportsView()
         {
             InitializeComponent();
         }

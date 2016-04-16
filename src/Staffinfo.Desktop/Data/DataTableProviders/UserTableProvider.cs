@@ -73,10 +73,10 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             //passwordP.Value = password.ToUpper();
 
             UserModel userModel = null;
-
+            SqlDataReader sqlDataReader = null;
             try
             {
-                var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
+                sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
                 sqlDataReader.Read();
 
                 userModel = new UserModel
@@ -89,7 +89,6 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                     FirstName = sqlDataReader[5].ToString(),
                     MiddleName = sqlDataReader[6].ToString()
                 };
-                sqlDataReader.Close();
 
                 ErrorInfo = null;
             }
@@ -97,6 +96,10 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             {
                 ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;
                 return null;
+            }
+            finally
+            {
+                sqlDataReader?.Close();
             }
 
             return userModel;

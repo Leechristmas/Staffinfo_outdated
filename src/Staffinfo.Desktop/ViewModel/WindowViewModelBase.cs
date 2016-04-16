@@ -1,6 +1,8 @@
 ﻿using System;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using Staffinfo.Desktop.Data;
+using Staffinfo.Desktop.Model;
 using Staffinfo.Desktop.Shared;
 using Staffinfo.Desktop.View;
 
@@ -9,24 +11,17 @@ namespace Staffinfo.Desktop.ViewModel
     /// <summary>
     /// Базовый для view models, которые привязываются к окну
     /// </summary>
-    public class WindowViewModelBase : ViewModelBase
+    public abstract class WindowViewModelBase : ViewModelBase
     {
         /// <summary>
         /// true - закрыть окно
         /// </summary>
         private bool _windowsClosed;
-
-        public bool WindowsClosed
-        {
-            get { return _windowsClosed; }
-            set
-            {
-                if (_windowsClosed == value)
-                    return;
-                _windowsClosed = value;
-                RaisePropertyChanged("WindowsClosed");
-            }
-        }
+        
+        /// <summary>
+        /// блокировка интерфейса
+        /// </summary>
+        private bool _viewIsEnable = true;
 
         /// <summary>
         /// Уровень доступа
@@ -53,6 +48,71 @@ namespace Staffinfo.Desktop.ViewModel
         /// </summary>
         public bool IsAdmin => AccessLevel == (int)AccessLevelType.Admin;
 
+        /// <summary>
+        /// Уровень доступа
+        /// </summary>
+        public string AccessType => User?.AccessLevel == (int)AccessLevelType.Reader ? "reader: " :
+            "admin: ";
+
+        /// <summary>
+        /// Полное имя пользователя
+        /// </summary>
+        public string FullUserName => User?.LastName + ' ' + User?.FirstName + ' ' + User?.MiddleName;
+
+        /// <summary>
+        /// Пользователь
+        /// </summary>
+        public UserModel User
+        {
+            get { return DataSingleton.Instance.User; }
+            set
+            {
+                DataSingleton.Instance.User = value;
+
+                RaisePropertyChanged();
+                RaisePropertyChanged("SettingVisibility");
+                RaisePropertyChanged("FullUserName");
+                RaisePropertyChanged("AccessType");
+            }
+        }
+
+        /// <summary>
+        /// Окно закрыто
+        /// </summary>
+        public bool WindowsClosed
+        {
+            get { return _windowsClosed; }
+            set
+            {
+                if (_windowsClosed == value)
+                    return;
+                _windowsClosed = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Валидация view
+        /// </summary>
+        /// <returns></returns>
+        protected virtual bool Validate
+        {
+            get { return true; }
+        }
+
+        /// <summary>
+        /// Блокировка интерфейса
+        /// </summary>
+        public bool ViewIsEnable
+        {
+            get { return _viewIsEnable; }
+            set
+            {
+                _viewIsEnable = value;
+                RaisePropertyChanged(nameof(ViewIsEnable));
+            }
+        }
+
         #region CloseCommand
 
         private RelayCommand _closeWindowCommand;
@@ -63,9 +123,10 @@ namespace Staffinfo.Desktop.ViewModel
         public RelayCommand CloseWindowCommand
             => _closeWindowCommand ?? (_closeWindowCommand = new RelayCommand(CloseWindow));
 
-        private void CloseWindow()
+        protected virtual void CloseWindow()
         {
-            WindowsClosed = true;
+            WindowsClosed = true;   //закрываем окно
+            WindowsClosed = false;  //разрешаем открывать окно снова
         }
 
         #endregion

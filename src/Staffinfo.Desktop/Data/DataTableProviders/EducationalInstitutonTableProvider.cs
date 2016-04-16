@@ -69,7 +69,8 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 {
                     Id = Int64.Parse(sqlDataReader[0].ToString()),
                     InstituitionTitle = sqlDataReader[1].ToString(),
-                    InstituitionType = sqlDataReader[2].ToString()
+                    Description = sqlDataReader[2].ToString(),
+                    InstituitionType = sqlDataReader[3].ToString()
                 };
                 sqlDataReader.Close();
 
@@ -104,7 +105,8 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                     {
                         Id = Int64.Parse(sqlDataReader[0].ToString()),
                         InstituitionTitle = sqlDataReader[1].ToString(),
-                        InstituitionType = sqlDataReader[2].ToString()
+                        Description = sqlDataReader[2].ToString(),
+                        InstituitionType = sqlDataReader[3].ToString()
                     };
 
                     educationalInstitutionList.Add(educationalInstitutionModel);

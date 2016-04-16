@@ -17,12 +17,15 @@ GO
 CREATE TABLE POST(
 		ID INT PRIMARY KEY IDENTITY,
 		POST_TITLE VARCHAR(64) NOT NULL,
-		SERVICE_ID INT NOT NULL);
+		SERVICE_ID INT NOT NULL,
+		POST_WEIGHT INT NOT NULL);
 GO
 --ЗВАНИЯ
 CREATE TABLE RANK(
 		ID INT PRIMARY KEY IDENTITY,
-		RANK_TITLE VARCHAR(64) NOT NULL UNIQUE);
+		RANK_TITLE VARCHAR(64) NOT NULL UNIQUE,
+		RANK_WEIGHT INT NOT NULL,	--"ВЕСОВОЙ" КОЭФФИЦИЕНТ ЗВАНИЯ
+		PERIOD FLOAT NOT NULL);		--СРОК ВЫСЛУГИ
 GO
 --КЛАССНОСТЬ 
 CREATE TABLE CLASINESS (
@@ -44,7 +47,7 @@ GO
 --УЧЕБНЫЕ ЗАВЕДЕНИЯ
 CREATE TABLE EDUCATIONAL_INSTITUTION(
 		ID INT PRIMARY KEY IDENTITY,
-		INST_TITLE VARCHAR(64) NOT NULL, 
+		INST_TITLE VARCHAR(64) NOT NULL UNIQUE, 
 		DESCRIPTION VARCHAR(64), 
 		INST_TYPE VARCHAR(64) NOT NULL);	
 GO
@@ -119,7 +122,7 @@ GO
 CREATE TABLE RELATIVE(
 	ID INT PRIMARY KEY IDENTITY,
 	EMPLOYEE_ID INT NOT NULL,
-	RELATION_TYPE_ID INT NOT NULL,
+	RELATION_TYPE VARCHAR(30),
 	FIRST_NAME VARCHAR(64) NOT NULL,
 	MIDDLE_NAME VARCHAR(64) NOT NULL,
 	LAST_NAME VARCHAR(64) NOT NULL,
@@ -144,7 +147,8 @@ GO
 --СЛУЖБЫ
 CREATE TABLE SERVICE(
 	ID INT PRIMARY KEY IDENTITY, 
-	SERVICE_TITLE VARCHAR(120) NOT NULL UNIQUE);
+	SERVICE_TITLE VARCHAR(120) NOT NULL UNIQUE,
+	GROUP_ID INT NOT NULL);	--принадлежность к определенной группе служб (определяется по первой цифре)
 GO
 --СПЕЦИАЛЬНОСТИ(ОБРАЗОВАНИЕ)
 CREATE TABLE SPECIALITY(
@@ -186,14 +190,32 @@ GO
 --ПАСПОРТНЫЕ ДАННЫЕ
 CREATE TABLE PASPORT(
 	ID INT PRIMARY KEY IDENTITY,
-	--ORGANIZATION_UNIT_ID INT,
 	ORGANIZATION_UNIT VARCHAR(120),
 	NUMBER VARCHAR(20),
 	SERIES VARCHAR(5));
 GO
+--ЛОГ ОТКРЫТИЙ РАБОЧИХ СЕССИЙ
+CREATE TABLE SESSION_LOG(
+	ID INT PRIMARY KEY IDENTITY,
+	USERID INT,
+	SESSION_OPEN_TIME DATETIME)--ВРЕМЯ ОТКРЫТИЯ СЕССИИ
+GO
+--ЛОГ ПРОВОДИМЫХ ОПЕРАЦИЙ
+CREATE TABLE OPERATIONS_LOG(
+	ID INT PRIMARY KEY IDENTITY,
+	OPERATION_TYPE VARCHAR(20),--ТИП ОПЕРАЦИИ
+	TABLENAME VARCHAR(128),
+	OPERATION_TIME DATETIME,
+	DESCRIPTION VARCHAR(120))--ВРЕМЯ ПРОВЕДЕНИЯ ОПЕРАЦИИ
+GO
 -------------------------------------------------------------------------
 ---CONSTRAINTS
 -------------------------------------------------------------------------
+ALTER TABLE SESSION_LOG
+	ADD
+		CONSTRAINT	FK_SESSION_LOG_USERS
+					FOREIGN KEY (USERID) REFERENCES USERS ON DELETE CASCADE
+GO
 ALTER TABLE PASPORT
 	ADD
 		CONSTRAINT	UQ_PASPORT_UNIQUE
@@ -277,9 +299,7 @@ GO
 ALTER TABLE RELATIVE
 	ADD
 		CONSTRAINT	FK_RELATIVE_EMPLOYEE
-					FOREIGN KEY (EMPLOYEE_ID) REFERENCES EMPLOYEE ON DELETE CASCADE,
-		CONSTRAINT	FK_RELATIVE_TB_RELATION_TYPE
-					FOREIGN KEY	(RELATION_TYPE_ID) REFERENCES RELATIVE_TYPE ON DELETE CASCADE;
+					FOREIGN KEY (EMPLOYEE_ID) REFERENCES EMPLOYEE ON DELETE CASCADE;
 GO
 ALTER TABLE REPRIMAND
 	ADD
@@ -302,33 +322,76 @@ INSERT INTO USERS VALUES('ADMIN', 'admin', 1, 'Шевчук', 'Дмитрий', 
 GO
 
 INSERT INTO SERVICE
-	VALUES('Пожарно-спасательная'),
-		('Медицинская'),
-		('Взрывотезническая'),
-		('Водолазная');
+	VALUES('Аппарат отряда', 100),
+		('Группа кадров и делопроизводства', 200),
+		('Центр оперативного управления', 300),
+		('Медицинская', 400),
+		('Водолазно-спасательная', 500),
+		('Взрывотезническая', 600),
+		('Служба химической и радиационной защиты', 700),
+		('Пожарно-спасательная', 800),
+		('Отделение инженерных работ', 801),
+		('Кинологическое отделение', 802),
+		('Отделение связи и оповещения', 803),
+		('Пожарно-спасательное отделение', 804);
 
 GO
 
 INSERT INTO POST
-	VALUES('Водитель', 1),
-		('Спасатель',1),
-		('Начальник службы',1),
-		('Водитель', 2),
-		('Спасатель',2),
-		('Начальник службы',2),
-		('Водитель', 3),
-		('Спасатель',3),
-		('Начальник службы',3),
-		('Водитель', 4),
-		('Спасатель',4),
-		('Начальник службы',4);
-
+	VALUES('Нач. отряда', 1, 1),	--Аппарат отряда
+		('Зам. по ОТР', 1, 2),
+		('Зам. по МТО', 1, 2),
+		('Зам. по ИРКО', 1, 2),
+		('Нач. деж. смены', 1, 3),
+		('Старший инженер', 1, 4),
+		('Инспектор гр. ИРКО', 2, 1),	--Группа кадров и делопроизводства
+		('Инспектор гр. делопроизводства', 2, 2),
+		('Нач. деж. смены', 3, 1),	--Центр оперативного управления
+		('Старший инженер', 3, 2),
+		('Диспетчер', 3, 3),
+		('Начальник', 4, 1),	--Медицинская служба
+		('Врач скорой мед. помощи', 4, 2),
+		('Спасатель-фельдшер', 4, 3),
+		('Водитель-санитар', 4, 4),
+		('Начальник', 5, 1),	--Водолазно-спасательная служба
+		('Командир отделения', 5, 2),
+		('Спасатель-водолаз', 5, 3),
+		('Водитель-водолаз', 5, 4),
+		('Начальник', 6, 1),	--Взрывотехническая служба
+		('Инженер-взрывотехник', 6, 2),
+		('Командир отделения', 6, 3),
+		('Старший спасатель-взрывотехник', 6, 4),
+		('Водитель-взрывотехник', 6, 5),
+		('Начальник', 7, 1),	--Служба хим. и радиационной защиты
+		('Инженер', 7, 2),
+		('Командир отделения', 7, 3),
+		('Старший спасатель-химик-дозиметр.', 7, 4),
+		('Начальник', 8, 1),	--Пожарно-спасательная служба
+		('Водитель-спасатель', 9, 1)	, --Отделение инженерных работ
+		('Старший инструктор-кинолог', 10, 1),	--Кинологическое отделение
+		('Спасатель-кинолог', 10, 2),
+		('Инженер', 11, 1),	--Отделение связи и оповещения
+		('Мастер связи', 11, 2),
+		('Водитель-связист', 11, 3),
+		('Командир отделения', 12, 1),	--Пожарно-спасательное отделение
+		('Старший спасатель-пожарный', 12, 2),
+		('Спасатель-пожарный', 12, 3),
+		('Старший водитель-спасатель', 12, 4),
+		('Водитель-спасатель', 12, 5)
 GO
 
 INSERT INTO RANK
-	VALUES('Сержант'),('Прапорщик'), ('Лейтенант'),
-	('Капитан'),('Майор'),('Подполковник');
-
+	VALUES('Младший сержант', 1, 1),
+		  ('Сержант', 2, 2),
+		  ('Старший сержант', 3, 3),
+		  ('Старшина', 4, 3),
+		  ('Прапорщик', 5, 5),
+		  ('Младший лейтенант',6, 1),
+		  ('Лейтенант', 7, 2),
+		  ('Старший лейтенант', 8, 3),
+		  ('Капитан', 9, 3),
+		  ('Майор', 10, 4),
+		  ('Подполковник', 11, 5);
 GO
 -------------------------------------------------------------------------
 ---PROCEDURES
@@ -715,7 +778,139 @@ GO
 -------------------------------------------------------------------------
 ---TRIGGERS
 -------------------------------------------------------------------------
+--ПИШЕМ В ЛОГ ПРИ ДОБАВЛЕНИИ/ОБНОВЛЕНИИ КЛАССНОСТИ
+CREATE TRIGGER CLASINESS_INSERT_UPDATE ON CLASINESS
+AFTER INSERT, UPDATE
+AS
+	IF (SELECT COUNT(*) FROM INSERTED) > 0
+		IF (SELECT COUNT(*) FROM DELETED) > 0
+			INSERT INTO OPERATIONS_LOG(OPERATION_TYPE, TABLENAME, OPERATION_TIME, DESCRIPTION)  
+			SELECT 'UPDATE', 'CLASINESS', GETDATE(), 'ОБНОВЛЕНА КЛАССНОСТЬ ЗА ' + CAST(CLASINESS_DATE AS VARCHAR(20)) FROM DELETED
+		ELSE 
+			INSERT INTO OPERATIONS_LOG(OPERATION_TYPE, TABLENAME, OPERATION_TIME, DESCRIPTION)  
+			SELECT 'INSERT', 'CLASINESS', GETDATE(), 'ДОБАВЛЕНА КЛАССНОСТЬ ЗА ' + CAST(CLASINESS_DATE AS VARCHAR(20)) FROM INSERTED
+GO
+--ПИШЕМ В ЛОГ ПРИ УДАЛЕНИИ КЛАССНОСТИ
+CREATE TRIGGER CLASINESS_DELETE ON CLASINESS
+AFTER DELETE
+AS
+	IF (SELECT COUNT(*) FROM DELETED) > 0
+		INSERT INTO OPERATIONS_LOG(OPERATION_TYPE, TABLENAME, OPERATION_TIME, DESCRIPTION)  
+			SELECT 'DELETE', 'CLASINESS', GETDATE(), 'УДАЛЕНА КЛАССНОСТЬ ЗА ' + CAST(CLASINESS_DATE AS VARCHAR(20)) FROM DELETED
+GO
+--ПИШЕМ В ЛОГ ПРИ ДОБАВЛЕНИИ/ОБНОВЛЕНИИ КОНТРАКТА
+CREATE TRIGGER CONTRACT_INSERT_UPDATE ON CONTRACT
+AFTER INSERT, UPDATE
+AS
+	IF (SELECT COUNT(*) FROM INSERTED) > 0
+	BEGIN
+		IF (SELECT COUNT(*) FROM DELETED) > 0
+			INSERT INTO OPERATIONS_LOG(OPERATION_TYPE, TABLENAME, OPERATION_TIME, DESCRIPTION)  
+			SELECT 'UPDATE', 'CONTRACTS', GETDATE(), 
+				   'ОБНОВЛЕН КОНТРАКТ "'+ (SELECT EMPLOYEE_LASTNAME FROM EMPLOYEE EMPL WHERE EMPL.ID = DELETED.EMPLOYEE_ID) + '" ЗА ' + CAST(START_DATE AS VARCHAR(20)) 
+			FROM DELETED
+		ELSE 
+			INSERT INTO OPERATIONS_LOG(OPERATION_TYPE, TABLENAME, OPERATION_TIME, DESCRIPTION)  
+			SELECT 'INSERT', 'CONTRACTS', GETDATE(), 
+				   'ДОБАВЛЕН КОНТРАКТ "'+ (SELECT EMPLOYEE_LASTNAME FROM EMPLOYEE EMPL WHERE EMPL.ID = INSERTED.EMPLOYEE_ID) + '" ЗА ' + CAST(START_DATE AS VARCHAR(20)) 
+			FROM INSERTED
+	END
+GO
+--ПИШЕМ В ЛОГ ПРИ УДАЛЕНИИ КОНТРАКТА
+CREATE TRIGGER CONTRACT_DELETE ON CONTRACT
+AFTER DELETE
+AS
+	IF (SELECT COUNT(*) FROM DELETED) > 0
+		INSERT INTO OPERATIONS_LOG(OPERATION_TYPE, TABLENAME, OPERATION_TIME, DESCRIPTION)  
+			SELECT 'DELETE', 'CONTRACTS', GETDATE(), 
+				   'УДАЛЕН КОНТРАКТ "'+ (SELECT EMPLOYEE_LASTNAME FROM EMPLOYEE EMPL WHERE EMPL.ID = DELETED.EMPLOYEE_ID) + '" ЗА ' + CAST(START_DATE AS VARCHAR(20)) 
+			FROM DELETED
+GO
 
+--ПИШЕМ В ЛОГ ПРИ ДОБАВЛЕНИИ/ОБНОВЛЕНИИ УЧЕБНОГО ЗАВЕДЕНИЯ
+CREATE TRIGGER EDUCATIONAL_INSTITUTION_INSERT_UPDATE ON EDUCATIONAL_INSTITUTION
+AFTER INSERT, UPDATE
+AS
+	IF (SELECT COUNT(*) FROM INSERTED) > 0
+	BEGIN
+		IF (SELECT COUNT(*) FROM DELETED) > 0
+			INSERT INTO OPERATIONS_LOG(OPERATION_TYPE, TABLENAME, OPERATION_TIME, DESCRIPTION)  
+			SELECT 'UPDATE', 'EDUCATIONAL_INSTITUTION', GETDATE(), 
+				   'ОБНОВЛЕНО УЧЕБНОЕ ЗАВЕДЕНИЕ "' + (SELECT INST_TITLE FROM EDUCATIONAL_INSTITUTION E WHERE E.ID = DELETED.ID) + '"'
+			FROM DELETED
+		ELSE 
+			INSERT INTO OPERATIONS_LOG(OPERATION_TYPE, TABLENAME, OPERATION_TIME, DESCRIPTION)  
+			SELECT 'INSERT', 'EDUCATIONAL_INSTITUTION', GETDATE(), 
+				   'ДОБАВЛЕНО УЧЕБНОЕ ЗАВЕДЕНИЕ "' + (SELECT INST_TITLE FROM EDUCATIONAL_INSTITUTION E WHERE E.ID = INSERTED.ID) + '"'
+			FROM INSERTED
+	END
+GO
+--ПИШЕМ В ЛОГ ПРИ УДАЛЕНИИ УЧЕБНОГО ЗАВЕДЕНИЯ
+CREATE TRIGGER EDUCATIONAL_INSTITUTION_DELETE ON EDUCATIONAL_INSTITUTION
+AFTER DELETE
+AS
+	IF (SELECT COUNT(*) FROM DELETED) > 0
+		INSERT INTO OPERATIONS_LOG(OPERATION_TYPE, TABLENAME, OPERATION_TIME, DESCRIPTION)  
+			SELECT 'DELETE', 'EDUCATIONAL_INSTITUTION', GETDATE(), 
+				   'УДАЛЕНО УЧЕБНОЕ ЗАВЕДЕНИЕ "' + INST_TITLE + '"'
+			FROM DELETED
+GO
+--ПИШЕМ В ЛОГ ПРИ ДОБАВЛЕНИИ/ОБНОВЛЕНИИ ОБУЧЕНИЯ
+CREATE TRIGGER EDUCATION_TIME_INSERT_UPDATE ON EDUCATION_TIME
+AFTER INSERT, UPDATE
+AS
+	IF (SELECT COUNT(*) FROM INSERTED) > 0
+	BEGIN
+		IF (SELECT COUNT(*) FROM DELETED) > 0
+			INSERT INTO OPERATIONS_LOG(OPERATION_TYPE, TABLENAME, OPERATION_TIME, DESCRIPTION)  
+			SELECT 'UPDATE', 'EDUCATION_TIME', GETDATE(), 
+				   'ОБНОВЛЕНА ЗАПИСЬ ОБ ОБУЧЕНИИ "'+ (SELECT EMPLOYEE_LASTNAME FROM EMPLOYEE EMPL WHERE EMPL.ID = DELETED.EMPLOYEE_ID) + '" ЗА ' + CAST(START_DATE AS VARCHAR(20)) 
+			FROM DELETED
+		ELSE 
+			INSERT INTO OPERATIONS_LOG(OPERATION_TYPE, TABLENAME, OPERATION_TIME, DESCRIPTION)  
+			SELECT 'INSERT', 'EDUCATION_TIME', GETDATE(), 
+				   'ДОБАВЛЕНА ЗАПИСЬ ОБ ОБУЧЕНИИ "'+ (SELECT EMPLOYEE_LASTNAME FROM EMPLOYEE EMPL WHERE EMPL.ID = INSERTED.EMPLOYEE_ID) + '" ЗА ' + CAST(START_DATE AS VARCHAR(20)) 
+			FROM INSERTED
+	END
+GO
+--ПИШЕМ В ЛОГ ПРИ УДАЛЕНИИ ЗАПИСИ ОБ ОБУЧЕНИИ
+CREATE TRIGGER EDUCATION_TIME_DELETE ON EDUCATION_TIME
+AFTER DELETE
+AS
+	IF (SELECT COUNT(*) FROM DELETED) > 0
+		INSERT INTO OPERATIONS_LOG(OPERATION_TYPE, TABLENAME, OPERATION_TIME, DESCRIPTION)  
+			SELECT 'DELETE', 'EDUCATION_TIME', GETDATE(), 
+				   'УДАЛЕНА ЗАПИСЬ ОБ ОБУЧЕНИИ "'+ (SELECT EMPLOYEE_LASTNAME FROM EMPLOYEE EMPL WHERE EMPL.ID = DELETED.EMPLOYEE_ID) + '" ЗА ' + CAST(START_DATE AS VARCHAR(20)) 
+			FROM DELETED
+GO
+--ПИШЕМ В ЛОГ ПРИ ДОБАВЛЕНИИ/ОБНОВЛЕНИИ БЛАГОДАРНОСТИ
+CREATE TRIGGER GRATITUDE_INSERT_UPDATE ON GRATITUDE
+AFTER INSERT, UPDATE
+AS
+	IF (SELECT COUNT(*) FROM INSERTED) > 0
+	BEGIN
+		IF (SELECT COUNT(*) FROM DELETED) > 0
+			INSERT INTO OPERATIONS_LOG(OPERATION_TYPE, TABLENAME, OPERATION_TIME, DESCRIPTION)  
+			SELECT 'UPDATE', 'GRATITUDE', GETDATE(), 
+				   'ОБНОВЛЕНА БЛАГОДАРНОСТЬ "'+ (SELECT EMPLOYEE_LASTNAME FROM EMPLOYEE EMPL WHERE EMPL.ID = DELETED.EMPLOYEE_ID) + '" ЗА ' + CAST(GRATITUDE_DATE AS VARCHAR(20)) 
+			FROM DELETED
+		ELSE 
+			INSERT INTO OPERATIONS_LOG(OPERATION_TYPE, TABLENAME, OPERATION_TIME, DESCRIPTION)  
+			SELECT 'INSERT', 'GRATITUDE', GETDATE(), 
+				   'ДОБАВЛЕНА БЛАГОДАРНОСТЬ "'+ (SELECT EMPLOYEE_LASTNAME FROM EMPLOYEE EMPL WHERE EMPL.ID = INSERTED.EMPLOYEE_ID) + '" ЗА ' + CAST(GRATITUDE_DATE AS VARCHAR(20)) 
+			FROM INSERTED
+	END
+GO
+--ПИШЕМ В ЛОГ ПРИ УДАЛЕНИИ БЛАГОДАРНОСТИ
+CREATE TRIGGER GRATITUDE_TIME_DELETE ON GRATITUDE
+AFTER DELETE
+AS
+	IF (SELECT COUNT(*) FROM DELETED) > 0
+		INSERT INTO OPERATIONS_LOG(OPERATION_TYPE, TABLENAME, OPERATION_TIME, DESCRIPTION)  
+			SELECT 'DELETE', 'GRATITUDE', GETDATE(), 
+				   'УДАЛЕНА БЛАГОДАРНОСТЬ "'+ (SELECT EMPLOYEE_LASTNAME FROM EMPLOYEE EMPL WHERE EMPL.ID = DELETED.EMPLOYEE_ID) + '" ЗА ' + CAST(GRATITUDE_DATE AS VARCHAR(20)) 
+			FROM DELETED
+GO
 -------------------------------------------------------------------------
 ---EOF
 -------------------------------------------------------------------------

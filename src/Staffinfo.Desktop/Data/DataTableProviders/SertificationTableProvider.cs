@@ -26,7 +26,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             if (sertification == null) throw new ArgumentNullException(nameof(sertification), Resources.DatabaseConnector_parameter_cannot_be_null);
 
             var cmd =
-                new SqlCommand($@"INSERT INTO SERTIFICATION VALUES({sertification.EmployeeId}, '{sertification.SertificationDate}', '{sertification.Description}'); SELECT MAX(ID) FROM SERTIFICATION;");
+                new SqlCommand($@"INSERT INTO SERTIFICATION VALUES({sertification.EmployeeId}, '{sertification.SertificationDate.Date}', '{sertification.Description}'); SELECT MAX(ID) FROM SERTIFICATION;");
 
             try
             {
@@ -106,7 +106,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                         Id = Int64.Parse(sqlDataReader[0].ToString()),
                         EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
                         SertificationDate = DateTime.Parse(sqlDataReader[2].ToString()),
-                        Description = sqlDataReader[4].ToString()
+                        Description = sqlDataReader[3].ToString()
                     };
 
                     sertificationList.Add(sertification);

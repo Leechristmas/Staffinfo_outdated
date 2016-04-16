@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using Staffinfo.Desktop.Data;
@@ -15,53 +16,134 @@ namespace Staffinfo.Desktop.ViewModel
     {
         public AllEmployeesViewModel()
         {
+            //инициализируем уровень доступа пользователя к view
             AccessLevel = DataSingleton.Instance.User.AccessLevel;
-        }
 
+            //инициализируем список сотрудников
+            Employees = DataSingleton.Instance.EmployeeList;
+        }
+        
         #region Fields
 
-        private ObservableCollectionViewModel<EmployeeViewModel> _employeeList =
-            new ObservableCollectionViewModel<EmployeeViewModel>(DataSingleton.Instance.EmployeeList);
+        /// <summary>
+        /// Служащие
+        /// </summary>
+        private ObservableCollection<EmployeeViewModel> _employees;
 
-        private string _searchText;
+        /// <summary>
+        /// текст поиска
+        /// </summary>
+        private string _searchText = String.Empty;
+
+        /// <summary>
+        /// выбранный служащий
+        /// </summary>
+        private EmployeeViewModel _selectedEmployee;
+
+        /// <summary>
+        /// Ширина бокового меню
+        /// </summary>
+        private int _menuWidth = 150;
+
+        ///// <summary>
+        ///// Ширина рабочей области
+        ///// </summary>
+        //private int _dataWidth;
+
+        ///// <summary>
+        ///// Ширина окна
+        ///// </summary>
+        //private int _windowWidth;
+
 
         #endregion
 
         #region Properties
 
         /// <summary>
-        /// Служащие
+        /// Ширина бокового меню
         /// </summary>
-        public ObservableCollectionViewModel<EmployeeViewModel> EmployeeList
+        public int MenuWidth
         {
-            get
+            get { return _menuWidth; }
+            set
             {
-
-                //if(SearchText == null) return EmployeeList;//x.ToUpper().StartsWith(SearchText.ToUpper())
-
-                //var filtered = from emp in EmployeeList.ModelCollection
-                //    let lname = emp.LastName
-                //    where lname.StartsWith(SearchText.ToUpper())
-                //    select emp;
-
-                //return filtered;
-
-
-                //return new ObservableCollectionViewModel<EmployeeViewModel>(EmployeeList.ModelCollection.Where(x => x.LastName.ToUpper().StartsWith(SearchText.ToUpper())).ToList());
-
-                return _employeeList;
+                _menuWidth = value;
+                RaisePropertyChanged(nameof(MenuWidth));
             }
         }
 
+        ///// <summary>
+        ///// Ширина бокового меню
+        ///// </summary>
+        //public int DataWidth
+        //{
+        //    get { return _dataWidth; }
+        //    set
+        //    {
+        //        _dataWidth = value;
+        //        RaisePropertyChanged(nameof(DataWidth));
+        //    }
+        //}
+
+        ///// <summary>
+        ///// Ширина бокового меню
+        ///// </summary>
+        //public int WindowWidth
+        //{
+        //    get { return _windowWidth; }
+        //    set
+        //    {
+        //        _windowWidth = value;
+        //        RaisePropertyChanged(nameof(WindowWidth));
+        //    }
+        //}
+
+        /// <summary>
+        /// Служащие
+        /// </summary>
+        public ObservableCollection<EmployeeViewModel> Employees
+        {
+            get { return _employees; }
+            set
+            {
+                _employees = value;
+                RaisePropertyChanged("Employees");
+            }
+        }
+
+        /// <summary>
+        /// Выбранный сотрудник
+        /// </summary>
+        public EmployeeViewModel SelectedEmployee
+        {
+            get { return _selectedEmployee; }
+            set
+            {
+                _selectedEmployee = value; 
+                RaisePropertyChanged(nameof(SelectedEmployee));
+            }
+        }
+
+        /// <summary>
+        /// Текст из строки поиска
+        /// </summary>
         public string SearchText
         {
             get { return _searchText; }
             set
             {
+                //блокируем интерфейс
+                ViewIsEnable = false;
+
                 _searchText = value;
-                
                 RaisePropertyChanged("SearchText");
-                RaisePropertyChanged("EmployeeList");
+
+                //селекция сотрудников согласно введенному тексту
+                Employees = new ObservableCollection<EmployeeViewModel>(DataSingleton.Instance.EmployeeList.Where(e => e.LastName.ToLower().StartsWith(SearchText.ToLower())));
+
+                //открываем интерфейс
+                ViewIsEnable = true;
             }
         }
 
@@ -86,19 +168,23 @@ namespace Staffinfo.Desktop.ViewModel
         /// Удалить служащего
         /// </summary>
         private RelayCommand _removeEmployee;
-
         public RelayCommand RemoveEmployee
             => _removeEmployee ?? (_removeEmployee = new RelayCommand(RemoveEmployeeExecute));
 
         private void RemoveEmployeeExecute()
         {
+            var item = SelectedEmployee;
+            if (item == null)
+            {
+                MessageBox.Show("Запись не выбрана.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error,
+                    MessageBoxResult.OK);
+                return;
+            }
+
             var remove = MessageBox.Show("Будет удалена вся ниформация о служащем. Вы уверены?", "Удаление", MessageBoxButton.YesNo,
                 MessageBoxImage.Question, MessageBoxResult.No);
 
             if (remove == MessageBoxResult.No) return;
-
-            //var index = EmployeeList.SelectedIndex;
-            var item = EmployeeList.SelectedItem;//ModelCollection[index];
             
             using (var prvdr = new EmployeeTableProvider())
             {
@@ -107,7 +193,7 @@ namespace Staffinfo.Desktop.ViewModel
                     MessageBox.Show("Ошибка удаления!" + prvdr.ErrorInfo, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-                EmployeeList.ModelCollection.Remove(item);
+                Employees.Remove(item);
             }
         }
 
@@ -115,13 +201,24 @@ namespace Staffinfo.Desktop.ViewModel
         /// Открыть окно с информацией по выбранному служащему
         /// </summary>
         private RelayCommand _showEmployee;
-
         public RelayCommand ShowEmployee => _showEmployee ?? (_showEmployee = new RelayCommand(ShowEmployeeExecute));
 
         private void ShowEmployeeExecute()
         {
-            var employeeView = new EmployeeView {DataContext = new EmployeeEditViewModel(EmployeeList.SelectedItem) };
+            var employeeView = new EmployeeView {DataContext = new EmployeeEditViewModel(SelectedEmployee) };
             employeeView.ShowDialog();
+        }
+
+        /// <summary>
+        /// Свернуть/развернуть ширину бокового меню
+        /// </summary>
+        private RelayCommand _toggleMenuWidth;
+        public RelayCommand ToggleMenuWidth
+            => _toggleMenuWidth ?? (_toggleMenuWidth = new RelayCommand(ToggleMenuWidthExecute));
+
+        private void ToggleMenuWidthExecute()
+        {
+            MenuWidth = MenuWidth == 150 ? 35 : 150;
         }
 
         #endregion

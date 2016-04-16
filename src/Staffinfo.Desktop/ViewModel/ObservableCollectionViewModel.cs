@@ -30,7 +30,7 @@ namespace Staffinfo.Desktop.ViewModel
 
         private const string SelectedItemPropertyName = "SelectedItem";
 
-        private T _selectedItem = new T();
+        private T _selectedItem = default(T);
         private int _selectedIndex;
 
         public T SelectedItem

@@ -17,6 +17,22 @@
             <i:InvokeCommandAction Command="{Binding WindowLoadedCommand}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
+    <!--<Controls:MetroWindow.IconTemplate>
+        <DataTemplate>
+            <Grid Width="{TemplateBinding Width}"
+                  Height="{TemplateBinding Height}"
+                  Margin="4"
+                  Background="Transparent"
+                  RenderOptions.EdgeMode="Aliased"
+                  RenderOptions.BitmapScalingMode="HighQuality">
+                <Rectangle>
+                    <Rectangle.Fill>
+                        <VisualBrush  Visual="{StaticResource appbar_database}" />
+                    </Rectangle.Fill>
+                </Rectangle>
+            </Grid>
+        </DataTemplate>
+    </Controls:MetroWindow.IconTemplate>-->
     <Controls:MetroWindow.RightWindowCommands>
         <Controls:WindowCommands>
             <Button Command="{Binding ShowSettings}"
@@ -61,7 +77,8 @@
                         </StackPanel>
                         <StackPanel Orientation="Vertical" 
                                     Margin="0,5">
-                            <ComboBox   MinWidth="145" 
+                            <ComboBox   MinWidth="145"
+                                        MaxWidth="250"
                                         Margin="5,0" 
                                         Height="30"
                                         ItemsSource="{Binding ServerNamesList}"
@@ -71,7 +88,7 @@
                                         Margin="5,5" 
                                         Height="30" 
                                         MaxLength="20" 
-                                        Text="{Binding Login}"/>
+                                        Text="{Binding Login, UpdateSourceTrigger=PropertyChanged}"/>
                             <PasswordBox MinWidth="150" 
                                         FontSize="16" 
                                         Margin="5,0" 
@@ -109,31 +126,103 @@
             </Controls:MetroTabItem>
             <Controls:MetroTabItem>
                 <Grid>
-                    <StackPanel Width="130"
+                    <StackPanel Width="150"
                                 Orientation="Vertical"
                                 HorizontalAlignment="Right">
                         <Button Name="EmployeeListBtn"
-                                Content="Служащие"
-                                VerticalAlignment="Center"
-                                Style="{StaticResource ButtonStyle}"
-                                Command="{Binding GoToAllEmployeesView}"/>
+                                FontSize="18" 
+                                Style="{DynamicResource ChromelessButtonStyle}"
+                                MinHeight="20" Margin="0"
+                                Command="{Binding GoToAllEmployeesView}"
+                                Height="30"
+                                VerticalAlignment="Top"
+                                HorizontalAlignment="Left">
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Width="20"
+                                           Height="20"
+                                           Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                                    <Rectangle.OpacityMask>
+                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_group}" />
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                                <TextBlock Text=" Служащие"/>
+                            </StackPanel>
+                        </Button>
                         <Button Name="OldEmployeeListBtn"
-                                Content="Пенсионеры"
-                                VerticalAlignment="Center"
-                                Style="{StaticResource ButtonStyle}"/>
+                                FontSize="18" 
+                                Style="{DynamicResource ChromelessButtonStyle}"
+                                MinHeight="20" Margin="0"
+                                Height="30"
+                                VerticalAlignment="Top"
+                                HorizontalAlignment="Left">
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Width="20"
+                                           Height="20"
+                                           Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                                    <Rectangle.OpacityMask>
+                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_group}" />
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                                <TextBlock Text=" Пенсионеры"/>
+                            </StackPanel>
+                        </Button>
                         <Button Name="SettingBtn"
-                                Content="Настройки"
-                                VerticalAlignment="Center"
-                                Style="{StaticResource ButtonStyle}"/>
+                                FontSize="18" 
+                                Style="{DynamicResource ChromelessButtonStyle}"
+                                MinHeight="20" Margin="0"
+                                Command="{Binding ShowSettings}"
+                                Height="30"
+                                VerticalAlignment="Top"
+                                HorizontalAlignment="Left">
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Width="20"
+                                           Height="20"
+                                           Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                                    <Rectangle.OpacityMask>
+                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_settings}" />
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                                <TextBlock Text=" Настройки"/>
+                            </StackPanel>
+                        </Button>
                         <Button Name="ReportBtn"
-                                Content="Отчеты"
-                                VerticalAlignment="Center"
-                                Style="{StaticResource ButtonStyle}"/>
+                                FontSize="18" 
+                                Style="{DynamicResource ChromelessButtonStyle}"
+                                MinHeight="20" Margin="0"
+                                Command="{Binding GoToReports}"
+                                Height="30"
+                                VerticalAlignment="Top"
+                                HorizontalAlignment="Left">
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Width="20"
+                                           Height="20"
+                                           Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                                    <Rectangle.OpacityMask>
+                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_office_excel}" />
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                                <TextBlock Text=" Отчеты"/>
+                            </StackPanel>
+                        </Button>
                         <Button Name="UsersBtn"
-                                Content="Пользователи"
-                                VerticalAlignment="Center"
-                                Style="{StaticResource ButtonStyle}"
-                                Command="{Binding ShowUsers}"/>
+                                FontSize="18" 
+                                Style="{DynamicResource ChromelessButtonStyle}"
+                                MinHeight="20" Margin="0"
+                                Command="{Binding ShowUsers}"
+                                Height="30"
+                                VerticalAlignment="Top"
+                                HorizontalAlignment="Left">
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Width="20"
+                                           Height="20"
+                                           Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                                    <Rectangle.OpacityMask>
+                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_user}" />
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                                <TextBlock Text=" Пользователи"/>
+                            </StackPanel>
+                        </Button>
                     </StackPanel>
 
                     <Border Background="LightGray"
@@ -144,10 +233,10 @@
                                     Orientation="Vertical"
                                     HorizontalAlignment="Right">
                             <Button Name="CloseButton"
-                                Content="Закрыть"
-                                VerticalAlignment="Bottom"
-                                Style="{StaticResource ButtonStyle}"
-                                Command="{Binding CloseWindowCommand}"/>
+                                    Content="Закрыть"
+                                    VerticalAlignment="Bottom"
+                                    Style="{StaticResource ButtonStyle}"
+                                    Command="{Binding CloseWindowCommand}"/>
                         </StackPanel>
                     </Border>
                     <StackPanel VerticalAlignment="Bottom"
@@ -160,7 +249,7 @@
                                    FontSize="14"
                                    Margin="5,0"/>
                         <TextBlock Name="FullNameTBlock"
-                                   Text="{Binding FullName}"
+                                   Text="{Binding FullUserName}"
                                    Foreground="White"
                                    FontSize="14"/>
                     </StackPanel>

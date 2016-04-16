@@ -45,23 +45,56 @@ namespace Staffinfo.Desktop.ViewModel
             SimpleIoc.Default.Register<StartViewModel>();
             SimpleIoc.Default.Register<AllEmployeesViewModel>();
             SimpleIoc.Default.Register<AddNewEmployeeViewModel>();
+            SimpleIoc.Default.Register<ReportsViewModel>();
+            SimpleIoc.Default.Register<AddNewMilitaryUnitViewModel>();
+            SimpleIoc.Default.Register<AddNewEducationalInstitutionViewModel>();
+            SimpleIoc.Default.Register<AddNewSpecialityViewModel>();
+            SimpleIoc.Default.Register<SettingsViewModel>();
         }
 
-        public AddNewEmployeeViewModel AddNewEmploye 
-        {
-            get { return ServiceLocator.Current.GetInstance<AddNewEmployeeViewModel>(); }
-        }
+        /// <summary>
+        /// Настройки
+        /// </summary>
+        public SettingsViewModel Settings => ServiceLocator.Current.GetInstance<SettingsViewModel>();
 
-        public AllEmployeesViewModel AllEmployee
-        {
-            get { return ServiceLocator.Current.GetInstance<AllEmployeesViewModel>(); }
-        }
+        /// <summary>
+        /// Отчеты
+        /// </summary>
+        public ReportsViewModel Reports => ServiceLocator.Current.GetInstance<ReportsViewModel>();
 
-        public StartViewModel Main
-        {
-            get { return ServiceLocator.Current.GetInstance<StartViewModel>(); }
-        }
-        
+        /// <summary>
+        /// Добавление сотрудника
+        /// </summary>
+        public AddNewEmployeeViewModel AddNewEmploye => ServiceLocator.Current.GetInstance<AddNewEmployeeViewModel>();
+
+        /// <summary>
+        /// Все сотрудники
+        /// </summary>
+        public AllEmployeesViewModel AllEmployee => ServiceLocator.Current.GetInstance<AllEmployeesViewModel>();
+
+        /// <summary>
+        /// Start-view
+        /// </summary>
+        public StartViewModel Main => ServiceLocator.Current.GetInstance<StartViewModel>();
+
+        /// <summary>
+        /// Добавление воинской части
+        /// </summary>
+        public AddNewMilitaryUnitViewModel AddMilitaryUnit
+            => ServiceLocator.Current.GetInstance<AddNewMilitaryUnitViewModel>();
+
+        /// <summary>
+        /// Добавление учебного заведения
+        /// </summary>
+        public AddNewEducationalInstitutionViewModel AddNewEducationalUnit
+            => ServiceLocator.Current.GetInstance<AddNewEducationalInstitutionViewModel>();
+
+        /// <summary>
+        /// Добавление специальности
+        /// </summary>
+        public AddNewSpecialityViewModel AddNewSpeciality
+            => ServiceLocator.Current.GetInstance<AddNewSpecialityViewModel>();
+
         public static void Cleanup()
         {
             // TODO Clear the ViewModels

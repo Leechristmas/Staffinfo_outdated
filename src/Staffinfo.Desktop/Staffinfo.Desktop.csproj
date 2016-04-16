@@ -111,6 +111,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters\DataGridHeaderConverter.cs" />
     <Compile Include="Converters\NewConverters.cs" />
     <Compile Include="Data\DatabaseConnector.cs" />
     <Compile Include="Data\DatabaseHelper.cs" />
@@ -126,6 +127,7 @@
     <Compile Include="Data\DataTableProviders\GratitudeTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\HolidayTimeTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\HospitalTimeTableProvider.cs" />
+    <Compile Include="Data\DataTableProviders\LogTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\MilitaryProcessTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\MilitaryUnitTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\PasportTableProvider.cs" />
@@ -143,8 +145,12 @@
     <Compile Include="Data\DataTableProviders\ViolationTableProvider.cs" />
     <Compile Include="Helpers\BitmapImageHelper.cs" />
     <Compile Include="Helpers\CatalogObservableCollectionsList.cs" />
+    <Compile Include="Helpers\Extentions.cs" />
     <Compile Include="Helpers\PasswordHelper.cs" />
     <Compile Include="Helpers\WindowCloseHelper.cs" />
+    <Compile Include="Model\DbLogRecord.cs" />
+    <Compile Include="Model\Report.cs" />
+    <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Shared\AccessLevelType.cs" />
     <Compile Include="Model\BaseModel.cs" />
     <Compile Include="Model\ClasinessModel.cs" />
@@ -174,7 +180,10 @@
     <Compile Include="Shared\AuthorizationException.cs" />
     <Compile Include="Shared\DatabaseNotFoundException.cs" />
     <Compile Include="Shared\DatabaseWasNotCreatedException.cs" />
+    <Compile Include="ViewModel\AddNewEducationalInstitutionViewModel.cs" />
     <Compile Include="ViewModel\AddNewEmployeeViewModel.cs" />
+    <Compile Include="ViewModel\AddNewMilitaryUnitViewModel.cs" />
+    <Compile Include="ViewModel\AddNewSpecialityViewModel.cs" />
     <Compile Include="ViewModel\AllEmployeesViewModel.cs" />
     <Compile Include="ViewModel\AllUsersViewModel.cs" />
     <Compile Include="ViewModel\DictionaryViewModelBase.cs" />
@@ -183,6 +192,9 @@
     <Compile Include="ViewModel\ListViewModel.cs" />
     <Compile Include="ViewModel\ObservableCollectionViewModel.cs" />
     <Compile Include="ViewModel\PartialUserViewModel.cs" />
+    <Compile Include="ViewModel\ReportsViewModel.cs" />
+    <Compile Include="ViewModel\SertificationViewModel.cs" />
+    <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="ViewModel\StartViewModel.cs" />
     <Compile Include="ViewModel\UserViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
@@ -211,6 +223,9 @@
     </Compile>
     <Compile Include="View\PasswordChangingView.xaml.cs">
       <DependentUpon>PasswordChangingView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ReportsView.xaml.cs">
+      <DependentUpon>ReportsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
@@ -289,6 +304,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\ReportsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\SettingsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -322,7 +341,9 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Reporting\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
