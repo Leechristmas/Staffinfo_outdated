@@ -96,6 +96,46 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         }
 
         /// <summary>
+        /// Возвращает все записи из таблицы логов начиная с указанной даты
+        /// </summary>
+        /// <returns></returns>
+        public ObservableCollection<DbLogRecord> Select(DateTime startDate)
+        {
+            ErrorInfo = null;
+
+            var dbLogRecords = new ObservableCollection<DbLogRecord>();
+
+            var cmd = new SqlCommand($"SELECT * FROM OPERATIONS_LOG WHERE OPERATION_TIME >= '{startDate}'");
+
+
+            var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
+
+            while (sqlDataReader.Read())
+            {
+                try
+                {
+                    var dbLogRecord = new DbLogRecord()
+                    {
+                        Id = Int64.Parse(sqlDataReader[0].ToString()),
+                        OperationType = sqlDataReader[1].ToString(),
+                        TableName = sqlDataReader[2].ToString(),
+                        OperationTime = DateTime.Parse(sqlDataReader[3].ToString()),
+                        Description = sqlDataReader[4].ToString()
+                    };
+
+                    dbLogRecords.Add(dbLogRecord);
+                }
+                catch (Exception ex)
+                {
+                    ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;//TODO: писать в log-файл
+                }
+            }
+            sqlDataReader.Close();
+
+            return dbLogRecords;
+        }
+
+        /// <summary>
         /// Возвращает последнюю добавленную запись
         /// </summary>
         /// <returns></returns>

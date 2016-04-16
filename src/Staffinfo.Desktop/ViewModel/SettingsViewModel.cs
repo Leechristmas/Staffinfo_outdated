@@ -20,9 +20,19 @@ namespace Staffinfo.Desktop.ViewModel
         }
 
         /// <summary>
+        /// Период по умолчанию
+        /// </summary>
+        //private const string DefaultPeriod = "за 1 день";
+
+        /// <summary>
         /// Записи из лог-таблицы
         /// </summary>
         private List<DbLogRecord> _logRecords;
+
+        /// <summary>
+        /// Выбранный период для отображения
+        /// </summary>
+        private string _selectedPeriod;// = DefaultPeriod;
 
         /// <summary>
         /// Активный таб
@@ -38,7 +48,7 @@ namespace Staffinfo.Desktop.ViewModel
             set
             {
                 _selectedTab = value;
-                if (_selectedTab == 1) RefreshLogRecords(); //определяем журнал по номеру таба: если открываем журнал - обновляем его
+                //if (_selectedTab == 1) RefreshLogRecords(); //определяем журнал по номеру таба: если открываем журнал - обновляем его
                 RaisePropertyChanged();
             }
         }
@@ -57,6 +67,20 @@ namespace Staffinfo.Desktop.ViewModel
         }
 
         /// <summary>
+        /// Выбранный период для отображения
+        /// </summary>
+        public string SelectedPeriod
+        {
+            get { return _selectedPeriod; }
+            set
+            {
+                _selectedPeriod = value;
+                RefreshLogRecords();
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
         /// Обновить журнал
         /// </summary>
         /// <returns></returns>
@@ -67,7 +91,21 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 using (LogTableProvider lPrvdr = new LogTableProvider())
                 {
-                    LogRecords = lPrvdr.Select().ToList();
+                    switch (SelectedPeriod)
+                    {
+                        case "за 1 день":
+                            LogRecords = lPrvdr.Select(DateTime.Today).ToList();
+                            break;
+                        case "за 7 дней":
+                            LogRecords = lPrvdr.Select(DateTime.Today.AddDays(-6)).ToList();
+                            break;
+                        case "за 30 дней":
+                            LogRecords = lPrvdr.Select(DateTime.Today.AddDays(-29)).ToList();
+                            break;
+                        case "за все время":
+                            LogRecords = lPrvdr.Select().ToList();
+                            break;
+                    }
                 }
             }
             catch (Exception e)
@@ -91,15 +129,17 @@ namespace Staffinfo.Desktop.ViewModel
         {
             //указываем стартовый таб
             SelectedTab = 0;
+            //сбрасываем период для журнала
+            SelectedPeriod = null;
         }
-        
 
-        protected override void CloseWindow()
-        {
-            //указываем стартовый таб
-            SelectedTab = 0;
-            base.CloseWindow();  
-        }
+        //нужные действия произведены в WindowClosingExecute
+        //protected override void CloseWindow()
+        //{
+        //    //указываем стартовый таб
+        //    SelectedTab = 0;
+        //    base.CloseWindow();  
+        //}
 
     }
 }
