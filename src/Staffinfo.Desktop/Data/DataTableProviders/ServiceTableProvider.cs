@@ -25,7 +25,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"SELECT * FROM SERVICE WHERE ID={id};");
+            var cmd = new SqlCommand($@"GET_SERVICE {id};");
 
             ServiceModel serviceModel = null;
 
@@ -61,7 +61,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             var serviceList = new ObservableCollection<ServiceModel>();
 
-            var cmd = new SqlCommand("SELECT * FROM SERVICE");
+            var cmd = new SqlCommand("GET_SERVICE");
 
             try
             {

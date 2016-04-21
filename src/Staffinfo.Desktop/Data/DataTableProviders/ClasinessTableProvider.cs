@@ -26,7 +26,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             if (clasiness == null) throw new ArgumentNullException(nameof(clasiness), Resources.DatabaseConnector_parameter_cannot_be_null);
             
             var cmd =
-                new SqlCommand($@"INSERT INTO CLASINESS VALUES({clasiness.EmployeeId}, {clasiness.OrderNumber}, '{clasiness.ClasinessDate}', {clasiness.ClasinessLevel}, '{clasiness.Description}'); SELECT MAX(ID) FROM CLASINESS;");
+                new SqlCommand($@"ADD_CLASINESS {clasiness.EmployeeId}, {clasiness.OrderNumber}, '{clasiness.ClasinessDate}', {clasiness.ClasinessLevel}, '{clasiness.Description}';");
 
             try
             {
@@ -95,7 +95,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             var clasinessList = new ObservableCollection<ClasinessModel>();
 
-            var cmd = new SqlCommand("SELECT * FROM CLASINESS");
+            var cmd = new SqlCommand("GET_CLASINESS");
 
             try
             {
@@ -184,7 +184,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             var clasinessList = new ObservableCollection<ClasinessModel>();
 
-            var cmd = new SqlCommand($"SELECT * FROM CLASINESS WHERE EMPLOYEE_ID={id}");
+            var cmd = new SqlCommand($"GET_CLASINESS {id}");
 
             try
             {

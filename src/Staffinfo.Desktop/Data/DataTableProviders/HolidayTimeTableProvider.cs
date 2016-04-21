@@ -26,7 +26,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             if (holidayTime == null) throw new ArgumentNullException(nameof(holidayTime), Resources.DatabaseConnector_parameter_cannot_be_null);
 
             var cmd =
-                new SqlCommand($@"INSERT INTO HOLIDAY_TIME VALUES({holidayTime.EmployeeId}, '{holidayTime.Description}', '{holidayTime.StartDate}', '{holidayTime.FinishDate}'); SELECT MAX(ID) FROM HOLIDAY_TIME;");
+                new SqlCommand($@"ADD_HOLIDAY_TIME {holidayTime.EmployeeId}, '{holidayTime.Description}', '{holidayTime.StartDate}', '{holidayTime.FinishDate}';");
 
             try
             {
@@ -94,7 +94,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             var holidayTimeList = new ObservableCollection<HolidayTimeModel>();
 
-            var cmd = new SqlCommand("SELECT * FROM HOLIDAY_TIME");
+            var cmd = new SqlCommand("GET_HOLIDAY_TIME");
 
             try
             {
@@ -184,7 +184,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
             var holidayTimeList = new ObservableCollection<HolidayTimeModel>();
 
-            var cmd = new SqlCommand($"SELECT * FROM HOLIDAY_TIME WHERE EMPLOYEE_ID = {id}");
+            var cmd = new SqlCommand($"GET_HOLIDAY_TIME {id}");
 
             try
             {

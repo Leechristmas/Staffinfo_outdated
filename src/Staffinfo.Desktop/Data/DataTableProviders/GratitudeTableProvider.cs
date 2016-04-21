@@ -26,7 +26,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             if (gratitude == null) throw new ArgumentNullException(nameof(gratitude), Resources.DatabaseConnector_parameter_cannot_be_null);
 
             var cmd =
-                new SqlCommand($@"INSERT INTO GRATITUDE VALUES({gratitude.EmployeeId}, '{gratitude.Description}', '{gratitude.GratitudeDate}'); SELECT MAX(ID) FROM GRATITUDE;");
+                new SqlCommand($@"ADD_GRATITUDE {gratitude.EmployeeId}, '{gratitude.Description}', '{gratitude.GratitudeDate}';");
 
             try
             {
@@ -93,7 +93,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             var gratitudeList = new ObservableCollection<GratitudeModel>();
 
-            var cmd = new SqlCommand("SELECT * FROM GRATITUDE");
+            var cmd = new SqlCommand("GET_GRATITUDE");
 
             try
             {
@@ -182,7 +182,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
             var gratitudeList = new ObservableCollection<GratitudeModel>();
 
-            var cmd = new SqlCommand($"SELECT * FROM GRATITUDE WHERE EMPLOYEE_ID = {id}");
+            var cmd = new SqlCommand($"GET_GRATITUDE {id}");
 
             try
             {

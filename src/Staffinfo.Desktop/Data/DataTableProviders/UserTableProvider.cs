@@ -133,7 +133,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             var userList = new ObservableCollection<UserModel>();
 
-            var cmd = new SqlCommand("GET_ALL_USERS");
+            var cmd = new SqlCommand("GET_USER");
 
             try
             {

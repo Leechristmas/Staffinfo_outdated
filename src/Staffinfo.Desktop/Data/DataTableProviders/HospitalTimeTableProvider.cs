@@ -29,7 +29,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             
 
             var cmd =
-                new SqlCommand($@"INSERT INTO HOSPITAL_TIME VALUES(@EMPLOYEE_ID, @DESCRIPTION, @START_DATE, @FINISH_DATE); SELECT MAX(ID) FROM HOSPITAL_TIME;");
+                new SqlCommand($@"ADD_HOSPITAL_TIME @EMPLOYEE_ID, @DESCRIPTION, @START_DATE, @FINISH_DATE;");
 
             var employeeId = cmd.Parameters.Add("@EMPLOYEE_ID", SqlDbType.Int);
             employeeId.Value = hospitalTime.EmployeeId;
@@ -109,7 +109,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             var hospitalTimeList = new ObservableCollection<HospitalTimeModel>();
 
-            var cmd = new SqlCommand("SELECT * FROM HOSPITAL_TIME");
+            var cmd = new SqlCommand("GET_HOSPITAL_TIME");
 
             try
             {
@@ -199,7 +199,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
             var hospitalTimeList = new ObservableCollection<HospitalTimeModel>();
 
-            var cmd = new SqlCommand($"SELECT * FROM HOSPITAL_TIME WHERE EMPLOYEE_ID = {id}");
+            var cmd = new SqlCommand($"GET_HOSPITAL_TIME {id}");
 
             try
             {

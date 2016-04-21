@@ -26,7 +26,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             if (reprimand == null) throw new ArgumentNullException(nameof(reprimand), Resources.DatabaseConnector_parameter_cannot_be_null);
 
             var cmd =
-                new SqlCommand($@"INSERT INTO REPRIMAND VALUES({reprimand.EmployeeId}, {reprimand.ReprimandSum}, '{reprimand.ReprimandDate}', '{reprimand.Description}'); SELECT MAX(ID) FROM REPRIMAND;");
+                new SqlCommand($@"ADD_REPRIMAND {reprimand.EmployeeId}, {reprimand.ReprimandSum}, '{reprimand.ReprimandDate}', '{reprimand.Description}';");
 
             try
             {
@@ -94,7 +94,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             var reprimandList = new ObservableCollection<ReprimandModel>();
 
-            var cmd = new SqlCommand("SELECT * FROM REPRIMAND");
+            var cmd = new SqlCommand("GET_REPRIMAND");
 
             try
             {
@@ -184,7 +184,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
             var reprimandList = new ObservableCollection<ReprimandModel>();
 
-            var cmd = new SqlCommand($"SELECT * FROM REPRIMAND WHERE EMPLOYEE_ID = {id}");
+            var cmd = new SqlCommand($"GET_REPRIMAND {id}");
 
             try
             {

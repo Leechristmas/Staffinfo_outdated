@@ -26,7 +26,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             if (educationalInstitution == null) throw new ArgumentNullException(nameof(educationalInstitution), Resources.DatabaseConnector_parameter_cannot_be_null);
             
             var cmd =
-                new SqlCommand($@"INSERT INTO EDUCATIONAL_INSTITUTION VALUES('{educationalInstitution.InstituitionTitle}','{educationalInstitution.Description}', '{educationalInstitution.InstituitionType}'); SELECT MAX(ID) FROM EDUCATIONAL_INSTITUTION;");
+                new SqlCommand($@"ADD_EDUCATIONAL_INSTITUTION '{educationalInstitution.InstituitionTitle}','{educationalInstitution.Description}', '{educationalInstitution.InstituitionType}';");
 
             try
             {
@@ -56,7 +56,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"SELECT * FROM EDUCATIONAL_INSTITUTION WHERE ID={id};");
+            var cmd = new SqlCommand($@"GET_EDUCATIONAL_INSTITUTION {id};");
 
             EducationalInstitutionModel educationalInstitutionModel = null;
 
@@ -93,7 +93,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             var educationalInstitutionList = new ObservableCollection<EducationalInstitutionModel>();
 
-            var cmd = new SqlCommand("SELECT * FROM EDUCATIONAL_INSTITUTION");
+            var cmd = new SqlCommand("GET_EDUCATIONAL_INSTITUTION");
 
             try
             {
@@ -172,6 +172,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         }
 
         /// <summary>
+        /// TODO: НЕТ ПОЛЯ EMPLOYEE_ID
         /// Возвращает список учебных заведений по id служащего
         /// </summary>
         /// <param name="id">id служащего</param>

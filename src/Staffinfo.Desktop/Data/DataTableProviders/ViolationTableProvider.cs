@@ -26,7 +26,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             if (violation == null) throw new ArgumentNullException(nameof(violation), Resources.DatabaseConnector_parameter_cannot_be_null);
 
             var cmd =
-                new SqlCommand($@"INSERT INTO VIOLATION VALUES({violation.EmployeeId}, '{violation.Description}', '{violation.ViolationDate}'); SELECT MAX(ID) FROM VIOLATION;");
+                new SqlCommand($@"ADD_VIOLATION {violation.EmployeeId}, '{violation.Description}', '{violation.ViolationDate}';");
 
             try
             {
@@ -93,7 +93,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             var violationList = new ObservableCollection<ViolationModel>();
 
-            var cmd = new SqlCommand("SELECT * FROM VIOLATION");
+            var cmd = new SqlCommand("GET_VIOLATION");
 
             try
             {
@@ -182,7 +182,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
             var violationList = new ObservableCollection<ViolationModel>();
 
-            var cmd = new SqlCommand($"SELECT * FROM VIOLATION WHERE EMPLOYEE_ID = {id}");
+            var cmd = new SqlCommand($"GET_VIOLATION {id}");
 
             try
             {

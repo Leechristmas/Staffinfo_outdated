@@ -25,7 +25,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             if(!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"SELECT * FROM POST WHERE ID={id};");
+            var cmd = new SqlCommand($@"GET_POST {id};");
 
             PostModel postModel = null;
 
@@ -62,7 +62,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             var postList = new ObservableCollection<PostModel>();
 
-            var cmd = new SqlCommand("SELECT * FROM POST");
+            var cmd = new SqlCommand("GET_POST");
 
             try
             {

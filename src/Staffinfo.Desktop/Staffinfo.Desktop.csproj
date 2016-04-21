@@ -88,6 +88,7 @@
     </Reference>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmLightLibs.5.2.0.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
@@ -186,13 +187,25 @@
     <Compile Include="ViewModel\AddNewSpecialityViewModel.cs" />
     <Compile Include="ViewModel\AllEmployeesViewModel.cs" />
     <Compile Include="ViewModel\AllUsersViewModel.cs" />
+    <Compile Include="ViewModel\ClasinessViewModel.cs" />
+    <Compile Include="ViewModel\ContractViewModel.cs" />
     <Compile Include="ViewModel\DictionaryViewModelBase.cs" />
+    <Compile Include="ViewModel\EducationalTimeViewModel.cs" />
     <Compile Include="ViewModel\EmployeeEditViewModel.cs" />
     <Compile Include="ViewModel\EmployeeViewModel.cs" />
+    <Compile Include="ViewModel\GratitudeViewModel.cs" />
+    <Compile Include="ViewModel\HolidayTimeViewModel.cs" />
+    <Compile Include="ViewModel\HospitalTimeViewModel.cs" />
     <Compile Include="ViewModel\ListViewModel.cs" />
+    <Compile Include="ViewModel\MilitaryProcessViewModel.cs" />
     <Compile Include="ViewModel\ObservableCollectionViewModel.cs" />
     <Compile Include="ViewModel\PartialUserViewModel.cs" />
+    <Compile Include="ViewModel\PostAssignmentViewModel.cs" />
+    <Compile Include="ViewModel\RankAssignmentViewModel.cs" />
+    <Compile Include="ViewModel\RankViewModel.cs" />
+    <Compile Include="ViewModel\RelativeViewModel.cs" />
     <Compile Include="ViewModel\ReportsViewModel.cs" />
+    <Compile Include="ViewModel\ReprimandViewModel.cs" />
     <Compile Include="ViewModel\SertificationViewModel.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="ViewModel\StartViewModel.cs" />
@@ -202,6 +215,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="ViewModel\ViolationViewModel.cs" />
     <Compile Include="ViewModel\WindowViewModelBase.cs" />
     <Compile Include="View\AddEducationalInstitutionView.xaml.cs">
       <DependentUpon>AddEducationalInstitutionView.xaml</DependentUpon>
@@ -220,6 +234,9 @@
     </Compile>
     <Compile Include="View\EmployeeView.xaml.cs">
       <DependentUpon>EmployeeView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\FiltrationView.xaml.cs">
+      <DependentUpon>FiltrationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\PasswordChangingView.xaml.cs">
       <DependentUpon>PasswordChangingView.xaml</DependentUpon>
@@ -299,6 +316,10 @@
     <Page Include="View\EmployeeView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\FiltrationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\PasswordChangingView.xaml">
       <SubType>Designer</SubType>

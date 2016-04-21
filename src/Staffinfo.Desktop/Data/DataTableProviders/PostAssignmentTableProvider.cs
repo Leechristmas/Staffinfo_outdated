@@ -26,7 +26,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             if (postAssignmentModel == null) throw new ArgumentNullException(nameof(postAssignmentModel), Resources.DatabaseConnector_parameter_cannot_be_null);
 
             var cmd =
-                new SqlCommand($@"INSERT INTO POST_ASSIGNMENT VALUES({postAssignmentModel.EmployeeId}, '{postAssignmentModel.Description}', '{postAssignmentModel.AssignmentDate}', {postAssignmentModel.PreviousPostId}, {postAssignmentModel.NewPostId}, {postAssignmentModel.OrderNumber}); SELECT MAX(ID) FROM POST_ASSIGNMENT;");
+                new SqlCommand($@"ADD_POST_ASSIGNMENT {postAssignmentModel.EmployeeId}, '{postAssignmentModel.Description}', '{postAssignmentModel.AssignmentDate}', {postAssignmentModel.PreviousPostId}, {postAssignmentModel.NewPostId}, {postAssignmentModel.OrderNumber};");
 
             try
             {
@@ -96,7 +96,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             var postAssignmentList = new ObservableCollection<PostAssignmentModel>();
 
-            var cmd = new SqlCommand("SELECT * FROM POST_ASSIGNMENT");
+            var cmd = new SqlCommand("GET_POST_ASSIGNMENT");
 
             try
             {
@@ -188,7 +188,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
             var postAssignmentList = new ObservableCollection<PostAssignmentModel>();
 
-            var cmd = new SqlCommand($"SELECT * FROM POST_ASSIGNMENT WHERE EMPLOYEE_ID = {id}");
+            var cmd = new SqlCommand($"GET_POST_ASSIGNMENT {id}");
 
             try
             {

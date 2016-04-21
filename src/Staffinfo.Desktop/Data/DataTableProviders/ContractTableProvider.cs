@@ -26,7 +26,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             if (contract == null) throw new ArgumentNullException(nameof(contract), Resources.DatabaseConnector_parameter_cannot_be_null);
             
             var cmd =
-                new SqlCommand($@"INSERT INTO CONTRACT VALUES({contract.EmployeeId}, '{contract.StartDate}', '{contract.FinishDate}', '{contract.Description}'); SELECT MAX(ID) FROM CONTRACT;");
+                new SqlCommand($@"ADD_CONTRACT {contract.EmployeeId}, '{contract.StartDate}', '{contract.FinishDate}', '{contract.Description}';");
 
             try
             {
@@ -94,7 +94,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             var contractList = new ObservableCollection<ContractModel>();
 
-            var cmd = new SqlCommand("SELECT * FROM CONTRACT");
+            var cmd = new SqlCommand("GET_CONTRACT");
 
             try
             {
@@ -184,7 +184,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
             var contractList = new ObservableCollection<ContractModel>();
 
-            var cmd = new SqlCommand($"SELECT * FROM CONTRACT WHERE EMPLOYEE_ID = {id}");
+            var cmd = new SqlCommand($"GET_CONTRACT {id}");
 
             try
             {

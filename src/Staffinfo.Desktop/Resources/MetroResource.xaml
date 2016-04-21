@@ -19,7 +19,11 @@
             <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
         </Style.Resources>
     </Style>
-    
+
+    <Style x:Key="ListBoxItemTest" TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+        <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+    </Style>
+
     <!--<Style x:Key="ListBoxItemStyle"
            TargetType="ListBoxItem"
            BasedOn="{StaticResource {x:Type ListBoxItem}}">

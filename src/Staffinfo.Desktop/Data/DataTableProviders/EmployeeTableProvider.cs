@@ -104,7 +104,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"SELECT * FROM EMPLOYEE WHERE ID={id};");
+            var cmd = new SqlCommand($@"GET_EMPLOYEE {id};");
 
             EmployeeModel employeeModel = null;
 
@@ -169,7 +169,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             var employeeList = new ObservableCollection<EmployeeModel>();
 
-            var cmd = new SqlCommand("SELECT * FROM EMPLOYEE");
+            var cmd = new SqlCommand("GET_EMPLOYEE");
 
             try
             {

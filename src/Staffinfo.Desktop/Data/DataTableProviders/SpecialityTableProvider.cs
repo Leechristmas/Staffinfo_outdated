@@ -26,7 +26,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             if (speciality == null) throw new ArgumentNullException(nameof(speciality), Resources.DatabaseConnector_parameter_cannot_be_null);
 
             var cmd =
-                new SqlCommand($@"INSERT INTO SPECIALITY VALUES('{speciality.Speciality}', '{speciality.Description}'); SELECT MAX(ID) FROM SPECIALITY;");
+                new SqlCommand($@"ADD_SPECIALITY '{speciality.Speciality}', '{speciality.Description}';");
 
             try
             {
@@ -56,7 +56,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"SELECT * FROM SPECIALITY WHERE ID={id};");
+            var cmd = new SqlCommand($@"GET_SPECIALITY {id};");
 
             SpecialityModel specialityModel = null;
 
@@ -92,7 +92,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             var specialityList = new ObservableCollection<SpecialityModel>();
 
-            var cmd = new SqlCommand("SELECT * FROM SPECIALITY");
+            var cmd = new SqlCommand("GET_SPECIALITY");
 
             try
             {

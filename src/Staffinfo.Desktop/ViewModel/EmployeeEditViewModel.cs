@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using GalaSoft.MvvmLight.Command;
 using Microsoft.Win32;
@@ -507,67 +510,67 @@ namespace Staffinfo.Desktop.ViewModel
         /// <summary>
         /// Аттестация
         /// </summary>
-        public ObservableCollection<SertificationModel> Sertifications { get; set; }
+        public ObservableCollection<SertificationViewModel> Sertifications { get; set; }
 
         /// <summary>
         /// Больничные
         /// </summary>
-        public ObservableCollection<HospitalTimeModel> HospitalTimes { get; set; }
+        public ObservableCollection<HospitalTimeViewModel> HospitalTimes { get; set; }
 
         /// <summary>
         /// Благодарности
         /// </summary>
-        public ObservableCollection<GratitudeModel> Gratitudes { get; set; }
+        public ObservableCollection<GratitudeViewModel> Gratitudes { get; set; }
 
         /// <summary>
         /// Выговоры
         /// </summary>
-        public ObservableCollection<ReprimandModel> Reprimands { get; set; }
+        public ObservableCollection<ReprimandViewModel> Reprimands { get; set; }
 
         /// <summary>
         /// Несение службы
         /// </summary>
-        public ObservableCollection<MilitaryProcessModel> MilitaryProcesses { get; set; }
+        public ObservableCollection<MilitaryProcessViewModel> MilitaryProcesses { get; set; }
 
         /// <summary>
         /// Классности
         /// </summary>
-        public ObservableCollection<ClasinessModel> Clasiness { get; set; }
+        public ObservableCollection<ClasinessViewModel> Clasiness { get; set; }
 
         /// <summary>
         /// Контракты
         /// </summary>
-        public ObservableCollection<ContractModel> Contracts { get; set; }
+        public ObservableCollection<ContractViewModel> Contracts { get; set; }
 
         /// <summary>
         /// Нарушения
         /// </summary>
-        public ObservableCollection<ViolationModel> Violations { get; set; }
+        public ObservableCollection<ViolationViewModel> Violations { get; set; }
 
         /// <summary>
         /// Обучения
         /// </summary>
-        public ObservableCollection<EducationTimeModel> EducationTimes { get; set; } 
+        public ObservableCollection<EducationalTimeViewModel> EducationTimes { get; set; } 
 
         /// <summary>
         /// Отпуска
         /// </summary>
-        public ObservableCollection<HolidayTimeModel> HolidayTimes { get; set; }
+        public ObservableCollection<HolidayTimeViewModel> HolidayTimes { get; set; }
 
         /// <summary>
         /// Присвоения должностей
         /// </summary>
-        public ObservableCollection<PostAssignmentModel> PostAssignments { get; set; }
+        public ObservableCollection<PostAssignmentViewModel> PostAssignments { get; set; }
 
         /// <summary>
         /// Присвоение званий
         /// </summary>
-        public ObservableCollection<RankAssignmentModel> RankAssignments { get; set; }
+        public ObservableCollection<RankAssignmentViewModel> RankAssignments { get; set; }
 
         /// <summary>
         /// Родственники
         /// </summary>
-        public ObservableCollection<RelativeModel> Relatives { get; set; }
+        public ObservableCollection<RelativeViewModel> Relatives { get; set; }
 
         /// <summary>
         /// Воинские части
@@ -602,67 +605,106 @@ namespace Staffinfo.Desktop.ViewModel
                     case 0:
                         using (var prvdr = new SertificationTableProvider())
                         {
-                            return Sertifications ?? (Sertifications = new ObservableCollection<SertificationModel>(prvdr.Select()));
+                            return Sertifications ??
+                                   (Sertifications =
+                                       new ObservableCollection<SertificationViewModel>(
+                                           prvdr.Select().Select(p => new SertificationViewModel(p))));
                         }
                     case 1:
                         using (var prvdr = new GratitudeTableProvider())
                         {
-                            return Gratitudes ?? (Gratitudes = new ObservableCollection<GratitudeModel>(prvdr.Select()));
+                            return Gratitudes ??
+                                   (Gratitudes =
+                                       new ObservableCollection<GratitudeViewModel>(
+                                           prvdr.Select().Select(p => new GratitudeViewModel(p))));
                         }
                     case 2:
                         using (var prvdr = new HospitalTimeTableProvider())
                         {
-                            return HospitalTimes ?? (HospitalTimes = new ObservableCollection<HospitalTimeModel>(prvdr.Select()));
+                            return HospitalTimes ??
+                                   (HospitalTimes =
+                                       new ObservableCollection<HospitalTimeViewModel>(
+                                           prvdr.Select().Select(p => new HospitalTimeViewModel(p))));
                         }
                     case 3:
                         using (var prvdr = new ReprimandTableProvider())
                         {
-                            return Reprimands ?? (Reprimands = new ObservableCollection<ReprimandModel>(prvdr.Select()));
+                            return Reprimands ??
+                                   (Reprimands =
+                                       new ObservableCollection<ReprimandViewModel>(
+                                           prvdr.Select().Select(p => new ReprimandViewModel(p))));
                         }
                     case 4:
                         using (var prvdr = new MilitaryProcessTableProvider())
                         {
-                            return MilitaryProcesses ?? (MilitaryProcesses = new ObservableCollection<MilitaryProcessModel>(prvdr.Select()));
+                            return MilitaryProcesses ??
+                                   (MilitaryProcesses =
+                                       new ObservableCollection<MilitaryProcessViewModel>(
+                                           prvdr.Select().Select(p => new MilitaryProcessViewModel(p))));
                         }
                     case 5:
                         using (var prvdr = new ClasinessTableProvider())
                         {
-                            return Clasiness ?? (Clasiness = new ObservableCollection<ClasinessModel>(prvdr.Select()));
+                            return Clasiness ??
+                                   (Clasiness =
+                                       new ObservableCollection<ClasinessViewModel>(
+                                           prvdr.Select().Select(p => new ClasinessViewModel(p))));
                         }
                     case 6:
                         using (var prvdr = new ContractTableProvider())
                         {
-                            return Contracts ?? (Contracts = new ObservableCollection<ContractModel>(prvdr.Select()));
+                            return Contracts ??
+                                   (Contracts =
+                                       new ObservableCollection<ContractViewModel>(
+                                           prvdr.Select().Select(p => new ContractViewModel(p))));
                         }
                     case 7:
                         using (var prvdr = new ViolationTableProvider())
                         {
-                            return Violations ?? (Violations = new ObservableCollection<ViolationModel>(prvdr.Select()));
+                            return Violations ??
+                                   (Violations =
+                                       new ObservableCollection<ViolationViewModel>(
+                                           prvdr.Select().Select(p => new ViolationViewModel(p))));
                         }
                     case 8:
                         using (var prvdr = new EducationTimeTableProvider())
                         {
-                            return EducationTimes ?? (EducationTimes = new ObservableCollection<EducationTimeModel>(prvdr.Select()));
+                            return EducationTimes ??
+                                   (EducationTimes =
+                                       new ObservableCollection<EducationalTimeViewModel>(
+                                           prvdr.Select().Select(p => new EducationalTimeViewModel(p))));
                         }
                     case 9:
                         using (var prvdr = new HolidayTimeTableProvider())
                         {
-                            return HolidayTimes ?? (HolidayTimes = new ObservableCollection<HolidayTimeModel>(prvdr.Select()));
+                            return HolidayTimes ??
+                                   (HolidayTimes =
+                                       new ObservableCollection<HolidayTimeViewModel>(
+                                           prvdr.Select().Select(p => new HolidayTimeViewModel(p))));
                         }
                     case 10:
                         using (var prvdr = new PostAssignmentTableProvider())
                         {
-                            return PostAssignments ?? (PostAssignments = new ObservableCollection<PostAssignmentModel>(prvdr.Select()));
+                            return PostAssignments ??
+                                   (PostAssignments =
+                                       new ObservableCollection<PostAssignmentViewModel>(
+                                           prvdr.Select().Select(p => new PostAssignmentViewModel(p))));
                         }
                     case 11:
                         using (var prvdr = new RankAssignmentTableProvider())
                         {
-                            return RankAssignments ?? (RankAssignments = new ObservableCollection<RankAssignmentModel>(prvdr.Select()));
+                            return RankAssignments ??
+                                   (RankAssignments =
+                                       new ObservableCollection<RankAssignmentViewModel>(
+                                           prvdr.Select().Select(p => new RankAssignmentViewModel(p))));
                         }
                     case 12:
                         using (var prvdr = new RelativeTableProvider())
                         {
-                            return Relatives ?? (Relatives = new ObservableCollection<RelativeModel>(prvdr.Select()));
+                            return Relatives ??
+                                   (Relatives =
+                                       new ObservableCollection<RelativeViewModel>(
+                                           prvdr.Select().Select(p => new RelativeViewModel(p))));
                         }
                     default:
                         return null;
@@ -915,7 +957,11 @@ namespace Staffinfo.Desktop.ViewModel
                 CatalogTextError = "Запись не выбрана";
                 return;
             }
-            
+            var answer = MessageBox.Show("Удалить запись?", "Удаление", MessageBoxButton.YesNo, MessageBoxImage.Question,
+                MessageBoxResult.No);
+
+            if(answer == MessageBoxResult.No) return;
+
             try
             {
                 switch (SelectedCatalogIndex)
@@ -923,7 +969,7 @@ namespace Staffinfo.Desktop.ViewModel
                     case 0:     //аттестация
                         using (SertificationTableProvider sPrvdr = new SertificationTableProvider())
                         {
-                            var sertificationId = Sertifications.ElementAt(SelectedCatalogRecordIndex).Id;
+                            var sertificationId = Sertifications.ElementAt(SelectedCatalogRecordIndex).GetModel().Id;
                             if (!sPrvdr.DeleteById(sertificationId)) throw new Exception(sPrvdr.ErrorInfo); //если удалить не удалось, бросаем exception
                         }
                         Sertifications.RemoveAt(SelectedCatalogRecordIndex);
@@ -931,7 +977,7 @@ namespace Staffinfo.Desktop.ViewModel
                     case 1:     //благодарности
                         using (GratitudeTableProvider gPrvdr = new GratitudeTableProvider())
                         {
-                            var gratitudeId = Gratitudes.ElementAt(SelectedCatalogRecordIndex).Id;
+                            var gratitudeId = Gratitudes.ElementAt(SelectedCatalogRecordIndex).GetModel().Id;
                             if (!gPrvdr.DeleteById(gratitudeId)) throw new Exception(gPrvdr.ErrorInfo);
                         }
                         Gratitudes.RemoveAt(SelectedCatalogRecordIndex);
@@ -939,7 +985,7 @@ namespace Staffinfo.Desktop.ViewModel
                     case 2:     //больничные
                         using (HospitalTimeTableProvider hTPrvdr = new HospitalTimeTableProvider())
                         {
-                            var hospitalTimeId = HospitalTimes.ElementAt(SelectedCatalogRecordIndex).Id;
+                            var hospitalTimeId = HospitalTimes.ElementAt(SelectedCatalogRecordIndex).GetModel().Id;
                             if (!hTPrvdr.DeleteById(hospitalTimeId)) throw new Exception(hTPrvdr.ErrorInfo);
                         }
                         HospitalTimes.RemoveAt(SelectedCatalogRecordIndex);
@@ -947,7 +993,7 @@ namespace Staffinfo.Desktop.ViewModel
                     case 3:     //взыскания
                         using (ReprimandTableProvider rPrvdr = new ReprimandTableProvider())
                         {
-                            var reprimandId = Reprimands.ElementAt(SelectedCatalogRecordIndex).Id;
+                            var reprimandId = Reprimands.ElementAt(SelectedCatalogRecordIndex).GetModel().Id;
                             if (!rPrvdr.DeleteById(reprimandId)) throw new Exception(rPrvdr.ErrorInfo);
                         }
                         Reprimands.RemoveAt(SelectedCatalogRecordIndex);
@@ -955,7 +1001,7 @@ namespace Staffinfo.Desktop.ViewModel
                     case 4:     //воинская служба
                         using (MilitaryProcessTableProvider mPrvdr = new MilitaryProcessTableProvider())
                         {
-                            var militaryId = MilitaryProcesses.ElementAt(SelectedCatalogRecordIndex).Id;
+                            var militaryId = MilitaryProcesses.ElementAt(SelectedCatalogRecordIndex).GetModel().Id;
                             if (!mPrvdr.DeleteById(militaryId)) throw new Exception(mPrvdr.ErrorInfo);
                         }
                         MilitaryProcesses.RemoveAt(SelectedCatalogRecordIndex);
@@ -963,7 +1009,7 @@ namespace Staffinfo.Desktop.ViewModel
                     case 5:     //классность
                         using (ClasinessTableProvider cPrvdr = new ClasinessTableProvider())
                         {
-                            var clasinessId = Clasiness.ElementAt(SelectedCatalogRecordIndex).Id;
+                            var clasinessId = Clasiness.ElementAt(SelectedCatalogRecordIndex).GetModel().Id;
                             if (!cPrvdr.DeleteById(clasinessId)) throw new Exception(cPrvdr.ErrorInfo);
                         }
                         Clasiness.RemoveAt(SelectedCatalogRecordIndex);
@@ -971,7 +1017,7 @@ namespace Staffinfo.Desktop.ViewModel
                     case 6:     //классность
                         using (ContractTableProvider cPrvdr = new ContractTableProvider())
                         {
-                            var contractId = Contracts.ElementAt(SelectedCatalogRecordIndex).Id;
+                            var contractId = Contracts.ElementAt(SelectedCatalogRecordIndex).GetModel().Id;
                             if (!cPrvdr.DeleteById(contractId)) throw new Exception(cPrvdr.ErrorInfo);
                         }
                         Contracts.RemoveAt(SelectedCatalogRecordIndex);
@@ -979,7 +1025,7 @@ namespace Staffinfo.Desktop.ViewModel
                     case 7:     //нарушения
                         using (ViolationTableProvider vPrvdr = new ViolationTableProvider())
                         {
-                            var violationId = Violations.ElementAt(SelectedCatalogRecordIndex).Id;
+                            var violationId = Violations.ElementAt(SelectedCatalogRecordIndex).GetModel().Id;
                             if (!vPrvdr.DeleteById(violationId)) throw new Exception(vPrvdr.ErrorInfo);
                         }
                         Violations.RemoveAt(SelectedCatalogRecordIndex);
@@ -987,7 +1033,7 @@ namespace Staffinfo.Desktop.ViewModel
                     case 8:     //образование
                         using (EducationTimeTableProvider ePrvdr = new EducationTimeTableProvider())
                         {
-                            var educationId = EducationTimes.ElementAt(SelectedCatalogRecordIndex).Id;
+                            var educationId = EducationTimes.ElementAt(SelectedCatalogRecordIndex).GetModel().Id;
                             if (!ePrvdr.DeleteById(educationId)) throw new Exception(ePrvdr.ErrorInfo);
                         }
                         EducationTimes.RemoveAt(SelectedCatalogRecordIndex);
@@ -995,7 +1041,7 @@ namespace Staffinfo.Desktop.ViewModel
                     case 9:     //отпуска
                         using (HolidayTimeTableProvider hPrvdr = new HolidayTimeTableProvider())
                         {
-                            var holidayId = HolidayTimes.ElementAt(SelectedCatalogRecordIndex).Id;
+                            var holidayId = HolidayTimes.ElementAt(SelectedCatalogRecordIndex).GetModel().Id;
                             if (!hPrvdr.DeleteById(holidayId)) throw new Exception(hPrvdr.ErrorInfo);
                         }
                         HolidayTimes.RemoveAt(SelectedCatalogRecordIndex);
@@ -1003,7 +1049,7 @@ namespace Staffinfo.Desktop.ViewModel
                     case 10:    //присвоение должностей
                         using (PostAssignmentTableProvider pPrvdr = new PostAssignmentTableProvider())
                         {
-                            var assignmentId = PostAssignments.ElementAt(SelectedCatalogRecordIndex).Id;
+                            var assignmentId = PostAssignments.ElementAt(SelectedCatalogRecordIndex).GetModel().Id;
                             if (!pPrvdr.DeleteById(assignmentId)) throw new Exception(pPrvdr.ErrorInfo);
                         }
                         PostAssignments.RemoveAt(SelectedCatalogRecordIndex);
@@ -1011,7 +1057,7 @@ namespace Staffinfo.Desktop.ViewModel
                     case 11:    //присвоение званий
                         using (RankAssignmentTableProvider rPrvdr = new RankAssignmentTableProvider())
                         {
-                            var assignmentId = RankAssignments.ElementAt(SelectedCatalogRecordIndex).Id;
+                            var assignmentId = RankAssignments.ElementAt(SelectedCatalogRecordIndex).GetModel().Id;
                             if (!rPrvdr.DeleteById(assignmentId)) throw new Exception(rPrvdr.ErrorInfo);
                         }
                         RankAssignments.RemoveAt(SelectedCatalogRecordIndex);
@@ -1019,7 +1065,7 @@ namespace Staffinfo.Desktop.ViewModel
                     case 12:    //родственники
                         using (RelativeTableProvider rPrvdr = new RelativeTableProvider())
                         {
-                            var relativeId = Relatives.ElementAt(SelectedCatalogRecordIndex).Id;
+                            var relativeId = Relatives.ElementAt(SelectedCatalogRecordIndex).GetModel().Id;
                             if (!rPrvdr.DeleteById(relativeId)) throw new Exception(rPrvdr.ErrorInfo);
                         }
                         Relatives.RemoveAt(SelectedCatalogRecordIndex);
@@ -1108,7 +1154,7 @@ namespace Staffinfo.Desktop.ViewModel
                         MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-                Sertifications.Add(sertification);
+                Sertifications.Add(new SertificationViewModel(sertification));
             }
 
             SertificationDate = null;
@@ -1191,7 +1237,7 @@ namespace Staffinfo.Desktop.ViewModel
                         MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-                Gratitudes.Add(gratitude);
+                Gratitudes.Add(new GratitudeViewModel(gratitude));
             }
 
             GratitudeDate = null;
@@ -1299,7 +1345,7 @@ namespace Staffinfo.Desktop.ViewModel
                         MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-                HospitalTimes.Add(hospitalTime);
+                HospitalTimes.Add(new HospitalTimeViewModel(hospitalTime));
             }
 
             StartHospitalDate = null;
@@ -1410,7 +1456,7 @@ namespace Staffinfo.Desktop.ViewModel
                         MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-                Reprimands.Add(reprimand);
+                Reprimands.Add(new ReprimandViewModel(reprimand));
             }
 
             ReprimandDate = null;
@@ -1542,7 +1588,7 @@ namespace Staffinfo.Desktop.ViewModel
                         MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-                MilitaryProcesses.Add(militaryProcess);
+                MilitaryProcesses.Add(new MilitaryProcessViewModel(militaryProcess));
 
                 MilitaryStartDate = null;
                 MilitaryFinishDate = null;
@@ -1694,7 +1740,7 @@ namespace Staffinfo.Desktop.ViewModel
                         MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-                Clasiness.Add(clasiness);
+                Clasiness.Add(new ClasinessViewModel(clasiness));
 
                 ClasinessDate = null;
                 ClasinessOrderNumber = null;
@@ -1810,7 +1856,7 @@ namespace Staffinfo.Desktop.ViewModel
                         MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-                Contracts.Add(contract);
+                Contracts.Add(new ContractViewModel(contract));
             }
 
             StartContractDate = null;
@@ -1907,7 +1953,7 @@ namespace Staffinfo.Desktop.ViewModel
                         MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-                Violations.Add(violation);
+                Violations.Add(new ViolationViewModel(violation));
             }
 
             ViolationDate = null;
@@ -2061,7 +2107,7 @@ namespace Staffinfo.Desktop.ViewModel
                         MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-                EducationTimes.Add(education);
+                EducationTimes.Add(new EducationalTimeViewModel(education));
 
                 EducationStartDate = null;
                 EducationFinishDate = null;
@@ -2204,7 +2250,7 @@ namespace Staffinfo.Desktop.ViewModel
                         MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-                HolidayTimes.Add(holidayTime);
+                HolidayTimes.Add(new HolidayTimeViewModel(holidayTime));
             }
 
             StartHolidayDate = null;
@@ -2408,7 +2454,7 @@ namespace Staffinfo.Desktop.ViewModel
                         MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-                PostAssignments.Add(postAssignment);
+                PostAssignments.Add(new PostAssignmentViewModel(postAssignment));
             }
 
             PostAssignmentDate = null;
@@ -2584,7 +2630,7 @@ namespace Staffinfo.Desktop.ViewModel
                         MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-                RankAssignments.Add(rankAssignment);
+                RankAssignments.Add(new RankAssignmentViewModel(rankAssignment));
             }
 
             RankAssignmentDate = null;
@@ -2773,7 +2819,7 @@ namespace Staffinfo.Desktop.ViewModel
                         MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-                Relatives.Add(relative);
+                Relatives.Add(new RelativeViewModel(relative));
             }
 
             RelativeFirstName = String.Empty;
@@ -2791,5 +2837,9 @@ namespace Staffinfo.Desktop.ViewModel
 
         #endregion
 
+        //private RelayCommand _autoGenerationColumn;
+        //public RelayCommand AutoGenerationColumn => _autoGenerationColumn ?? (AutoGenerationColumnExecute);
+
+        //перенести обработку из code-behind сюда!!!
     }
 }

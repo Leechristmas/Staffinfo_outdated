@@ -26,7 +26,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             if (militaryUnit == null) throw new ArgumentNullException(nameof(militaryUnit), Resources.DatabaseConnector_parameter_cannot_be_null);
 
             var cmd =
-                new SqlCommand($@"INSERT INTO MILITARY_UNIT VALUES('{militaryUnit.MilitaryName}', '{militaryUnit.Description}'); SELECT MAX(ID) FROM MILITARY_UNIT;");
+                new SqlCommand($@"ADD_MILITARY_UNIT '{militaryUnit.MilitaryName}', '{militaryUnit.Description}';");
 
             try
             {
@@ -56,7 +56,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"SELECT * FROM MILITARY_UNIT WHERE ID={id};");
+            var cmd = new SqlCommand($@"GET_MILITARY_UNIT {id};");
 
             MilitaryUnitModel militaryUnit = null;
 
@@ -92,7 +92,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             var militaryUnitList = new ObservableCollection<MilitaryUnitModel>();
 
-            var cmd = new SqlCommand("SELECT * FROM MILITARY_UNIT");
+            var cmd = new SqlCommand("GET_MILITARY_UNIT");
 
             try
             {

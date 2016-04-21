@@ -26,7 +26,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             if (relativeModel == null) throw new ArgumentNullException(nameof(relativeModel), Resources.DatabaseConnector_parameter_cannot_be_null);
 
             var cmd =
-                new SqlCommand($@"INSERT INTO RELATIVE VALUES({relativeModel.EmployeeId}, '{relativeModel.RelationType}','{relativeModel.FirstName}', '{relativeModel.MiddleName}', '{relativeModel.LastName}', '{relativeModel.BornDate}', '{relativeModel.Description}'); SELECT MAX(ID) FROM RELATIVE;");
+                new SqlCommand($@"ADD_RELATIVE {relativeModel.EmployeeId}, '{relativeModel.RelationType}','{relativeModel.FirstName}', '{relativeModel.MiddleName}', '{relativeModel.LastName}', '{relativeModel.BornDate}', '{relativeModel.Description}';");
 
             try
             {
@@ -97,7 +97,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             var relativeList = new ObservableCollection<RelativeModel>();
 
-            var cmd = new SqlCommand("SELECT * FROM RELATIVE");
+            var cmd = new SqlCommand("GET_RELATIVE");
 
             try
             {
@@ -193,7 +193,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
             var relativeList = new ObservableCollection<RelativeModel>();
 
-            var cmd = new SqlCommand($"SELECT * FROM RELATIVE WHERE EMPLOYEE_ID = {id}");
+            var cmd = new SqlCommand($"GET_RELATIVE {id}");
 
             try
             {

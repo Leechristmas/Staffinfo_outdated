@@ -26,7 +26,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             if (eductionTime == null) throw new ArgumentNullException(nameof(eductionTime), Resources.DatabaseConnector_parameter_cannot_be_null);
             
             var cmd =
-                new SqlCommand($@"INSERT INTO EDUCATION_TIME VALUES({eductionTime.EmployeeId}, '{eductionTime.StartDate}', '{eductionTime.FinishDate}', {eductionTime.SpecialityId}, {eductionTime.InstitutionId}, '{eductionTime.Description}'); SELECT MAX(ID) FROM EDUCATION_TIME;");
+                new SqlCommand($@"ADD_EDUCATION_TIME {eductionTime.EmployeeId}, '{eductionTime.StartDate}', '{eductionTime.FinishDate}', {eductionTime.SpecialityId}, {eductionTime.InstitutionId}, '{eductionTime.Description}';");
 
             try
             {
@@ -96,7 +96,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             var educationTimeList = new ObservableCollection<EducationTimeModel>();
 
-            var cmd = new SqlCommand("SELECT * FROM EDUCATION_TIME");
+            var cmd = new SqlCommand("GET_EDUCATION_TIME");
 
             try
             {
@@ -188,7 +188,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
             var educationTimeList = new ObservableCollection<EducationTimeModel>();
 
-            var cmd = new SqlCommand($"SELECT * FROM EDUCATION_TIME WHERE EMPLOYEE_ID = {id}");
+            var cmd = new SqlCommand($"GET_EDUCATION_TIME {id}");
 
             try
             {

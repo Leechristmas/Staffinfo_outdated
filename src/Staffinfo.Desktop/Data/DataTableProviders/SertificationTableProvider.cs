@@ -26,7 +26,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             if (sertification == null) throw new ArgumentNullException(nameof(sertification), Resources.DatabaseConnector_parameter_cannot_be_null);
 
             var cmd =
-                new SqlCommand($@"INSERT INTO SERTIFICATION VALUES({sertification.EmployeeId}, '{sertification.SertificationDate.Date}', '{sertification.Description}'); SELECT MAX(ID) FROM SERTIFICATION;");
+                new SqlCommand($@"ADD_SERTIFICATION {sertification.EmployeeId}, '{sertification.SertificationDate.Date}', '{sertification.Description}';");
 
             try
             {
@@ -93,7 +93,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             var sertificationList = new ObservableCollection<SertificationModel>();
 
-            var cmd = new SqlCommand("SELECT * FROM SERTIFICATION");
+            var cmd = new SqlCommand("GET_SERTIFICATION");
 
             try
             {
@@ -182,7 +182,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
             var sertificationList = new ObservableCollection<SertificationModel>();
 
-            var cmd = new SqlCommand($"SELECT * FROM SERTIFICATION WHERE EMPLOYEE_ID = {id}");
+            var cmd = new SqlCommand($"GET_SERTIFICATION {id}");
 
             try
             {

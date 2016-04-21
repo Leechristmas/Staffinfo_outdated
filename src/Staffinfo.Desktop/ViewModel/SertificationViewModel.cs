@@ -9,7 +9,7 @@ namespace Staffinfo.Desktop.ViewModel
 {
     public class SertificationViewModel : INotifyPropertyChanged
     {
-        private readonly SertificationModel _sertificationModel;
+        private SertificationModel _sertificationModel;
 
         public SertificationViewModel(SertificationModel sertificationModel)
         {
@@ -20,9 +20,10 @@ namespace Staffinfo.Desktop.ViewModel
         /// Дата аттестации
         /// </summary>
         private const string SertificationDatePropertyName = "SertificationDate";
+        [DisplayName(@"Дата аттестации")]
         public string SertificationDate
         {
-            get { return _sertificationModel.SertificationDate.ToString("yy-mm-dd"); }
+            get { return _sertificationModel.SertificationDate.ToString("d"); }
             /*  set
               {
                   if (_sertificationModel.SertificationDate == value)
@@ -36,18 +37,19 @@ namespace Staffinfo.Desktop.ViewModel
         /// <summary>
         /// Описание
         /// </summary>
-        public string Description { get { return _sertificationModel.Description; } }
+        [DisplayName(@"Описание")]
+        public string Description => _sertificationModel.Description;
 
-
+        /// <summary>
+        /// Возвращае модель
+        /// </summary>
+        /// <returns></returns>
         public SertificationModel GetModel()
         {
             return _sertificationModel;
         }
 
-        public SertificationModel Get()
-        {
-            return _sertificationModel;
-        }
+        #region INotifyPropertyChanged implementation
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -56,5 +58,8 @@ namespace Staffinfo.Desktop.ViewModel
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+
+        #endregion
+
     }
 }

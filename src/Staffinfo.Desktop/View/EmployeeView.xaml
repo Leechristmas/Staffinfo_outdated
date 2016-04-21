@@ -6,6 +6,8 @@
         xmlns:local="clr-namespace:Staffinfo.Desktop.View"
         xmlns:helpers="clr-namespace:Staffinfo.Desktop.Helpers"
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:command="http://www.galasoft.ch/mvvmlight"
         mc:Ignorable="d"
         helpers:WindowCloseHelper.WindowsClose="{Binding WindowsClosed}"
         Title="{Binding Path=FullName}" MinWidth="600" MinHeight="740" Height="740" Width="600">
@@ -48,78 +50,72 @@
                             </Border>
                             <StackPanel Orientation="Vertical"
                                         Margin="50,3">
-                                <TextBox 
-                                    Name="LastNameTBox" 
-                                    MinWidth="200"
-                                    IsEnabled="{Binding IsAdmin}"  
-                                    Height="30"
-                                    Margin="10,2"
-                                    controls:TextBoxHelper.Watermark="Фамилия"
-                                    controls:TextBoxHelper.ClearTextButton="True"
-                                    FontSize="14"
-                                    ToolTip="Фамилия"
-                                    Text="{Binding Path=LastName}"/>
-                                <TextBox 
-                                    Name="FirstNameTBox"
-                                    MinWidth="200"
-                                    IsEnabled="{Binding IsAdmin}" 
-                                    Height="30"
-                                    Margin="10,2"
-                                    controls:TextBoxHelper.Watermark="Имя"
-                                    controls:TextBoxHelper.ClearTextButton="True"
-                                    FontSize="14"
-                                    ToolTip="Имя"
-                                    Text="{Binding Path=FirstName}"/>
-                                <TextBox 
-                                    Name="MiddleNameTBox" 
-                                    MinWidth="200"
-                                    IsEnabled="{Binding IsAdmin}"  
-                                    Height="30"
-                                    Margin="10,2"
-                                    controls:TextBoxHelper.Watermark="Отчество"
-                                    controls:TextBoxHelper.ClearTextButton="True"
-                                    FontSize="14"
-                                    ToolTip="Отчество"
+                                <TextBox Name="LastNameTBox" 
+                                         MinWidth="200"
+                                         IsEnabled="{Binding IsAdmin}" 
+                                         Height="30"
+                                         Margin="10,2"
+                                         controls:TextBoxHelper.Watermark="Фамилия"
+                                         controls:TextBoxHelper.ClearTextButton="True"
+                                         FontSize="16"
+                                         ToolTip="Фамилия"
+                                         Text="{Binding Path=LastName}"/>
+                                <TextBox Name="FirstNameTBox"
+                                         MinWidth="200"
+                                         IsEnabled="{Binding IsAdmin}" 
+                                         Height="30"
+                                         Margin="10,2"
+                                         controls:TextBoxHelper.Watermark="Имя"
+                                         controls:TextBoxHelper.ClearTextButton="True"
+                                         FontSize="16"
+                                         ToolTip="Имя"
+                                         Text="{Binding Path=FirstName}"/>
+                                <TextBox Name="MiddleNameTBox" 
+                                         MinWidth="200"
+                                         IsEnabled="{Binding IsAdmin}"
+                                         Height="30"
+                                         Margin="10,2"
+                                         controls:TextBoxHelper.Watermark="Отчество"
+                                         controls:TextBoxHelper.ClearTextButton="True"
+                                         FontSize="16"
+                                         ToolTip="Отчество"
                                     Text="{Binding Path=MiddleName}"/>
-                                <ComboBox 
-                                    Name="ServiceCBox" 
-                                    MinWidth="200"
-                                    IsEnabled="{Binding IsAdmin}"  
-                                    Height="30"
-                                    Margin="10,2"
-                                    controls:TextBoxHelper.Watermark="--Служба--"
-                                    controls:TextBoxHelper.ClearTextButton="True"
-                                    FontSize="14"
-                                    ToolTip="Служба"
-                                    SelectedItem="{Binding ServiceList.SelectedItem}"
-                                    ItemsSource="{Binding ServiceList.ModelList}"
-                                    DisplayMemberPath="ServiceTitle"/>
-                                <ComboBox 
-                                    Name="PostCBox" 
-                                    MinWidth="200"
-                                    IsEnabled="{Binding IsAdmin}"  
-                                    Height="30"
-                                    Margin="10,2"
-                                    controls:TextBoxHelper.Watermark="--Должность--"
-                                    controls:TextBoxHelper.ClearTextButton="True"
-                                    FontSize="14"
-                                    ToolTip="Должность"
-                                    SelectedItem="{Binding SelectedPost}"
-                                    ItemsSource="{Binding PostList.ModelList}"
-                                    DisplayMemberPath="PostTitle"/>
-                                <ComboBox 
-                                    Name="RankCBox" 
-                                    MinWidth="200"
-                                    IsEnabled="{Binding IsAdmin}"  
-                                    Height="30"
-                                    Margin="10,2"
-                                    controls:TextBoxHelper.Watermark="--Звание--"
-                                    controls:TextBoxHelper.ClearTextButton="True"
-                                    FontSize="14"
-                                    ToolTip="Звание"
-                                    SelectedItem="{Binding RankList.SelectedItem}"
-                                    ItemsSource="{Binding RankList.ModelList}"
-                                    DisplayMemberPath="RankTitle"/>
+                                <ComboBox Name="ServiceCBox" 
+                                          MinWidth="200"
+                                          IsEnabled="{Binding IsAdmin}"  
+                                          Height="30"
+                                          Margin="10,2"
+                                          controls:TextBoxHelper.Watermark="--Служба--"
+                                          controls:TextBoxHelper.ClearTextButton="True"
+                                          FontSize="16"
+                                          ToolTip="Служба"
+                                          SelectedItem="{Binding ServiceList.SelectedItem}"
+                                          ItemsSource="{Binding ServiceList.ModelList}"
+                                          DisplayMemberPath="ServiceTitle"/>
+                                <ComboBox Name="PostCBox" 
+                                          MinWidth="200"
+                                          IsEnabled="{Binding IsAdmin}"  
+                                          Height="30"
+                                          Margin="10,2"
+                                          controls:TextBoxHelper.Watermark="--Длжность--"
+                                          controls:TextBoxHelper.ClearTextButton="True"
+                                          FontSize="16"
+                                          ToolTip="Должность"
+                                          SelectedItem="{Binding SelectedPost}"
+                                          ItemsSource="{Binding PostList.ModelList}"
+                                          DisplayMemberPath="PostTitle"/>
+                                <ComboBox Name="RankCBox" 
+                                          MinWidth="200"
+                                          IsEnabled="{Binding IsAdmin}"  
+                                          Height="30"
+                                          Margin="10,2"
+                                          controls:TextBoxHelper.Watermark="--Звание--"
+                                          controls:TextBoxHelper.ClearTextButton="True"
+                                          FontSize="16"
+                                          ToolTip="Звание"
+                                          SelectedItem="{Binding RankList.SelectedItem}"
+                                          ItemsSource="{Binding RankList.ModelList}"
+                                          DisplayMemberPath="RankTitle"/>
                             </StackPanel>
                         </StackPanel>
                         <StackPanel Grid.Row="1"
@@ -150,51 +146,45 @@
                         <StackPanel Grid.Row="2" 
                                     Orientation="Horizontal">
                             <StackPanel Orientation="Vertical" Margin="10,20">
-                                <TextBlock 
-                                    Text="Дата рождения" 
-                                    FontSize="16"
-                                    Margin="0,6"/>
-                                <TextBlock 
-                                    Text="Дата начала службы в МЧС" 
-                                    FontSize="16"
-                                    Margin="0,6"/>
-                                <TextBlock 
-                                    Text="Личный номер" 
-                                    FontSize="16"
-                                    Margin="0,6"/>
+                                <TextBlock Text="Дата рождения" 
+                                           FontSize="16"
+                                           Margin="0,6"/>
+                                <TextBlock Text="Дата начала службы в МЧС" 
+                                           FontSize="16"
+                                           Margin="0,6"/>
+                                <TextBlock Text="Личный номер" 
+                                           FontSize="16"
+                                           Margin="0,6"/>
                             </StackPanel>
                             <StackPanel Orientation="Vertical" Margin="48,20">
-                                <DatePicker 
-                                    Name="BornDatePicker"
-                                    IsEnabled="{Binding IsAdmin}" 
-                                    MinWidth="200"
-                                    controls:TextBoxHelper.Watermark="Дата рождения"
-                                    FontSize="14"
-                                    ToolTip="Дата рождения"
-                                    Margin="0,2"
-                                    Height="30"
-                                    SelectedDate="{Binding Path=BornDate}"/>
-                                <DatePicker 
-                                    Name="JobStartDatePicker"
-                                    IsEnabled="{Binding IsAdmin}" 
-                                    MinWidth="200"
-                                    controls:TextBoxHelper.Watermark="Начало службы"
-                                    FontSize="14"
-                                    ToolTip="Дата начала службы в МЧС"
-                                    Margin="0,2"
-                                    Height="30"
-                                    SelectedDate="{Binding Path=JobStartDate}"/>
-                                <TextBox 
-                                    Name="PersonalNumber"
-                                    IsEnabled="{Binding IsAdmin}" 
-                                    MinWidth="200"
-                                    controls:TextBoxHelper.Watermark="Личный номер"
-                                    controls:TextBoxHelper.ClearTextButton="True"
-                                    FontSize="14"
-                                    ToolTip="Личный номер служащего"
-                                    Margin="0,2"
-                                    Height="30"
-                                    Text="{Binding PersonalNumber, Mode=TwoWay}"/>
+                                <DatePicker Name="BornDatePicker"
+                                            IsEnabled="{Binding IsAdmin}" 
+                                            MinWidth="200"
+                                            controls:TextBoxHelper.Watermark="Дата рождения"
+                                            FontSize="16"
+                                            ToolTip="Дата рождения"
+                                            Margin="0,2"
+                                            Height="30"
+                                            SelectedDate="{Binding Path=BornDate}"/>
+                                <DatePicker Name="JobStartDatePicker"
+                                            IsEnabled="{Binding IsAdmin}" 
+                                            MinWidth="200"
+                                            controls:TextBoxHelper.Watermark="Начало службы"
+                                            FontSize="16"
+                                            ToolTip="Дата начала службы в МЧС"
+                                            Margin="0,2"
+                                            Height="30"
+                                            SelectedDate="{Binding Path=JobStartDate}"/>
+                                <TextBox Name="PersonalNumber"
+                                         IsEnabled="{Binding IsAdmin}" 
+                                         MinWidth="200"
+                                         controls:TextBoxHelper.Watermark="Личный номер"
+                                         controls:TextBoxHelper.ClearTextButton="True"
+                                         FontSize="16"
+                                         ToolTip="Личный номер служащего"
+                                         Margin="0,2"
+                                         Height="30"
+                                         Text="{Binding PersonalNumber, Mode=TwoWay}"/>
                             </StackPanel>
                         </StackPanel>
                         <StackPanel Grid.Row="3" 
@@ -205,72 +195,66 @@
                                     Header="Домашний адрес"
                                     MinWidth="210">
                                     <StackPanel Orientation="Vertical">
-                                        <TextBox 
-                                            Name="CityTBox"
-                                            controls:TextBoxHelper.Watermark="Город"
-                                            controls:TextBoxHelper.ClearTextButton="True"
-                                            FontSize="14"
-                                            IsEnabled="{Binding IsAdmin}" 
-                                            Margin="1,1"
-                                            Height="30"
-                                            ToolTip="Город"
-                                            Text="{Binding Path=City}"/>
-                                        <TextBox
-                                            Name="StreetTBox"
-                                            controls:TextBoxHelper.Watermark="Улица"
-                                            controls:TextBoxHelper.ClearTextButton="True"
-                                            FontSize="14"
-                                            IsEnabled="{Binding IsAdmin}" 
-                                            Margin="1,1"
-                                            Height="30"
-                                            ToolTip="Улица"
-                                            Text="{Binding Path=Street}"/>
-                                        <TextBox
-                                            Name="HouseTBox"
-                                            controls:TextBoxHelper.Watermark="Дом"
-                                            controls:TextBoxHelper.ClearTextButton="True"
-                                            FontSize="14"
-                                            IsEnabled="{Binding IsAdmin}" 
-                                            Margin="1,1"
-                                            Height="30"
-                                            ToolTip="Номер дома"
-                                            Text="{Binding Path=House}"/>
-                                        <TextBox
-                                            Name="FlatTBox"
-                                            controls:TextBoxHelper.Watermark="Квартира"
-                                            controls:TextBoxHelper.ClearTextButton="True"
-                                            FontSize="14"
-                                            IsEnabled="{Binding IsAdmin}" 
-                                            Margin="1,1"
-                                            Height="30"
-                                            ToolTip="Номер квартиры"
-                                            Text="{Binding Path=Flat}"/>
+                                        <TextBox Name="CityTBox"
+                                                 controls:TextBoxHelper.Watermark="Город"
+                                                 controls:TextBoxHelper.ClearTextButton="True"
+                                                 FontSize="16"
+                                                 IsEnabled="{Binding IsAdmin}" 
+                                                 Margin="1,1"
+                                                 Height="30"
+                                                 ToolTip="Город"
+                                                 Text="{Binding Path=City}"/>
+                                        <TextBox Name="StreetTBox"
+                                                 controls:TextBoxHelper.Watermark="Улица"
+                                                 controls:TextBoxHelper.ClearTextButton="True"
+                                                 FontSize="16"
+                                                 IsEnabled="{Binding IsAdmin}" 
+                                                 Margin="1,1"
+                                                 Height="30"
+                                                 ToolTip="Улица"
+                                                 Text="{Binding Path=Street}"/>
+                                        <TextBox Name="HouseTBox"
+                                                 controls:TextBoxHelper.Watermark="Дом"
+                                                 controls:TextBoxHelper.ClearTextButton="True"
+                                                 FontSize="16"
+                                                 IsEnabled="{Binding IsAdmin}" 
+                                                 Margin="1,1"
+                                                 Height="30"
+                                                 ToolTip="Номер дома"
+                                                 Text="{Binding Path=House}"/>
+                                        <TextBox Name="FlatTBox"
+                                                 controls:TextBoxHelper.Watermark="Квартира"
+                                                 controls:TextBoxHelper.ClearTextButton="True"
+                                                 FontSize="16"
+                                                 IsEnabled="{Binding IsAdmin}" 
+                                                 Margin="1,1"
+                                                 Height="30"
+                                                 ToolTip="Номер квартиры"
+                                                 Text="{Binding Path=Flat}"/>
                                     </StackPanel>
                                 </Expander>
                                 <Expander
                                     Header="Телефон"
                                     MinWidth="210">
                                     <StackPanel>
-                                        <TextBox
-                                            Name="HomePhoneNumberTBox"
-                                            controls:TextBoxHelper.Watermark="Домашний телефон"
-                                            controls:TextBoxHelper.ClearTextButton="True"
-                                            FontSize="14"
-                                            IsEnabled="{Binding IsAdmin}" 
-                                            Margin="1,1"
-                                            Height="30"
-                                            ToolTip="Номер мобильного телефона"
-                                            Text="{Binding Path=HomePhoneNumber}"/>
-                                        <TextBox
-                                            Name="MobilePhoneNumberTBox"
-                                            controls:TextBoxHelper.Watermark="Мобильный телефон"
-                                            controls:TextBoxHelper.ClearTextButton="True"
-                                            FontSize="14"
-                                            IsEnabled="{Binding IsAdmin}" 
-                                            Margin="1,1"
-                                            Height="30"
-                                            ToolTip="Номер домашнего телефона"
-                                            Text="{Binding Path=MobilePhoneNumber}"/>
+                                        <TextBox Name="HomePhoneNumberTBox"
+                                                 controls:TextBoxHelper.Watermark="Домашний телефон"
+                                                 controls:TextBoxHelper.ClearTextButton="True"
+                                                 FontSize="16"
+                                                 IsEnabled="{Binding IsAdmin}" 
+                                                 Margin="1,1"
+                                                 Height="30"
+                                                 ToolTip="Номер мобильного телефона"
+                                                 Text="{Binding Path=HomePhoneNumber}"/>
+                                        <TextBox Name="MobilePhoneNumberTBox"
+                                                 controls:TextBoxHelper.Watermark="Мобильный телефон"
+                                                 controls:TextBoxHelper.ClearTextButton="True"
+                                                 FontSize="16"
+                                                 IsEnabled="{Binding IsAdmin}" 
+                                                 Margin="1,1"
+                                                 Height="30"
+                                                 ToolTip="Номер домашнего телефона"
+                                                 Text="{Binding Path=MobilePhoneNumber}"/>
                                     </StackPanel>
                                 </Expander>
                             </StackPanel>
@@ -279,27 +263,25 @@
                                     Header="Паспорт"
                                     MinWidth="210">
                                     <StackPanel>
-                                        <TextBox
-                                            Name="PasportOragnizationTBox"
-                                            controls:TextBoxHelper.Watermark="Организация"
-                                            controls:TextBoxHelper.ClearTextButton="True"
-                                            ToolTip="Организация, выдавшая паспорт"
-                                            FontSize="14"
-                                            IsEnabled="{Binding IsAdmin}" 
-                                            Margin="1,1"
-                                            Height="30"
-                                            Text="{Binding Pasport.OrganizationUnit}"/>
-                                        <ComboBox
-                                            Name="PasportSeriesCBox"
-                                            controls:TextBoxHelper.Watermark="Серия"
-                                            controls:TextBoxHelper.ClearTextButton="True"
-                                            FontSize="14"
-                                            IsEnabled="{Binding IsAdmin}" 
-                                            Margin="1,1"
-                                            Height="30"
-                                            ToolTip="Серия паспорта"
-                                            SelectedValue="{Binding Path=Pasport.Series}"
-                                            SelectedValuePath="Content">
+                                        <TextBox Name="PasportOragnizationTBox"
+                                                 controls:TextBoxHelper.Watermark="Организация"
+                                                 controls:TextBoxHelper.ClearTextButton="True"
+                                                 ToolTip="Организация, выдавшая паспорт"
+                                                 FontSize="16"
+                                                 IsEnabled="{Binding IsAdmin}" 
+                                                 Margin="1,1"
+                                                 Height="30"
+                                                 Text="{Binding Pasport.OrganizationUnit}"/>
+                                        <ComboBox Name="PasportSeriesCBox"
+                                                  controls:TextBoxHelper.Watermark="Серия"
+                                                  controls:TextBoxHelper.ClearTextButton="True"
+                                                  FontSize="16"
+                                                  IsEnabled="{Binding IsAdmin}" 
+                                                  Margin="1,1"
+                                                  Height="30"
+                                                  ToolTip="Серия паспорта"
+                                                  SelectedValue="{Binding Path=Pasport.Series}"
+                                                  SelectedValuePath="Content">
                                             <ComboBoxItem Content="AB"/>
                                             <ComboBoxItem Content="BM"/>
                                             <ComboBoxItem Content="HB"/>
@@ -309,28 +291,26 @@
                                             <ComboBoxItem Content="KB"/>
                                             <ComboBoxItem Content="PP"/>
                                         </ComboBox>
-                                        <TextBox
-                                            Name="PasportNumberTBox"
-                                            controls:TextBoxHelper.Watermark="Номер паспорта"
-                                            controls:TextBoxHelper.ClearTextButton="True"
-                                            FontSize="14"
-                                            IsEnabled="{Binding IsAdmin}" 
-                                            ToolTip="Номер паспорта"
-                                            Margin="1,1"
-                                            Height="30"
-                                            Text="{Binding Path=Pasport.Number}"/>
+                                        <TextBox Name="PasportNumberTBox"
+                                                 controls:TextBoxHelper.Watermark="Номер паспорта"
+                                                 controls:TextBoxHelper.ClearTextButton="True"
+                                                 FontSize="16"
+                                                 IsEnabled="{Binding IsAdmin}" 
+                                                 ToolTip="Номер паспорта"
+                                                 Margin="1,1"
+                                                 Height="30"
+                                                 Text="{Binding Path=Pasport.Number}"/>
                                     </StackPanel>
                                 </Expander>
                                 <Expander
                                     Header="Выслуга"
                                     MinWidth="210">
                                     <StackPanel>
-                                        <TextBlock
-                                            Name="ServiceLengthTBlock"
-                                            FontSize="14"
-                                            IsEnabled="{Binding IsAdmin}" 
-                                            Margin="1,2"
-                                            Text="ХХ лет ХХ месяцев ХХ дней"/>
+                                        <TextBlock Name="ServiceLengthTBlock"
+                                                   FontSize="16"
+                                                   IsEnabled="{Binding IsAdmin}" 
+                                                   Margin="1,2"
+                                                   Text="ХХ лет ХХ месяцев ХХ дней"/>
                                     </StackPanel>
                                 </Expander>
                             </StackPanel>
@@ -383,8 +363,14 @@
                                                     ScrollViewer.HorizontalScrollBarVisibility="Auto"
                                                     GridLinesVisibility="All"
                                                     ItemsSource="{Binding SelectedItem}"
-                                                    SelectedIndex="{Binding SelectedCatalogRecordIndex}">
-                                        <!--<DataGrid.ColumnHeaderStyle>
+                                                    SelectedIndex="{Binding SelectedCatalogRecordIndex}"
+                                                    AutoGeneratingColumn="AutoGenerationColumnExecute">
+                                            <!--<i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="AutoGeneratingColumn">
+                                                    <command:EventToCommand Command="{Binding dg_AutoGeneratingColumn}" PassEventArgsToCommand="True" />
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>-->
+                                            <!--<DataGrid.ColumnHeaderStyle>
                                             <Style TargetType="DataGridColumnHeader">
                                                 <Setter Property="Template">
                                                     <Setter.Value>
@@ -761,20 +747,20 @@
                                                 <StackPanel Orientation="Vertical">
                                                     <DatePicker Name="EducationProcessStartDatePicker"
                                                                 MinWidth="150"
-                                                                Height="15"
+                                                                Height="30"
                                                                 FontSize="16"
                                                                 controls:TextBoxHelper.Watermark="Дата начала"
                                                                 SelectedDate="{Binding EducationStartDate}"/>
                                                     <DatePicker Name="EducationProcessFinishDatePicker"
                                                                 MinWidth="150"
                                                                 Margin="0,2,0,0"
-                                                                Height="15"
+                                                                Height="30"
                                                                 FontSize="16"
                                                                 controls:TextBoxHelper.Watermark="Дата окончания"
                                                                 SelectedDate="{Binding EducationFinishDate}"/>
                                                     <TextBox Name="EducationProcessDescriptionTBox"
                                                              Margin="0,2,0,0"
-                                                             Height="15"
+                                                             Height="30"
                                                              FontSize="16"
                                                              MinWidth="150"
                                                              controls:TextBoxHelper.ClearTextButton="True"
@@ -787,9 +773,9 @@
                                                     <StackPanel Orientation="Horizontal">
                                                         <ComboBox   Name="InstitutionCBox"
                                                                     MinWidth="150"
+                                                                    Height="30"
                                                                     Width="210"
                                                                     FontSize="16"
-                                                                    Margin="0,2,0,0"
                                                                     controls:TextBoxHelper.Watermark="--Учебное заведение--"
                                                                     DisplayMemberPath="FullName"
                                                                     ItemsSource="{Binding EducationalInstitutions}"
@@ -806,6 +792,7 @@
                                                     <StackPanel Orientation="Horizontal">
                                                         <ComboBox   Name="SpecialityCBox"
                                                                     MinWidth="150"
+                                                                    Height="30"
                                                                     Width="210"
                                                                     FontSize="16"                                                        
                                                                     Margin="0,2,0,0"

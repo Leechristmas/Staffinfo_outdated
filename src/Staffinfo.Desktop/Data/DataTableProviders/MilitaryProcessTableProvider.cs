@@ -26,7 +26,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             if (militaryProcess == null) throw new ArgumentNullException(nameof(militaryProcess), Resources.DatabaseConnector_parameter_cannot_be_null);
 
             var cmd =
-                new SqlCommand($@"INSERT INTO MILITARY_PROCESS VALUES({militaryProcess.EmployeeId}, '{militaryProcess.Description}', '{militaryProcess.StartDate}', '{militaryProcess.FinishDate}', {militaryProcess.MilitaryUnitId}); SELECT MAX(ID) FROM MILITARY_PROCESS;");
+                new SqlCommand($@"ADD_MILITARY_PROCESS {militaryProcess.EmployeeId}, '{militaryProcess.Description}', '{militaryProcess.StartDate}', '{militaryProcess.FinishDate}', {militaryProcess.MilitaryUnitId};");
 
             try
             {
@@ -95,7 +95,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             var militaryProcessList = new ObservableCollection<MilitaryProcessModel>();
 
-            var cmd = new SqlCommand("SELECT * FROM MILITARY_PROCESS");
+            var cmd = new SqlCommand("GET_MILITARY_PROCESS");
 
             try
             {
@@ -185,7 +185,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
             var militaryProcessList = new ObservableCollection<MilitaryProcessModel>();
 
-            var cmd = new SqlCommand($"SELECT * FROM MILITARY_PROCESS WHERE EMPLOYEE_ID = {id}");
+            var cmd = new SqlCommand($"GET_MILITARY_PROCESS {id}");
 
             try
             {

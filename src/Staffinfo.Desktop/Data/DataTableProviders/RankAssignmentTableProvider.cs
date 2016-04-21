@@ -26,7 +26,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             if (rankAssignmentModel == null) throw new ArgumentNullException(nameof(rankAssignmentModel), Resources.DatabaseConnector_parameter_cannot_be_null);
 
             var cmd =
-                new SqlCommand($@"INSERT INTO RANK_ASSIGNMENT VALUES({rankAssignmentModel.EmployeeId}, '{rankAssignmentModel.Description}', '{rankAssignmentModel.AssignmentDate}', {rankAssignmentModel.PreviousRankId}, {rankAssignmentModel.NewRankId}, {rankAssignmentModel.OrderNumber}); SELECT MAX(ID) FROM RANK_ASSIGNMENT;");
+                new SqlCommand($@"ADD_RANK_ASSIGNMENT {rankAssignmentModel.EmployeeId}, '{rankAssignmentModel.Description}', '{rankAssignmentModel.AssignmentDate}', {rankAssignmentModel.PreviousRankId}, {rankAssignmentModel.NewRankId}, {rankAssignmentModel.OrderNumber};");
 
             try
             {
@@ -96,7 +96,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             var rankAssignmentList = new ObservableCollection<RankAssignmentModel>();
 
-            var cmd = new SqlCommand("SELECT * FROM RANK_ASSIGNMENT");
+            var cmd = new SqlCommand("GET_RANK_ASSIGNMENT");
 
             try
             {
@@ -188,7 +188,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
             var rankAssignmentList = new ObservableCollection<RankAssignmentModel>();
 
-            var cmd = new SqlCommand($"SELECT * FROM RANK_ASSIGNMENT WHERE EMPLOYEE_ID = {id}");
+            var cmd = new SqlCommand($"GET_RANK_ASSIGNMENT {id}");
 
             try
             {
