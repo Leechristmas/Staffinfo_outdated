@@ -149,7 +149,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             if (hospitalTimeModel == null) throw new ArgumentNullException(nameof(hospitalTimeModel), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"UPDATE HOSPITAL_TIME SET EMPLOYEE_ID={hospitalTimeModel.EmployeeId}, DESCRIPTION='{hospitalTimeModel.Description}', START_HOSPITAL_TIME='{hospitalTimeModel.StartDate}', FINISH_HOSPITAL_TIME='{hospitalTimeModel.FinishDate}' WHERE ID={hospitalTimeModel.Id};");
+            var cmd = new SqlCommand($@"UPDATE HOSPITAL_TIME SET DISEASED_ID={hospitalTimeModel.EmployeeId}, DESCRIPTION='{hospitalTimeModel.Description}', START_HOSPITAL_TIME='{hospitalTimeModel.StartDate}', FINISH_HOSPITAL_TIME='{hospitalTimeModel.FinishDate}' WHERE ID={hospitalTimeModel.Id};");
 
             try
             {

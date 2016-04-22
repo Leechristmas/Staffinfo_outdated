@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -31,7 +32,7 @@ namespace Staffinfo.Desktop.ViewModel
         {
             //подтягиваем список званий
             _rankList = new ListViewModel<RankModel>(DataSingleton.Instance.RankList);
-            
+
             //список должностей
             _postList = new ListViewModel<PostModel>(DataSingleton.Instance.PostList);
 
@@ -94,7 +95,7 @@ namespace Staffinfo.Desktop.ViewModel
         /// Тип даныых, которые будут отображаться в grid'e
         /// </summary>
         private List<string> _informationModeList;
-        
+
         /// <summary>
         /// Фото служащего
         /// </summary>
@@ -199,7 +200,7 @@ namespace Staffinfo.Desktop.ViewModel
                 _selectedTabIndex = value;
                 RaisePropertyChanged();
                 RaisePropertyChanged("TabsToogleTitle");
-                
+
                 //обнуляем текст ошибки при переходе между табами
                 CatalogTextError = String.Empty;
             }
@@ -377,7 +378,7 @@ namespace Staffinfo.Desktop.ViewModel
                 WasChanged = (_flat != EmployeeViewModel.Flat);
             }
         }
-        
+
         /// <summary>
         /// Паспорт
         /// </summary>
@@ -550,7 +551,7 @@ namespace Staffinfo.Desktop.ViewModel
         /// <summary>
         /// Обучения
         /// </summary>
-        public ObservableCollection<EducationalTimeViewModel> EducationTimes { get; set; } 
+        public ObservableCollection<EducationalTimeViewModel> EducationTimes { get; set; }
 
         /// <summary>
         /// Отпуска
@@ -576,7 +577,7 @@ namespace Staffinfo.Desktop.ViewModel
         /// Воинские части
         /// </summary>
         public ObservableCollection<MilitaryUnitModel> MilitaryUnits => DataSingleton.Instance.MilitaryUnitList;
-        
+
         /// <summary>
         /// Специальности
         /// </summary>
@@ -586,7 +587,7 @@ namespace Staffinfo.Desktop.ViewModel
         /// Учебные заведения
         /// </summary>
         public ObservableCollection<EducationalInstitutionModel> EducationalInstitutions => DataSingleton.Instance.EducationalInstitutionList;
-        
+
         /// <summary>
         /// Активный справочник
         /// </summary>
@@ -727,10 +728,12 @@ namespace Staffinfo.Desktop.ViewModel
             "Родственники"
         });
 
+
+
         #endregion
 
         #region Commands
-        
+
         /// <summary>
         /// Принять изменения
         /// </summary>
@@ -778,7 +781,7 @@ namespace Staffinfo.Desktop.ViewModel
                         MessageBoxImage.Error);
 
             }
-            
+
             CloseWindow();
         }
 
@@ -834,7 +837,7 @@ namespace Staffinfo.Desktop.ViewModel
                 if (fileInfo.Extension.ToLower() == ".jpg")
                 {
                     Photo = BitmapImageHelper.SetSize(new BitmapImage(new Uri(fileInfo.FullName)), 600, 600); //стоит использовать менеезатратный вариант
-                 }
+                }
             }
         }
 
@@ -852,19 +855,26 @@ namespace Staffinfo.Desktop.ViewModel
         /// <summary>
         /// Переходим на edit tabs и обратно
         /// </summary>
-        private RelayCommand _tabsToggle;
-        
-        public RelayCommand TabsToggle => _tabsToggle ?? (_tabsToggle = new RelayCommand(TabsToggleExecute));
+        private RelayCommand _toAddView;
 
-        private void TabsToggleExecute()
+        public RelayCommand ToAddView => _toAddView ?? (_toAddView = new RelayCommand(ToAddViewExecute));
+
+        private void ToAddViewExecute()
         {
-            SelectedTabIndex = SelectedTabIndex == 0 ? 1 : 0;   
+            //указываем, что будет происходить добавление
+            isChanging = false;
+            TabsToggle();
         }
-        
+
+        private void TabsToggle()
+        {
+            SelectedTabIndex = SelectedTabIndex == 0 ? 1 : 0;
+        }
+
         #endregion
 
         #region Methods
-        
+
 
         /// <summary>
         /// Подбирает паспорт из БД по id
@@ -896,6 +906,11 @@ namespace Staffinfo.Desktop.ViewModel
         #region Common fields
 
         /// <summary>
+        /// Редактирование или добавление записи? (используется при добавлении записи)
+        /// </summary>
+        private bool isChanging = false;
+
+        /// <summary>
         /// Текст ошибки при работе со справочниками
         /// </summary>
         private string _catalogErrorText = String.Empty;
@@ -904,6 +919,12 @@ namespace Staffinfo.Desktop.ViewModel
         /// Индекс выделенной записи справочника
         /// </summary>
         private int _selectedCatalogRecordIndex = -1;
+
+        /// <summary>
+        /// Выбранный элемент из списков "catalog"
+        /// </summary>
+        private object _selectedCatalogRecord;
+
 
         #endregion
 
@@ -935,9 +956,216 @@ namespace Staffinfo.Desktop.ViewModel
             }
         }
 
+        /// <summary>
+        /// Выбранный элемент из списков "catalog"
+        /// </summary>
+        public object SelectedCatalogRecord
+        {
+            get { return _selectedCatalogRecord; }
+            set
+            {
+                _selectedCatalogRecord = value;
+                RaisePropertyChanged();
+            }
+        }
+
         #endregion
 
         #region Common commands
+
+        /// <summary>
+        /// Изменение записи
+        /// </summary>
+        private RelayCommand _updateItem;
+        public RelayCommand UpdateItem => _updateItem ?? (_updateItem = new RelayCommand(UpdateItemExecute));
+
+        private void UpdateItemExecute()
+        {
+            CatalogTextError = String.Empty;
+            if (SelectedCatalogRecordIndex < 0)
+            {
+                CatalogTextError = "Запись не выбрана";
+                return;
+            }
+
+            //переходим в редактирование
+            TabsToggle();
+
+            //указываем, что будет происходить изменение записи
+            isChanging = true;
+
+            switch (SelectedCatalogIndex)
+            {
+                case 0:     //аттестация
+                    var sertification = SelectedCatalogRecord as SertificationViewModel;
+                    if (sertification == null)
+                    {
+                        CatalogTextError = "Ошибка. Редактирование невозможно";
+                        return;
+                    }
+                    SertificationDate = sertification.GetModel().SertificationDate;
+                    SertificationDescription = sertification.GetModel().Description;
+                    break;
+                case 1:     //благодарности
+                    var gratitude = SelectedCatalogRecord as GratitudeViewModel;
+                    if (gratitude == null)
+                    {
+                        CatalogTextError = "ошибка. Редактирование невозможно";
+                        return;
+                    }
+                    GratitudeDate = gratitude.GetModel().GratitudeDate;
+                    GratitudeDescription = gratitude.GetModel().Description;
+                    break;
+                case 2:     //больничные
+                    var hospitalTime = SelectedCatalogRecord as HospitalTimeViewModel;
+                    if (hospitalTime == null)
+                    {
+                        CatalogTextError = "Ошибка. Редактирование невозможно";
+                        return;
+                    }
+                    StartHospitalDate = hospitalTime.GetModel().StartDate;
+                    FinishHospitalDate = hospitalTime.GetModel().FinishDate;
+                    HospitalTimeDescription = hospitalTime.GetModel().Description;
+                    break;
+                case 3:     //взыскания
+                    var reprimand = SelectedCatalogRecord as ReprimandViewModel;
+                    if (reprimand == null)
+                    {
+                        CatalogTextError = "Ошибка. Редактирование невозможно";
+                        return;
+                    }
+                    ReprimandDate = reprimand.GetModel().ReprimandDate;
+                    ReprimandSum = reprimand.GetModel().ReprimandSum.ToString(CultureInfo.CurrentCulture);
+                    ReprimandDescription = reprimand.GetModel().Description;
+                    break;
+                case 4:     //воинская служба
+                    var military = SelectedCatalogRecord as MilitaryProcessViewModel;
+                    if (military == null)
+                    {
+                        CatalogTextError = "Ошибка. Редактирование невозможно";
+                        return;
+                    }
+                    MilitaryStartDate = military.GetModel().StartDate;
+                    MilitaryFinishDate = military.GetModel().FinishDate;
+                    MilitaryDescription = military.GetModel().Description;
+                    var t = military.GetModel().MilitaryUnitId;
+                    MilitaryUnit =
+                        DataSingleton.Instance.MilitaryUnitList.FirstOrDefault(
+                            m => m.Id == military.GetModel().MilitaryUnitId);
+                    break;
+                case 5:     //классность
+                    var clasiness = SelectedCatalogRecord as ClasinessViewModel;
+                    if (clasiness == null)
+                    {
+                        CatalogTextError = "Ошибка. Редактирование невозможно";
+                        return;
+                    }
+                    ClasinessDate = clasiness.GetModel().ClasinessDate;
+                    ClasinessDegree = clasiness.ClasinessLevel;
+                    ClasinessOrderNumber = clasiness.OrderNumber;
+                    ClasinessDescription = clasiness.Description;
+                    break;
+                case 6:     //контракты
+                    var contract = SelectedCatalogRecord as ContractViewModel;
+                    if (contract == null)
+                    {
+                        CatalogTextError = "Ошибка. Редактирование невозможно";
+                        return;
+                    }
+                    ContractDescription = contract.Description;
+                    StartContractDate = contract.GetModel().StartDate;
+                    FinishContractDate = contract.GetModel().FinishDate;
+                    break;
+                case 7:     //нарушения
+                    var violation = SelectedCatalogRecord as ViolationViewModel;
+                    if (violation == null)
+                    {
+                        CatalogTextError = "Ошибка. Редактирование невозможно";
+                        return;
+                    }
+                    ViolationDate = violation.GetModel().ViolationDate;
+                    ViolationDescription = violation.Description;
+                    break;
+                case 8:     //образование
+                    var education = SelectedCatalogRecord as EducationalTimeViewModel;
+                    if (education == null)
+                    {
+                        CatalogTextError = "Ошибка. Редактирование невозможно";
+                        return;
+                    }
+                    EducationStartDate = education.GetModel().StartDate;
+                    EducationFinishDate = education.GetModel().FinishDate;
+                    EducationDescription = education.Description;
+                    EducationalInstitution =
+                        DataSingleton.Instance.EducationalInstitutionList.FirstOrDefault(
+                            i => i.Id == education.GetModel().InstitutionId);
+                    Speciality =
+                        DataSingleton.Instance.SpecialityList.FirstOrDefault(
+                            s => s.Id == education.GetModel().SpecialityId);
+
+                    break;
+                case 9:     //отпуска
+                    var holidayTime = SelectedCatalogRecord as HolidayTimeViewModel;
+                    if (holidayTime == null)
+                    {
+                        CatalogTextError = "Ошибка. Редактирование невозможно".ToString();
+                        return;
+                    }
+                    StartHolidayDate = holidayTime.GetModel().StartDate;
+                    FinishHolidayDate = holidayTime.GetModel().FinishDate;
+                    HolidayTimeDescription = holidayTime.Description;
+                    break;
+                case 10:    //присвоение должностей
+                    var postAssignment = SelectedCatalogRecord as PostAssignmentViewModel;
+                    if (postAssignment == null)
+                    {
+                        CatalogTextError = "Ошибка. Редактирование невозможно";
+                        return;
+                    }
+                    PostAssignmentDate = postAssignment.GetModel().AssignmentDate;
+                    PostAssignmentDescription = postAssignment.GetModel().Description;
+                    PostAssignmentOrderNumber = postAssignment.GetModel().OrderNumber;
+                    PostAssignmentOldPost =
+                        DataSingleton.Instance.PostList.FirstOrDefault(
+                            p => p.Id == postAssignment.GetModel().PreviousPostId);
+                    PostAssignmentNewPost =
+                        DataSingleton.Instance.PostList.FirstOrDefault(p => p.Id == postAssignment.GetModel().NewPostId);
+                    PostAssignmentService =
+                        DataSingleton.Instance.ServiceList.FirstOrDefault(s => s.Id == PostAssignmentNewPost.Id);
+                    break;
+                case 11:    //присвоение званий
+                    var rankAssignment = SelectedCatalogRecord as RankAssignmentViewModel;
+                    if (rankAssignment == null)
+                    {
+                        CatalogTextError = "Ошибка. Редактирование невозможно";
+                        return;
+                    }
+                    RankAssignmentDate = rankAssignment.GetModel().AssignmentDate;
+                    RankAssignmentDescription = rankAssignment.GetModel().Description;
+                    RankAssignmentOrderNumber = rankAssignment.GetModel().OrderNumber;
+                    RankAssignmentOldRank =
+                        DataSingleton.Instance.RankList.FirstOrDefault(
+                            r => r.Id == rankAssignment.GetModel().PreviousRankId);
+                    RankAssignmentNewRank =
+                        DataSingleton.Instance.RankList.FirstOrDefault(r => r.Id == rankAssignment.GetModel().NewRankId);
+                    break;
+                case 12:    //родственники
+                    var relative = SelectedCatalogRecord as RelativeViewModel;
+                    if (relative == null)
+                    {
+                        CatalogTextError = "Ошибка. Редактирование невозможно";
+                        return;
+                    }
+                    RelativeFirstName = relative.Firtname;
+                    RelativeLastName = relative.Lastname;
+                    RelativeMiddleName = relative.Middlename;
+                    RelativeBornDate = relative.GetModel().BornDate;
+                    RelativeDescription = relative.GetModel().Description;
+                    RelativeType = relative.GetModel().RelationType;
+                    break;
+            }
+        }
+
         /// <summary>
         /// Удаление записи
         /// </summary>
@@ -955,7 +1183,7 @@ namespace Staffinfo.Desktop.ViewModel
             var answer = MessageBox.Show("Удалить запись?", "Удаление", MessageBoxButton.YesNo, MessageBoxImage.Question,
                 MessageBoxResult.No);
 
-            if(answer == MessageBoxResult.No) return;
+            if (answer == MessageBoxResult.No) return;
 
             try
             {
@@ -1136,26 +1364,55 @@ namespace Staffinfo.Desktop.ViewModel
             //заносим аттестацию в бд и список
             using (SertificationTableProvider sPrvdr = new SertificationTableProvider())
             {
-                var sertification = sPrvdr.Save(new SertificationModel()
+                if (isChanging)
                 {
-                    EmployeeId = EmployeeViewModel.Id.Value,
-                    SertificationDate = SertificationDate.Value,
-                    Description = SertificationDescription
-                });
+                    //поднимаем модель из viewmodel
+                    var viewModel = SelectedCatalogRecord as SertificationViewModel;
+                    var model = viewModel?.GetModel();
 
-                if (sertification == null)
-                {
-                    MessageBox.Show("Не удалось сохранить аттестацию: " + sPrvdr.ErrorInfo, "Ошибка",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    if (model.SertificationDate == SertificationDate.Value &&
+                        viewModel.Description == SertificationDescription)
+                    {
+                        TabsToggle();
+                        return;
+                    }
+
+                    //обновляем модель
+                    model.SertificationDate = SertificationDate.Value;
+                    model.Description = SertificationDescription;
+
+                    //обновление в бд
+                    if (!sPrvdr.Update(model))
+                        MessageBox.Show("Не удалось применить изменения: " + sPrvdr.ErrorInfo, "Ошибка",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    else
+                    {
+                        Sertifications[SelectedCatalogRecordIndex] = new SertificationViewModel(model);
+                    }
                 }
-                Sertifications.Add(new SertificationViewModel(sertification));
+                else
+                {
+                    var sertification = sPrvdr.Save(new SertificationModel()
+                    {
+                        EmployeeId = EmployeeViewModel.Id.Value,
+                        SertificationDate = SertificationDate.Value,
+                        Description = SertificationDescription
+                    });
+
+                    if (sertification == null)
+                    {
+                        MessageBox.Show("Не удалось сохранить аттестацию: " + sPrvdr.ErrorInfo, "Ошибка",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                        Sertifications.Add(new SertificationViewModel(sertification));
+                }
             }
 
             SertificationDate = null;
             SertificationDescription = String.Empty;
 
-            TabsToggleExecute();
+            TabsToggle();
         }
 
         #endregion
@@ -1219,26 +1476,55 @@ namespace Staffinfo.Desktop.ViewModel
             //заносим благодарность в бд и список
             using (GratitudeTableProvider sPrvdr = new GratitudeTableProvider())
             {
-                var gratitude = sPrvdr.Save(new GratitudeModel()
+                if (isChanging)
                 {
-                    EmployeeId = EmployeeViewModel.Id.Value,
-                    GratitudeDate = GratitudeDate.Value,
-                    Description = GratitudeDescription
-                });
+                    //поднимаем модель из viewmodel
+                    var viewModel = SelectedCatalogRecord as GratitudeViewModel;
+                    var model = viewModel?.GetModel();
 
-                if (gratitude == null)
-                {
-                    MessageBox.Show("Не удалось сохранить вынесение благодарности: " + sPrvdr.ErrorInfo, "Ошибка",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    if (model.GratitudeDate == GratitudeDate.Value &&
+                        viewModel.Description == GratitudeDescription)
+                    {
+                        TabsToggle();
+                        return;
+                    }
+
+                    //обновляем модель
+                    model.GratitudeDate = GratitudeDate.Value;
+                    model.Description = GratitudeDescription;
+
+                    //обновление в бд
+                    if (!sPrvdr.Update(model))
+                        MessageBox.Show("Не удалось применить изменения: " + sPrvdr.ErrorInfo, "Ошибка",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    else
+                    {
+                        Gratitudes[SelectedCatalogRecordIndex] = new GratitudeViewModel(model);
+                    }
                 }
-                Gratitudes.Add(new GratitudeViewModel(gratitude));
+                else
+                {
+                    var gratitude = sPrvdr.Save(new GratitudeModel()
+                    {
+                        EmployeeId = EmployeeViewModel.Id.Value,
+                        GratitudeDate = GratitudeDate.Value,
+                        Description = GratitudeDescription
+                    });
+
+                    if (gratitude == null)
+                    {
+                        MessageBox.Show("Не удалось сохранить вынесение благодарности: " + sPrvdr.ErrorInfo, "Ошибка",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                        Gratitudes.Add(new GratitudeViewModel(gratitude));
+                }
             }
 
             GratitudeDate = null;
             GratitudeDescription = String.Empty;
 
-            TabsToggleExecute();
+            TabsToggle();
         }
 
         #endregion
@@ -1289,7 +1575,7 @@ namespace Staffinfo.Desktop.ViewModel
         /// <summary>
         /// Заметка к больничному
         /// </summary>
-        public string  HospitalTimeDescription
+        public string HospitalTimeDescription
         {
             get { return _hospitalTimeDescription; }
             set
@@ -1326,28 +1612,59 @@ namespace Staffinfo.Desktop.ViewModel
             //заносим больничный в бд и список
             using (HospitalTimeTableProvider hTPrvdr = new HospitalTimeTableProvider())
             {
-                var hospitalTime = hTPrvdr.Save(new HospitalTimeModel()
+                if (isChanging)
                 {
-                    EmployeeId = EmployeeViewModel.Id.Value,
-                    StartDate = StartHospitalDate.Value,
-                    FinishDate = FinishHospitalDate.Value,
-                    Description = GratitudeDescription
-                });
+                    //поднимаем модель из viewmodel
+                    var viewModel = SelectedCatalogRecord as HospitalTimeViewModel;
+                    var model = viewModel?.GetModel();
 
-                if (hospitalTime == null)
-                {
-                    MessageBox.Show("Не удалось сохранить больничный: " + hTPrvdr.ErrorInfo, "Ошибка",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    if (model.StartDate == StartHospitalDate.Value &&
+                        model.Description == HospitalTimeDescription &&
+                        model.FinishDate == FinishHospitalDate)
+                    {
+                        TabsToggle();
+                        return;
+                    }
+
+                    //обновляем модель
+                    model.StartDate = StartHospitalDate.Value;
+                    model.Description = HospitalTimeDescription;
+                    model.FinishDate = FinishHospitalDate.Value;
+
+                    //обновление в бд
+                    if (!hTPrvdr.Update(model))
+                        MessageBox.Show("Не удалось применить изменения: " + hTPrvdr.ErrorInfo, "Ошибка",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    else
+                    {
+                        HospitalTimes[SelectedCatalogRecordIndex] = new HospitalTimeViewModel(model);
+                    }
                 }
-                HospitalTimes.Add(new HospitalTimeViewModel(hospitalTime));
+                else
+                {
+                    var hospitalTime = hTPrvdr.Save(new HospitalTimeModel()
+                    {
+                        EmployeeId = EmployeeViewModel.Id.Value,
+                        StartDate = StartHospitalDate.Value,
+                        FinishDate = FinishHospitalDate.Value,
+                        Description = HospitalTimeDescription
+                    });
+
+                    if (hospitalTime == null)
+                    {
+                        MessageBox.Show("Не удалось сохранить больничный: " + hTPrvdr.ErrorInfo, "Ошибка",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                        HospitalTimes.Add(new HospitalTimeViewModel(hospitalTime));
+                }
             }
 
             StartHospitalDate = null;
             FinishHospitalDate = null;
             HospitalTimeDescription = String.Empty;
 
-            TabsToggleExecute();
+            TabsToggle();
         }
 
         #endregion
@@ -1437,34 +1754,65 @@ namespace Staffinfo.Desktop.ViewModel
 
             using (ReprimandTableProvider rPrvdr = new ReprimandTableProvider())
             {
-                var reprimand = rPrvdr.Save(new ReprimandModel
+                if (isChanging)
                 {
-                    EmployeeId = EmployeeViewModel.Id.Value,
-                    ReprimandDate = ReprimandDate.Value,
-                    ReprimandSum = reprimandSum,
-                    Description = ReprimandDescription
-                });
+                    //поднимаем модель из viewmodel
+                    var viewModel = SelectedCatalogRecord as ReprimandViewModel;
+                    var model = viewModel?.GetModel();
 
-                if (reprimand == null)
-                {
-                    MessageBox.Show("Не удалось сохранить вынесение выговора: " + rPrvdr.ErrorInfo, "Ошибка",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    if (model.ReprimandDate == ReprimandDate.Value &&
+                        model.Description == ReprimandDescription &&
+                        model.ReprimandSum == reprimandSum)
+                    {
+                        TabsToggle();
+                        return;
+                    }
+
+                    //обновляем модель
+                    model.ReprimandDate = ReprimandDate.Value;
+                    model.Description = ReprimandDescription;
+                    model.ReprimandSum = reprimandSum;
+
+                    //обновление в бд
+                    if (!rPrvdr.Update(model))
+                        MessageBox.Show("Не удалось применить изменения: " + rPrvdr.ErrorInfo, "Ошибка",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    else
+                    {
+                        Reprimands[SelectedCatalogRecordIndex] = new ReprimandViewModel(model);
+                    }
                 }
-                Reprimands.Add(new ReprimandViewModel(reprimand));
+                else
+                {
+                    var reprimand = rPrvdr.Save(new ReprimandModel
+                    {
+                        EmployeeId = EmployeeViewModel.Id.Value,
+                        ReprimandDate = ReprimandDate.Value,
+                        ReprimandSum = reprimandSum,
+                        Description = ReprimandDescription
+                    });
+
+                    if (reprimand == null)
+                    {
+                        MessageBox.Show("Не удалось сохранить вынесение выговора: " + rPrvdr.ErrorInfo, "Ошибка",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                        Reprimands.Add(new ReprimandViewModel(reprimand));
+                }
             }
 
             ReprimandDate = null;
             ReprimandDescription = String.Empty;
             ReprimandSum = String.Empty;
 
-            TabsToggleExecute();
+            TabsToggle();
         }
 
         #endregion
 
         #region Military
-        
+
         /// <summary>
         /// Дата начала службы
         /// </summary>
@@ -1551,7 +1899,7 @@ namespace Staffinfo.Desktop.ViewModel
                 CatalogTextError = "Дата начала службы не указана или указана неверно";
                 return;
             }
-            if (MilitaryFinishDate == null || 
+            if (MilitaryFinishDate == null ||
                 MilitaryFinishDate.Value.Date < MilitaryStartDate.Value.Date ||
                 MilitaryFinishDate.Value.Date > DateTime.Now.Date)
             {
@@ -1569,28 +1917,62 @@ namespace Staffinfo.Desktop.ViewModel
             }
             using (MilitaryProcessTableProvider mPrvdr = new MilitaryProcessTableProvider())
             {
-                var militaryProcess = mPrvdr.Save(new MilitaryProcessModel
+                if (isChanging)
                 {
-                    EmployeeId = EmployeeViewModel.Id.Value,
-                    StartDate = MilitaryStartDate.Value,
-                    FinishDate = MilitaryFinishDate.Value,
-                    MilitaryUnitId = MilitaryUnit.Id.Value,
-                    Description = MilitaryDescription
-                });
-                if (militaryProcess == null)
-                {
-                    MessageBox.Show("Не удалось сохранить запись о несении воинской службы: " + mPrvdr.ErrorInfo, "Ошибка",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    //поднимаем модель из viewmodel
+                    var viewModel = SelectedCatalogRecord as MilitaryProcessViewModel;
+                    var model = viewModel?.GetModel();
+
+                    if (model.StartDate == MilitaryStartDate.Value &&
+                        model.Description == MilitaryDescription &&
+                        model.FinishDate == MilitaryFinishDate.Value &&
+                        model.MilitaryUnitId == MilitaryUnit.Id)
+                    {
+                        TabsToggle();
+                        return;
+                    }
+
+                    //обновляем модель
+                    model.StartDate = MilitaryStartDate.Value;
+                    model.Description = MilitaryDescription;
+                    model.FinishDate = MilitaryFinishDate.Value;
+                    model.MilitaryUnitId = MilitaryUnit.Id.Value;
+
+                    //обновление в бд
+                    if (!mPrvdr.Update(model))
+                        MessageBox.Show("Не удалось применить изменения: " + mPrvdr.ErrorInfo, "Ошибка",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    else
+                    {
+                        MilitaryProcesses[SelectedCatalogRecordIndex] = new MilitaryProcessViewModel(model);
+                    }
                 }
-                MilitaryProcesses.Add(new MilitaryProcessViewModel(militaryProcess));
+                else
+                {
+                    var militaryProcess = mPrvdr.Save(new MilitaryProcessModel
+                    {
+                        EmployeeId = EmployeeViewModel.Id.Value,
+                        StartDate = MilitaryStartDate.Value,
+                        FinishDate = MilitaryFinishDate.Value,
+                        MilitaryUnitId = MilitaryUnit.Id.Value,
+                        Description = MilitaryDescription
+                    });
+                    if (militaryProcess == null)
+                    {
+                        MessageBox.Show("Не удалось сохранить запись о несении воинской службы: " + mPrvdr.ErrorInfo, "Ошибка",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                        MilitaryProcesses.Add(new MilitaryProcessViewModel(militaryProcess));
+                }
+                
 
                 MilitaryStartDate = null;
                 MilitaryFinishDate = null;
                 MilitaryUnit = null;
                 MilitaryDescription = String.Empty;
 
-                TabsToggleExecute();
+                TabsToggle();
             }
         }
 
@@ -1721,28 +2103,62 @@ namespace Staffinfo.Desktop.ViewModel
             }
             using (ClasinessTableProvider cPrvdr = new ClasinessTableProvider())
             {
-                var clasiness = cPrvdr.Save(new ClasinessModel
+                if (isChanging)
                 {
-                    EmployeeId = EmployeeViewModel.Id.Value,
-                    ClasinessDate = ClasinessDate.Value,
-                    ClasinessLevel = ClasinessDegree.Value,
-                    OrderNumber = ClasinessOrderNumber.Value,
-                    Description = ClasinessDescription
-                });
-                if (clasiness == null)
-                {
-                    MessageBox.Show("Не удалось сохранить запись о классности: " + cPrvdr.ErrorInfo, "Ошибка",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    //поднимаем модель из viewmodel
+                    var viewModel = SelectedCatalogRecord as ClasinessViewModel;
+                    var model = viewModel?.GetModel();
+
+                    if (model.ClasinessDate == ClasinessDate.Value &&
+                        model.Description == ClasinessDescription &&
+                        model.ClasinessLevel == ClasinessDegree &&
+                        model.OrderNumber == ClasinessOrderNumber)
+                    {
+                        TabsToggle();
+                        return;
+                    }
+
+                    //обновляем модель
+                    model.ClasinessDate = ClasinessDate.Value;
+                    model.Description = ClasinessDescription;
+                    model.ClasinessLevel = ClasinessDegree.Value;
+                    model.OrderNumber = ClasinessOrderNumber.Value;
+
+                    //обновление в бд
+                    if (!cPrvdr.Update(model))
+                        MessageBox.Show("Не удалось применить изменения: " + cPrvdr.ErrorInfo, "Ошибка",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    else
+                    {
+                        Clasiness[SelectedCatalogRecordIndex] = new ClasinessViewModel(model);
+                    }
                 }
-                Clasiness.Add(new ClasinessViewModel(clasiness));
+                else
+                {
+                    var clasiness = cPrvdr.Save(new ClasinessModel
+                    {
+                        EmployeeId = EmployeeViewModel.Id.Value,
+                        ClasinessDate = ClasinessDate.Value,
+                        ClasinessLevel = ClasinessDegree.Value,
+                        OrderNumber = ClasinessOrderNumber.Value,
+                        Description = ClasinessDescription
+                    });
+                    if (clasiness == null)
+                    {
+                        MessageBox.Show("Не удалось сохранить запись о классности: " + cPrvdr.ErrorInfo, "Ошибка",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                        Clasiness.Add(new ClasinessViewModel(clasiness));
+                }
+                
 
                 ClasinessDate = null;
                 ClasinessOrderNumber = null;
                 ClasinessDegree = null;
                 ClasinessDescription = String.Empty;
 
-                TabsToggleExecute();
+                TabsToggle();
             }
         }
         #endregion
@@ -1837,28 +2253,59 @@ namespace Staffinfo.Desktop.ViewModel
             //заносим контракт в бд и список
             using (ContractTableProvider cTPrvdr = new ContractTableProvider())
             {
-                var contract = cTPrvdr.Save(new ContractModel()
+                if (isChanging)
                 {
-                    EmployeeId = EmployeeViewModel.Id.Value,
-                    StartDate = StartContractDate.Value,
-                    FinishDate = FinishContractDate.Value,
-                    Description = ContractDescription
-                });
+                    //поднимаем модель из viewmodel
+                    var viewModel = SelectedCatalogRecord as ContractViewModel;
+                    var model = viewModel?.GetModel();
 
-                if (contract == null)
-                {
-                    MessageBox.Show("Не удалось сохранить контракт: " + cTPrvdr.ErrorInfo, "Ошибка",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    if (model.StartDate == StartContractDate.Value &&
+                        model.Description == ContractDescription &&
+                        model.FinishDate == FinishContractDate.Value)
+                    {
+                        TabsToggle();
+                        return;
+                    }
+
+                    //обновляем модель
+                    model.StartDate = StartContractDate.Value;
+                    model.Description = ContractDescription;
+                    model.FinishDate = FinishContractDate.Value;
+
+                    //обновление в бд
+                    if (!cTPrvdr.Update(model))
+                        MessageBox.Show("Не удалось применить изменения: " + cTPrvdr.ErrorInfo, "Ошибка",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    else
+                    {
+                        Contracts[SelectedCatalogRecordIndex] = new ContractViewModel(model);
+                    }
                 }
-                Contracts.Add(new ContractViewModel(contract));
+                else
+                {
+                    var contract = cTPrvdr.Save(new ContractModel()
+                    {
+                        EmployeeId = EmployeeViewModel.Id.Value,
+                        StartDate = StartContractDate.Value,
+                        FinishDate = FinishContractDate.Value,
+                        Description = ContractDescription
+                    });
+
+                    if (contract == null)
+                    {
+                        MessageBox.Show("Не удалось сохранить контракт: " + cTPrvdr.ErrorInfo, "Ошибка",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                        Contracts.Add(new ContractViewModel(contract));
+                }
             }
 
             StartContractDate = null;
             FinishContractDate = null;
             ContractDescription = String.Empty;
 
-            TabsToggleExecute();
+            TabsToggle();
         }
 
         #endregion
@@ -1935,26 +2382,55 @@ namespace Staffinfo.Desktop.ViewModel
             //заносим нарушение в бд и список
             using (ViolationTableProvider vPrvdr = new ViolationTableProvider())
             {
-                var violation = vPrvdr.Save(new ViolationModel()
+                if (isChanging)
                 {
-                    EmployeeId = EmployeeViewModel.Id.Value,
-                    ViolationDate = ViolationDate.Value,
-                    Description = ViolationDescription
-                });
+                    //поднимаем модель из viewmodel
+                    var viewModel = SelectedCatalogRecord as ViolationViewModel;
+                    var model = viewModel?.GetModel();
 
-                if (violation == null)
-                {
-                    MessageBox.Show("Не удалось сохранить нарушение: " + vPrvdr.ErrorInfo, "Ошибка",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    if (model.ViolationDate == ViolationDate.Value &&
+                        model.Description == ViolationDescription)
+                    {
+                        TabsToggle();
+                        return;
+                    }
+
+                    //обновляем модель
+                    model.ViolationDate = ViolationDate.Value;
+                    model.Description = ViolationDescription;
+
+                    //обновление в бд
+                    if (!vPrvdr.Update(model))
+                        MessageBox.Show("Не удалось применить изменения: " + vPrvdr.ErrorInfo, "Ошибка",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    else
+                    {
+                        Violations[SelectedCatalogRecordIndex] = new ViolationViewModel(model);
+                    }
                 }
-                Violations.Add(new ViolationViewModel(violation));
+                else
+                {
+                    var violation = vPrvdr.Save(new ViolationModel()
+                    {
+                        EmployeeId = EmployeeViewModel.Id.Value,
+                        ViolationDate = ViolationDate.Value,
+                        Description = ViolationDescription
+                    });
+
+                    if (violation == null)
+                    {
+                        MessageBox.Show("Не удалось сохранить нарушение: " + vPrvdr.ErrorInfo, "Ошибка",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                        Violations.Add(new ViolationViewModel(violation));
+                }
             }
 
             ViolationDate = null;
             ViolationDescription = String.Empty;
 
-            TabsToggleExecute();
+            TabsToggle();
         }
 
         #endregion
@@ -1980,7 +2456,7 @@ namespace Staffinfo.Desktop.ViewModel
         /// специальность
         /// </summary>
         private SpecialityModel _speciality;
-        
+
         /// <summary>
         /// Описание
         /// </summary>
@@ -2087,22 +2563,58 @@ namespace Staffinfo.Desktop.ViewModel
             }
             using (EducationTimeTableProvider ePrvdr = new EducationTimeTableProvider())
             {
-                var education = ePrvdr.Save(new EducationTimeModel()
+                if (isChanging)
                 {
-                    EmployeeId = EmployeeViewModel.Id.Value,
-                    StartDate = EducationStartDate.Value,
-                    FinishDate = EducationFinishDate.Value,
-                    InstitutionId = EducationalInstitution.Id.Value,
-                    SpecialityId = Speciality.Id.Value,
-                    Description = EducationDescription
-                });
-                if (education == null)
-                {
-                    MessageBox.Show("Не удалось сохранить запись об обучении: " + ePrvdr.ErrorInfo, "Ошибка",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    //поднимаем модель из viewmodel
+                    var viewModel = SelectedCatalogRecord as EducationalTimeViewModel;
+                    var model = viewModel?.GetModel();
+
+                    if (model.StartDate == EducationStartDate.Value &&
+                        model.FinishDate == EducationFinishDate.Value &&
+                        model.Description == EducationDescription &&
+                        model.InstitutionId == EducationalInstitution.Id &&
+                        model.SpecialityId == Speciality.Id)
+                    {
+                        TabsToggle();
+                        return;
+                    }
+
+                    //обновляем модель
+                    model.StartDate = EducationStartDate.Value;
+                    model.FinishDate = EducationFinishDate.Value;
+                    model.Description = EducationDescription;
+                    model.InstitutionId = EducationalInstitution.Id.Value;
+                    model.SpecialityId = Speciality.Id.Value;
+
+                    //обновление в бд
+                    if (!ePrvdr.Update(model))
+                        MessageBox.Show("Не удалось применить изменения: " + ePrvdr.ErrorInfo, "Ошибка",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    else
+                    {
+                        EducationTimes[SelectedCatalogRecordIndex] = new EducationalTimeViewModel(model);
+                    }
                 }
-                EducationTimes.Add(new EducationalTimeViewModel(education));
+                else
+                {
+                    var education = ePrvdr.Save(new EducationTimeModel()
+                    {
+                        EmployeeId = EmployeeViewModel.Id.Value,
+                        StartDate = EducationStartDate.Value,
+                        FinishDate = EducationFinishDate.Value,
+                        InstitutionId = EducationalInstitution.Id.Value,
+                        SpecialityId = Speciality.Id.Value,
+                        Description = EducationDescription
+                    });
+                    if (education == null)
+                    {
+                        MessageBox.Show("Не удалось сохранить запись об обучении: " + ePrvdr.ErrorInfo, "Ошибка",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                        EducationTimes.Add(new EducationalTimeViewModel(education));
+                }
+                    
 
                 EducationStartDate = null;
                 EducationFinishDate = null;
@@ -2110,7 +2622,7 @@ namespace Staffinfo.Desktop.ViewModel
                 Speciality = null;
                 EducationDescription = String.Empty;
 
-                TabsToggleExecute();
+                TabsToggle();
             }
         }
 
@@ -2231,28 +2743,60 @@ namespace Staffinfo.Desktop.ViewModel
             //заносим отпуск в бд и список
             using (HolidayTimeTableProvider hTPrvdr = new HolidayTimeTableProvider())
             {
-                var holidayTime = hTPrvdr.Save(new HolidayTimeModel()
+                if (isChanging)
                 {
-                    EmployeeId = EmployeeViewModel.Id.Value,
-                    StartDate = StartHolidayDate.Value,
-                    FinishDate = FinishHolidayDate.Value,
-                    Description = HolidayTimeDescription
-                });
+                    //поднимаем модель из viewmodel
+                    var viewModel = SelectedCatalogRecord as HolidayTimeViewModel;
+                    var model = viewModel?.GetModel();
 
-                if (holidayTime == null)
-                {
-                    MessageBox.Show("Не удалось сохранить отпуск: " + hTPrvdr.ErrorInfo, "Ошибка",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    if (model.StartDate == StartHolidayDate.Value &&
+                        model.FinishDate == FinishHolidayDate.Value &&
+                        model.Description == HolidayTimeDescription)
+                    {
+                        TabsToggle();
+                        return;
+                    }
+
+                    //обновляем модель
+                    model.StartDate = StartHolidayDate.Value;
+                    model.FinishDate = FinishHolidayDate.Value;
+                    model.Description = HolidayTimeDescription;
+
+                    //обновление в бд
+                    if (!hTPrvdr.Update(model))
+                        MessageBox.Show("Не удалось применить изменения: " + hTPrvdr.ErrorInfo, "Ошибка",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    else
+                    {
+                        HolidayTimes[SelectedCatalogRecordIndex] = new HolidayTimeViewModel(model);
+                    }
                 }
-                HolidayTimes.Add(new HolidayTimeViewModel(holidayTime));
+                else
+                {
+                    var holidayTime = hTPrvdr.Save(new HolidayTimeModel()
+                    {
+                        EmployeeId = EmployeeViewModel.Id.Value,
+                        StartDate = StartHolidayDate.Value,
+                        FinishDate = FinishHolidayDate.Value,
+                        Description = HolidayTimeDescription
+                    });
+
+                    if (holidayTime == null)
+                    {
+                        MessageBox.Show("Не удалось сохранить отпуск: " + hTPrvdr.ErrorInfo, "Ошибка",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                        HolidayTimes.Add(new HolidayTimeViewModel(holidayTime));
+                }
+                    
             }
 
             StartHolidayDate = null;
             FinishHolidayDate = null;
             HolidayTimeDescription = String.Empty;
 
-            TabsToggleExecute();
+            TabsToggle();
         }
 
         #endregion
@@ -2433,23 +2977,59 @@ namespace Staffinfo.Desktop.ViewModel
             //заносим присвоение должности в бд и список
             using (PostAssignmentTableProvider pAPrvdr = new PostAssignmentTableProvider())
             {
-                var postAssignment = pAPrvdr.Save(new PostAssignmentModel()
+                if (isChanging)
                 {
-                    EmployeeId = EmployeeViewModel.Id.Value,
-                    AssignmentDate = PostAssignmentDate.Value,
-                    OrderNumber = PostAssignmentOrderNumber.Value,
-                    PreviousPostId = PostAssignmentOldPost.Id.Value,
-                    NewPostId = PostAssignmentNewPost.Id.Value,
-                    Description = PostAssignmentDescription
-                });
+                    //поднимаем модель из viewmodel
+                    var viewModel = SelectedCatalogRecord as PostAssignmentViewModel;
+                    var model = viewModel?.GetModel();
 
-                if (postAssignment == null)
-                {
-                    MessageBox.Show("Не удалось сохранить запись: " + pAPrvdr.ErrorInfo, "Ошибка",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    if (model.AssignmentDate == PostAssignmentDate.Value &&
+                        model.Description == PostAssignmentDescription &&
+                        model.NewPostId == PostAssignmentNewPost.Id &&
+                        model.PreviousPostId == PostAssignmentOldPost.Id &&
+                        model.OrderNumber == PostAssignmentOrderNumber)
+                    {
+                        TabsToggle();
+                        return;
+                    }
+
+                    //обновляем модель
+                    model.AssignmentDate = PostAssignmentDate.Value;
+                    model.Description = PostAssignmentDescription;
+                    model.NewPostId = PostAssignmentNewPost.Id.Value;
+                    model.PreviousPostId = PostAssignmentOldPost.Id.Value;
+                    model.OrderNumber = PostAssignmentOrderNumber.Value;
+
+                    //обновление в бд
+                    if (!pAPrvdr.Update(model))
+                        MessageBox.Show("Не удалось применить изменения: " + pAPrvdr.ErrorInfo, "Ошибка",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    else
+                    {
+                        PostAssignments[SelectedCatalogRecordIndex] = new PostAssignmentViewModel(model);
+                    }
                 }
-                PostAssignments.Add(new PostAssignmentViewModel(postAssignment));
+                else
+                {
+                    var postAssignment = pAPrvdr.Save(new PostAssignmentModel()
+                    {
+                        EmployeeId = EmployeeViewModel.Id.Value,
+                        AssignmentDate = PostAssignmentDate.Value,
+                        OrderNumber = PostAssignmentOrderNumber.Value,
+                        PreviousPostId = PostAssignmentOldPost.Id.Value,
+                        NewPostId = PostAssignmentNewPost.Id.Value,
+                        Description = PostAssignmentDescription
+                    });
+
+                    if (postAssignment == null)
+                    {
+                        MessageBox.Show("Не удалось сохранить запись: " + pAPrvdr.ErrorInfo, "Ошибка",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                        PostAssignments.Add(new PostAssignmentViewModel(postAssignment));
+                }
+                    
             }
 
             PostAssignmentDate = null;
@@ -2459,7 +3039,7 @@ namespace Staffinfo.Desktop.ViewModel
 
             PostAssignmentDescription = String.Empty;
 
-            TabsToggleExecute();
+            TabsToggle();
         }
 
         #endregion
@@ -2482,7 +3062,7 @@ namespace Staffinfo.Desktop.ViewModel
         /// Описание
         /// </summary>
         private string _rankAssignmentDescription = String.Empty;
-        
+
         /// <summary>
         /// Старое звание
         /// </summary>
@@ -2492,7 +3072,7 @@ namespace Staffinfo.Desktop.ViewModel
         /// Новое звание
         /// </summary>
         private RankModel _rankAssignmentNewRank;
-        
+
         #endregion
 
         #region Properties
@@ -2609,23 +3189,59 @@ namespace Staffinfo.Desktop.ViewModel
             //заносим присвоение должности в бд и список
             using (RankAssignmentTableProvider rAPrvdr = new RankAssignmentTableProvider())
             {
-                var rankAssignment = rAPrvdr.Save(new RankAssignmentModel()
+                if (isChanging)
                 {
-                    EmployeeId = EmployeeViewModel.Id.Value,
-                    AssignmentDate = RankAssignmentDate.Value,
-                    OrderNumber = RankAssignmentOrderNumber.Value,
-                    PreviousRankId = RankAssignmentOldRank.Id.Value,
-                    NewRankId = RankAssignmentNewRank.Id.Value,
-                    Description = RankAssignmentDescription
-                });
+                    //поднимаем модель из viewmodel
+                    var viewModel = SelectedCatalogRecord as RankAssignmentViewModel;
+                    var model = viewModel?.GetModel();
 
-                if (rankAssignment == null)
-                {
-                    MessageBox.Show("Не удалось сохранить запись: " + rAPrvdr.ErrorInfo, "Ошибка",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    if (model.AssignmentDate == RankAssignmentDate.Value &&
+                        model.Description == RankAssignmentDescription &&
+                        model.NewRankId == RankAssignmentNewRank.Id &&
+                        model.PreviousRankId == RankAssignmentOldRank.Id &&
+                        model.OrderNumber == RankAssignmentOrderNumber)
+                    {
+                        TabsToggle();
+                        return;
+                    }
+
+                    //обновляем модель
+                    model.AssignmentDate = RankAssignmentDate.Value;
+                    model.Description = RankAssignmentDescription;
+                    model.NewRankId = RankAssignmentNewRank.Id.Value;
+                    model.PreviousRankId = RankAssignmentOldRank.Id.Value;
+                    model.OrderNumber = RankAssignmentOrderNumber.Value;
+
+                    //обновление в бд
+                    if (!rAPrvdr.Update(model))
+                        MessageBox.Show("Не удалось применить изменения: " + rAPrvdr.ErrorInfo, "Ошибка",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    else
+                    {
+                        RankAssignments[SelectedCatalogRecordIndex] = new RankAssignmentViewModel(model);
+                    }
                 }
-                RankAssignments.Add(new RankAssignmentViewModel(rankAssignment));
+                else
+                {
+                    var rankAssignment = rAPrvdr.Save(new RankAssignmentModel()
+                    {
+                        EmployeeId = EmployeeViewModel.Id.Value,
+                        AssignmentDate = RankAssignmentDate.Value,
+                        OrderNumber = RankAssignmentOrderNumber.Value,
+                        PreviousRankId = RankAssignmentOldRank.Id.Value,
+                        NewRankId = RankAssignmentNewRank.Id.Value,
+                        Description = RankAssignmentDescription
+                    });
+
+                    if (rankAssignment == null)
+                    {
+                        MessageBox.Show("Не удалось сохранить запись: " + rAPrvdr.ErrorInfo, "Ошибка",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                        RankAssignments.Add(new RankAssignmentViewModel(rankAssignment));
+                }
+                    
             }
 
             RankAssignmentDate = null;
@@ -2635,13 +3251,13 @@ namespace Staffinfo.Desktop.ViewModel
 
             RankAssignmentDescription = String.Empty;
 
-            TabsToggleExecute();
+            TabsToggle();
         }
 
         #endregion
 
         #region Relatives
-        
+
         /// <summary>
         /// Имя родственника
         /// </summary>
@@ -2797,24 +3413,62 @@ namespace Staffinfo.Desktop.ViewModel
             //заносим присвоение должности в бд и список
             using (RelativeTableProvider rPrvdr = new RelativeTableProvider())
             {
-                var relative = rPrvdr.Save(new RelativeModel()
+                if (isChanging)
                 {
-                    EmployeeId = EmployeeViewModel.Id.Value,
-                    FirstName = RelativeFirstName,
-                    LastName = RelativeLastName,
-                    MiddleName = RelativeMiddleName,
-                    RelationType = RelativeType,
-                    BornDate = RelativeBornDate.Value,
-                    Description = RelativeDescription
-                });
+                    //поднимаем модель из viewmodel
+                    var viewModel = SelectedCatalogRecord as RelativeViewModel;
+                    var model = viewModel?.GetModel();
 
-                if (relative == null)
-                {
-                    MessageBox.Show("Не удалось сохранить запись: " + rPrvdr.ErrorInfo, "Ошибка",
-                        MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    if (model.BornDate == RelativeBornDate.Value &&
+                        model.Description == RelativeDescription &&
+                        model.RelationType == RelativeType &&
+                        model.LastName == RelativeLastName &&
+                        model.FirstName == RelativeFirstName &&
+                        model.MiddleName == RelativeMiddleName)
+                    {
+                        TabsToggle();
+                        return;
+                    }
+
+                    //обновляем модель
+                    model.BornDate = RelativeBornDate.Value;
+                    model.Description = RelativeDescription;
+                    model.RelationType = RelativeType;
+                    model.LastName = RelativeLastName;
+                    model.FirstName = RelativeFirstName;
+                    model.MiddleName = RelativeMiddleName;
+
+                    //обновление в бд
+                    if (!rPrvdr.Update(model))
+                        MessageBox.Show("Не удалось применить изменения: " + rPrvdr.ErrorInfo, "Ошибка",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    else
+                    {
+                        Relatives[SelectedCatalogRecordIndex] = new RelativeViewModel(model);
+                    }
                 }
-                Relatives.Add(new RelativeViewModel(relative));
+                else
+                {
+                    var relative = rPrvdr.Save(new RelativeModel()
+                    {
+                        EmployeeId = EmployeeViewModel.Id.Value,
+                        FirstName = RelativeFirstName,
+                        LastName = RelativeLastName,
+                        MiddleName = RelativeMiddleName,
+                        RelationType = RelativeType,
+                        BornDate = RelativeBornDate.Value,
+                        Description = RelativeDescription
+                    });
+
+                    if (relative == null)
+                    {
+                        MessageBox.Show("Не удалось сохранить запись: " + rPrvdr.ErrorInfo, "Ошибка",
+                            MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    else
+                        Relatives.Add(new RelativeViewModel(relative));
+                }
+                    
             }
 
             RelativeFirstName = String.Empty;
@@ -2825,7 +3479,7 @@ namespace Staffinfo.Desktop.ViewModel
 
             RelativeDescription = String.Empty;
 
-            TabsToggleExecute();
+            TabsToggle();
         }
 
         #endregion

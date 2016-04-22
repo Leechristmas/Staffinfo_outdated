@@ -38,8 +38,14 @@ namespace Staffinfo.Desktop.ViewModel
         [DisplayName(@"Воинская часть")]
         public string MilitaryUnit
             =>
-                DataSingleton.Instance.MilitaryUnitList.FirstOrDefault(p => p.Id == _militaryProcessModel.Id)
+                DataSingleton.Instance.MilitaryUnitList.FirstOrDefault(p => p.Id == _militaryProcessModel.MilitaryUnitId)
                     .MilitaryName;
+
+        /// <summary>
+        /// Описание
+        /// </summary>
+        [DisplayName(@"Описание")]
+        public string Description => _militaryProcessModel.Description;
 
         /// <summary>
         /// Возвращает модель

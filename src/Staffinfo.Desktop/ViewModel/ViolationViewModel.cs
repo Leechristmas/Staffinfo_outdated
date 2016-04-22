@@ -22,7 +22,7 @@ namespace Staffinfo.Desktop.ViewModel
         /// Дата нарушения
         /// </summary>
         [DisplayName(@"Дата нарушения")]
-        public string ReprimandDate => _violationModel.ViolationDate.ToString("d");
+        public string ViolationDate => _violationModel.ViolationDate.ToString("d");
         
         /// <summary>
         /// Описание

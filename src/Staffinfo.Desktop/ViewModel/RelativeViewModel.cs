@@ -49,6 +49,12 @@ namespace Staffinfo.Desktop.ViewModel
         public string BornDate => _relativeModel.BornDate.ToString("d");
 
         /// <summary>
+        /// Описание
+        /// </summary>
+        [DisplayName(@"Дополнительно")]
+        public string Description => _relativeModel.Description;
+
+        /// <summary>
         /// Возвращает модель
         /// </summary>
         /// <returns></returns>

@@ -109,7 +109,8 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                         EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
                         Description = sqlDataReader[2].ToString(),
                         StartDate = DateTime.Parse(sqlDataReader[3].ToString()),
-                        FinishDate = DateTime.Parse(sqlDataReader[4].ToString())
+                        FinishDate = DateTime.Parse(sqlDataReader[4].ToString()),
+                        MilitaryUnitId = int.Parse(sqlDataReader[5].ToString())
                     };
 
                     militaryProcessList.Add(militaryProcessModel);
@@ -199,7 +200,8 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                         EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
                         Description = sqlDataReader[2].ToString(),
                         StartDate = DateTime.Parse(sqlDataReader[3].ToString()),
-                        FinishDate = DateTime.Parse(sqlDataReader[4].ToString())
+                        FinishDate = DateTime.Parse(sqlDataReader[4].ToString()),
+                        MilitaryUnitId = int.Parse(sqlDataReader[5].ToString())
                     };
 
                     militaryProcessList.Add(militaryProcess);
