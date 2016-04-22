@@ -137,13 +137,7 @@ namespace Staffinfo.Desktop.Data
         /// </summary>
         public ObservableCollection<MilitaryUnitModel> MilitaryUnitList
             => _militaryUnitList ?? (_militaryUnitList = new ObservableCollection<MilitaryUnitModel>());
-
-        /// <summary>
-        /// Типы родства
-        /// </summary>
-        public ObservableCollection<RelativeTypeModel> RelativeTypeList
-            => _relativeTypeList ?? (_relativeTypeList = new ObservableCollection<RelativeTypeModel>());
-
+        
         /// <summary>
         /// Специальности
         /// </summary>
@@ -193,12 +187,6 @@ namespace Staffinfo.Desktop.Data
             using (var prvdr = new MilitaryUnitTableProvider())
             {
                 Instance._militaryUnitList = prvdr.Select();
-            }
-
-            //Тип родства
-            using (var prvdr = new RelativeTypeTableProvider())
-            {
-                Instance._relativeTypeList = prvdr.Select();
             }
 
             //Специальности

@@ -62,10 +62,11 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             var serviceList = new ObservableCollection<ServiceModel>();
 
             var cmd = new SqlCommand("GET_SERVICE");
+            SqlDataReader sqlDataReader = null;
 
             try
             {
-                var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
+                sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
 
                 while (sqlDataReader.Read())
                 {
@@ -86,6 +87,10 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             {
                 ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;
                 return null;
+            }
+            finally
+            {
+             sqlDataReader?.Close();   
             }
             return serviceList;
         }

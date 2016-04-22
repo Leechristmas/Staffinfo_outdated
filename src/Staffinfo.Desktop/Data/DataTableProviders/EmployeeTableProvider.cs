@@ -173,49 +173,51 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
             try
             {
-                var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
                 
-                while (sqlDataReader.Read())
+
+                using (var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd))
                 {
-                    //Адрес
-                    var address = sqlDataReader["ADDRESS"].ToString();
-                    //Реквизитный состав адреса
-                    var addressProps = address.Split('#');
-                    
-                    //Фотография
-                    var ms = new MemoryStream();
-                    BitmapImage photo = null;
-                    if (sqlDataReader["PHOTO"].ToString() != "")
+                    while (sqlDataReader.Read())
                     {
-                        ms.Write((byte[])sqlDataReader["PHOTO"], 0, ((byte[])sqlDataReader["PHOTO"]).Length);
-                        photo = BitmapImageHelper.ByteToImage(ms.ToArray());
+                        //Адрес
+                        var address = sqlDataReader["ADDRESS"].ToString();
+                        //Реквизитный состав адреса
+                        var addressProps = address.Split('#');
+
+                        //Фотография
+                        var ms = new MemoryStream();
+                        BitmapImage photo = null;
+                        if (sqlDataReader["PHOTO"].ToString() != "")
+                        {
+                            ms.Write((byte[])sqlDataReader["PHOTO"], 0, ((byte[])sqlDataReader["PHOTO"]).Length);
+                            photo = BitmapImageHelper.ByteToImage(ms.ToArray());
+                        }
+
+                        var employeeModel = new EmployeeModel
+                        {
+                            Id = Int64.Parse(sqlDataReader[0].ToString()),
+                            FirstName = sqlDataReader["EMPLOYEE_FIRSTNAME"].ToString(),
+                            LastName = sqlDataReader["EMPLOYEE_LASTNAME"].ToString(),
+                            MiddleName = sqlDataReader["EMPLOYEE_MIDDLENAME"].ToString(),
+                            PersonalNumber = sqlDataReader["PERSONAL_KEY"].ToString(),
+                            PostId = Int64.Parse(sqlDataReader["POST_ID"].ToString()),
+                            RankId = Int64.Parse(sqlDataReader["RANK_ID"].ToString()),
+                            BornDate = DateTime.Parse(sqlDataReader["BORN_DATE"].ToString()),
+                            JobStartDate = DateTime.Parse(sqlDataReader["JOB_START_DATE"].ToString()),
+                            City = addressProps[0],
+                            Street = addressProps[1],
+                            House = addressProps[2],
+                            Flat = addressProps[3],
+                            PasportId = int.Parse(sqlDataReader["PASPORT_ID"].ToString()),
+                            MobilePhoneNumber = sqlDataReader["MOBILE_PHONE_NUMBER"].ToString(),
+                            HomePhoneNumber = sqlDataReader["HOME_PHONE_NUMBER"].ToString(),
+                            IsPensioner = bool.Parse(sqlDataReader["IS_PENSIONER"].ToString()),
+                            Photo = photo
+                        };
+
+                        employeeList.Add(employeeModel);
                     }
-
-                    var employeeModel = new EmployeeModel
-                    {
-                        Id = Int64.Parse(sqlDataReader[0].ToString()),
-                        FirstName = sqlDataReader["EMPLOYEE_FIRSTNAME"].ToString(),
-                        LastName = sqlDataReader["EMPLOYEE_LASTNAME"].ToString(),
-                        MiddleName = sqlDataReader["EMPLOYEE_MIDDLENAME"].ToString(),
-                        PersonalNumber = sqlDataReader["PERSONAL_KEY"].ToString(),
-                        PostId = Int64.Parse(sqlDataReader["POST_ID"].ToString()),
-                        RankId = Int64.Parse(sqlDataReader["RANK_ID"].ToString()),
-                        BornDate = DateTime.Parse(sqlDataReader["BORN_DATE"].ToString()),
-                        JobStartDate = DateTime.Parse(sqlDataReader["JOB_START_DATE"].ToString()),
-                        City = addressProps[0],
-                        Street = addressProps[1],
-                        House = addressProps[2],
-                        Flat = addressProps[3],
-                        PasportId = int.Parse(sqlDataReader["PASPORT_ID"].ToString()),
-                        MobilePhoneNumber = sqlDataReader["MOBILE_PHONE_NUMBER"].ToString(),
-                        HomePhoneNumber = sqlDataReader["HOME_PHONE_NUMBER"].ToString(),
-                        IsPensioner = bool.Parse(sqlDataReader["IS_PENSIONER"].ToString()),
-                        Photo = photo
-                    };
-
-                    employeeList.Add(employeeModel);
                 }
-                sqlDataReader.Close();
 
                 ErrorInfo = null;
             }

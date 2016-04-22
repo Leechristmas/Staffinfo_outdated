@@ -586,12 +586,7 @@ namespace Staffinfo.Desktop.ViewModel
         /// Учебные заведения
         /// </summary>
         public ObservableCollection<EducationalInstitutionModel> EducationalInstitutions => DataSingleton.Instance.EducationalInstitutionList;
-
-        /// <summary>
-        /// Типы родства
-        /// </summary>
-        public ObservableCollection<RelativeTypeModel> RelativeTypes => DataSingleton.Instance.RelativeTypeList;
-
+        
         /// <summary>
         /// Активный справочник
         /// </summary>
@@ -608,7 +603,7 @@ namespace Staffinfo.Desktop.ViewModel
                             return Sertifications ??
                                    (Sertifications =
                                        new ObservableCollection<SertificationViewModel>(
-                                           prvdr.Select().Select(p => new SertificationViewModel(p))));
+                                           prvdr.Select().Where(s => s.EmployeeId == EmployeeViewModel.Id).Select(p => new SertificationViewModel(p))));
                         }
                     case 1:
                         using (var prvdr = new GratitudeTableProvider())
@@ -616,7 +611,7 @@ namespace Staffinfo.Desktop.ViewModel
                             return Gratitudes ??
                                    (Gratitudes =
                                        new ObservableCollection<GratitudeViewModel>(
-                                           prvdr.Select().Select(p => new GratitudeViewModel(p))));
+                                           prvdr.Select().Where(s => s.EmployeeId == EmployeeViewModel.Id).Select(p => new GratitudeViewModel(p))));
                         }
                     case 2:
                         using (var prvdr = new HospitalTimeTableProvider())
@@ -624,7 +619,7 @@ namespace Staffinfo.Desktop.ViewModel
                             return HospitalTimes ??
                                    (HospitalTimes =
                                        new ObservableCollection<HospitalTimeViewModel>(
-                                           prvdr.Select().Select(p => new HospitalTimeViewModel(p))));
+                                           prvdr.Select().Where(s => s.EmployeeId == EmployeeViewModel.Id).Select(p => new HospitalTimeViewModel(p))));
                         }
                     case 3:
                         using (var prvdr = new ReprimandTableProvider())
@@ -632,7 +627,7 @@ namespace Staffinfo.Desktop.ViewModel
                             return Reprimands ??
                                    (Reprimands =
                                        new ObservableCollection<ReprimandViewModel>(
-                                           prvdr.Select().Select(p => new ReprimandViewModel(p))));
+                                           prvdr.Select().Where(s => s.EmployeeId == EmployeeViewModel.Id).Select(p => new ReprimandViewModel(p))));
                         }
                     case 4:
                         using (var prvdr = new MilitaryProcessTableProvider())
@@ -640,7 +635,7 @@ namespace Staffinfo.Desktop.ViewModel
                             return MilitaryProcesses ??
                                    (MilitaryProcesses =
                                        new ObservableCollection<MilitaryProcessViewModel>(
-                                           prvdr.Select().Select(p => new MilitaryProcessViewModel(p))));
+                                           prvdr.Select().Where(s => s.EmployeeId == EmployeeViewModel.Id).Select(p => new MilitaryProcessViewModel(p))));
                         }
                     case 5:
                         using (var prvdr = new ClasinessTableProvider())
@@ -648,7 +643,7 @@ namespace Staffinfo.Desktop.ViewModel
                             return Clasiness ??
                                    (Clasiness =
                                        new ObservableCollection<ClasinessViewModel>(
-                                           prvdr.Select().Select(p => new ClasinessViewModel(p))));
+                                           prvdr.Select().Where(s => s.EmployeeId == EmployeeViewModel.Id).Select(p => new ClasinessViewModel(p))));
                         }
                     case 6:
                         using (var prvdr = new ContractTableProvider())
@@ -656,7 +651,7 @@ namespace Staffinfo.Desktop.ViewModel
                             return Contracts ??
                                    (Contracts =
                                        new ObservableCollection<ContractViewModel>(
-                                           prvdr.Select().Select(p => new ContractViewModel(p))));
+                                           prvdr.Select().Where(s => s.EmployeeId == EmployeeViewModel.Id).Select(p => new ContractViewModel(p))));
                         }
                     case 7:
                         using (var prvdr = new ViolationTableProvider())
@@ -664,7 +659,7 @@ namespace Staffinfo.Desktop.ViewModel
                             return Violations ??
                                    (Violations =
                                        new ObservableCollection<ViolationViewModel>(
-                                           prvdr.Select().Select(p => new ViolationViewModel(p))));
+                                           prvdr.Select().Where(s => s.EmployeeId == EmployeeViewModel.Id).Select(p => new ViolationViewModel(p))));
                         }
                     case 8:
                         using (var prvdr = new EducationTimeTableProvider())
@@ -672,7 +667,7 @@ namespace Staffinfo.Desktop.ViewModel
                             return EducationTimes ??
                                    (EducationTimes =
                                        new ObservableCollection<EducationalTimeViewModel>(
-                                           prvdr.Select().Select(p => new EducationalTimeViewModel(p))));
+                                           prvdr.Select().Where(s => s.EmployeeId == EmployeeViewModel.Id).Select(p => new EducationalTimeViewModel(p))));
                         }
                     case 9:
                         using (var prvdr = new HolidayTimeTableProvider())
@@ -680,7 +675,7 @@ namespace Staffinfo.Desktop.ViewModel
                             return HolidayTimes ??
                                    (HolidayTimes =
                                        new ObservableCollection<HolidayTimeViewModel>(
-                                           prvdr.Select().Select(p => new HolidayTimeViewModel(p))));
+                                           prvdr.Select().Where(s => s.EmployeeId == EmployeeViewModel.Id).Select(p => new HolidayTimeViewModel(p))));
                         }
                     case 10:
                         using (var prvdr = new PostAssignmentTableProvider())
@@ -688,7 +683,7 @@ namespace Staffinfo.Desktop.ViewModel
                             return PostAssignments ??
                                    (PostAssignments =
                                        new ObservableCollection<PostAssignmentViewModel>(
-                                           prvdr.Select().Select(p => new PostAssignmentViewModel(p))));
+                                           prvdr.Select().Where(s => s.EmployeeId == EmployeeViewModel.Id).Select(p => new PostAssignmentViewModel(p))));
                         }
                     case 11:
                         using (var prvdr = new RankAssignmentTableProvider())
@@ -696,7 +691,7 @@ namespace Staffinfo.Desktop.ViewModel
                             return RankAssignments ??
                                    (RankAssignments =
                                        new ObservableCollection<RankAssignmentViewModel>(
-                                           prvdr.Select().Select(p => new RankAssignmentViewModel(p))));
+                                           prvdr.Select().Where(s => s.EmployeeId == EmployeeViewModel.Id).Select(p => new RankAssignmentViewModel(p))));
                         }
                     case 12:
                         using (var prvdr = new RelativeTableProvider())
@@ -704,7 +699,7 @@ namespace Staffinfo.Desktop.ViewModel
                             return Relatives ??
                                    (Relatives =
                                        new ObservableCollection<RelativeViewModel>(
-                                           prvdr.Select().Select(p => new RelativeViewModel(p))));
+                                           prvdr.Select().Where(s => s.EmployeeId == EmployeeViewModel.Id).Select(p => new RelativeViewModel(p))));
                         }
                     default:
                         return null;

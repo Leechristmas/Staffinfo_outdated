@@ -169,7 +169,7 @@ CREATE TABLE EMPLOYEE(
 	JOB_START_DATE DATE NOT NULL,
 	ADDRESS	VARCHAR(120),
 	PASPORT_ID	INT NOT NULL,
-	MOBILE_PHONE_NUMBER VARCHAR(13),
+	MOBILE_PHONE_NUMBER VARCHAR(20),
 	HOME_PHONE_NUMBER VARCHAR(10),
 	IS_PENSIONER BIT DEFAULT 0,
 	PHOTO IMAGE);
@@ -325,11 +325,11 @@ INSERT INTO SERVICE
 	VALUES('Аппарат отряда', 100),
 		('Группа кадров и делопроизводства', 200),
 		('Центр оперативного управления', 300),
-		('Медицинская', 400),
-		('Водолазно-спасательная', 500),
-		('Взрывотезническая', 600),
+		('Медицинская служба', 400),
+		('Водолазно-спасательная служба', 500),
+		('Взрывотезническая служба', 600),
 		('Служба химической и радиационной защиты', 700),
-		('Пожарно-спасательная', 800),
+		('Пожарно-спасательная служба', 800),
 		('Отделение инженерных работ', 801),
 		('Кинологическое отделение', 802),
 		('Отделение связи и оповещения', 803),
@@ -986,6 +986,16 @@ INSERT INTO USERS VALUES(@USER_LOGIN,
 						 @FIRST_NAME,
 						 @MIDDLE_NAME);
 SELECT MAX(ID) FROM USERS;
+
+GO
+--ВОЗВРАЩАЕТ АКТУАЛЬНУЮ КЛАССНОСТЬ ДЛЯ СОТРУДНИКА
+CREATE PROCEDURE GET_CURRENT_CLASINESS
+				@EMPLOYEE_ID INT
+AS
+SELECT * FROM CLASINESS WHERE EMPLOYEE_ID = @EMPLOYEE_ID AND 
+							CLASINESS_DATE = (SELECT MAX(CLASINESS_DATE)
+											  FROM CLASINESS C
+											  WHERE C.EMPLOYEE_ID = @EMPLOYEE_ID);
 
 GO
 -------------------------------------------------------------------------

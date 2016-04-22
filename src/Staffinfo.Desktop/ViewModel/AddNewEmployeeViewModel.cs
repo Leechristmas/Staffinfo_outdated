@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
@@ -313,6 +314,7 @@ namespace Staffinfo.Desktop.ViewModel
         /// <summary>
         /// Номер мобильного телефона
         /// </summary>
+        [Phone]
         public string MobilePhoneNumber
         {
             get { return _mobilePhoneNumber; }

@@ -11,7 +11,7 @@
                         Title="Отчеты" Height="700" Width="700"
                         DataContext="{Binding Source={StaticResource Locator}, Path=Reports}"
                         helpers:WindowCloseHelper.WindowsClose="{Binding WindowsClosed}">
-    <Grid>
+    <Grid IsEnabled="{Binding ViewIsEnable}">
         <ListBox ItemsSource="{Binding Reports}"
                  SelectedItem="{Binding SelectedReport}"
                  ScrollViewer.CanContentScroll="true"
@@ -31,9 +31,9 @@
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Border BorderBrush="Black" 
-                                BorderThickness="2" 
-                                Margin="1" 
-                                Padding="10">
+                            BorderThickness="2" 
+                            Margin="1" 
+                            Padding="10">
                         <StackPanel Orientation="Vertical">
                             <TextBlock Text="{Binding Name}" 
                                            />
@@ -41,27 +41,6 @@
                                            TextWrapping="WrapWithOverflow" 
                                            FontWeight="Normal"
                                            FontStyle="Italic"/>
-
-                            <Button Name="AddEmployeeBtn"
-                                    FontSize="18"
-                                    IsEnabled="{Binding IsAdmin}" 
-                                    Style="{DynamicResource ChromelessButtonStyle}"
-                                    MinHeight="20" Margin="0"
-                                    Command="{Binding GetReport}"
-                                    Height="30"
-                                    VerticalAlignment="Top"
-                                    HorizontalAlignment="Right">
-                                <StackPanel Orientation="Horizontal">
-                                    <Rectangle Width="20"
-                                           Height="20"
-                                           Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
-                                        <Rectangle.OpacityMask>
-                                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_page_excel}" />
-                                        </Rectangle.OpacityMask>
-                                    </Rectangle>
-                                    <TextBlock Text=" Отчет"/>
-                                </StackPanel>
-                            </Button>
                             <StackPanel Orientation="Horizontal">
                             </StackPanel>
                         </StackPanel>
@@ -73,16 +52,43 @@
                     VerticalAlignment="Bottom">
             <Border Background="LightGray"
                     Height="25">
-                <Button Name="CloseBtn"
-                        FontSize="16"
-                        Content="Закрыть"
-                        VerticalAlignment="Bottom"
-                        Style="{StaticResource ButtonStyle}"
-                        MinHeight="20"
-                        MinWidth="100"
-                        Margin="0"
-                        Command="{Binding CloseWindowCommand}"
-                        HorizontalAlignment="Right"/>
+                    <Grid Margin="0,1">
+                        <TextBlock Foreground="Red"
+                                   Text="{Binding Error}"
+                                   HorizontalAlignment="Left"
+                                   FontSize="16"
+                                   FontWeight="DemiBold"
+                                   Margin="5,0"/>
+                        <Button FontSize="16"
+                                IsEnabled="{Binding IsAdmin}" 
+                                Style="{DynamicResource ChromelessButtonStyle}"
+                                MinHeight="20" Margin="100,0"
+                                Command="{Binding GetReport}"
+                                Height="25"
+                                VerticalAlignment="Bottom"
+                                HorizontalAlignment="Right">
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Width="20"
+                                           Height="20"
+                                           Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                                    <Rectangle.OpacityMask>
+                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_page_excel}" />
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                                <TextBlock Text=" Отчет"/>
+                            </StackPanel>
+                        </Button>
+                        <Button Name="CloseBtn"
+                                FontSize="16"
+                                Content="Закрыть"
+                                VerticalAlignment="Bottom"
+                                Style="{StaticResource ButtonStyle}"
+                                Height="25"
+                                MinWidth="100"
+                                Margin="0"
+                                Command="{Binding CloseWindowCommand}"
+                                HorizontalAlignment="Right"/>
+                    </Grid>
             </Border>
             <StackPanel VerticalAlignment="Bottom"
                                 Orientation="Horizontal"

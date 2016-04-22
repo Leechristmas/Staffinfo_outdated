@@ -178,7 +178,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         /// <summary>
         /// Возвращает список подтверждений классности по id служащего
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">id служащего</param>
         /// <returns></returns>
         public ObservableCollection<ClasinessModel> SelectByEmployeeId(long? id)
         {
@@ -188,23 +188,23 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
             try
             {
-                var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
-
-                while (sqlDataReader.Read())
+                using (var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd))
                 {
-                    var clasinessModel = new ClasinessModel
+                    while (sqlDataReader.Read())
                     {
-                        Id = Int64.Parse(sqlDataReader[0].ToString()),
-                        EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
-                        OrderNumber = UInt16.Parse(sqlDataReader[2].ToString()),
-                        ClasinessDate = DateTime.Parse(sqlDataReader[3].ToString()),
-                        ClasinessLevel = Byte.Parse(sqlDataReader[4].ToString()),
-                        Description = sqlDataReader[5].ToString()
-                    };
+                        var clasinessModel = new ClasinessModel
+                        {
+                            Id = Int64.Parse(sqlDataReader[0].ToString()),
+                            EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
+                            OrderNumber = UInt16.Parse(sqlDataReader[2].ToString()),
+                            ClasinessDate = DateTime.Parse(sqlDataReader[3].ToString()),
+                            ClasinessLevel = Byte.Parse(sqlDataReader[4].ToString()),
+                            Description = sqlDataReader[5].ToString()
+                        };
 
-                    clasinessList.Add(clasinessModel);
+                        clasinessList.Add(clasinessModel);
+                    }
                 }
-                sqlDataReader.Close();
 
                 ErrorInfo = null;
             }
@@ -214,8 +214,45 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 return null;
             }
             return clasinessList;
-        } 
-        
+        }
+
+        /// <summary>
+        /// Возвращает актуальную классность для служащего
+        /// </summary>
+        /// <param name="employeeId">id служащего</param>
+        /// <returns></returns>
+        public ClasinessModel SelectActualClasiness(long? employeeId)
+        {
+            var cmd = new SqlCommand($"GET_CURRENT_CLASINESS {employeeId}");
+            
+            try
+            {
+                ClasinessModel clasinessModel = null;
+                using (var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd))
+                {
+                    sqlDataReader.Read();
+                    clasinessModel = new ClasinessModel
+                    {
+                        Id = Int64.Parse(sqlDataReader[0].ToString()),
+                        EmployeeId = Int64.Parse(sqlDataReader[1].ToString()),
+                        OrderNumber = UInt16.Parse(sqlDataReader[2].ToString()),
+                        ClasinessDate = DateTime.Parse(sqlDataReader[3].ToString()),
+                        ClasinessLevel = Byte.Parse(sqlDataReader[4].ToString()),
+                        Description = sqlDataReader[5].ToString()
+                    };
+                }
+                
+                ErrorInfo = null;
+
+                return clasinessModel;
+            }
+            catch (Exception ex)
+            {
+                ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;
+                return null;
+            }
+        }
+
         #endregion
 
         #region IDisposable implementation

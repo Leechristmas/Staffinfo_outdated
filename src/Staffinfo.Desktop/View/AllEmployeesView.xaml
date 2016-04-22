@@ -40,10 +40,11 @@
             <RowDefinition/>
             <RowDefinition Height="45"/>
         </Grid.RowDefinitions>
-        <StackPanel Grid.Column="0">
+        <Grid Grid.Column="0">
             <ToolBar VerticalAlignment="Top"
                      IsEnabled="{Binding IsAdmin}">
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal"
+                            Height="32">
                     <Button ToolTip="Добавить сотрудника"
                             Command="{Binding GoToAddingNewEmployee}"
                             BorderThickness="0"
@@ -75,7 +76,7 @@
                 </StackPanel>
             </ToolBar>
             <!--Список сотрудников-->
-            <Grid Margin="0"
+            <Grid Margin="0,30,0,0"
                   Width="Auto">
                 <controls:MetroTabControl SelectedIndex="{Binding ActualTab}">
                     <controls:MetroTabItem>
@@ -160,7 +161,7 @@
                     </controls:MetroTabItem>
                 </controls:MetroTabControl>
             </Grid>
-        </StackPanel>
+        </Grid>
         <Grid Grid.Row="0"
               Grid.Column="1"
               Width="{Binding MenuWidth}"
