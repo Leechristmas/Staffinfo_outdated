@@ -869,6 +869,48 @@ namespace Staffinfo.Desktop.ViewModel
         private void TabsToggle()
         {
             SelectedTabIndex = SelectedTabIndex == 0 ? 1 : 0;
+            switch (SelectedCatalogIndex)
+            {
+                case 0:
+                    SertificationSetDefault();
+                    break;
+                case 1:
+                    GratitudeSetDefault();
+                    break;
+                case 2:
+                    HospitalTimeSetDefault();
+                    break;
+                case 3:
+                    ReprimandSetDefault();
+                    break;
+                case 4:
+                    MilitarySetDefault();
+                    break;
+                case 5:
+                    ClasinessSetDefault();
+                    break;
+                case 6:
+                    ContractSetDefault();
+                    break;
+                case 7:
+                    ViolationSetDefault();
+                    break;
+                case 8:
+                    EducationSetDefault();
+                    break;
+                case 9:
+                    HolidayTimeSetDefault();
+                    break;
+                case 10:
+                    PostAssignmentSetDefault();
+                    break;
+                case 11:
+                    RankAssignmentSetDefault();
+                    break;
+                case 12:
+                    RelativeSetDefault();
+                    break;
+            }
         }
 
         #endregion
@@ -897,6 +939,145 @@ namespace Staffinfo.Desktop.ViewModel
                     MessageBoxImage.Error);
             }
             return pasport;
+        }
+
+        /// <summary>
+        /// Установить значения полей аттестации по умолчанию
+        /// </summary>
+        private void SertificationSetDefault()
+        {
+            SertificationDate = null;
+            SertificationDescription = String.Empty;
+        }
+
+        /// <summary>
+        /// Установить значения полей благодарности по умолчанию
+        /// </summary>
+        private void GratitudeSetDefault()
+        {
+            GratitudeDate = null;
+            GratitudeDescription = String.Empty;
+        }
+
+        /// <summary>
+        /// Установить значения полей больничного по умолчанию
+        /// </summary>
+        private void HospitalTimeSetDefault()
+        {
+            StartHospitalDate = null;
+            FinishHospitalDate = null;
+            HospitalTimeDescription = String.Empty;
+        }
+
+        /// <summary>
+        /// Установить значения полей взыскания по умолчанию
+        /// </summary>
+        private void ReprimandSetDefault()
+        {
+            ReprimandDate = null;
+            ReprimandDescription = String.Empty;
+            ReprimandSum = String.Empty;
+        }
+
+        /// <summary>
+        /// Установить значения полей прохождения службы по умолчанию
+        /// </summary>
+        private void MilitarySetDefault()
+        {
+            MilitaryStartDate = null;
+            MilitaryFinishDate = null;
+            MilitaryUnit = null;
+            MilitaryDescription = String.Empty;
+        }
+
+        /// <summary>
+        /// Установить значение полей классности по умолчанию
+        /// </summary>
+        private void ClasinessSetDefault()
+        {
+            ClasinessDate = null;
+            ClasinessOrderNumber = null;
+            ClasinessDegree = null;
+            ClasinessDescription = String.Empty;
+        }
+
+        /// <summary>
+        /// Установить значения полей контракта по умолчанию
+        /// </summary>
+        private void ContractSetDefault()
+        {
+            StartContractDate = null;
+            FinishContractDate = null;
+            ContractDescription = String.Empty;
+        }
+
+        /// <summary>
+        /// Установить значение полей нарушения по умолчанию
+        /// </summary>
+        private void ViolationSetDefault()
+        {
+            ViolationDate = null;
+            ViolationDescription = String.Empty;
+        }
+
+        /// <summary>
+        /// Установить значение полей обучения по умолчанию
+        /// </summary>
+        private void EducationSetDefault()
+        {
+            EducationStartDate = null;
+            EducationFinishDate = null;
+            EducationalInstitution = null;
+            Speciality = null;
+            EducationDescription = String.Empty;
+        }
+
+        /// <summary>
+        /// Установить значение полей отпуска по умолчанию
+        /// </summary>
+        private void HolidayTimeSetDefault()
+        {
+            StartHolidayDate = null;
+            FinishHolidayDate = null;
+            HolidayTimeDescription = String.Empty;
+        }
+
+        /// <summary>
+        /// Установить значение полей присвоения должности по умолчанию
+        /// </summary>
+        private void PostAssignmentSetDefault()
+        {
+            PostAssignmentDate = null;
+            PostAssignmentOrderNumber = null;
+            PostAssignmentOldPost = null;
+            PostAssignmentNewPost = null;
+            PostAssignmentDescription = String.Empty;
+        }
+
+        /// <summary>
+        /// Установить значение полей присвоения звания по умолчанию
+        /// </summary>
+        private void RankAssignmentSetDefault()
+        {
+            RankAssignmentDate = null;
+            RankAssignmentOrderNumber = null;
+            RankAssignmentOldRank = null;
+            RankAssignmentNewRank = null;
+            RankAssignmentDescription = String.Empty;
+        }
+
+        /// <summary>
+        /// Установить значение полей родственника по умолчанию
+        /// </summary>
+        private void RelativeSetDefault()
+        {
+            RelativeFirstName = String.Empty;
+            RelativeLastName = String.Empty;
+            RelativeMiddleName = String.Empty;
+            RelativeType = null;
+            RelativeBornDate = null;
+
+            RelativeDescription = String.Empty;
         }
 
         #endregion
@@ -1409,8 +1590,7 @@ namespace Staffinfo.Desktop.ViewModel
                 }
             }
 
-            SertificationDate = null;
-            SertificationDescription = String.Empty;
+            SertificationSetDefault();
 
             TabsToggle();
         }
@@ -1521,8 +1701,7 @@ namespace Staffinfo.Desktop.ViewModel
                 }
             }
 
-            GratitudeDate = null;
-            GratitudeDescription = String.Empty;
+            GratitudeSetDefault();
 
             TabsToggle();
         }
@@ -1660,9 +1839,7 @@ namespace Staffinfo.Desktop.ViewModel
                 }
             }
 
-            StartHospitalDate = null;
-            FinishHospitalDate = null;
-            HospitalTimeDescription = String.Empty;
+            HospitalTimeSetDefault();
 
             TabsToggle();
         }
@@ -1802,9 +1979,7 @@ namespace Staffinfo.Desktop.ViewModel
                 }
             }
 
-            ReprimandDate = null;
-            ReprimandDescription = String.Empty;
-            ReprimandSum = String.Empty;
+            ReprimandSetDefault();
 
             TabsToggle();
         }
@@ -1966,11 +2141,7 @@ namespace Staffinfo.Desktop.ViewModel
                         MilitaryProcesses.Add(new MilitaryProcessViewModel(militaryProcess));
                 }
                 
-
-                MilitaryStartDate = null;
-                MilitaryFinishDate = null;
-                MilitaryUnit = null;
-                MilitaryDescription = String.Empty;
+                MilitarySetDefault();
 
                 TabsToggle();
             }
@@ -2152,11 +2323,7 @@ namespace Staffinfo.Desktop.ViewModel
                         Clasiness.Add(new ClasinessViewModel(clasiness));
                 }
                 
-
-                ClasinessDate = null;
-                ClasinessOrderNumber = null;
-                ClasinessDegree = null;
-                ClasinessDescription = String.Empty;
+                ClasinessSetDefault();
 
                 TabsToggle();
             }
@@ -2301,9 +2468,7 @@ namespace Staffinfo.Desktop.ViewModel
                 }
             }
 
-            StartContractDate = null;
-            FinishContractDate = null;
-            ContractDescription = String.Empty;
+            ContractSetDefault();
 
             TabsToggle();
         }
@@ -2427,8 +2592,7 @@ namespace Staffinfo.Desktop.ViewModel
                 }
             }
 
-            ViolationDate = null;
-            ViolationDescription = String.Empty;
+            ViolationSetDefault();
 
             TabsToggle();
         }
@@ -2616,11 +2780,6 @@ namespace Staffinfo.Desktop.ViewModel
                 }
                     
 
-                EducationStartDate = null;
-                EducationFinishDate = null;
-                EducationalInstitution = null;
-                Speciality = null;
-                EducationDescription = String.Empty;
 
                 TabsToggle();
             }
@@ -2792,9 +2951,7 @@ namespace Staffinfo.Desktop.ViewModel
                     
             }
 
-            StartHolidayDate = null;
-            FinishHolidayDate = null;
-            HolidayTimeDescription = String.Empty;
+            HolidayTimeSetDefault();
 
             TabsToggle();
         }
@@ -3032,12 +3189,7 @@ namespace Staffinfo.Desktop.ViewModel
                     
             }
 
-            PostAssignmentDate = null;
-            PostAssignmentOrderNumber = null;
-            PostAssignmentOldPost = null;
-            PostAssignmentNewPost = null;
-
-            PostAssignmentDescription = String.Empty;
+            PostAssignmentSetDefault();
 
             TabsToggle();
         }
@@ -3244,12 +3396,7 @@ namespace Staffinfo.Desktop.ViewModel
                     
             }
 
-            RankAssignmentDate = null;
-            RankAssignmentOrderNumber = null;
-            RankAssignmentOldRank = null;
-            RankAssignmentNewRank = null;
-
-            RankAssignmentDescription = String.Empty;
+            RankAssignmentSetDefault();
 
             TabsToggle();
         }
@@ -3471,13 +3618,7 @@ namespace Staffinfo.Desktop.ViewModel
                     
             }
 
-            RelativeFirstName = String.Empty;
-            RelativeLastName = String.Empty;
-            RelativeMiddleName = String.Empty;
-            RelativeType = null;
-            RelativeBornDate = null;
-
-            RelativeDescription = String.Empty;
+            RelativeSetDefault();
 
             TabsToggle();
         }
