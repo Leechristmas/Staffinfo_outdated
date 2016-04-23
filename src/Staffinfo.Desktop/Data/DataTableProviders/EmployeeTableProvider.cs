@@ -331,6 +331,35 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             return true;
         }
 
+        /// <summary>
+        /// Возвращает количество дней выслуги по id служащего
+        /// </summary>
+        /// <param name="employeeId">id служащего</param>
+        /// <returns></returns>
+        public long? GetExpirienceDays(long? employeeId)
+        {
+            if(!employeeId.HasValue) throw new ArgumentNullException(nameof(employeeId), Resources.DatabaseConnector_parameter_cannot_be_null);
+            var cmd = new SqlCommand($@"SELECT 'DAYS' = DBO.GET_EXPIRIENCE_DAYS({employeeId})");
+
+            try
+            {
+                using (var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd))
+                {
+                    sqlDataReader.Read();
+
+                    //количество дней
+                    long? days = Int64.Parse(sqlDataReader["DAYS"].ToString());
+
+                    return days;
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;
+                return -1;
+            }
+        }
+
         #endregion
 
         #region IDisposable implementation

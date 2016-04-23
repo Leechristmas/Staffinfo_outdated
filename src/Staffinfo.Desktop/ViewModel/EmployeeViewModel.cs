@@ -344,5 +344,6 @@ namespace Staffinfo.Desktop.ViewModel
         });
 
         #endregion
+
     }
 }

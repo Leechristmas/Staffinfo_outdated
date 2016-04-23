@@ -16,6 +16,7 @@ using Staffinfo.Desktop.Data;
 using Staffinfo.Desktop.Data.DataTableProviders;
 using Staffinfo.Desktop.Helpers;
 using Staffinfo.Desktop.Model;
+using Staffinfo.Desktop.Shared;
 using Staffinfo.Desktop.View;
 
 
@@ -190,6 +191,11 @@ namespace Staffinfo.Desktop.ViewModel
         #region Properties
 
         /// <summary>
+        /// Выслуга лет
+        /// </summary>
+        public string ExpirienceTime => GetExpirience();
+
+        /// <summary>
         /// Индекс выбранного "таба" (datagrid или добавление/редактирование pfgbcb)
         /// </summary>
         public int SelectedTabIndex
@@ -314,7 +320,7 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 _jobStartDate = value;
                 RaisePropertyChanged();
-
+                RaisePropertyChanged(nameof(ExpirienceTime));
                 WasChanged = (_jobStartDate != EmployeeViewModel.JobStartDate);
             }
         }
@@ -917,6 +923,88 @@ namespace Staffinfo.Desktop.ViewModel
          
         #region Methods
 
+        /// <summary>
+        /// Возвращает строковое представление выслуги лет
+        /// TODO: коэффициент!
+        /// </summary>
+        /// <returns></returns>
+        private string GetExpirience()
+        {
+            long expDays = 0, years = 0, month = 0, days = 0;
+
+            using (EmployeeTableProvider prvdr = new EmployeeTableProvider())
+            {
+                expDays = prvdr.GetExpirienceDays(EmployeeViewModel.Id.Value).Value;
+            }
+            if (expDays == -1) return "Не удалось рассчитать";
+            
+            //добавить перерасчет по коэффициенту
+
+            //расчет лет
+            while (expDays > 365)
+            {
+                years++;
+                expDays -= 365;
+            }
+
+            //месяцы и дни
+            for (Months i = Months.January; i <= Months.December; i++)
+            {
+                if (i == Months.January ||
+                    i == Months.March ||
+                    i == Months.May ||
+                    i == Months.July ||
+                    i == Months.August ||
+                    i == Months.October ||
+                    i == Months.December)
+                {
+                    if (expDays > 31)
+                    {
+                        expDays -= 31;
+                        month++;
+                    }
+                    else
+                    {
+                        days = expDays;
+                        break;
+                    }
+                }
+                else if (i == Months.February)
+                {
+                    if (expDays > 28)
+                    {
+                        expDays -= 28;
+                        month++;
+                    }
+                    else
+                    {
+                        days = expDays;
+                        break;
+                    }
+                }
+                else
+                {
+                    if (expDays > 30)
+                    {
+                        expDays -= 30;
+                        month++;
+                    }
+                    else
+                    {
+                        days = expDays;
+                        break;
+                    }
+                }
+            }
+
+
+            //for (int i = JobStartDate.Value.Year; i <= DateTime.Now.Year; i++)
+            //{
+            //    if (i%4 == 0) expDays++;
+            //}
+
+            return $@"{years} лет {month} месяцев {days} дней";
+        }
 
         /// <summary>
         /// Подбирает паспорт из БД по id
@@ -1838,7 +1926,8 @@ namespace Staffinfo.Desktop.ViewModel
                         HospitalTimes.Add(new HospitalTimeViewModel(hospitalTime));
                 }
             }
-
+            //пересчитываем выслугу
+            RaisePropertyChanged(nameof(ExpirienceTime));
             HospitalTimeSetDefault();
 
             TabsToggle();
@@ -2950,6 +3039,8 @@ namespace Staffinfo.Desktop.ViewModel
                 }
                     
             }
+            //пересчитываем выслугу
+            RaisePropertyChanged(nameof(ExpirienceTime));
 
             HolidayTimeSetDefault();
 

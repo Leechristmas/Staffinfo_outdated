@@ -310,7 +310,7 @@
                                                    FontSize="16"
                                                    IsEnabled="{Binding IsAdmin}" 
                                                    Margin="1,2"
-                                                   Text="ХХ лет ХХ месяцев ХХ дней"/>
+                                                   Text="{Binding ExpirienceTime}"/>
                                     </StackPanel>
                                 </Expander>
                             </StackPanel>

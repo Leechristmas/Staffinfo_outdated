@@ -142,6 +142,19 @@ namespace Staffinfo.Desktop.ViewModel
         }
 
         /// <summary>
+        /// Текст ошибки при неудачной сортировке
+        /// </summary>
+        public string SortErrorText
+        {
+            get { return _sortErrorText; }
+            set
+            {
+                _sortErrorText = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
         /// Выбранный тип сортировки
         /// </summary>
         public string SelectedSortType
@@ -412,23 +425,14 @@ namespace Staffinfo.Desktop.ViewModel
         }
 
         /// <summary>
-        /// Переходим к фильтрации и обратно
+        /// Переходим к фильтрации
         /// </summary>
         private RelayCommand _toFilterView;
         public RelayCommand ToFilterView => _toFilterView ?? (_toFilterView = new RelayCommand(ToFilterViewExecute));
 
         private void ToFilterViewExecute()
         {
-            if (ActualTab == 0)
-            {
-                ActualTab = 1;
-                FiltrationBtnVisibility = Visibility.Collapsed;
-            }
-            else
-            {
-                ActualTab = 0;
-                FiltrationBtnVisibility = Visibility.Visible;
-            }
+            
         }
 
         /// <summary>
@@ -439,8 +443,14 @@ namespace Staffinfo.Desktop.ViewModel
 
         private void ApplySortExecute()
         {
+            SortErrorText = null;
+
             if (SelectedSortParameter == null ||
-                SelectedSortType == null) return; //TODO: отругать
+                SelectedSortType == null)
+            {
+                SortErrorText = "Не все параметры указаны";
+                return;
+            }
 
             switch (SelectedSortParameter)
             {
@@ -473,11 +483,14 @@ namespace Staffinfo.Desktop.ViewModel
         /// <summary>
         /// TODO
         /// </summary>
-        private RelayCommand _acceptFiltration;
-        public RelayCommand AcceptFiltration
-            => _acceptFiltration ?? (_acceptFiltration = new RelayCommand(AcceptFiltrationExecute));
+        private RelayCommand _applyFiltration;
 
-        private void AcceptFiltrationExecute()
+        private string _sortErrorText;
+
+        public RelayCommand ApplyFiltration
+            => _applyFiltration ?? (_applyFiltration = new RelayCommand(ApplyFiltrationExecute));
+
+        private void ApplyFiltrationExecute()
         {
             var t = Ranks.Where(p => p.IsSelected);
             var t2 = t.Count();

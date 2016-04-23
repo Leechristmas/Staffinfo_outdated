@@ -184,6 +184,7 @@
     <Compile Include="Shared\AuthorizationException.cs" />
     <Compile Include="Shared\DatabaseNotFoundException.cs" />
     <Compile Include="Shared\DatabaseWasNotCreatedException.cs" />
+    <Compile Include="Shared\Months.cs" />
     <Compile Include="ViewModel\AddNewEducationalInstitutionViewModel.cs" />
     <Compile Include="ViewModel\AddNewEmployeeViewModel.cs" />
     <Compile Include="ViewModel\AddNewMilitaryUnitViewModel.cs" />

@@ -292,11 +292,14 @@
                                           SelectedValue="{Binding SelectedSortType}"
                                           ToolTip="Тип сортировки (по возрастанию/убыванию)"
                                           SelectedValuePath="Content"
-                                          Margin="0,10"
+                                          Margin="0,5"
                                           IsReadOnly="True">
                                     <ComboBoxItem Content="по возрастанию"/>
                                     <ComboBoxItem Content="по убыванию"/>
                                 </ComboBox>
+                                <TextBlock Text="{Binding SortErrorText}"
+                                           FontSize="14"
+                                           Foreground="Red"/>
                                 <Button FontSize="18"
                                         Content="Применить"
                                         Style="{DynamicResource ChromelessButtonStyle}"

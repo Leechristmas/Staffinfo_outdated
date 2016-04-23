@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Staffinfo.Desktop.Data;
 using Staffinfo.Desktop.Data.DataTableProviders;
 using Staffinfo.Desktop.Model;
 
@@ -11,6 +12,7 @@ namespace Staffinfo.Tests.DataTests
         [TestMethod]
         public void AddNewEmployeeIsSuccess()
         {
+            DataSingleton.Instance.DatabaseConnector = new DatabaseConnector("Data Source=DESKTOP-2B54QFI\\SQLEXPRESS;Initial Catalog=STAFFINFO_TESTS; Integrated Security=SSPI;");
             using (var prvdr = new EmployeeTableProvider())
             {
                 var employee = prvdr.Save(new EmployeeModel
@@ -42,6 +44,7 @@ namespace Staffinfo.Tests.DataTests
         [TestMethod]
         public void GetEmployeeById()
         {
+            DataSingleton.Instance.DatabaseConnector = new DatabaseConnector("Data Source=DESKTOP-2B54QFI\\SQLEXPRESS;Initial Catalog=STAFFINFO_TESTS; Integrated Security=SSPI;");
             using (var prvdr = new EmployeeTableProvider())
             {
                 var employeeModel = prvdr.Select(1);
@@ -54,6 +57,7 @@ namespace Staffinfo.Tests.DataTests
         [TestMethod]
         public void GetAllEmployees_HasElements()
         {
+            DataSingleton.Instance.DatabaseConnector = new DatabaseConnector("Data Source=DESKTOP-2B54QFI\\SQLEXPRESS;Initial Catalog=STAFFINFO_TESTS; Integrated Security=SSPI;");
             using (var prvdr = new EmployeeTableProvider())
             {
                 var employeeList = prvdr.Select();
@@ -66,6 +70,7 @@ namespace Staffinfo.Tests.DataTests
         [TestMethod]
         public void UpdateEmployee()
         {
+            DataSingleton.Instance.DatabaseConnector = new DatabaseConnector("Data Source=DESKTOP-2B54QFI\\SQLEXPRESS;Initial Catalog=STAFFINFO_TESTS; Integrated Security=SSPI;");
             using (var prvdr = new EmployeeTableProvider())
             {
                 Assert.IsTrue(prvdr.Update(new EmployeeModel
@@ -89,6 +94,18 @@ namespace Staffinfo.Tests.DataTests
                     IsPensioner = false,
                     Photo = null
                 }));
+            }
+        }
+
+        [TestMethod]
+        [Description("Выслуга лет в днях")]
+        public void GetExpirienceDays()
+        {
+            DataSingleton.Instance.DatabaseConnector = new DatabaseConnector("Data Source=DESKTOP-2B54QFI\\SQLEXPRESS;Initial Catalog=STAFFINFO_TESTS; Integrated Security=SSPI;");
+            using (var prvdr = new EmployeeTableProvider())
+            {
+                var days = prvdr.GetExpirienceDays(1);
+                Assert.IsFalse(days == -1);
             }
         }
     }
