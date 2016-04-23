@@ -14,7 +14,7 @@ namespace Staffinfo.Desktop.ViewModel
     /// <summary>
     /// ViewModel для окна со списком служащих
     /// </summary>
-    public class AllEmployeesViewModel: WindowViewModelBase
+    public class AllEmployeesViewModel : WindowViewModelBase
     {
         public AllEmployeesViewModel()
         {
@@ -28,7 +28,7 @@ namespace Staffinfo.Desktop.ViewModel
 
             Ranks = DataSingleton.Instance.RankList.Select(p => new RankViewModel(p)).ToList();
         }
-        
+
         #region Fields
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace Staffinfo.Desktop.ViewModel
         /// <summary>
         /// Ширина бокового меню
         /// </summary>
-        private int _menuWidth = 150;
+        private int _menuWidth = 35;
 
         /// <summary>
         /// Текущий таб (фильтрация/раб. область)
@@ -71,6 +71,21 @@ namespace Staffinfo.Desktop.ViewModel
         /// </summary>
         private bool _canDelete;
 
+        /// <summary>
+        /// Текущий таб функционального меню
+        /// </summary>
+        private int _menuTabIndex;
+
+        /// <summary>
+        /// Параметр сортировки
+        /// </summary>
+        private string _selectedSortParameter;
+
+        /// <summary>
+        /// Тип сортировки
+        /// </summary>
+        private string _selectedSortType;
+
         ///// <summary>
         ///// Ширина рабочей области
         ///// </summary>
@@ -85,6 +100,59 @@ namespace Staffinfo.Desktop.ViewModel
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Текущий таб функционального меню
+        /// </summary>    
+        public int MenuTabIndex
+        {
+            get { return _menuTabIndex; }
+            set
+            {
+                _menuTabIndex = value;
+                RaisePropertyChanged();
+                RaisePropertyChanged(nameof(MenuHeader));
+            }
+        }
+
+        /// <summary>
+        /// Заголовок функционального меню
+        /// </summary>
+        public string MenuHeader
+        {
+            get
+            {
+                if (MenuTabIndex == 0) return "Меню";
+                if (MenuTabIndex == 1) return "Сортировка";
+                return "Фильтрация";
+            }
+        }
+
+        /// <summary>
+        /// Выбранный параметр сортировки
+        /// </summary>
+        public string SelectedSortParameter
+        {
+            get { return _selectedSortParameter; }
+            set
+            {
+                _selectedSortParameter = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Выбранный тип сортировки
+        /// </summary>
+        public string SelectedSortType
+        {
+            get { return _selectedSortType; }
+            set
+            {
+                _selectedSortType = value;
+                RaisePropertyChanged();
+            }
+        }
 
         /// <summary>
         /// Ширина бокового меню
@@ -186,7 +254,7 @@ namespace Staffinfo.Desktop.ViewModel
             get { return _selectedEmployee; }
             set
             {
-                _selectedEmployee = value; 
+                _selectedEmployee = value;
                 RaisePropertyChanged(nameof(SelectedEmployee));
             }
         }
@@ -238,6 +306,29 @@ namespace Staffinfo.Desktop.ViewModel
         #region Commands
 
         /// <summary>
+        /// Перейти к сортировке
+        /// </summary>
+        private RelayCommand _goToSortView;
+        public RelayCommand GoToSortView => _goToSortView ?? (_goToSortView = new RelayCommand(GoToSortViewExecute));
+
+        private void GoToSortViewExecute()
+        {
+            MenuTabIndex = 1;
+            if (MenuWidth == 35) MenuWidth = 200;
+        }
+
+        /// <summary>
+        /// Перейти к функциональному боковому меню
+        /// </summary>
+        private RelayCommand _goToMainMenu;
+        public RelayCommand GoToMainMenu => _goToMainMenu ?? (_goToMainMenu = new RelayCommand(GoToMainMenuExecute));
+
+        private void GoToMainMenuExecute()
+        {
+            MenuTabIndex = 0;
+        }
+
+        /// <summary>
         /// Открыть окно добавления служащего
         /// </summary>
         private RelayCommand _goToAddingNewEmployee;
@@ -246,11 +337,11 @@ namespace Staffinfo.Desktop.ViewModel
 
         private void GoToAddingNewEmployeeExecute()
         {
-            var addNewEmployeeView = new AddNewEmployeeView {DataContext = new AddNewEmployeeViewModel()};
+            var addNewEmployeeView = new AddNewEmployeeView { DataContext = new AddNewEmployeeViewModel() };
             addNewEmployeeView.ShowDialog();
             //CanDelete = Employees.Count > 0;
         }
-        
+
         /// <summary>
         /// Удалить служащего
         /// </summary>
@@ -274,7 +365,7 @@ namespace Staffinfo.Desktop.ViewModel
                 MessageBoxImage.Question, MessageBoxResult.No);
 
             if (remove == MessageBoxResult.No) return;
-            
+
             using (var prvdr = new EmployeeTableProvider())
             {
                 if (!prvdr.DeleteById(item.Id))
@@ -299,7 +390,7 @@ namespace Staffinfo.Desktop.ViewModel
 
         private void ShowEmployeeExecute()
         {
-            var employeeView = new EmployeeView {DataContext = new EmployeeEditViewModel(SelectedEmployee) };
+            var employeeView = new EmployeeView { DataContext = new EmployeeEditViewModel(SelectedEmployee) };
             employeeView.ShowDialog();
         }
 
@@ -312,7 +403,12 @@ namespace Staffinfo.Desktop.ViewModel
 
         private void ToggleMenuWidthExecute()
         {
-            MenuWidth = MenuWidth == 150 ? 35 : 150;
+            MenuWidth = MenuWidth == 200 ? 35 : 200;
+            if (MenuTabIndex != 0)
+            {
+                MenuTabIndex = 0;
+                SetDefaultSortRequisites();
+            }
         }
 
         /// <summary>
@@ -336,6 +432,45 @@ namespace Staffinfo.Desktop.ViewModel
         }
 
         /// <summary>
+        /// Применить сортировку
+        /// </summary>
+        private RelayCommand _applySort;
+        public RelayCommand ApplySort => _applySort ?? (_applySort = new RelayCommand(ApplySortExecute));
+
+        private void ApplySortExecute()
+        {
+            if (SelectedSortParameter == null ||
+                SelectedSortType == null) return; //TODO: отругать
+
+            switch (SelectedSortParameter)
+            {
+                case "по званию":
+                    Employees = SelectedSortType == "по возрастанию"
+                        ? new ObservableCollection<EmployeeViewModel>(_employees.OrderBy(e => e.Rank.RankWeight))
+                        : new ObservableCollection<EmployeeViewModel>(
+                            _employees.OrderByDescending(e => e.Rank.RankWeight));
+                    break;
+                case "по возрасту":
+                    Employees = SelectedSortType == "по возрастанию"
+                        ? new ObservableCollection<EmployeeViewModel>(_employees.OrderBy(e => e.Age))
+                        : new ObservableCollection<EmployeeViewModel>(
+                            _employees.OrderByDescending(e => e.Age));
+                    break;
+                case "по фамилии":
+                    Employees = SelectedSortType == "по возрастанию"
+                        ? new ObservableCollection<EmployeeViewModel>(_employees.OrderBy(e => e.LastName))
+                        : new ObservableCollection<EmployeeViewModel>(
+                            _employees.OrderByDescending(e => e.LastName));
+                    break;
+            }
+
+            //обнуляем поля сортировки
+            SetDefaultSortRequisites();
+            //переходим к функциональному меню
+            MenuTabIndex = 0;
+        }
+
+        /// <summary>
         /// TODO
         /// </summary>
         private RelayCommand _acceptFiltration;
@@ -349,5 +484,14 @@ namespace Staffinfo.Desktop.ViewModel
         }
 
         #endregion
+
+        /// <summary>
+        /// Устанавливает реквизиты сортировки по умолчанию
+        /// </summary>
+        public void SetDefaultSortRequisites()
+        {
+            SelectedSortParameter = null;
+            SelectedSortType = null;
+        }
     }
 }

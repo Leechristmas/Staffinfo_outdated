@@ -34,7 +34,7 @@
     <Grid IsEnabled="{Binding ViewIsEnable}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="200"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -168,83 +168,150 @@
               HorizontalAlignment="Right">
             <GroupBox Margin="0">
                 <GroupBox.Header>
-                        <Button Background="Transparent"
-                                BorderThickness="0"
-                                HorizontalAlignment="Left"
-                                Style="{StaticResource ButtonStyle}"
-                                MinWidth="20"
-                                Command="{Binding ToggleMenuWidth}">
-                            <StackPanel>
-                                <Rectangle Width="15"
-                                           Height="15"
-                                           Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
-                                    <Rectangle.OpacityMask>
-                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_list}" />
-                                    </Rectangle.OpacityMask>
-                                </Rectangle>
-                            </StackPanel>
-                        </Button>
-                </GroupBox.Header>
-                <Grid>
-                    <Button Name="AddEmployeeBtn"
-                            FontSize="18"
-                            IsEnabled="{Binding IsAdmin}" 
-                            Style="{DynamicResource ChromelessButtonStyle}"
-                            MinHeight="20" Margin="0"
-                            Command="{Binding GoToAddingNewEmployee}"
-                            Height="30"
-                            VerticalAlignment="Top"
-                            HorizontalAlignment="Left">
                         <StackPanel Orientation="Horizontal">
-                            <Rectangle Width="20"
+                            <Button Background="Transparent"
+                                    BorderThickness="0"
+                                    HorizontalAlignment="Left"
+                                    Style="{StaticResource ButtonStyle}"
+                                    MinWidth="20"
+                                    Command="{Binding ToggleMenuWidth}">
+                                <StackPanel>
+                                    <Rectangle Width="15"
+                                               Height="15"
+                                               Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_list}" />
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                </StackPanel>
+                            </Button>
+                            <TextBlock Text="{Binding MenuHeader}"
+                                       Margin="5,0"
+                                       Foreground="White"/>
+                    </StackPanel>
+                </GroupBox.Header>
+                <controls:MetroTabControl   SelectedIndex="{Binding MenuTabIndex}">
+                    <controls:MetroTabItem>
+                        <Grid>
+                            <Button Name="AddEmployeeBtn"
+                                    FontSize="18"
+                                    IsEnabled="{Binding IsAdmin}" 
+                                    Style="{DynamicResource ChromelessButtonStyle}"
+                                    MinHeight="20" Margin="0"
+                                    Command="{Binding GoToAddingNewEmployee}"
+                                    Height="30"
+                                    VerticalAlignment="Top"
+                                    HorizontalAlignment="Left">
+                                <StackPanel Orientation="Horizontal">
+                                    <Rectangle Width="20"
                                            Height="20"
                                            Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
-                                <Rectangle.OpacityMask>
-                                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_user_add}" />
-                                </Rectangle.OpacityMask>
-                            </Rectangle>
-                            <TextBlock Text=" Добавить"/>
-                        </StackPanel>
-                    </Button>
-                    <Button Name="RemoveEmployeeBtn"
-                                FontSize="18"
-                                IsEnabled="{Binding IsAdmin}"  
-                                Style="{DynamicResource ChromelessButtonStyle}"
-                                Height="30" Margin="0,30,0,0"
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_user_add}" />
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                    <TextBlock Text=" Добавить"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Name="RemoveEmployeeBtn"
+                                    FontSize="18"
+                                    IsEnabled="{Binding IsAdmin}"  
+                                    Style="{DynamicResource ChromelessButtonStyle}"
+                                    Height="30" Margin="0,30,0,0"
                             VerticalAlignment="Top"
                             HorizontalAlignment="Left"
                                 Command="{Binding RemoveEmployee}">
-                        <StackPanel Orientation="Horizontal">
-                            <Rectangle Width="20"
+                                <StackPanel Orientation="Horizontal">
+                                    <Rectangle Width="20"
                                            Height="20"
                                            Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
-                                <Rectangle.OpacityMask>
-                                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_user_delete}" />
-                                </Rectangle.OpacityMask>
-                            </Rectangle>
-                            <TextBlock Text=" Удалить"/>
-                        </StackPanel>
-                    </Button>
-                    <Button Name="ToFiltrationView"
-                            FontSize="18"
-                            Style="{DynamicResource ChromelessButtonStyle}"
-                            Height="30" Margin="0,60,0,0"
-                            VerticalAlignment="Top"
-                            HorizontalAlignment="Left"
-                            Command="{Binding ToFilterView}"
-                            Visibility="{Binding FiltrationBtnVisibility}">
-                        <StackPanel Orientation="Horizontal">
-                            <Rectangle Width="20"
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_user_delete}" />
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                    <TextBlock Text=" Удалить"/>
+                                </StackPanel>
+                            </Button>
+                            <Button Name="ToFiltrationView"
+                                    FontSize="18"
+                                    Style="{DynamicResource ChromelessButtonStyle}"
+                                    Height="30" Margin="0,60,0,0"
+                                    VerticalAlignment="Top"
+                                    HorizontalAlignment="Left"
+                                    Command="{Binding ToFilterView}"
+                                    Visibility="{Binding FiltrationBtnVisibility}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Rectangle Width="20"
                                            Height="20"
                                            Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
-                                <Rectangle.OpacityMask>
-                                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_filter}" />
-                                </Rectangle.OpacityMask>
-                            </Rectangle>
-                            <TextBlock Text=" Фильтр"/>
-                        </StackPanel>
-                    </Button>
-                </Grid>
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_filter}" />
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                    <TextBlock Text=" Фильтр"/>
+                                </StackPanel>
+                            </Button>
+                            <Button FontSize="18"
+                                    Style="{DynamicResource ChromelessButtonStyle}"
+                                    Height="30" Margin="0,90,0,0"
+                                    VerticalAlignment="Top"
+                                    HorizontalAlignment="Left"
+                                    Command="{Binding GoToSortView}">
+                                <StackPanel Orientation="Horizontal">
+                                    <Rectangle Width="20"
+                                           Height="20"
+                                           Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_sort}" />
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                    <TextBlock Text=" Сортировать"/>
+                                </StackPanel>
+                            </Button>
+                        </Grid>
+                    </controls:MetroTabItem>
+                    <controls:MetroTabItem>
+                        <Grid>
+                            <StackPanel Orientation="Vertical">
+                                <ComboBox FontSize="14"
+                                          Height="30"
+                                          controls:TextBoxHelper.Watermark="Параметр"
+                                          controls:TextBoxHelper.ClearTextButton="True"
+                                          SelectedValue="{Binding SelectedSortParameter}"
+                                          SelectedValuePath="Content"
+                                          ToolTip="Параметр, по которому следует выполнить сортировку"
+                                          IsReadOnly="True">
+                                    <ComboBoxItem Content="по званию"/>
+                                    <ComboBoxItem Content="по фамилии"/>
+                                    <ComboBoxItem Content="по возрасту"/>
+                                </ComboBox>
+                                <ComboBox FontSize="14"
+                                          Height="30"
+                                          controls:TextBoxHelper.Watermark="Тип"
+                                          controls:TextBoxHelper.ClearTextButton="True"
+                                          SelectedValue="{Binding SelectedSortType}"
+                                          ToolTip="Тип сортировки (по возрастанию/убыванию)"
+                                          SelectedValuePath="Content"
+                                          Margin="0,10"
+                                          IsReadOnly="True">
+                                    <ComboBoxItem Content="по возрастанию"/>
+                                    <ComboBoxItem Content="по убыванию"/>
+                                </ComboBox>
+                                <Button FontSize="18"
+                                        Content="Применить"
+                                        Style="{DynamicResource ChromelessButtonStyle}"
+                                        Command="{Binding ApplySort}"/>
+                            </StackPanel>
+                            <Button Height="30"
+                                    FontSize="18"
+                                    Content="Назад"
+                                    Style="{DynamicResource ChromelessButtonStyle}"
+                                    VerticalAlignment="Bottom"
+                                    Command="{Binding GoToMainMenu}"/>
+                        </Grid>
+                        
+                    </controls:MetroTabItem>
+                </controls:MetroTabControl>
             </GroupBox>
         </Grid>
 

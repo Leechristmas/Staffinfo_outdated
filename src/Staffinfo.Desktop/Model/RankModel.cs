@@ -1,4 +1,6 @@
-﻿namespace Staffinfo.Desktop.Model
+﻿using System.Collections;
+
+namespace Staffinfo.Desktop.Model
 {
     /// <summary>
     /// Модель звания
