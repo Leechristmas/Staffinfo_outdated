@@ -13,6 +13,7 @@ namespace Staffinfo.Desktop.ViewModel
 
         public PartialUserViewModel(UserModel user)
         {
+            _id = user.Id;
             _login = user.Login;
             _firstName = user.FirstName;
             _lastName = user.LastName;
@@ -20,6 +21,8 @@ namespace Staffinfo.Desktop.ViewModel
         }
 
         #region Fields
+
+        private readonly long? _id;
 
         /// <summary>
         /// Имя
@@ -47,6 +50,8 @@ namespace Staffinfo.Desktop.ViewModel
 
 
         #region Properties
+
+        public long? Id => _id;
 
         /// <summary>
         /// Имя

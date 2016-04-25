@@ -60,7 +60,6 @@
                                    FontWeight="DemiBold"
                                    Margin="5,0"/>
                         <Button FontSize="16"
-                                IsEnabled="{Binding IsAdmin}" 
                                 Style="{DynamicResource ChromelessButtonStyle}"
                                 MinHeight="20" Margin="100,0"
                                 Command="{Binding GetReport}"

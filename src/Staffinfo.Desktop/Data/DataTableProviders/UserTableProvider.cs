@@ -219,7 +219,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         }
 
         /// <summary>
-        /// TODO
+        /// Обновляет пользователя
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
@@ -244,7 +244,33 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         }
 
         /// <summary>
-        /// TODO
+        /// Обновляет пароль пользователя
+        /// </summary>
+        /// <param name="userId">id пользователя</param>
+        /// <param name="password">новый пароль</param>
+        /// <returns></returns>
+        public bool UpdatePassword(long? userId, string password)
+        {
+            if (userId == null) throw new ArgumentNullException(nameof(userId), Resources.DatabaseConnector_parameter_cannot_be_null);
+
+            var cmd = new SqlCommand($@"UPDATE USERS SET USER_PASSWORD = '{password}' WHERE ID = {userId}");
+
+            try
+            {
+                DataSingleton.Instance.DatabaseConnector.Execute(cmd);
+                ErrorInfo = null;
+            }
+            catch (Exception ex)
+            {
+                ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Удаляет пользователя по id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>

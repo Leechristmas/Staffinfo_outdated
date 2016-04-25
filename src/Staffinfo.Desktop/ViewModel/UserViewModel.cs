@@ -51,8 +51,44 @@ namespace Staffinfo.Desktop.ViewModel
         }
 
         #endregion
-        
+
         #region Fields
+
+        /// <summary>
+        /// Индекс выбранного пользователя
+        /// </summary>
+        private int? _selectedUserIndex;
+
+        /// <summary>
+        /// Текст ошибки при добавлении пользователя
+        /// </summary>
+        private string _addUserErrorText;
+        
+        /// <summary>
+        /// Имя добавляемого пользователя
+        /// </summary>
+        private string _newUserFirstName = String.Empty;
+
+        /// <summary>
+        /// Фамилия добавляемого пользователя
+        /// </summary>
+        private string _newUserLastName = String.Empty;
+
+        /// <summary>
+        /// Отчество добавляемого пользователя
+        /// </summary>
+        private string _newUserMiddleName = String.Empty;
+
+        /// <summary>
+        /// Логин добавляемого пользователя
+        /// </summary>
+        private string _newUserLogin = String.Empty;
+
+        /// <summary>
+        /// Пароль добавляемого пользователя
+        /// </summary>
+        private string _newUserPassword = String.Empty;
+
         /// <summary>
         /// Отчество
         /// </summary>
@@ -87,9 +123,42 @@ namespace Staffinfo.Desktop.ViewModel
         /// Индекс активного таба
         /// </summary>
         private int _selectedTabIndex;
+
+        /// <summary>
+        /// Старый пароль
+        /// </summary>
+        private string _oldPassword;
+
+        /// <summary>
+        /// Новый пароль
+        /// </summary>
+        private string _newPassword;
+
+        /// <summary>
+        /// Подтверждение пароля
+        /// </summary>
+        private string _confirmPassword;
+
+        /// <summary>
+        /// Текст ошибки
+        /// </summary>
+        private string _errorText;
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Индекс выбранного пользователя
+        /// </summary>
+        public int? SelectedUserIndex
+        {
+            get { return _selectedUserIndex; }
+            set
+            {
+                _selectedUserIndex = value;
+                RaisePropertyChanged();
+            }
+        }
 
         /// <summary>
         /// Был ли изменен пользователь
@@ -181,13 +250,151 @@ namespace Staffinfo.Desktop.ViewModel
             }
         }
 
-
+        /// <summary>
+        /// Индекс активного таба (пользователи/смена пароля/добавление пользователя)
+        /// </summary>
         public int SelectedTabIndex
         {
             get { return _selectedTabIndex; }
             set
             {
                 _selectedTabIndex = value;
+                RaisePropertyChanged(nameof(CanDelete));
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Старый пароль
+        /// </summary>
+        public string OldPassword
+        {
+            get { return _oldPassword; }
+            set
+            {
+                _oldPassword = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Новый пароль
+        /// </summary>
+        public string NewPassword
+        {
+            get { return _newPassword; }
+            set
+            {
+                _newPassword = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Подтверждение пароля
+        /// </summary>
+        public string ConfirmPassword
+        {
+            get { return _confirmPassword; }
+            set
+            {
+                _confirmPassword = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Текст ошибки
+        /// </summary>
+        public string ErrorText
+        {
+            get { return _errorText; }
+            set
+            {
+                _errorText = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Текст ошибки рпи добавлении пользователя
+        /// </summary>
+        public string AddUserErrorText
+        {
+            get { return _addUserErrorText; }
+            set
+            {
+                _addUserErrorText = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Enable для кнопки удаления
+        /// </summary>
+        public bool CanDelete => SelectedTabIndex == 1 && UserList.ModelCollection.Count > 0;
+
+        /// <summary>
+        /// Имя добавляемого пользователя
+        /// </summary>
+        public string NewUserFirstName
+        {
+            get { return _newUserFirstName; }
+            set
+            {
+                _newUserFirstName = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Фамилия добавляемого пользователя
+        /// </summary>
+        public string NewUserLastName
+        {
+            get { return _newUserLastName; }
+            set
+            {
+                _newUserLastName = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// ОТчество добавляемого пользователя
+        /// </summary>
+        public string NewUserMiddleName
+        {
+            get { return _newUserMiddleName; }
+            set
+            {
+                _newUserMiddleName = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Логин добавляемого пользователя
+        /// </summary>
+        public string NewUserLogin
+        {
+            get { return _newUserLogin; }
+            set
+            {
+                _newUserLogin = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Пароль добавляемого польтзователя
+        /// </summary>
+        public string NewUserPassword
+        {
+            get { return _newUserPassword; }
+            set
+            {
+                _newUserPassword = value;
                 RaisePropertyChanged();
             }
         }
@@ -203,7 +410,38 @@ namespace Staffinfo.Desktop.ViewModel
         private RelayCommand _showPasswordChanging;
         private void ShowPasswordChangingExecute()
         {
+            NewPassword = String.Empty;
+            OldPassword = String.Empty;
+            ConfirmPassword = String.Empty;
             SelectedTabIndex = SelectedTabIndex == 0 ? 2 : 0;
+        }
+
+        #endregion
+
+        #region ToMainTab command
+        /// <summary>
+        /// Перейти к изменению пароля
+        /// </summary>
+        private RelayCommand _toMainTab;
+        public RelayCommand ToMainTab
+            => _toMainTab ?? (_toMainTab = new RelayCommand(ToMainTabExecute));
+        private void ToMainTabExecute()
+        {
+            SelectedTabIndex = 0;
+            SetAddUserRequisitesDefault();
+        }
+        #endregion
+
+        #region ToAddOnTab command
+        /// <summary>
+        /// Перейти к добавлению
+        /// </summary>
+        private RelayCommand _toAddTab;
+        public RelayCommand ToAddTab
+            => _toAddTab ?? (_toAddTab = new RelayCommand(ToAddTabExecute));
+        private void ToAddTabExecute()
+        {
+            SelectedTabIndex = 3;
         }
 
         #endregion
@@ -223,30 +461,183 @@ namespace Staffinfo.Desktop.ViewModel
 
             using (var prvdr = new UserTableProvider())
             {
-                if (!prvdr.Update(new UserModel
+                var updatedUser = new UserModel
                 {
                     Id = User.Id,
-                    Login = User.Login,
-                    Password = User.Password,
-                    LastName = User.LastName,
-                    FirstName = User.FirstName,
-                    MiddleName = User.MiddleName,
-                    AccessLevel = User.AccessLevel
-                }))
+                    Login = Login,
+                    Password = Password,
+                    LastName = LastName,
+                    FirstName = FirstName,
+                    MiddleName = MiddleName,
+                    AccessLevel = AccessLevel
+                };
+                if (!prvdr.Update(updatedUser))
                 {
                     MessageBox.Show("Не удалось сохранить изменения", "Ошибка", MessageBoxButton.OK,
                         MessageBoxImage.Error, MessageBoxResult.OK);
                     return;
                 }
-                User.Login = Login;
-                User.Password = Password;
-                User.AccessLevel = AccessLevel;
-                User.LastName = LastName;
-                User.FirstName = FirstName;
-                User.MiddleName = MiddleName;
+                User = updatedUser;
             }
         }
 
         #endregion
+
+        #region AcceptNewPassword command
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private RelayCommand _acceptNewPassword;
+
+        public RelayCommand AcceptNewPassword
+            => _acceptNewPassword ?? (_acceptNewPassword = new RelayCommand(AcceptNewPasswordExecute));
+
+        private void AcceptNewPasswordExecute()
+        {
+            ErrorText = null;
+
+            if (String.CompareOrdinal(OldPassword, User.Password) != 0)
+            {
+                ErrorText = "Текущий пароль указан неверно";
+                return;
+            }
+            if (String.CompareOrdinal(ConfirmPassword, NewPassword) != 0)
+            {
+                ErrorText = "Пароли не совпадают.";
+                ConfirmPassword = String.Empty;
+                return;
+            }
+            if (NewPassword.Length < 5)
+            {
+                ErrorText = "Не достаточно длинный пароль. Минимальное количество символов - 5";
+                return;
+            }
+            if (NewPassword.Length > 15)
+            {
+                ErrorText = "Слишком длинный пароль. Максимальное количество символов - 15";
+            }
+
+            using (var prvdr = new UserTableProvider())
+            {
+                if (!prvdr.UpdatePassword(User.Id, NewPassword))
+                {
+                    MessageBox.Show("Не удалось обновить пароль!" + prvdr.ErrorInfo, "Ошибка", MessageBoxButton.OK,
+                        MessageBoxImage.Error, MessageBoxResult.OK);
+                    return;
+                }
+            }
+            User.Password = NewPassword;
+            ToMainTabExecute();
+        }
+
+        #endregion
+
+        #region AddUser command
+
+        /// <summary>
+        /// Добавить пользователя
+        /// </summary>
+        private RelayCommand _addUser;
+
+        public RelayCommand AddUser => _addUser ?? (_addUser = new RelayCommand(AddUserExecute));
+
+        private void AddUserExecute()
+        {
+            AddUserErrorText = null;
+
+            if (NewUserFirstName.Length < 3 || NewUserFirstName.Length > 15)
+            {
+                AddUserErrorText = "Имя указано некорректно.";
+                return;
+            }
+            if (NewUserLastName.Length < 3 || NewUserLastName.Length > 20)
+            {
+                AddUserErrorText = "Фамилия указана некорректно.";
+                return;
+            }
+            if (NewUserMiddleName.Length < 3 || NewUserMiddleName.Length > 15)
+            {
+                AddUserErrorText = "Отчество указано некорректно.";
+                return;
+            }
+            if (NewUserLogin.Length < 5 || NewUserLogin.Length > 15)
+            {
+                AddUserErrorText = "Логин указан некорректно.";
+                return;
+            }
+            if (NewUserPassword.Length < 5 || NewUserPassword.Length > 15)
+            {
+                AddUserErrorText = "Пароль указан некорректно.";
+                return;
+            }
+
+            using (var prvdr = new UserTableProvider())
+            {
+                var user = prvdr.Save(new UserModel
+                {
+                    LastName = NewUserLastName,
+                    FirstName = NewUserFirstName,
+                    MiddleName = NewUserMiddleName,
+                    Login = NewUserLogin,
+                    Password = NewUserPassword,
+                    AccessLevel = 0
+                });
+                if (user == null)
+                {
+                    MessageBox.Show("Не удалось добавить пользователя." + prvdr.ErrorInfo, "Ошибка", MessageBoxButton.OK,
+                        MessageBoxImage.Error, MessageBoxResult.OK);
+                    return;
+                }
+                UserList.ModelCollection.Add(new PartialUserViewModel(user));
+            }
+            SetAddUserRequisitesDefault();
+            SelectedTabIndex = 1;
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Удалить пользователя
+        /// </summary>
+        private RelayCommand _removeUser;
+        public RelayCommand RemoveUser => _removeUser ?? (_removeUser = new RelayCommand(RemoveUserExecute));
+
+        private void RemoveUserExecute()
+        {
+            if (SelectedUserIndex == null)
+            {
+                MessageBox.Show("Пользователь не выбран.", "Ошибка", MessageBoxButton.OK,
+                         MessageBoxImage.Error, MessageBoxResult.OK);
+                return;
+            }
+
+            if (UserList.SelectedItem.Id == User.Id)
+            {
+                MessageBox.Show("Операция невозможна. Обратитесь к администритору базы данных.", "Ошибка", MessageBoxButton.OK,
+                         MessageBoxImage.Error, MessageBoxResult.OK);
+                return;
+            }
+
+            using (var prvdr = new UserTableProvider())
+            {
+                if (!prvdr.DeleteById(UserList.SelectedItem.Id))
+                {
+                    MessageBox.Show("Не удалось удалить пользователя." + prvdr.ErrorInfo, "Ошибка", MessageBoxButton.OK,
+                        MessageBoxImage.Error, MessageBoxResult.OK);
+                    return;
+                }
+                if (SelectedUserIndex != null) UserList.ModelCollection.RemoveAt(SelectedUserIndex.Value);
+            }
+        }
+
+        /// <summary>
+        /// Устанавливает значения реквизитов добавления пользователя по умолчанию
+        /// </summary>
+        private void SetAddUserRequisitesDefault()
+        {
+            NewUserFirstName = NewUserMiddleName = NewUserLastName = NewUserLogin = NewUserPassword = null;
+        }
+
     }
 }

@@ -7,13 +7,17 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:helpers="clr-namespace:Staffinfo.Desktop.Helpers"
         mc:Ignorable="d"
-        Title="Пользователи" Height="400" Width="500"
+        Title="Пользователи" Height="400" Width="600"
         helpers:WindowCloseHelper.WindowsClose="{Binding WindowsClosed}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="45"/>
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="165"/>
+        </Grid.ColumnDefinitions>
         <controls:MetroTabControl Name="UserTabCtrl"
                                   SelectedIndex="{Binding SelectedTabIndex}">
             <controls:MetroTabItem Name="CurrentUserTab">
@@ -27,7 +31,9 @@
                         </ContentPresenter>
                     </DataTemplate>
                 </controls:MetroTabItem.HeaderTemplate>
-                <StackPanel Orientation="Vertical">
+                
+                <StackPanel Orientation="Vertical"
+                            IsEnabled="{Binding IsAdmin}">
                     <StackPanel Orientation="Horizontal"
                                 Margin="10">
                         <StackPanel Orientation="Vertical"
@@ -62,7 +68,6 @@
                                      FontSize="14"
                                      MinWidth="150"
                                      Text="{Binding Login}"
-                                     IsEnabled="{Binding IsAdmin}"
                                      Margin="10,10,20,10"/>
 
                             <StackPanel Orientation="Horizontal">
@@ -81,7 +86,6 @@
                                         MinHeight="20"
                                         Height="30"
                                         VerticalAlignment="Top"
-                                        IsEnabled="{Binding IsAdmin}"
                                         Command="{Binding ShowPasswordChanging}"/>
                             </StackPanel>
 
@@ -89,20 +93,17 @@
                                      FontSize="14"
                                      MinWidth="150"
                                      Text="{Binding LastName}"
-                                     IsEnabled="{Binding IsAdmin}"
                                      Margin="10,2,20,10"/>
 
                             <TextBox Name="FirstNameTBox"
                                      FontSize="14"
                                      MinWidth="150"
                                      Text="{Binding FirstName}"
-                                     IsEnabled="{Binding IsAdmin}"
                                      Margin="10,2,20,10"/>
                             <TextBox x:Name="MiddleNameTBox"
                                      FontSize="14"
                                      MinWidth="150"
                                      Text="{Binding MiddleName}"
-                                     IsEnabled="{Binding IsAdmin}"
                                      Margin="10,2,20,10"/>
                             <ComboBox Name="AccessLevelTBox"
                                       FontSize="14"
@@ -115,10 +116,16 @@
                             </ComboBox>
                         </StackPanel>
                     </StackPanel>
+                    <Button Content="Сохранить"
+                            Height="2"
+                            Style="{StaticResource ButtonStyle}"
+                            VerticalAlignment="Bottom"
+                            HorizontalAlignment="Right"
+                            IsEnabled="{Binding IsAdmin}"
+                            Command="{Binding SaveChanges}"/>
                 </StackPanel>
             </controls:MetroTabItem>
-            <controls:MetroTabItem Name="AllUsersTab"
-                                   IsEnabled="{Binding IsAdmin}">
+            <controls:MetroTabItem Name="AllUsersTab">
                 <controls:MetroTabItem.HeaderTemplate>
                     <DataTemplate>
                         <ContentPresenter>
@@ -130,12 +137,9 @@
                     </DataTemplate>
                 </controls:MetroTabItem.HeaderTemplate>
                 <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="150"/>
-                    </Grid.ColumnDefinitions>
                     <ListBox ItemsSource="{Binding UserList.ModelCollection}"
                              SelectedItem="{Binding UserList.SelectedItem}"
+                             SelectedIndex="{Binding SelectedUserIndex}"
                              ScrollViewer.CanContentScroll="true"
                              ScrollViewer.VerticalScrollBarVisibility="Auto"
                              ScrollViewer.HorizontalScrollBarVisibility="Auto" 
@@ -160,79 +164,155 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
-                    <StackPanel Grid.Column="1"
-                                Grid.Row="0"
-                                Orientation="Vertical">
-                        <Button Content="Добавить"
-                                Style="{StaticResource ButtonStyle}"/>
-                        <Button Content="Удалить"
-                                Style="{StaticResource ButtonStyle}"/>
-                    </StackPanel>
                 </Grid>
             </controls:MetroTabItem>
             <controls:MetroTabItem Name="PaswwordChangingTab">
-                <StackPanel Orientation="Horizontal"
-                    Margin="5">
-                    <StackPanel Orientation="Vertical"
-                        Margin="5,0">
-                        <TextBlock Text="Старый пароль"
-                           Margin="0,5"
-                           FontSize="14"/>
-                        <TextBlock Text="Новый пароль"
-                           Margin="0,5"
-                           FontSize="14"/>
-                        <TextBlock Text="Подтвердите пароль"
-                           Margin="0,5"
-                           FontSize="14"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Vertical"
-                        Margin="5,0"
-                        MinWidth="180">
-                        <PasswordBox MaxLength="20" 
-                             PasswordChar="*" 
-                             Margin="0,2"
-                             controls:PasswordBoxHelper.CapsLockWarningToolTip="Включен CapsLock" 
-                             helpers:PasswordHelper.Attach="True"/>
-                        <PasswordBox MaxLength="20" 
-                             PasswordChar="*" 
-                             Margin="0,2"
-                             controls:PasswordBoxHelper.CapsLockWarningToolTip="Включен CapsLock" 
-                             helpers:PasswordHelper.Attach="True"/>
-                        <PasswordBox MaxLength="20" 
-                             PasswordChar="*" 
-                             Margin="0,2"
-                             controls:PasswordBoxHelper.CapsLockWarningToolTip="Включен CapsLock" 
-                             helpers:PasswordHelper.Attach="True"/>
-                        <StackPanel Orientation="Horizontal"
-                                    Margin="0,10">
-                            <Button Content="Принять"
-                                    MinWidth="80"
-                                    Style="{StaticResource ButtonStyle}"/>
-                            <Button Content="Отмена"
-                                    Style="{StaticResource ButtonStyle}"
-                                    MinWidth="100"
-                                    Command="{Binding ShowPasswordChanging}"/>
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal"
+                                Margin="5">
+                        <StackPanel Orientation="Vertical"
+                                    Margin="5,0">
+                            <TextBlock Text="Старый пароль"
+                                       Margin="0,5"
+                                       FontSize="14"/>
+                            <TextBlock Text="Новый пароль"
+                                       Margin="0,5"
+                                       FontSize="14"/>
+                            <TextBlock Text="Подтвердите пароль"
+                                       Margin="0,5"
+                                       FontSize="14"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical"
+                                    Margin="5,0"
+                                    MinWidth="180">
+                            <PasswordBox MaxLength="20" 
+                                         PasswordChar="*" 
+                                         Margin="0,2"
+                                         controls:PasswordBoxHelper.CapsLockWarningToolTip="Включен CapsLock"
+                                         helpers:PasswordHelper.Attach="True" 
+                                         helpers:PasswordHelper.Password="{Binding Path=OldPassword, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                            <PasswordBox MaxLength="20" 
+                                         PasswordChar="*" 
+                                         Margin="0,2"
+                                         controls:PasswordBoxHelper.CapsLockWarningToolTip="Включен CapsLock" 
+                                         helpers:PasswordHelper.Attach="True"
+                                         helpers:PasswordHelper.Password="{Binding Path=NewPassword, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                            <PasswordBox MaxLength="20" 
+                                         PasswordChar="*" 
+                                         Margin="0,2"
+                                         controls:PasswordBoxHelper.CapsLockWarningToolTip="Включен CapsLock" 
+                                         helpers:PasswordHelper.Attach="True"
+                                         helpers:PasswordHelper.Password="{Binding Path=ConfirmPassword, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
                         </StackPanel>
                     </StackPanel>
+                    <!--Текст ошибки-->
+                    <TextBlock  Foreground="Red"
+                                FontSize="14"
+                                FontWeight="DemiBold"
+                                Text="{Binding ErrorText}"
+                                Margin="0"/>
+                    <StackPanel Orientation="Horizontal"
+                                Margin="0,10">
+                        <Button Content="Принять"
+                                MinWidth="80"
+                                Style="{StaticResource ButtonStyle}"
+                                Command="{Binding AcceptNewPassword}"/>
+                        <Button Content="Отмена"
+                                Style="{StaticResource ButtonStyle}"
+                                MinWidth="100"
+                                Command="{Binding ToMainTab}"/>
+                    </StackPanel>
                 </StackPanel>
+
+            </controls:MetroTabItem>
+            <controls:MetroTabItem>
+                <Grid>
+                    <StackPanel Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal">
+                            <StackPanel Orientation="Vertical" Margin="5">
+                                <TextBlock Text="Имя" FontSize="18"
+                                   Margin="0, 0, 0, 5"/>
+                                <TextBlock Text="Фамилия" FontSize="18"
+                                   Margin="0, 7"/>
+                                <TextBlock Text="Отчество" FontSize="18"
+                                   Margin="0, 7"/>
+                                <TextBlock Text="Логин" FontSize="18"
+                                   Margin="0, 7"/>
+                                <TextBlock Text="Пароль" FontSize="18"
+                                   Margin="0, 7"/>
+                            </StackPanel>
+                            <StackPanel Width="200"
+                                Margin="5">
+                                <TextBox  Margin="0, 0, 0, 5"
+                                          FontSize="14"
+                                          Text="{Binding NewUserFirstName}"
+                                          controls:TextBoxHelper.Watermark="Имя нового пользователя"/>
+                                <TextBox Margin="0, 5"
+                                         FontSize="14"
+                                         Text="{Binding NewUserLastName}"
+                                          controls:TextBoxHelper.Watermark="Укажите фамилию"/>
+                                <TextBox Margin="0, 5"
+                                         FontSize="14"
+                                         Text="{Binding NewUserMiddleName}"
+                                          controls:TextBoxHelper.Watermark="Укажите отчество"/>
+                                <TextBox Margin="0, 5"
+                                         FontSize="14"
+                                         Text="{Binding NewUserLogin}"
+                                          controls:TextBoxHelper.Watermark="Укажите логин"/>
+                                <TextBox Margin="0, 5"
+                                         FontSize="14"
+                                         Text="{Binding NewUserPassword}"
+                                          controls:TextBoxHelper.Watermark="Укажите пароль"/>
+                            </StackPanel>
+
+                        </StackPanel>
+                        <!--Текст ошибки-->
+                        <TextBlock  Foreground="Red"
+                                    FontSize="14"
+                                    FontWeight="DemiBold"
+                                    Text="{Binding AddUserErrorText}"
+                                    Margin="0"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Right">
+                        <Button Content="Принять"
+                                MinWidth="90"
+                                Style="{StaticResource ButtonStyle}"
+                                VerticalAlignment="Bottom"
+                                Command="{Binding AddUser}"/>
+                        <Button Content="Назад"
+                                MinWidth="90"
+                                Style="{StaticResource ButtonStyle}"
+                                VerticalAlignment="Bottom"
+                                Command="{Binding ToMainTab}"/>
+                    </StackPanel>
+                </Grid>
+
             </controls:MetroTabItem>
         </controls:MetroTabControl>
-            <StackPanel Orientation="Vertical"
+        <GroupBox Grid.Row="0" 
+                  Grid.Column="1"
+                  Margin="0"
+                  Header="Меню">
+            <StackPanel Orientation="Vertical">
+                <Button Content="Зарегистрировать"
+                        Style="{StaticResource ButtonStyle}"
+                        Command="{Binding ToAddTab}"/>
+                <Button Content="Удалить"
+                        Style="{StaticResource ButtonStyle}"
+                        IsEnabled="{Binding CanDelete}"
+                        Command="{Binding RemoveUser}"/>
+            </StackPanel>
+        </GroupBox>
+        <StackPanel Orientation="Vertical"
                         VerticalAlignment="Top"
-                        Grid.Row="1">
+                        Grid.Row="1" Grid.Column="0"
+                        Grid.ColumnSpan="2">
                 <Border VerticalAlignment="Bottom"
                         Background="LightGray"
                         Height="25">
                     <StackPanel Orientation="Horizontal"
                                 HorizontalAlignment="Right">
-                    <Button Content="Сохранить"
-                            Height="2"
-                            MinWidth="80"
-                            Style="{StaticResource ButtonStyle}"
-                            VerticalAlignment="Bottom"
-                            HorizontalAlignment="Right"
-                            IsEnabled="{Binding IsAdmin}"
-                            Command="{Binding SaveChanges}"/>
                     <Button Content="Закрыть"
                             Height="20"
                             MinWidth="80"
