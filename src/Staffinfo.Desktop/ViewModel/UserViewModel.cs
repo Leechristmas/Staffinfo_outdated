@@ -221,12 +221,30 @@ namespace Staffinfo.Desktop.ViewModel
                 MessageBoxImage.Question);
             if (answer == MessageBoxResult.No) return;
 
-            DataSingleton.Instance.User.Login = Login;
-            DataSingleton.Instance.User.AccessLevel = AccessLevel;
-            DataSingleton.Instance.User.FirstName = FirstName;
-            DataSingleton.Instance.User.LastName = LastName;
-            DataSingleton.Instance.User.MiddleName = MiddleName;
-            DataSingleton.Instance.User.Password = Password;
+            using (var prvdr = new UserTableProvider())
+            {
+                if (!prvdr.Update(new UserModel
+                {
+                    Id = User.Id,
+                    Login = User.Login,
+                    Password = User.Password,
+                    LastName = User.LastName,
+                    FirstName = User.FirstName,
+                    MiddleName = User.MiddleName,
+                    AccessLevel = User.AccessLevel
+                }))
+                {
+                    MessageBox.Show("Не удалось сохранить изменения", "Ошибка", MessageBoxButton.OK,
+                        MessageBoxImage.Error, MessageBoxResult.OK);
+                    return;
+                }
+                User.Login = Login;
+                User.Password = Password;
+                User.AccessLevel = AccessLevel;
+                User.LastName = LastName;
+                User.FirstName = FirstName;
+                User.MiddleName = MiddleName;
+            }
         }
 
         #endregion

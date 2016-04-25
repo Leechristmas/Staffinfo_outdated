@@ -98,7 +98,7 @@
                                      Text="{Binding FirstName}"
                                      IsEnabled="{Binding IsAdmin}"
                                      Margin="10,2,20,10"/>
-                            <TextBox Name="MiddleNameTBox"
+                            <TextBox x:Name="MiddleNameTBox"
                                      FontSize="14"
                                      MinWidth="150"
                                      Text="{Binding MiddleName}"

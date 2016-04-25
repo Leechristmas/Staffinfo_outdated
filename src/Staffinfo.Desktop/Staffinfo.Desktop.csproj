@@ -114,6 +114,7 @@
     </ApplicationDefinition>
     <Compile Include="Converters\DataGridHeaderConverter.cs" />
     <Compile Include="Converters\NewConverters.cs" />
+    <Compile Include="Converters\StringToIntConverter.cs" />
     <Compile Include="Data\DatabaseConnector.cs" />
     <Compile Include="Data\DatabaseHelper.cs" />
     <Compile Include="Data\DataSingleton.cs" />
@@ -194,6 +195,7 @@
     <Compile Include="ViewModel\ClasinessViewModel.cs" />
     <Compile Include="ViewModel\ContractViewModel.cs" />
     <Compile Include="ViewModel\DictionaryViewModelBase.cs" />
+    <Compile Include="ViewModel\EducationalIntitutionViewModel.cs" />
     <Compile Include="ViewModel\EducationalTimeViewModel.cs" />
     <Compile Include="ViewModel\EmployeeEditViewModel.cs" />
     <Compile Include="ViewModel\EmployeeViewModel.cs" />
@@ -202,9 +204,11 @@
     <Compile Include="ViewModel\HospitalTimeViewModel.cs" />
     <Compile Include="ViewModel\ListViewModel.cs" />
     <Compile Include="ViewModel\MilitaryProcessViewModel.cs" />
+    <Compile Include="ViewModel\MilitaryUnitViewModel.cs" />
     <Compile Include="ViewModel\ObservableCollectionViewModel.cs" />
     <Compile Include="ViewModel\PartialUserViewModel.cs" />
     <Compile Include="ViewModel\PostAssignmentViewModel.cs" />
+    <Compile Include="ViewModel\PostViewModel.cs" />
     <Compile Include="ViewModel\RankAssignmentViewModel.cs" />
     <Compile Include="ViewModel\RankViewModel.cs" />
     <Compile Include="ViewModel\RelativeViewModel.cs" />
@@ -212,6 +216,7 @@
     <Compile Include="ViewModel\ReprimandViewModel.cs" />
     <Compile Include="ViewModel\SertificationViewModel.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
+    <Compile Include="ViewModel\SpecialityViewModel.cs" />
     <Compile Include="ViewModel\StartViewModel.cs" />
     <Compile Include="ViewModel\UserViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
@@ -238,9 +243,6 @@
     </Compile>
     <Compile Include="View\EmployeeView.xaml.cs">
       <DependentUpon>EmployeeView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\FiltrationView.xaml.cs">
-      <DependentUpon>FiltrationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\PasswordChangingView.xaml.cs">
       <DependentUpon>PasswordChangingView.xaml</DependentUpon>
@@ -324,10 +326,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\FiltrationView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="View\PasswordChangingView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -353,6 +351,7 @@
     <Content Include="Data\Scripts\create_and_init_database_staffinfo.sql" />
     <Content Include="Data\Scripts\drop_database_staffinfo.sql" />
     <Content Include="Data\Scripts\fill_database_with_test_data.sql" />
+    <Resource Include="Resources\Side.png" />
     <EmbeddedResource Include="Resources\Images\empty_avatar_100x100.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>

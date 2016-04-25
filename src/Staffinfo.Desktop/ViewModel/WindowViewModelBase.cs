@@ -39,6 +39,8 @@ namespace Staffinfo.Desktop.ViewModel
                 if (value < 0 || value > 1) throw new Exception("Неверный уровень доступа");
                 _accessLevel = value;
                 //WasChanged = true;
+                RaisePropertyChanged(nameof(IsAdmin));
+                RaisePropertyChanged(nameof(AccessType));
                 RaisePropertyChanged();
             }
         }
@@ -70,9 +72,9 @@ namespace Staffinfo.Desktop.ViewModel
                 DataSingleton.Instance.User = value;
 
                 RaisePropertyChanged();
-                RaisePropertyChanged("SettingVisibility");
                 RaisePropertyChanged("FullUserName");
-                RaisePropertyChanged("AccessType");
+
+                AccessLevel = value.AccessLevel;
             }
         }
 

@@ -52,6 +52,8 @@
     </Style>-->
     <Style TargetType="ListBoxItem"
            x:Key="EmployeesListItemStyle">
+        <Setter Property="HorizontalAlignment"
+                Value="Stretch"/>
         <Style.Triggers>
             <Trigger Property="IsSelected" Value="True" >
                 <Setter Property="FontWeight" Value="Bold" />

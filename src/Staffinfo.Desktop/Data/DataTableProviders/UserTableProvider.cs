@@ -25,7 +25,7 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         {
             if (user == null) throw new ArgumentNullException(nameof(user), Resources.DatabaseConnector_parameter_cannot_be_null);
 
-            var cmd = new SqlCommand($@"SELECT * FROM USERS WHERE USER_LOGIN = @USER_LOGIN AND PASSWORD = @USER_PASSWORD;");
+            var cmd = new SqlCommand($@"CHECK_USER @USER_LOGIN, @USER_PASSWORD;");
 
             UserModel userModel = null;
 
@@ -106,13 +106,34 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         }
 
         /// <summary>
-        /// TODO
+        /// Сохраняет учетную запись
         /// </summary>
-        /// <param name="obj"></param>
+        /// <param name="user">учетная запись</param>
         /// <returns></returns>
-        public UserModel Save(UserModel obj)
+        public UserModel Save(UserModel user)
         {
-            throw new NotImplementedException();
+            if (user == null) throw new ArgumentNullException(nameof(user), Resources.DatabaseConnector_parameter_cannot_be_null);
+
+            var cmd =
+                new SqlCommand($@"ADD_USERS '{user.Login}', '{user.Password}', '{user.AccessLevel}', '{user.LastName}', '{user.FirstName}', '{user.MiddleName}';");
+            
+            try
+            {
+                var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
+
+                sqlDataReader.Read();
+                user.Id = Int64.Parse(sqlDataReader[0].ToString());
+                sqlDataReader.Close();
+
+                ErrorInfo = null;
+            }
+            catch (Exception ex)
+            {
+                ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;
+                return null;
+            }
+
+            return user;
         }
 
         /// <summary>
@@ -122,7 +143,38 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         /// <returns></returns>
         public UserModel Select(long? id)
         {
-            throw new NotImplementedException();
+            if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
+
+            var cmd = new SqlCommand($@"GET_USER {id};");
+
+            UserModel user = null;
+
+            try
+            {
+                var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
+                sqlDataReader.Read();
+
+                user = new UserModel
+                {
+                    Id = Int64.Parse(sqlDataReader[0].ToString()),
+                    Login = sqlDataReader["USER_LOGIN"].ToString(),
+                    Password = sqlDataReader["USER_PASSWORD"].ToString(),
+                    AccessLevel = int.Parse(sqlDataReader["ACCESS_LEVEL"].ToString()),
+                    LastName = sqlDataReader["LAST_NAME"].ToString(),
+                    FirstName = sqlDataReader["FIRST_NAME"].ToString(),
+                    MiddleName = sqlDataReader["MIDDLE_NAME"].ToString()
+                };
+                sqlDataReader.Close();
+
+                ErrorInfo = null;
+            }
+            catch (Exception ex)
+            {
+                ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;
+                return null;
+            }
+
+            return user;
         }
 
         /// <summary>
@@ -169,11 +221,26 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         /// <summary>
         /// TODO
         /// </summary>
-        /// <param name="obj"></param>
+        /// <param name="user"></param>
         /// <returns></returns>
-        public bool Update(UserModel obj)
+        public bool Update(UserModel user)
         {
-            throw new NotImplementedException();
+            if (user == null) throw new ArgumentNullException(nameof(user), Resources.DatabaseConnector_parameter_cannot_be_null);
+            
+            var cmd = new SqlCommand($@"UPDATE USERS SET USER_LOGIN = '{user.Login}', USER_PASSWORD = '{user.Password}', ACCESS_LEVEL = {user.AccessLevel}, LAST_NAME = '{user.LastName}', FIRST_NAME = '{user.FirstName}', MIDDLE_NAME = '{user.MiddleName}' WHERE ID={user.Id};");
+
+            try
+            {
+                DataSingleton.Instance.DatabaseConnector.Execute(cmd);
+                ErrorInfo = null;
+            }
+            catch (Exception ex)
+            {
+                ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -183,16 +250,20 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
         /// <returns></returns>
         public bool DeleteById(long? id)
         {
-            throw new NotImplementedException();
-        }
-        /// <summary>
-        /// TODO
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public ObservableCollection<UserModel> SelectByEmployeeId(long? id)
-        {
-            throw new NotImplementedException();
+            if (!id.HasValue) throw new ArgumentNullException(nameof(id), Resources.DatabaseConnector_parameter_cannot_be_null);
+
+            var cmd = new SqlCommand($@"DELETE FROM USERS WHERE ID = '{id}'");
+            try
+            {
+                DataSingleton.Instance.DatabaseConnector.Execute(cmd);
+                ErrorInfo = null;
+            }
+            catch (Exception ex)
+            {
+                ErrorInfo = Resources.DatabaseConnector_operation_error + ex.Message;
+                return false;
+            }
+            return true;
         }
 
         #region IDisposable implementation

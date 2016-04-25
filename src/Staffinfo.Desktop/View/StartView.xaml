@@ -33,23 +33,7 @@
             </Grid>
         </DataTemplate>
     </Controls:MetroWindow.IconTemplate>-->
-    <Controls:MetroWindow.RightWindowCommands>
-        <Controls:WindowCommands>
-            <Button Command="{Binding ShowSettings}"
-                    Visibility="{Binding SettingVisibility}">
-                <StackPanel Orientation="Horizontal">
-                    <Rectangle Width="20"
-                               Height="20"
-                               Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
-                        <Rectangle.OpacityMask>
-                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_settings}" />
-                        </Rectangle.OpacityMask>
-                    </Rectangle>
-                    <TextBlock Text=" настройки"/>
-                </StackPanel>
-            </Button>
-        </Controls:WindowCommands>
-    </Controls:MetroWindow.RightWindowCommands>
+    
     <Grid>
         <Controls:MetroTabControl Name="StartTabControl"
                                   SelectedIndex="{Binding SelectedTabIndex}">
@@ -173,7 +157,8 @@
                                 Command="{Binding ShowSettings}"
                                 Height="30"
                                 VerticalAlignment="Top"
-                                HorizontalAlignment="Left">
+                                HorizontalAlignment="Left"
+                                IsEnabled="{Binding IsAdmin}">
                             <StackPanel Orientation="Horizontal">
                                 <Rectangle Width="20"
                                            Height="20"

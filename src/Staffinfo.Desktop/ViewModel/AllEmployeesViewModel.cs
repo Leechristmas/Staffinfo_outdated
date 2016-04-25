@@ -27,9 +27,13 @@ namespace Staffinfo.Desktop.ViewModel
             CanDelete = Employees?.Count > 0;
 
             Ranks = DataSingleton.Instance.RankList.Select(p => new RankViewModel(p)).ToList();
+
+            _posts = DataSingleton.Instance.PostList.Select(p => new PostViewModel(p)).ToList();
         }
 
         #region Fields
+
+        private readonly List<PostViewModel> _posts;
 
         /// <summary>
         /// Служащие
@@ -45,6 +49,11 @@ namespace Staffinfo.Desktop.ViewModel
         /// выбранный служащий
         /// </summary>
         private EmployeeViewModel _selectedEmployee;
+
+        /// <summary>
+        /// ВЫбранная служба (фильтрация)
+        /// </summary>
+        private ServiceModel _selectedService;
 
         /// <summary>
         /// Ширина бокового меню
@@ -86,6 +95,26 @@ namespace Staffinfo.Desktop.ViewModel
         /// </summary>
         private string _selectedSortType;
 
+        /// <summary>
+        /// Текст ошибки (сортировка)
+        /// </summary>
+        private string _sortErrorText;
+
+        /// <summary>
+        /// Текст ошибки (филтрация)
+        /// </summary>
+        private string _filterErrorText;
+
+        /// <summary>
+        /// Нач. возраст (для фильтрации)
+        /// </summary>
+        private int? _startAge;
+
+        /// <summary>
+        /// Финальный возраст (для фильтрации)
+        /// </summary>
+        private int? _finishAge;
+
         ///// <summary>
         ///// Ширина рабочей области
         ///// </summary>
@@ -100,6 +129,7 @@ namespace Staffinfo.Desktop.ViewModel
         #endregion
 
         #region Properties
+
 
         /// <summary>
         /// Текущий таб функционального меню
@@ -155,6 +185,45 @@ namespace Staffinfo.Desktop.ViewModel
         }
 
         /// <summary>
+        /// Текст ошибки при неудачной фильтрации
+        /// </summary>
+        public string FilterErrorText
+        {
+            get { return _filterErrorText; }
+            set
+            {
+                _filterErrorText = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Начальный возраст (для фильтрации)
+        /// </summary>
+        public int? StartAge
+        {
+            get { return _startAge; }
+            set
+            {
+                _startAge = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
+        /// Финальный возраст (для фильтрации)
+        /// </summary>
+        public int? FinishAge
+        {
+            get { return _finishAge; }
+            set
+            {
+                _finishAge = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
         /// Выбранный тип сортировки
         /// </summary>
         public string SelectedSortType
@@ -198,7 +267,7 @@ namespace Staffinfo.Desktop.ViewModel
         /// </summary>
         public bool CanDelete
         {
-            get { return _canDelete; }
+            get { return _canDelete && IsAdmin; }
             set
             {
                 _canDelete = value;
@@ -219,32 +288,6 @@ namespace Staffinfo.Desktop.ViewModel
                 RaisePropertyChanged();
             }
         }
-
-        ///// <summary>
-        ///// Ширина бокового меню
-        ///// </summary>
-        //public int DataWidth
-        //{
-        //    get { return _dataWidth; }
-        //    set
-        //    {
-        //        _dataWidth = value;
-        //        RaisePropertyChanged(nameof(DataWidth));
-        //    }
-        //}
-
-        ///// <summary>
-        ///// Ширина бокового меню
-        ///// </summary>
-        //public int WindowWidth
-        //{
-        //    get { return _windowWidth; }
-        //    set
-        //    {
-        //        _windowWidth = value;
-        //        RaisePropertyChanged(nameof(WindowWidth));
-        //    }
-        //}
 
         /// <summary>
         /// Служащие
@@ -286,8 +329,12 @@ namespace Staffinfo.Desktop.ViewModel
                 _searchText = value;
                 RaisePropertyChanged("SearchText");
 
+                //применим филр
+                ApplyFiltrationExecute();
+
                 //селекция сотрудников согласно введенному тексту
-                Employees = new ObservableCollection<EmployeeViewModel>(DataSingleton.Instance.EmployeeList.Where(e => e.LastName.ToLower().StartsWith(SearchText.ToLower())));
+                Employees = new ObservableCollection<EmployeeViewModel>(Employees.Where(e => e.LastName.ToLower().StartsWith(SearchText.ToLower())));
+                
 
                 CanDelete = Employees.Count > 0;
 
@@ -302,15 +349,29 @@ namespace Staffinfo.Desktop.ViewModel
         public List<RankViewModel> Ranks { get; set; }
 
         /// <summary>
-        /// Выбранные звания
+        /// Должности
         /// </summary>
-        public List<RankModel> SelectedRanks
+        public List<PostViewModel> Posts
         {
-            get { return _selectedRanks; }
+            get { return _posts.Where(p => p.ServiceId == SelectedService?.Id).ToList(); }
+        }
+
+        /// <summary>
+        /// Службы
+        /// </summary>
+        public List<ServiceModel> Services => DataSingleton.Instance.ServiceList;
+
+        /// <summary>
+        /// Выбранная служба
+        /// </summary>
+        public ServiceModel SelectedService
+        {
+            get { return _selectedService; }
             set
             {
-                _selectedRanks = value;
+                _selectedService = value;
                 RaisePropertyChanged();
+                RaisePropertyChanged(nameof(Posts));
             }
         }
 
@@ -339,6 +400,7 @@ namespace Staffinfo.Desktop.ViewModel
         private void GoToMainMenuExecute()
         {
             MenuTabIndex = 0;
+            SetDefaultSortRequisites();
         }
 
         /// <summary>
@@ -352,7 +414,7 @@ namespace Staffinfo.Desktop.ViewModel
         {
             var addNewEmployeeView = new AddNewEmployeeView { DataContext = new AddNewEmployeeViewModel() };
             addNewEmployeeView.ShowDialog();
-            //CanDelete = Employees.Count > 0;
+            CanDelete = Employees.Count > 0;
         }
 
         /// <summary>
@@ -360,7 +422,7 @@ namespace Staffinfo.Desktop.ViewModel
         /// </summary>
         private RelayCommand _removeEmployee;
         public RelayCommand RemoveEmployee
-            => _removeEmployee ?? (_removeEmployee = new RelayCommand(RemoveEmployeeExecute, () => CanDelete));
+            => _removeEmployee ?? (_removeEmployee = new RelayCommand(RemoveEmployeeExecute));
 
         private void RemoveEmployeeExecute()
         {
@@ -432,7 +494,9 @@ namespace Staffinfo.Desktop.ViewModel
 
         private void ToFilterViewExecute()
         {
-            
+            MenuTabIndex = 2;
+            if (MenuWidth == 35) MenuWidth = 200;
+
         }
 
         /// <summary>
@@ -481,19 +545,45 @@ namespace Staffinfo.Desktop.ViewModel
         }
 
         /// <summary>
-        /// TODO
+        /// Применить фильтрацию
         /// </summary>
         private RelayCommand _applyFiltration;
-
-        private string _sortErrorText;
-
         public RelayCommand ApplyFiltration
             => _applyFiltration ?? (_applyFiltration = new RelayCommand(ApplyFiltrationExecute));
 
         private void ApplyFiltrationExecute()
         {
-            var t = Ranks.Where(p => p.IsSelected);
-            var t2 = t.Count();
+            FilterErrorText = null;
+
+            if (StartAge < 18 || StartAge > FinishAge || FinishAge > 60)
+            {
+                FilterErrorText = "Возраст указан неверно";
+                return;
+            } 
+
+            var selectedRanks = Ranks.Where(r => r.IsSelected).ToList();
+            var selectedPosts = Posts.Where(p => p.IsSelected).ToList();
+
+            var result = (from item in DataSingleton.Instance.EmployeeList
+                where ((!selectedRanks.Any() || selectedRanks.Any(r => r.RankId == item.Rank.Id)) &&
+                       (!selectedPosts.Any() || selectedPosts.Any(p => p.PostId == item.Post.Id)) &&
+                       (StartAge == null || item.Age >= StartAge) &&
+                       (FinishAge == null || item.Age <= FinishAge))
+                select item).ToList();
+
+            Employees = new ObservableCollection<EmployeeViewModel>(result.Where(e => e.LastName.ToLower().StartsWith(SearchText.ToLower())));
+            CanDelete = Employees.Count > 0;
+        }
+
+        /// <summary>
+        /// Сбросить фильтрацию
+        /// </summary>
+        private RelayCommand _defaultFilter;
+        public RelayCommand DefaultFilter => _defaultFilter ?? (_defaultFilter = new RelayCommand(DefaultFilterExecute));
+
+        private void DefaultFilterExecute()
+        {
+            SetDefaultFilterRequisites();    
         }
 
         #endregion
@@ -503,8 +593,31 @@ namespace Staffinfo.Desktop.ViewModel
         /// </summary>
         public void SetDefaultSortRequisites()
         {
+            SortErrorText = null;
             SelectedSortParameter = null;
             SelectedSortType = null;
+        }
+
+        /// <summary>
+        /// Устанавливает реквизиты фильтрации по умолчанию
+        /// </summary>
+        public void SetDefaultFilterRequisites()
+        {
+            SelectedService = null;
+            foreach (var rank in Ranks)
+            {
+                if(rank.IsSelected) rank.IsSelected = false;
+            }
+            foreach (var post in Posts)
+            {
+                if (post.IsSelected) post.IsSelected = false;
+            }
+            StartAge = null;
+            FinishAge = null;
+            FilterErrorText = null;
+            Employees =
+                new ObservableCollection<EmployeeViewModel>(
+                    DataSingleton.Instance.EmployeeList.Where(e => e.LastName.ToLower().StartsWith(SearchText.ToLower())));
         }
     }
 }

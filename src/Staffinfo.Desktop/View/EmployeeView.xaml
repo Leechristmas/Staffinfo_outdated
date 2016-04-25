@@ -12,7 +12,7 @@
         helpers:WindowCloseHelper.WindowsClose="{Binding WindowsClosed}"
         Title="{Binding Path=FullName}" MinWidth="600" MinHeight="740" Height="740" Width="600">
 
-    <controls:MetroWindow.RightWindowCommands>
+    <!--<controls:MetroWindow.RightWindowCommands>
         <controls:WindowCommands>
             <Button Command="{Binding ShowSettings}">
                 <StackPanel Orientation="Horizontal">
@@ -27,7 +27,7 @@
                 </StackPanel>
             </Button>
         </controls:WindowCommands>
-    </controls:MetroWindow.RightWindowCommands>
+    </controls:MetroWindow.RightWindowCommands>-->
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -321,9 +321,15 @@
                 <controls:MetroTabItem 
                     Name="AddationalInfoTab"
                     Header="Дополнительно">
-                    <controls:MetroTabControl>
-                        <StackPanel Margin="5,0">
-                            <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+                    <controls:MetroTabControl>                        
+                        <Grid Margin="5,0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <Grid Margin="10,0,0,0"
+                                  Grid.Row="0">
                                 <!--Определяет страницу редактирования доп. информ-ции о служащем // item source = "{Binding InformationModeList}"-->
                                 <ComboBox   Name="InformationModeCBox" 
                                             MinWidth="200"
@@ -333,28 +339,50 @@
                                             ItemsSource="{Binding InformationModeList}"
                                             SelectedIndex="{Binding SelectedCatalogIndex}"
                                             controls:TextBoxHelper.Watermark="Укажите тип данных">
-                                    
                                 </ComboBox>
                                 <Button Name="TabsToogleBtn"
-                                        MinWidth="100"
+                                        Width="100"
                                         IsEnabled="{Binding IsAdmin}" 
                                         Content="{Binding TabsToogleTitle}"
                                         Style="{DynamicResource ChromelessButtonStyle}"
                                         FontSize="16"
                                         Command="{Binding ToAddView}"/>
-                            </StackPanel>
+                                <Grid HorizontalAlignment="Right">
+                                    <Button Width="100"
+                                            HorizontalAlignment="Right"
+                                            Style="{DynamicResource ButtonStyle}"
+                                            Content="Удалить"
+                                            MinWidth="100"
+                                            Margin="0,0,100,0"
+                                            Command="{Binding RemoveItem}"
+                                            ToolTip="Удалить выбранную запись"
+                                            Visibility="{Binding EditRecordVisibility}"
+                                            IsEnabled="{Binding IsAdmin}"/>
+                                    <Button Width="100"
+                                            HorizontalAlignment="Right"
+                                            Style="{DynamicResource ButtonStyle}"
+                                            Content="Изменить"
+                                            MinWidth="100"
+                                            Command="{Binding UpdateItem}"
+                                            ToolTip="Изменить выбранную запись"
+                                            Visibility="{Binding EditRecordVisibility}"
+                                            IsEnabled="{Binding IsAdmin}"/>
+                                </Grid>
+                            </Grid>
                             
                             <!--Текст ошибки-->
                             <TextBlock  Foreground="Red"
                                         FontSize="14"
                                         FontWeight="DemiBold"
                                         Text="{Binding CatalogTextError}"
-                                        Margin="10,0"/>
+                                        Margin="10,0"
+                                        Grid.Row="1"/>
                             
                             <controls:MetroTabControl Name="InfoTabControl"
+                                                      Grid.Row="2"
                                                       SelectedIndex="{Binding SelectedTabIndex}">
-                                <controls:MetroTabItem Name="DataGridTab"> 
-                                    <StackPanel Orientation="Vertical">
+                                <controls:MetroTabItem Name="DataGridTab">
+                                        <Grid>
                                         <DataGrid   Name="EmployeesDataGrid"
                                                     AutoGenerateColumns="True"
                                                     IsReadOnly="True"
@@ -390,24 +418,8 @@
                                             </Style>
                                         </DataGrid.ColumnHeaderStyle>-->
                                         </DataGrid>
-                                        <StackPanel Orientation="Horizontal"
-                                                    HorizontalAlignment="Right">
-                                            <Button Width="100"
-                                                    HorizontalAlignment="Right"
-                                                    Style="{DynamicResource ButtonStyle}"
-                                                    Content="Удалить"
-                                                    MinWidth="100"
-                                                    Command="{Binding RemoveItem}"
-                                                    ToolTip="Удалить выбранную запись"/>
-                                            <Button Width="100"
-                                                    HorizontalAlignment="Right"
-                                                    Style="{DynamicResource ButtonStyle}"
-                                                    Content="Изменить"
-                                                    MinWidth="100"
-                                                    Command="{Binding UpdateItem}"
-                                                    ToolTip="Изменить выбранную запись"/>
-                                        </StackPanel>
-                                    </StackPanel>
+                                        
+                                    </Grid>
                                 </controls:MetroTabItem>
                                 <controls:MetroTabItem Name="EditTabs">
                                     <!--Страницы редактирования доп. информ-ции-->
@@ -1185,7 +1197,7 @@
                                     </controls:MetroAnimatedTabControl>
                                 </controls:MetroTabItem>
                             </controls:MetroTabControl>
-                        </StackPanel>
+                        </Grid>
                     </controls:MetroTabControl>
                 </controls:MetroTabItem>
             </controls:MetroAnimatedTabControl>

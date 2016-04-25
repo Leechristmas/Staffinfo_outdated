@@ -862,7 +862,6 @@ namespace Staffinfo.Desktop.ViewModel
         /// Переходим на edit tabs и обратно
         /// </summary>
         private RelayCommand _toAddView;
-
         public RelayCommand ToAddView => _toAddView ?? (_toAddView = new RelayCommand(ToAddViewExecute));
 
         private void ToAddViewExecute()
@@ -874,7 +873,17 @@ namespace Staffinfo.Desktop.ViewModel
 
         private void TabsToggle()
         {
-            SelectedTabIndex = SelectedTabIndex == 0 ? 1 : 0;
+            if (SelectedTabIndex == 0)
+            {
+                EditRecordVisibility = Visibility.Collapsed;
+                SelectedTabIndex = 1;
+            }
+            else
+            {
+                EditRecordVisibility = Visibility.Visible;
+                SelectedTabIndex = 0;
+            }
+
             switch (SelectedCatalogIndex)
             {
                 case 0:
@@ -1194,10 +1203,26 @@ namespace Staffinfo.Desktop.ViewModel
         /// </summary>
         private object _selectedCatalogRecord;
 
-
+        /// <summary>
+        /// Видимость кнопок редактирования записи
+        /// </summary>
+        private Visibility _editRecordVisibility = Visibility.Visible;
         #endregion
 
         #region Common properties
+
+        /// <summary>
+        /// Видимость кнопок редактирования записи
+        /// </summary>
+        public Visibility EditRecordVisibility
+        {
+            get { return _editRecordVisibility; }
+            set
+            {
+                _editRecordVisibility = value;
+                RaisePropertyChanged();
+            }
+        }
 
         /// <summary>
         /// Индекс выделенной записи справочника

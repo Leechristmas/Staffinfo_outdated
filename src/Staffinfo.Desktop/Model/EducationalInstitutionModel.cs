@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace Staffinfo.Desktop.Model
 {
@@ -14,6 +15,11 @@ namespace Staffinfo.Desktop.Model
         /// Название учреждения образования
         /// </summary>
         public string InstituitionTitle { get; set; }
+        
+        /// <summary>
+        /// Тип учебного заведения(ВУЗ,СУЗ и т.д.)
+        /// </summary>
+        public string InstituitionType { get; set; }
 
         /// <summary>
         /// Описание
@@ -21,13 +27,9 @@ namespace Staffinfo.Desktop.Model
         public string Description { get; set; }
 
         /// <summary>
-        /// Тип учебного заведения(ВУЗ,СУЗ и т.д.)
-        /// </summary>
-        public string InstituitionType { get; set; }
-
-        /// <summary>
         /// Название учебного заведения для view
         /// </summary>
+        [Browsable(false)]
         public string FullName => InstituitionTitle + " - " + InstituitionType;
 
         #endregion

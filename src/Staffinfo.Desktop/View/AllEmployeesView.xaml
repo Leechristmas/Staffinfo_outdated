@@ -7,9 +7,14 @@
                         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
                         xmlns:helpers="clr-namespace:Staffinfo.Desktop.Helpers"
                         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                        xmlns:cnvrtr="clr-namespace:Staffinfo.Desktop.Converters"
                         mc:Ignorable="d"
                         Title="Служащие" Height="700" Width="1000" DataContext="{Binding Source={StaticResource Locator}, Path=AllEmployee}"
                         helpers:WindowCloseHelper.WindowsClose="{Binding WindowsClosed}">
+
+    <Window.Resources>
+        <cnvrtr:StringToIntConverter x:Key="StringToIntConverter"/>
+    </Window.Resources>
     <controls:MetroWindow.RightWindowCommands>
         <controls:WindowCommands>
             <TextBox Name="SearchTBox"
@@ -17,7 +22,8 @@
                      Margin="2"
                      Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"
                      MaxWidth="200"/>
-            <Button Command="{Binding ShowSettings}">
+            <Button Command="{Binding ShowSettings}"
+                    IsEnabled="{Binding IsAdmin}">
                 <StackPanel Orientation="Horizontal">
                     <Rectangle Width="20"
                                Height="20"
@@ -34,7 +40,7 @@
     <Grid IsEnabled="{Binding ViewIsEnable}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -61,6 +67,7 @@
                     </Button>
                     <Button ToolTip="Удалить сотрудника"
                             Command="{Binding RemoveEmployee}"
+                            IsEnabled="{Binding CanDelete}"
                             BorderThickness="0"
                             Background="Transparent">
                         <StackPanel>
@@ -82,13 +89,13 @@
                     <controls:MetroTabItem>
                         <Grid>
                             <ListBox ItemsSource="{Binding Employees}"
-                             SelectedItem="{Binding SelectedEmployee}"
-                             ScrollViewer.CanContentScroll="true"
-                             ScrollViewer.VerticalScrollBarVisibility="Auto"
-                             ScrollViewer.HorizontalScrollBarVisibility="Auto" 
-                             BorderThickness="0"
-                             ItemContainerStyle="{StaticResource EmployeesListItemStyle}"
-                             Height="{Binding ElementName=AllEmployeesView, Path=Height}">
+                                     SelectedItem="{Binding SelectedEmployee}"
+                                     ScrollViewer.CanContentScroll="true"
+                                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                     ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+                                     BorderThickness="0"
+                                     ItemContainerStyle="{StaticResource EmployeesListItemStyle}"
+                                     Height="{Binding ElementName=AllEmployeesView, Path=Height}">
                                 <!--{Binding ElementName=AllEmployeesView, Path=Height}-->
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="MouseDoubleClick">
@@ -155,7 +162,7 @@
                                         Command="{Binding ToFilterView}"
                                         Width="100"
                                         Content="Принять"/>
-                                
+
                             </StackPanel>
                         </StackPanel>
                     </controls:MetroTabItem>
@@ -168,26 +175,27 @@
               HorizontalAlignment="Right">
             <GroupBox Margin="0">
                 <GroupBox.Header>
-                        <StackPanel Orientation="Horizontal">
-                            <Button Background="Transparent"
+                    <StackPanel Orientation="Horizontal">
+                        <Button Background="Transparent"
                                     BorderThickness="0"
                                     HorizontalAlignment="Left"
                                     Style="{StaticResource ButtonStyle}"
                                     MinWidth="20"
                                     Command="{Binding ToggleMenuWidth}">
-                                <StackPanel>
-                                    <Rectangle Width="15"
+                            <StackPanel>
+                                <Rectangle Width="15"
                                                Height="15"
-                                               Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
-                                        <Rectangle.OpacityMask>
-                                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_list}" />
-                                        </Rectangle.OpacityMask>
-                                    </Rectangle>
-                                </StackPanel>
-                            </Button>
-                            <TextBlock Text="{Binding MenuHeader}"
+                                               Fill="White">
+                                    <Rectangle.OpacityMask>
+                                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_list}" />
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                            </StackPanel>
+                        </Button>
+                        <TextBlock Text="{Binding MenuHeader}"
                                        Margin="5,0"
-                                       Foreground="White"/>
+                                       Foreground="White"
+                                       VerticalAlignment="Center"/>
                     </StackPanel>
                 </GroupBox.Header>
                 <controls:MetroTabControl   SelectedIndex="{Binding MenuTabIndex}">
@@ -215,11 +223,11 @@
                             </Button>
                             <Button Name="RemoveEmployeeBtn"
                                     FontSize="18"
-                                    IsEnabled="{Binding IsAdmin}"  
+                                    IsEnabled="{Binding CanDelete}"  
                                     Style="{DynamicResource ChromelessButtonStyle}"
                                     Height="30" Margin="0,30,0,0"
-                            VerticalAlignment="Top"
-                            HorizontalAlignment="Left"
+                                    VerticalAlignment="Top"
+                                    HorizontalAlignment="Left"
                                 Command="{Binding RemoveEmployee}">
                                 <StackPanel Orientation="Horizontal">
                                     <Rectangle Width="20"
@@ -312,7 +320,108 @@
                                     VerticalAlignment="Bottom"
                                     Command="{Binding GoToMainMenu}"/>
                         </Grid>
-                        
+                    </controls:MetroTabItem>
+                    <controls:MetroTabItem>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <StackPanel Grid.Row="0">
+                                <Expander Grid.Row="0"
+                                      Header="Звания"
+                                      VerticalAlignment="Top"
+                                      IsExpanded="False">
+                                    <ListBox ItemsSource="{Binding Ranks}"
+                                         SelectionMode="Multiple"
+                                         DisplayMemberPath="RankTitle"
+                                         ScrollViewer.CanContentScroll="true"
+                                         ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                         ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                                        <ListBox.ItemContainerStyle>
+                                            <Style TargetType="{x:Type ListBoxItem}">
+                                                <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                                            </Style>
+                                        </ListBox.ItemContainerStyle>
+                                    </ListBox>
+                                </Expander>
+                                <Expander Header="Должности"
+                                          VerticalAlignment="Top"
+                                          IsExpanded="False"
+                                          MaxHeight="200">
+                                    <StackPanel Orientation="Vertical">
+                                        <ComboBox IsReadOnly="False"
+                                                  controls:TextBoxHelper.Watermark="Служба"
+                                                  ItemsSource="{Binding Services}"
+                                                  DisplayMemberPath="ServiceTitle"
+                                                  SelectedItem="{Binding SelectedService}"/>
+                                        <ListBox ItemsSource="{Binding Posts}"
+                                                 SelectionMode="Multiple"
+                                                 DisplayMemberPath="PostTitle"
+                                                 ScrollViewer.CanContentScroll="true"
+                                                 ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                                 ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                                            <ListBox.ItemContainerStyle>
+                                                <Style TargetType="{x:Type ListBoxItem}">
+                                                    <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                                                </Style>
+                                            </ListBox.ItemContainerStyle>
+                                        </ListBox>
+                                    </StackPanel>
+                                </Expander>
+                                <Expander Header="Возраст"
+                                          VerticalAlignment="Top"
+                                          IsExpanded="False">
+                                    <StackPanel Orientation="Horizontal">
+                                        <StackPanel Orientation="Vertical">
+                                            <TextBlock Text="С"
+                                                       FontSize="16"
+                                                       Margin="0,3"/>
+                                            <TextBlock Text="По"
+                                                       FontSize="16"
+                                                       Margin="0,6"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Vertical"
+                                                    Margin="5,0">
+                                            <TextBox    MinWidth="50"
+                                                        MaxWidth="100"
+                                                        Text="{Binding StartAge, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource StringToIntConverter}}"/>
+                                            <TextBox    Margin="0,5"
+                                                        Text="{Binding FinishAge, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource StringToIntConverter}}"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Expander>
+                            </StackPanel>
+                            <Grid Grid.Row="1"
+                                  VerticalAlignment="Bottom">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock Text="{Binding FilterErrorText}"
+                                           FontSize="14"
+                                           Foreground="Red"/>
+                                    <Button Grid.Row="0"  
+                                        Style="{DynamicResource ChromelessButtonStyle}"
+                                        Command="{Binding ApplyFiltration}"
+                                        Content="Применить"
+                                        FontSize="18"/>
+                                </StackPanel>
+                                <Button Grid.Row="1" 
+                                        Style="{DynamicResource ChromelessButtonStyle}"
+                                        Command="{Binding DefaultFilter}"
+                                        Content="Сбросить"
+                                        FontSize="18"/>
+                                <Button Grid.Row="2" 
+                                        Height="30"
+                                        FontSize="18"
+                                        Content="Назад"
+                                        Style="{DynamicResource ChromelessButtonStyle}"
+                                        Command="{Binding GoToMainMenu}"/>
+                            </Grid>
+                        </Grid>
                     </controls:MetroTabItem>
                 </controls:MetroTabControl>
             </GroupBox>

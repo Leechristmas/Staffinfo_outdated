@@ -5,18 +5,20 @@ using Staffinfo.Desktop.Model;
 
 namespace Staffinfo.Desktop.ViewModel
 {
-    public class RankViewModel: INotifyPropertyChanged
+    public class PostViewModel: INotifyPropertyChanged
     {
         private bool _isSelected;
 
-        public RankViewModel(RankModel rankModel)
+        public PostViewModel(PostModel postModel)
         {
-            RankTitle = rankModel.RankTitle;
-            RankId = rankModel.Id;
-        } 
+            PostTitle = postModel.PostTitle;
+            PostId = postModel.Id;
+            ServiceId = postModel.ServiceId;
+        }
 
-        public long? RankId { get; set; }
-        public string RankTitle { get; set; }
+        public long? ServiceId { get; set; }
+        public long? PostId { get; set; }
+        public string PostTitle { get; set; }
 
         public bool IsSelected
         {
