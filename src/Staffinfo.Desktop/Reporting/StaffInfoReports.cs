@@ -48,11 +48,12 @@ namespace Staffinfo.Desktop.Reporting
                 FileName = String.Format($"Штатная расстановка на {DateTime.Today.ToString("d")}.xls");
                 var reportSheet = (Worksheet) Workbook.Worksheets["Отчет"];
 
-                int currentRow = 5;
+                int currentRow = 5, emplCount = 0;
                 var data = reportComponent.GetStaffPlacementTable();
 
                 foreach (var row in data.Select())
                 {
+                    emplCount = 0;
                     if (row.Field<string>("Rank") == "")
                     {
                         reportSheet.Range[reportSheet.Cells[currentRow, 1], reportSheet.Cells[currentRow, 7]].Merge();
@@ -76,13 +77,18 @@ namespace Staffinfo.Desktop.Reporting
                         SetMediumStyle(reportSheet.Range[reportSheet.Cells[currentRow, 4], reportSheet.Cells[currentRow, 6]]);  //центральные столбцы
                         SetNameStyle(reportSheet.Range[reportSheet.Cells[currentRow, 3], reportSheet.Cells[currentRow, 3]]);    //стобец с выравниванием по левому краю
                         SetMediumStyle(reportSheet.Range[reportSheet.Cells[currentRow, 2], reportSheet.Cells[currentRow, 2]]);  //центральный столбец
+                        emplCount++;
                     }
                     currentRow++;
                 }
 
-                SetBottomStyle(reportSheet.Range[reportSheet.Cells[--currentRow, 2], reportSheet.Cells[currentRow, 6]]);  //нижняя строка
-                SetLeftBottomStyle(reportSheet.Range[reportSheet.Cells[currentRow, 1], reportSheet.Cells[currentRow, 1]]);  //нижняя строка левый столбец 
-                SetRightBottomStyle(reportSheet.Range[reportSheet.Cells[currentRow, 7], reportSheet.Cells[currentRow, 7]]);  //нижняя строка правый столбец
+                if (emplCount > 0)
+                {
+                    SetBottomStyle(reportSheet.Range[reportSheet.Cells[--currentRow, 2], reportSheet.Cells[currentRow, 6]]);  //нижняя строка
+                    SetLeftBottomStyle(reportSheet.Range[reportSheet.Cells[currentRow, 1], reportSheet.Cells[currentRow, 1]]);  //нижняя строка левый столбец 
+                    SetRightBottomStyle(reportSheet.Range[reportSheet.Cells[currentRow, 7], reportSheet.Cells[currentRow, 7]]);  //нижняя строка правый столбец
+                }
+                
 
 
                 ReportManager.OpenReport(Workbook, FileName, Excel);
@@ -229,6 +235,7 @@ namespace Staffinfo.Desktop.Reporting
         private void SetLeftBottomStyle(Range range)
         {
             SetMediumStyle(range);
+            range.Font.Bold = true;
             range.Borders[XlBordersIndex.xlEdgeBottom].Weight = XlBorderWeight.xlMedium;
             range.Borders[XlBordersIndex.xlEdgeLeft].Weight = XlBorderWeight.xlMedium;
         }
