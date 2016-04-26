@@ -132,7 +132,9 @@
                                 <TextBlock Text=" Служащие"/>
                             </StackPanel>
                         </Button>
+                        <!--пенсионеры-->
                         <Button Name="OldEmployeeListBtn"
+                                Visibility="Collapsed"
                                 FontSize="18" 
                                 Style="{DynamicResource ChromelessButtonStyle}"
                                 MinHeight="20" Margin="0"

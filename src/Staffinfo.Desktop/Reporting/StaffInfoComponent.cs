@@ -39,6 +39,8 @@ namespace Staffinfo.Desktop.Reporting
             List<ServiceModel> services = null;
             DataTable dataTable = CreateStaffPlacementTable();
 
+            int soldierCount = 0, officerCount = 0;
+
             //получаем служащих
             using (var prvdr = new EmployeeTableProvider())
             {
@@ -82,9 +84,13 @@ namespace Staffinfo.Desktop.Reporting
                     dRow["Phone"] = e.MobilePhoneNumber ?? e.HomePhoneNumber;
 
                     dataTable.Rows.Add(dRow);
+
+                    if (GetRank(e).RankWeight >= 6) officerCount++;
+                    else soldierCount++;
                 }
             }
 
+            dataTable.Rows.Add("", $"{officerCount}", $"{soldierCount}");
             return dataTable;
         }
 

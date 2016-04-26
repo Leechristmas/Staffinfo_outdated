@@ -54,6 +54,18 @@ namespace Staffinfo.Desktop.Reporting
                 foreach (var row in data.Select())
                 {
                     emplCount = 0;
+
+                    //итоговый подсчет офицеров и рядовых (в конце формирования указываем общее количество)
+                    if (row.Field<string>("Post") == "")
+                    {
+                        int soldiers = Int32.Parse(row.Field<string>("Name")),
+                            officers = Int32.Parse(row.Field<string>("Rank")); ;
+                        reportSheet.Cells[3, 1] =
+                            $"По штату всего: {soldiers + officers}; офицеры: {officers}; рядовые: {soldiers}";
+                        break;
+                    }
+
+                    //название службы
                     if (row.Field<string>("Rank") == "")
                     {
                         reportSheet.Range[reportSheet.Cells[currentRow, 1], reportSheet.Cells[currentRow, 7]].Merge();

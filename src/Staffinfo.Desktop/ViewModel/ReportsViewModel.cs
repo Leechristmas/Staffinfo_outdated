@@ -166,13 +166,15 @@ namespace Staffinfo.Desktop.ViewModel
             Error = null;
 
             //построение отчета
-            switch (SelectedReport.Id)
+            switch (SelectedReport.Id.Value)
             {
                 case 1:
                     using (var stfReports = new StaffInfoReports())
                     {
                         stfReports.Make();
                     }
+                    break;
+                default:
                     break;
             }
             
