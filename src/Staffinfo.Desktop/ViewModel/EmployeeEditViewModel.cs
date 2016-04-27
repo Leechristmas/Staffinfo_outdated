@@ -171,12 +171,7 @@ namespace Staffinfo.Desktop.ViewModel
         /// Были ли произведены изменения
         /// </summary>
         private bool _wasChanged;
-
-        /// <summary>
-        /// Коллекция справочников
-        /// </summary>
-        private CatalogObservableCollectionsList _catalogList;
-
+        
         /// <summary>
         /// Индекс выбранного "таба"
         /// </summary>
@@ -3115,12 +3110,7 @@ namespace Staffinfo.Desktop.ViewModel
         /// Новая должность
         /// </summary>
         private PostModel _postAssignmentNewPost;
-
-        /// <summary>
-        /// "Активная служба"
-        /// </summary>
-        private readonly ServiceModel _postAssignmenService;
-
+        
         #endregion
 
         #region Properties

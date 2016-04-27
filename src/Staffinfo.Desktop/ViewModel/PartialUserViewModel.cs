@@ -64,11 +64,6 @@ namespace Staffinfo.Desktop.ViewModel
         public string LastName => _lastName;
 
         /// <summary>
-        /// Уровень доступа к БД
-        /// </summary>
-        public string  AccessLevel => _accessLevel == (int) AccessLevelType.Admin ? "Admin" : "Reader";
-
-        /// <summary>
         /// Логин
         /// </summary>
         public string Login => _login;

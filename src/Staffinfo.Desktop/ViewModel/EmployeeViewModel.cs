@@ -32,12 +32,7 @@ namespace Staffinfo.Desktop.ViewModel
         #endregion
 
         #region Fields
-
-        /// <summary>
-        /// Паспорт
-        /// </summary>
-        private PasportModel _pasport;
-
+        
         /// <summary>
         /// Тип даныых, которые будут отображаться в grid'e
         /// </summary>

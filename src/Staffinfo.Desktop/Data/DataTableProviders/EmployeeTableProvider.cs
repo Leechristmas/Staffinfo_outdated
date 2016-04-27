@@ -277,10 +277,10 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
             pasportId.Value = employee.PasportId;
 
             var mobilePhoneNumber = cmd.Parameters.Add("@MOBILE_PHONE_NUMBER", SqlDbType.VarChar);
-            mobilePhoneNumber.Value = employee.MobilePhoneNumber;
+            mobilePhoneNumber.Value = employee.MobilePhoneNumber ?? String.Empty;
 
             var homePhoneNumber = cmd.Parameters.Add("@HOME_PHONE_NUMBER", SqlDbType.VarChar);
-            homePhoneNumber.Value = employee.HomePhoneNumber;
+            homePhoneNumber.Value = employee.HomePhoneNumber ?? String.Empty;
 
             var isPensioner = cmd.Parameters.Add("@IS_PENSIONER", SqlDbType.Bit);
             isPensioner.Value = employee.IsPensioner;

@@ -145,7 +145,6 @@
     <Compile Include="Data\DataTableProviders\UserTableProvider.cs" />
     <Compile Include="Data\DataTableProviders\ViolationTableProvider.cs" />
     <Compile Include="Helpers\BitmapImageHelper.cs" />
-    <Compile Include="Helpers\CatalogObservableCollectionsList.cs" />
     <Compile Include="Helpers\Extentions.cs" />
     <Compile Include="Helpers\PasswordHelper.cs" />
     <Compile Include="Helpers\WindowCloseHelper.cs" />
@@ -287,7 +286,9 @@
     <EmbeddedResource Include="Reporting\Templates\StaffInfo.xls">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <None Include="Reporting\Templates\Employee.xls" />
+    <EmbeddedResource Include="Reporting\Templates\Employee.xls">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

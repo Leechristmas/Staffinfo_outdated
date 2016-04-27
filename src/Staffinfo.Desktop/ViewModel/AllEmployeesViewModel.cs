@@ -66,16 +66,6 @@ namespace Staffinfo.Desktop.ViewModel
         private int _actualTab;
 
         /// <summary>
-        /// Enable кнопки фильтрации
-        /// </summary>
-        private Visibility _filtrationBtnVisibility;
-
-        /// <summary>
-        /// Выброанные звания
-        /// </summary>
-        private List<RankModel> _selectedRanks;
-
-        /// <summary>
         /// Разрешить удаление
         /// </summary>
         private bool _canDelete;
@@ -273,19 +263,6 @@ namespace Staffinfo.Desktop.ViewModel
                 _canDelete = value;
                 RaisePropertyChanged(nameof(CanDelete));
                 RaisePropertyChanged(nameof(RemoveEmployee));
-            }
-        }
-
-        /// <summary>
-        /// Enable фильтрации
-        /// </summary>
-        public Visibility FiltrationBtnVisibility
-        {
-            get { return _filtrationBtnVisibility; }
-            set
-            {
-                _filtrationBtnVisibility = value;
-                RaisePropertyChanged();
             }
         }
 

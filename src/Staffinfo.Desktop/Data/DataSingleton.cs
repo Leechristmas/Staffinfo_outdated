@@ -79,12 +79,7 @@ namespace Staffinfo.Desktop.Data
         /// Военная часть
         /// </summary>
         private ObservableCollection<MilitaryUnitModel> _militaryUnitList;
-
-        /// <summary>
-        /// Тип родства
-        /// </summary>
-        private ObservableCollection<RelativeTypeModel> _relativeTypeList;
-
+        
         /// <summary>
         /// Специальности
         /// </summary>

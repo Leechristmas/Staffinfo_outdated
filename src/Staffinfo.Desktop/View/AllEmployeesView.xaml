@@ -237,8 +237,7 @@
                                     Height="30" Margin="0,60,0,0"
                                     VerticalAlignment="Top"
                                     HorizontalAlignment="Left"
-                                    Command="{Binding ToFilterView}"
-                                    Visibility="{Binding FiltrationBtnVisibility}">
+                                    Command="{Binding ToFilterView}">
                                 <StackPanel Orientation="Horizontal">
                                     <Rectangle Width="20"
                                            Height="20"
@@ -320,15 +319,15 @@
                             </Grid.RowDefinitions>
                             <StackPanel Grid.Row="0">
                                 <Expander Grid.Row="0"
-                                      Header="Звания"
-                                      VerticalAlignment="Top"
-                                      IsExpanded="False">
+                                          Header="Звания"
+                                          VerticalAlignment="Top"
+                                          IsExpanded="False">
                                     <ListBox ItemsSource="{Binding Ranks}"
-                                         SelectionMode="Multiple"
-                                         DisplayMemberPath="RankTitle"
-                                         ScrollViewer.CanContentScroll="true"
-                                         ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                         ScrollViewer.HorizontalScrollBarVisibility="Auto">
+                                             SelectionMode="Multiple"
+                                             DisplayMemberPath="RankTitle"
+                                             ScrollViewer.CanContentScroll="true"
+                                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                             ScrollViewer.HorizontalScrollBarVisibility="Auto">
                                         <ListBox.ItemContainerStyle>
                                             <Style TargetType="{x:Type ListBoxItem}">
                                                 <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
