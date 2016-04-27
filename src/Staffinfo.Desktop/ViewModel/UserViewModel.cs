@@ -636,7 +636,8 @@ namespace Staffinfo.Desktop.ViewModel
         /// </summary>
         private void SetAddUserRequisitesDefault()
         {
-            NewUserFirstName = NewUserMiddleName = NewUserLastName = NewUserLogin = NewUserPassword = null;
+            NewUserFirstName = NewUserMiddleName = NewUserLastName = NewUserLogin = NewUserPassword = String.Empty;
+            AddUserErrorText = null;
         }
 
     }

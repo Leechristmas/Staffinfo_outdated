@@ -7,6 +7,7 @@
                         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
                         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                         xmlns:helpers="clr-namespace:Staffinfo.Desktop.Helpers"
+                        xmlns:circularProgressBar="clr-namespace:CircularProgressBar;assembly=CircularProgressBar"
                         mc:Ignorable="d"
                         Title="Отчеты" Height="700" Width="700"
                         DataContext="{Binding Source={StaticResource Locator}, Path=Reports}"
@@ -27,11 +28,11 @@
                  FontSize="18"
                  FontWeight="DemiBold"
                  Margin="0,0,0,45">
-            <!--<i:Interaction.Triggers>
+            <i:Interaction.Triggers>
                     <i:EventTrigger EventName="MouseDoubleClick">
                     <i:InvokeCommandAction Command="{Binding GetReport}"/>
                 </i:EventTrigger>
-                </i:Interaction.Triggers>-->
+                </i:Interaction.Triggers>
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <Border BorderBrush="Black" 
@@ -52,6 +53,10 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
+            <circularProgressBar:Custom Width="120"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Visibility="{Binding ProgressVisibility}"/>
         <StackPanel Orientation="Vertical"
                     VerticalAlignment="Bottom">
             <Border Background="LightGray"

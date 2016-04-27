@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using GalaSoft.MvvmLight.Command;
 using Staffinfo.Desktop.Data;
 using Staffinfo.Desktop.Model;
@@ -133,6 +134,11 @@ namespace Staffinfo.Desktop.ViewModel
         }
 
         /// <summary>
+        /// visibility для progress bar'a
+        /// </summary>
+        public Visibility ProgressVisibility => ViewIsEnable ? Visibility.Collapsed : Visibility.Visible;
+
+        /// <summary>
         /// Текст ошибки
         /// </summary>
         public string Error
@@ -152,33 +158,38 @@ namespace Staffinfo.Desktop.ViewModel
         private RelayCommand _getReport;
         public RelayCommand GetReport => _getReport ?? (_getReport = new RelayCommand(GetReportExecute));
 
-        private void GetReportExecute()
+        private async void GetReportExecute()
         {
             ViewIsEnable = false;
-            
-            if (SelectedReport == null)
-            {
-                Error = "Отчет не выбран";
-                ViewIsEnable = true;
-                return;
-            }
+            RaisePropertyChanged(nameof(ProgressVisibility));
 
-            Error = null;
-
-            //построение отчета
-            switch (SelectedReport.Id.Value)
+            await Task.Run(() =>
             {
-                case 1:
-                    using (var stfReports = new StaffInfoReports())
-                    {
-                        stfReports.Make();
-                    }
-                    break;
-                default:
-                    break;
-            }
+                if (SelectedReport == null)
+                {
+                    Error = "Отчет не выбран";
+                    ViewIsEnable = true;
+                    return;
+                }
+
+                Error = null;
+
+                //построение отчета
+                switch (SelectedReport.Id.Value)
+                {
+                    case 1:
+                        using (var stfReports = new StaffInfoReports())
+                        {
+                            stfReports.Make();
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            });
             
             ViewIsEnable = true;
+            RaisePropertyChanged(nameof(ProgressVisibility));
         }
 
         #endregion
