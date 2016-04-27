@@ -33,6 +33,10 @@ namespace Staffinfo.Desktop.Reporting
             return dataTable;
         }
 
+        /// <summary>
+        /// Возвращает сформированную таблицу для отчета штатной расстановки
+        /// </summary>
+        /// <returns></returns>
         public DataTable GetStaffPlacementTable()
         {
             List<EmployeeModel> employees = null;

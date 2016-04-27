@@ -288,6 +288,7 @@
     <EmbeddedResource Include="Reporting\Templates\StaffInfo.xls">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <None Include="Reporting\Templates\Employee.xls" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

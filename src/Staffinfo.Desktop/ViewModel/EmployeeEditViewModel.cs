@@ -3022,6 +3022,14 @@ namespace Staffinfo.Desktop.ViewModel
                     var viewModel = SelectedCatalogRecord as HolidayTimeViewModel;
                     var model = viewModel?.GetModel();
 
+                    if (model == null)
+                    {
+                        MessageBox.Show("Не удалось применить изменения: " + hTPrvdr.ErrorInfo, "Ошибка",
+                             MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+                        
+
                     if (model.StartDate == StartHolidayDate.Value &&
                         model.FinishDate == FinishHolidayDate.Value &&
                         model.Description == HolidayTimeDescription)
