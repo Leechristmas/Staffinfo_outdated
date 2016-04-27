@@ -106,6 +106,26 @@
                 <StackPanel Orientation="Vertical"
                             HorizontalAlignment="Left"
                             Margin="5,0">
+                    <ComboBox Controls:TextBoxHelper.Watermark="--Служба--"
+                              Controls:TextBoxHelper.ClearTextButton="True"
+                              VerticalAlignment="Top"
+                              HorizontalAlignment="Left"
+                              Margin="0,1"
+                              FontSize="14"
+                              MinHeight="30"
+                              Width="225"
+                              Name="ServiceCBox"
+                              ItemsSource="{Binding ServiceList.ModelList}"
+                              DisplayMemberPath="ServiceTitle">
+                        <ComboBox.SelectedItem>
+                            <Binding Path="SelectedService"
+                                     UpdateSourceTrigger="PropertyChanged">
+                                <Binding.ValidationRules>
+                                    <DataErrorValidationRule/>
+                                </Binding.ValidationRules>
+                            </Binding>
+                        </ComboBox.SelectedItem>
+                    </ComboBox>
                     <ComboBox Controls:TextBoxHelper.Watermark="--Должность--"
                               Controls:TextBoxHelper.ClearTextButton="True"
                               VerticalAlignment="Top"
@@ -139,26 +159,6 @@
                               DisplayMemberPath="RankTitle">
                         <ComboBox.SelectedItem>
                             <Binding Path="SelectedRank"
-                                     UpdateSourceTrigger="PropertyChanged">
-                                <Binding.ValidationRules>
-                                    <DataErrorValidationRule/>
-                                </Binding.ValidationRules>
-                            </Binding>
-                        </ComboBox.SelectedItem>
-                    </ComboBox>
-                    <ComboBox Controls:TextBoxHelper.Watermark="--Служба--"
-                              Controls:TextBoxHelper.ClearTextButton="True"
-                              VerticalAlignment="Top"
-                              HorizontalAlignment="Left"
-                              Margin="0,1"
-                              FontSize="14"
-                              MinHeight="30"
-                              Width="225"
-                              Name="ServiceCBox"
-                              ItemsSource="{Binding ServiceList.ModelList}"
-                              DisplayMemberPath="ServiceTitle">
-                        <ComboBox.SelectedItem>
-                            <Binding Path="SelectedService"
                                      UpdateSourceTrigger="PropertyChanged">
                                 <Binding.ValidationRules>
                                     <DataErrorValidationRule/>
@@ -389,11 +389,12 @@
                   Header="Телефон">
             <StackPanel Orientation="Horizontal">
                 <StackPanel Margin="5,0">
-                    <TextBox MinWidth="170"
+                    <TextBox Width="170"
                              Name="MobileNumberTBox"
                              Controls:TextBoxHelper.Watermark="Мобильный номер"
                              Controls:TextBoxHelper.ClearTextButton="True"
                              Margin="0,1"
+                             MaxLength="20"
                              MinHeight="30"
                              FontSize="14">
                         <TextBox.Text>
@@ -407,11 +408,12 @@
                     </TextBox>
                 </StackPanel>
                 <StackPanel Margin="5,0">
-                    <TextBox MinWidth="170"
+                    <TextBox Width="170"
                              Name="HomeNumberTBox"
                              Controls:TextBoxHelper.Watermark="Домашний номер"
                              Controls:TextBoxHelper.ClearTextButton="True"
                              Margin="0,1"
+                             MaxLength="10"
                              MinHeight="30"
                              FontSize="14">
                         <TextBox.Text>
@@ -444,6 +446,7 @@
                         <Button Content="Добавить" 
                                 Background="Transparent"
                                 BorderThickness="0"
+                                IsDefault="True"
                                 Name="AddEmployeeBtn"
                                 Margin="5,0,180,0" 
                                 MinWidth="80"
@@ -461,6 +464,7 @@
                         <Button Content="Отмена" 
                                 Background="Transparent"
                                 BorderThickness="0"
+                                IsCancel="True"
                                 Name="CancelBtn"
                                 Margin="5,0" 
                                 MinWidth="80"

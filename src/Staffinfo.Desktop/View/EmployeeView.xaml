@@ -97,7 +97,7 @@
                                           IsEnabled="{Binding IsAdmin}"  
                                           Height="30"
                                           Margin="10,2"
-                                          controls:TextBoxHelper.Watermark="--Длжность--"
+                                          controls:TextBoxHelper.Watermark="--Должность--"
                                           controls:TextBoxHelper.ClearTextButton="True"
                                           FontSize="16"
                                           ToolTip="Должность"
@@ -314,6 +314,25 @@
                                     </StackPanel>
                                 </Expander>
                             </StackPanel>
+                        </StackPanel>
+                        <StackPanel Grid.Row="3" Orientation="Horizontal"
+                                    VerticalAlignment="Bottom"
+                                    HorizontalAlignment="Right">
+                            <Button Name="AcceptBtn"
+                                    Style="{StaticResource ButtonStyle}"
+                                    Content="Принять"
+                                    IsDefault="True"
+                                    IsEnabled="{Binding IsAdmin}"
+                                    MinWidth="100"
+                                    Command="{Binding Path=AcceptChanges}"
+                                    ToolTip="Принять изменения"/>
+                            <Button Name="CleanUpBtn"
+                                    Style="{StaticResource ButtonStyle}"
+                                    Content="Отменить"
+                                    IsEnabled="{Binding IsAdmin}"
+                                    MinWidth="100"
+                                    Command="{Binding Path=CleanOut}"
+                                    ToolTip="Отменить все изменения"/>
                         </StackPanel>
                     </Grid>
                 </controls:MetroTabItem>
@@ -1208,27 +1227,28 @@
                 VerticalAlignment="Top"
                 Background="LightGray">
             <Grid>
-                <StackPanel Orientation="Horizontal">
+                <!--<StackPanel Orientation="Horizontal">
                     <Button Name="AcceptBtn"
-                                Style="{StaticResource ButtonStyle}"
-                                Content="Принять"
-                                IsEnabled="{Binding IsAdmin}" 
-                                MinWidth="100"
-                                Command="{Binding Path=AcceptChanges}"
-                                ToolTip="Принять изменения"/>
-                    <Button     Name="CleanUpBtn"
-                                Style="{StaticResource ButtonStyle}"
-                                Content="Отменить"
-                                IsEnabled="{Binding IsAdmin}" 
-                                MinWidth="100"
-                                Command="{Binding Path=CleanOut}"
-                                ToolTip="Отменить все изменения"/>
-                </StackPanel>
+                            Style="{StaticResource ButtonStyle}"
+                            Content="Принять"
+                            IsEnabled="{Binding IsAdmin}"
+                            MinWidth="100"
+                            Command="{Binding Path=AcceptChanges}"
+                            ToolTip="Принять изменения"/>
+                    <Button Name="CleanUpBtn"
+                            Style="{StaticResource ButtonStyle}"
+                            Content="Отменить"
+                            IsEnabled="{Binding IsAdmin}"
+                            MinWidth="100"
+                            Command="{Binding Path=CleanOut}"
+                            ToolTip="Отменить все изменения"/>
+                </StackPanel>-->
                 <Button Name="CloseBtn"
-                    Style="{StaticResource ButtonStyle}"
-                    Content="Закрыть"
-                    HorizontalAlignment="Right"
-                    Command="{Binding CloseWindowCommand}"/>
+                        Style="{StaticResource ButtonStyle}"
+                        Content="Закрыть"
+                        IsCancel="True"
+                        HorizontalAlignment="Right"
+                        Command="{Binding CloseWindowCommand}"/>
             </Grid>
         </Border>
         <StackPanel VerticalAlignment="Bottom"

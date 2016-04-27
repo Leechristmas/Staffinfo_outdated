@@ -9,6 +9,10 @@
         mc:Ignorable="d"
         Title="Пользователи" Height="400" Width="600"
         helpers:WindowCloseHelper.WindowsClose="{Binding WindowsClosed}">
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding ToAddOnTab}"
+                    Gesture="CTRL+A"/>
+    </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -246,22 +250,27 @@
                                 <TextBox  Margin="0, 0, 0, 5"
                                           FontSize="14"
                                           Text="{Binding NewUserFirstName}"
+                                          controls:TextBoxHelper.ClearTextButton="True"
                                           controls:TextBoxHelper.Watermark="Имя нового пользователя"/>
                                 <TextBox Margin="0, 5"
                                          FontSize="14"
                                          Text="{Binding NewUserLastName}"
+                                          controls:TextBoxHelper.ClearTextButton="True"
                                           controls:TextBoxHelper.Watermark="Укажите фамилию"/>
                                 <TextBox Margin="0, 5"
                                          FontSize="14"
                                          Text="{Binding NewUserMiddleName}"
+                                          controls:TextBoxHelper.ClearTextButton="True"
                                           controls:TextBoxHelper.Watermark="Укажите отчество"/>
                                 <TextBox Margin="0, 5"
                                          FontSize="14"
                                          Text="{Binding NewUserLogin}"
+                                          controls:TextBoxHelper.ClearTextButton="True"
                                           controls:TextBoxHelper.Watermark="Укажите логин"/>
                                 <TextBox Margin="0, 5"
                                          FontSize="14"
                                          Text="{Binding NewUserPassword}"
+                                          controls:TextBoxHelper.ClearTextButton="True"
                                           controls:TextBoxHelper.Watermark="Укажите пароль"/>
                             </StackPanel>
 

@@ -11,7 +11,16 @@
                         mc:Ignorable="d"
                         Title="Служащие" Height="700" Width="1000" DataContext="{Binding Source={StaticResource Locator}, Path=AllEmployee}"
                         helpers:WindowCloseHelper.WindowsClose="{Binding WindowsClosed}">
-
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding GoToAddingNewEmployee}"
+                    Gesture="CTRL+A" />
+        <KeyBinding Command="{Binding ToFilterView}"
+                    Gesture="CTRL+F"/>
+        <KeyBinding Command="{Binding GoToSortView}"
+                    Gesture="CTRL+Q"/>
+        <KeyBinding Command="{Binding ShowSettings}"
+                    Gesture="CTRL+N"/>
+    </Window.InputBindings>
     <Window.Resources>
         <cnvrtr:StringToIntConverter x:Key="StringToIntConverter"/>
     </Window.Resources>
@@ -85,10 +94,8 @@
             <!--Список сотрудников-->
             <Grid Margin="0,30,0,0"
                   Width="Auto">
-                <controls:MetroTabControl SelectedIndex="{Binding ActualTab}">
-                    <controls:MetroTabItem>
-                        <Grid>
-                            <ListBox ItemsSource="{Binding Employees}"
+                <Grid>
+                    <ListBox ItemsSource="{Binding Employees}"
                                      SelectedItem="{Binding SelectedEmployee}"
                                      ScrollViewer.CanContentScroll="true"
                                      ScrollViewer.VerticalScrollBarVisibility="Auto"
@@ -96,77 +103,61 @@
                                      BorderThickness="0"
                                      ItemContainerStyle="{StaticResource EmployeesListItemStyle}"
                                      Height="{Binding ElementName=AllEmployeesView, Path=Height}">
-                                <!--{Binding ElementName=AllEmployeesView, Path=Height}-->
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="MouseDoubleClick">
-                                        <i:InvokeCommandAction Command="{Binding ShowEmployee}"/>
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border BorderBrush="SteelBlue" BorderThickness="1" 
+                        <!--{Binding ElementName=AllEmployeesView, Path=Height}-->
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseDoubleClick">
+                                <i:InvokeCommandAction Command="{Binding ShowEmployee}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <ListBox.InputBindings>
+                            <KeyBinding Command="{Binding GoToAddingNewEmployee}"
+                                                Gesture="CTRL+A" />
+                            <KeyBinding Command="{Binding ToFilterView}"
+                                                Gesture="CTRL+F"/>
+                            <KeyBinding Command="{Binding GoToSortView}"
+                                                Gesture="CTRL+Q"/>
+                            <KeyBinding Command="{Binding ShowSettings}"
+                                                Gesture="CTRL+N"/>
+                        </ListBox.InputBindings>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Border BorderBrush="SteelBlue" BorderThickness="1" 
                                         CornerRadius="4" Margin="1" Padding="10">
-                                            <StackPanel Orientation="Horizontal"
+                                    <StackPanel Orientation="Horizontal"
                                                 Height="100">
-                                                <StackPanel>
-                                                    <Border BorderBrush="Black" BorderThickness="1" Margin="0,0,10,0">
-                                                        <Image  Height="100"
+                                        <StackPanel>
+                                            <Border BorderBrush="Black" BorderThickness="1" Margin="0,0,10,0">
+                                                <Image  Height="100"
                                                         Width="100"
                                                         Source="{Binding Photo}"/>
-                                                    </Border>
-                                                </StackPanel>
-                                                <StackPanel Orientation="Horizontal"
+                                            </Border>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal"
                                                     Margin="3,0">
-                                                    <StackPanel Orientation="Vertical"
+                                            <StackPanel Orientation="Vertical"
                                                         VerticalAlignment="Bottom">
-                                                        <TextBlock Text="{Binding LastName}" FontWeight="Bold" FontSize="16" VerticalAlignment="Center"/>
-                                                        <TextBlock Text="{Binding FirstName}" FontWeight="Normal" FontSize="16" Margin="0, 3" VerticalAlignment="Center"/>
-                                                        <TextBlock Text="{Binding MiddleName}" FontWeight="Normal" FontSize="16" VerticalAlignment="Center"/>
-                                                        <StackPanel Orientation="Horizontal">
-                                                            <TextBlock Text="Возраст: " FontWeight="Normal" FontSize="16" VerticalAlignment="Center"/>
-                                                            <TextBlock Text="{Binding Age}" FontWeight="Normal" FontSize="16" VerticalAlignment="Center"/>
-                                                        </StackPanel>
-                                                    </StackPanel>
-                                                    <StackPanel Orientation="Vertical"
-                                                        Margin="20,0"
-                                                        VerticalAlignment="Bottom">
-                                                        <TextBlock Text="{Binding RankName}" FontWeight="Normal" FontSize="16" VerticalAlignment="Center"/>
-                                                        <TextBlock Text="{Binding PostName}" FontWeight="Normal" FontSize="16" Margin="0, 3" VerticalAlignment="Center"/>
-                                                        <TextBlock Text="{Binding ServiceName}" FontWeight="Normal" FontSize="16" VerticalAlignment="Center"/>
-                                                    </StackPanel>
+                                                <TextBlock Text="{Binding LastName}" FontWeight="Bold" FontSize="16" VerticalAlignment="Center"/>
+                                                <TextBlock Text="{Binding FirstName}" FontWeight="Normal" FontSize="16" Margin="0, 3" VerticalAlignment="Center"/>
+                                                <TextBlock Text="{Binding MiddleName}" FontWeight="Normal" FontSize="16" VerticalAlignment="Center"/>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="Возраст: " FontWeight="Normal" FontSize="16" VerticalAlignment="Center"/>
+                                                    <TextBlock Text="{Binding Age}" FontWeight="Normal" FontSize="16" VerticalAlignment="Center"/>
                                                 </StackPanel>
                                             </StackPanel>
-                                        </Border>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                        </Grid>
-                    </controls:MetroTabItem>
-                    <controls:MetroTabItem>
-                        <StackPanel Orientation="Vertical"
-                                    Margin="5">
-                            <StackPanel Orientation="Horizontal">
-                                <StackPanel Orientation="Vertical">
-                                    <TextBlock  FontSize="20"
-                                                Text="Звания"/>
-                                    <!--<ListBox Width="150"
-                                             Height="200"
-                                             ItemsSource="{Binding Ranks}"
-                                             DisplayMemberPath="RankTitle"
-                                             Style="{StaticResource ListBoxItemTest}">
-                                    </ListBox>-->
-                                </StackPanel>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <Button Style="{StaticResource ButtonStyle}"
-                                        Command="{Binding ToFilterView}"
-                                        Width="100"
-                                        Content="Принять"/>
-
-                            </StackPanel>
-                        </StackPanel>
-                    </controls:MetroTabItem>
-                </controls:MetroTabControl>
+                                            <StackPanel Orientation="Vertical"
+                                                        Margin="20,0"
+                                                        VerticalAlignment="Bottom">
+                                                <TextBlock Text="{Binding RankName}" FontWeight="Normal" FontSize="16" VerticalAlignment="Center"/>
+                                                <TextBlock Text="{Binding PostName}" FontWeight="Normal" FontSize="16" Margin="0, 3" VerticalAlignment="Center"/>
+                                                <TextBlock Text="{Binding ServiceName}" FontWeight="Normal" FontSize="16" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
             </Grid>
         </Grid>
         <Grid Grid.Row="0"

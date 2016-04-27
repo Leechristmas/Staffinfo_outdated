@@ -574,6 +574,14 @@ namespace Staffinfo.Desktop.ViewModel
                         if (SelectedPasportOrganization?.Length > 100)
                             error = "Длина названия организации не должна превышать 100 символов";
                         break;
+                    case "HomePhoneNumber":
+                        if (HomePhoneNumber?.Length > 10)
+                            error = "Слишком длинный номер (домашний)";
+                        break;
+                    case "MobilePhoneNumber":
+                        if (MobilePhoneNumber?.Length > 20)
+                            error = "Слишком длинный номер (мобильный)";
+                        break;
                 }
                 Error = error;
                 return error;

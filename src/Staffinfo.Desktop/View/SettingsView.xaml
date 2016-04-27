@@ -11,6 +11,10 @@
                         mc:Ignorable="d"
                         Title="Настройки" Height="600" Width="500" DataContext="{Binding Source={StaticResource Locator}, Path=Settings}"
                         helpers:WindowCloseHelper.WindowsClose="{Binding WindowsClosed}">
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding RemoveItem}"
+                    Gesture="CTRL+R"/>
+    </Window.InputBindings>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closing">
             <command:EventToCommand Command="{Binding WindowClosing}" PassEventArgsToCommand="True" />
@@ -21,22 +25,39 @@
             <!--Управление справочниками-->
             <controls:MetroTabItem Header="Справочники">
                 <Grid>
-                    <StackPanel Margin="5">
-                        <ComboBox MinWidth="200"
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Margin="5"
+                                Grid.Row="0">
+                        <StackPanel Orientation="Horizontal">
+                            <ComboBox MinWidth="200"
                                   Width="200"
                                   HorizontalAlignment="Left"
                                   FontSize="16"
                                   ItemsSource="{Binding Catalogs}"
                                   SelectedIndex="{Binding SelectedCatalogIndex}"
                                   controls:TextBoxHelper.Watermark="Укажите справочник">
-                        </ComboBox>
+                            </ComboBox>
+                            <Button Width="100"
+                                HorizontalAlignment="Right"
+                                Style="{DynamicResource ButtonStyle}"
+                                Content="Удалить"
+                                MinWidth="100"
+                                Command="{Binding RemoveItem}"
+                                ToolTip="Удалить выбранную запись"/>
+                        </StackPanel>
                         <!--Текст ошибки-->
                         <TextBlock  Foreground="Red"
                                     FontSize="14"
                                     FontWeight="DemiBold"
                                     Text="{Binding CatalogTextError}"
                                     Margin="10,0"/>
-                        <DataGrid   AutoGenerateColumns="True"
+                    </StackPanel>
+
+                    <DataGrid Grid.Row="1" AutoGenerateColumns="True"
                                     IsReadOnly="True"
                                     CanUserAddRows="False"
                                     Style="{DynamicResource AzureDataGrid}"
@@ -48,15 +69,7 @@
                                     SelectedIndex="{Binding SelectedCatalogRecordIndex}"
                                     AutoGeneratingColumn="AutoGenerationColumnExecute"
                                     Margin="0,5"/>
-                        <Button Width="100"
-                                HorizontalAlignment="Right"
-                                Style="{DynamicResource ButtonStyle}"
-                                Content="Удалить"
-                                MinWidth="100"
-                                Command="{Binding RemoveItem}"
-                                ToolTip="Удалить выбранную запись"/>
-                    </StackPanel>
-                    <StackPanel VerticalAlignment="Bottom"
+                    <StackPanel Grid.Row="2" VerticalAlignment="Bottom"
                                 Orientation="Horizontal"
                                 Background="#41B1E1"
                                 Height="20">

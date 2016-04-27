@@ -49,11 +49,13 @@
                         HorizontalAlignment="Right">
                 <Button Name="AddSpeciality"
                         Content="Добавить"
+                        IsDefault="True"
                         MinWidth="80"
                         Style="{StaticResource ButtonStyle}"
                         Command="{Binding AddSpeciality}"/>
                 <Button Name="CloseBtn"
                         Content="Закрыть"
+                        IsCancel="True"
                         MinWidth="80"
                         Style="{StaticResource ButtonStyle}"
                         Command="{Binding CloseWindowCommand}"/>

@@ -59,11 +59,13 @@
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Right">
                 <Button Name="AddSpeciality"
+                        IsDefault="True"
                         Content="Добавить"
                         MinWidth="80"
                         Style="{StaticResource ButtonStyle}"
                         Command="{Binding AddInstitution}"/>
                 <Button Name="CloseBtn"
+                        IsCancel="True"
                         Content="Закрыть"
                         MinWidth="80"
                         Style="{StaticResource ButtonStyle}"

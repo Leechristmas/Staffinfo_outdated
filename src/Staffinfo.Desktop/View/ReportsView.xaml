@@ -11,6 +11,10 @@
                         Title="Отчеты" Height="700" Width="700"
                         DataContext="{Binding Source={StaticResource Locator}, Path=Reports}"
                         helpers:WindowCloseHelper.WindowsClose="{Binding WindowsClosed}">
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding GetReport}"
+                    Gesture="CTRL+G"/>
+    </Window.InputBindings>
     <Grid IsEnabled="{Binding ViewIsEnable}">
         <ListBox ItemsSource="{Binding Reports}"
                  SelectedItem="{Binding SelectedReport}"
@@ -64,6 +68,7 @@
                                 MinHeight="20" Margin="100,0"
                                 Command="{Binding GetReport}"
                                 Height="25"
+                                IsDefault="True"
                                 VerticalAlignment="Bottom"
                                 HorizontalAlignment="Right">
                             <StackPanel Orientation="Horizontal">
@@ -80,6 +85,7 @@
                         <Button Name="CloseBtn"
                                 FontSize="16"
                                 Content="Закрыть"
+                                IsCancel="True"
                                 VerticalAlignment="Bottom"
                                 Style="{StaticResource ButtonStyle}"
                                 Height="25"
