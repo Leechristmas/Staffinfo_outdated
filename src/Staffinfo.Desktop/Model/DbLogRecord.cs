@@ -8,6 +8,11 @@ namespace Staffinfo.Desktop.Model
     public class DbLogRecord: BaseModel
     {
         /// <summary>
+        /// Id сессии
+        /// </summary>
+        public long? SessionId { get; set; }
+
+        /// <summary>
         /// Тип операции
         /// </summary>
         public string OperationType { get; set; }

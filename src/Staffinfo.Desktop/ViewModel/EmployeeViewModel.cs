@@ -67,6 +67,19 @@ namespace Staffinfo.Desktop.ViewModel
         }
 
         /// <summary>
+        /// Признак пенсионера
+        /// </summary>
+        public bool IsPensioner
+        {
+            get { return _empModel.IsPensioner; }
+            set
+            {
+                _empModel.IsPensioner = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        /// <summary>
         /// Фамилия
         /// </summary>
         public string LastName

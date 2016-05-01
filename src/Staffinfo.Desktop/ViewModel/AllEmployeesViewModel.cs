@@ -22,7 +22,7 @@ namespace Staffinfo.Desktop.ViewModel
             AccessLevel = DataSingleton.Instance.User.AccessLevel;
 
             //инициализируем список сотрудников
-            Employees = DataSingleton.Instance.EmployeeList;
+            Employees = DataSingleton.Instance.EmployeeList;// new ObservableCollection<EmployeeViewModel>(DataSingleton.Instance.EmployeeList.Where(e => !e.IsPensioner));
 
             CanDelete = Employees?.Count > 0;
 
@@ -410,19 +410,25 @@ namespace Staffinfo.Desktop.ViewModel
             {
                 MessageBox.Show("Запись не выбрана.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error,
                     MessageBoxResult.OK);
+                ViewIsEnable = true;
                 return;
             }
 
             var remove = MessageBox.Show("Будет удалена вся ниформация о служащем. Вы уверены?", "Удаление", MessageBoxButton.YesNo,
                 MessageBoxImage.Question, MessageBoxResult.No);
 
-            if (remove == MessageBoxResult.No) return;
+            if (remove == MessageBoxResult.No)
+            {
+                ViewIsEnable = true;
+                return;
+            }
 
             using (var prvdr = new EmployeeTableProvider())
             {
                 if (!prvdr.DeleteById(item.Id))
                 {
                     MessageBox.Show("Ошибка удаления!" + prvdr.ErrorInfo, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                    ViewIsEnable = true;
                     return;
                 }
                 Employees.Remove(item);

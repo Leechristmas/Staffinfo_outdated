@@ -34,6 +34,22 @@
             <RowDefinition Height="45"/>
         </Grid.RowDefinitions>
         <Grid Grid.Column="0">
+            <Button Height="30"
+                    Width="25"
+                    VerticalAlignment="Top"
+                    HorizontalAlignment="Right"
+                    Style="{DynamicResource ChromelessButtonStyle}"
+                    ToolTip="Сформировать отчет">
+                <StackPanel Orientation="Horizontal">
+                <Rectangle Width="20"
+                           Height="20"
+                           Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_page_excel}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+                </StackPanel>
+            </Button>
             <controls:MetroAnimatedTabControl>
                 <!--Общая информация-->
                 <controls:MetroTabItem Header="Общее">
@@ -1243,6 +1259,11 @@
                             Command="{Binding Path=CleanOut}"
                             ToolTip="Отменить все изменения"/>
                 </StackPanel>-->
+                <Button Style="{StaticResource ButtonStyle}"
+                        Content="Перевести в ''Пенсионеры''"
+                        IsCancel="True"
+                        HorizontalAlignment="Left"
+                        Command="{Binding SetIsPensioner}"/>
                 <Button Name="CloseBtn"
                         Style="{StaticResource ButtonStyle}"
                         Content="Закрыть"

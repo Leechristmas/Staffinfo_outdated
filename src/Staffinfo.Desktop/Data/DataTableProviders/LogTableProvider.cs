@@ -37,10 +37,11 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                 dbLogRecord = new DbLogRecord
                 {
                     Id = Int64.Parse(sqlDataReader[0].ToString()),
-                    OperationType = sqlDataReader[1].ToString(),
-                    TableName = sqlDataReader[2].ToString(),
-                    OperationTime = DateTime.Parse(sqlDataReader[3].ToString()),
-                    Description = sqlDataReader[4].ToString()
+                    SessionId = Int64.Parse(sqlDataReader[1].ToString()),
+                    OperationType = sqlDataReader[2].ToString(),
+                    TableName = sqlDataReader[3].ToString(),
+                    OperationTime = DateTime.Parse(sqlDataReader[4].ToString()),
+                    Description = sqlDataReader[5].ToString()
                 };
                 sqlDataReader.Close();
 
@@ -67,7 +68,6 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
             var cmd = new SqlCommand("SELECT * FROM OPERATIONS_LOG");
 
-
             var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
 
             while (sqlDataReader.Read())
@@ -77,10 +77,11 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                     var dbLogRecord = new DbLogRecord()
                     {
                         Id = Int64.Parse(sqlDataReader[0].ToString()),
-                        OperationType = sqlDataReader[1].ToString(),
-                        TableName = sqlDataReader[2].ToString(),
-                        OperationTime = DateTime.Parse(sqlDataReader[3].ToString()),
-                        Description = sqlDataReader[4].ToString()
+                        SessionId = Int64.Parse(sqlDataReader[1].ToString()),
+                        OperationType = sqlDataReader[2].ToString(),
+                        TableName = sqlDataReader[3].ToString(),
+                        OperationTime = DateTime.Parse(sqlDataReader[4].ToString()),
+                        Description = sqlDataReader[5].ToString()
                     };
 
                     dbLogRecords.Add(dbLogRecord);
@@ -107,7 +108,6 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
 
             var cmd = new SqlCommand($"SELECT * FROM OPERATIONS_LOG WHERE OPERATION_TIME >= '{startDate}'");
 
-
             var sqlDataReader = DataSingleton.Instance.DatabaseConnector.ExecuteReader(cmd);
 
             while (sqlDataReader.Read())
@@ -117,10 +117,11 @@ namespace Staffinfo.Desktop.Data.DataTableProviders
                     var dbLogRecord = new DbLogRecord()
                     {
                         Id = Int64.Parse(sqlDataReader[0].ToString()),
-                        OperationType = sqlDataReader[1].ToString(),
-                        TableName = sqlDataReader[2].ToString(),
-                        OperationTime = DateTime.Parse(sqlDataReader[3].ToString()),
-                        Description = sqlDataReader[4].ToString()
+                        SessionId = Int64.Parse(sqlDataReader[1].ToString()),
+                        OperationType = sqlDataReader[2].ToString(),
+                        TableName = sqlDataReader[3].ToString(),
+                        OperationTime = DateTime.Parse(sqlDataReader[4].ToString()),
+                        Description = sqlDataReader[5].ToString()
                     };
 
                     dbLogRecords.Add(dbLogRecord);
