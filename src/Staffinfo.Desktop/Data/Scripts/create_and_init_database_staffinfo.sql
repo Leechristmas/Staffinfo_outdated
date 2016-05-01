@@ -1620,8 +1620,18 @@ BEGIN
 	DECLARE @START_DATE DATETIME = (SELECT JOB_START_DATE FROM EMPLOYEE WHERE ID = @EMPLOYEE_ID),	--ДАТА НАЧАЛА СЛУЖБЫ
 			@FINISH_DATE DATETIME = GETDATE();	--ТЕКУЩАЯ ДАТА
 	DECLARE @ALL_DAYS INT = DATEDIFF(DAY, @START_DATE, @FINISH_DATE);--РАЗНИЦА МЕЖДУ НАЧАЛОМ СЛУЖБЫ И ТЕКУЩЕЙ ДАТОЙ В ДНЯХ
-			 
-	SET @ALL_DAYS = @ALL_DAYS - DBO.GET_HOLIDAY_DAYS(@EMPLOYEE_ID) - DBO.GET_HOSPITAL_DAYS(@EMPLOYEE_ID);
+	
+	DECLARE @SERCICE_GROUP_ID INT = (SELECT GROUP_ID FROM SERVICE --ПОЛУЧАЕМ ID ГРУППЫ ПОДРАЗДЕЛНИЙ
+									WHERE ID = (SELECT SERVICE_ID FROM POST
+												WHERE ID = (SELECT POST_ID FROM EMPLOYEE 
+															WHERE ID = @EMPLOYEE_ID)));
+																														
+
+	IF @SERCICE_GROUP_ID >= 500 AND @SERCICE_GROUP_ID < 600 --ЕСЛИ ВОДОЛАЗНАЯ СЛУЖБА, КОЭФФ. = 1.5
+	BEGIN													-- И ИСКЛЮЧАЕМ ОТПУСКА И БОЛЬНИЧНЫЕ
+		SET @ALL_DAYS = @ALL_DAYS - DBO.GET_HOLIDAY_DAYS(@EMPLOYEE_ID) - DBO.GET_HOSPITAL_DAYS(@EMPLOYEE_ID);
+		SET @ALL_DAYS = @ALL_DAYS * 1.5		
+	END
 	
 	RETURN @ALL_DAYS;
 END

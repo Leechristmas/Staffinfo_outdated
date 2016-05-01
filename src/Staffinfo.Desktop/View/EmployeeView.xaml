@@ -105,7 +105,7 @@
                                           controls:TextBoxHelper.ClearTextButton="True"
                                           FontSize="16"
                                           ToolTip="Служба"
-                                          SelectedItem="{Binding ServiceList.SelectedItem}"
+                                          SelectedItem="{Binding SelectedService}"
                                           ItemsSource="{Binding ServiceList.ModelList}"
                                           DisplayMemberPath="ServiceTitle"/>
                                 <ComboBox Name="PostCBox" 
