@@ -11,6 +11,7 @@
                         mc:Ignorable="d"
                         Title="Служащие" Height="700" Width="1000" DataContext="{Binding Source={StaticResource Locator}, Path=AllEmployee}"
                         helpers:WindowCloseHelper.WindowsClose="{Binding WindowsClosed}">
+    <!--Биндинг hot keys-->
     <Window.InputBindings>
         <KeyBinding Command="{Binding GoToAddingNewEmployee}"
                     Gesture="CTRL+A" />
@@ -21,9 +22,11 @@
         <KeyBinding Command="{Binding ShowSettings}"
                     Gesture="CTRL+N"/>
     </Window.InputBindings>
+    
     <Window.Resources>
         <cnvrtr:StringToIntConverter x:Key="StringToIntConverter"/>
     </Window.Resources>
+    <!--Header окна-->
     <controls:MetroWindow.RightWindowCommands>
         <controls:WindowCommands>
             <TextBox Name="SearchTBox"
@@ -46,6 +49,7 @@
             </Button>
         </controls:WindowCommands>
     </controls:MetroWindow.RightWindowCommands>
+    <!--Рабочая область-->
     <Grid IsEnabled="{Binding ViewIsEnable}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
@@ -56,6 +60,7 @@
             <RowDefinition Height="45"/>
         </Grid.RowDefinitions>
         <Grid Grid.Column="0">
+            <!--Панель инструментов-->
             <ToolBar VerticalAlignment="Top"
                      IsEnabled="{Binding IsAdmin}">
                 <StackPanel Orientation="Horizontal"
@@ -95,6 +100,7 @@
             <Grid Margin="0,30,0,0"
                   Width="Auto">
                 <Grid>
+                    <!--Control отображения сотрудников-->
                     <ListBox ItemsSource="{Binding Employees}"
                                      SelectedItem="{Binding SelectedEmployee}"
                                      ScrollViewer.CanContentScroll="true"
@@ -160,6 +166,7 @@
                 </Grid>
             </Grid>
         </Grid>
+        <!--Функциональное боковое меню-->
         <Grid Grid.Row="0"
               Grid.Column="1"
               Width="{Binding MenuWidth}"
@@ -268,6 +275,7 @@
                             </Button>
                         </Grid>
                     </controls:MetroTabItem>
+                    <!--Сортировка-->
                     <controls:MetroTabItem>
                         <Grid>
                             <StackPanel Orientation="Vertical">
@@ -311,6 +319,7 @@
                                     Command="{Binding GoToMainMenu}"/>
                         </Grid>
                     </controls:MetroTabItem>
+                    <!--Фильтрация-->
                     <controls:MetroTabItem>
                         <Grid>
                             <Grid.RowDefinitions>
@@ -416,7 +425,7 @@
                 </controls:MetroTabControl>
             </GroupBox>
         </Grid>
-
+        <!--Нижняя строка состояния-->
         <StackPanel Grid.Row="1"
                     Grid.ColumnSpan="2"
                     Grid.Column="0"

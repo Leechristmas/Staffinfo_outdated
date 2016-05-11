@@ -1550,6 +1550,18 @@ AS
 			FROM DELETED
 	END
 GO
+--Заносит запись об авторизации в лог операций для наглядного отображения пользователю
+CREATE TRIGGER AUTHENTICATION_LOG ON SESSION_LOG
+AFTER INSERT
+AS
+	INSERT INTO OPERATIONS_LOG 
+			SELECT	inserted.id,  
+					NULL,
+					NULL,
+					inserted.SESSION_OPEN_TIME,					
+					'Авторизовался ' + (SELECT USER_LOGIN FROM USERS WHERE ID = inserted.userid)
+			FROM inserted;
+GO
 -------------------------------------------------------------------------
 ---FUNCTIONS
 -------------------------------------------------------------------------
@@ -1635,7 +1647,56 @@ BEGIN
 	
 	RETURN @ALL_DAYS;
 END
-
+GO
+--ВОЗВРАЩАЕТ АКТУАЛЬНУЮ КЛАССНОСТЬ ДЛЯ СОТРУДНИКА
+CREATE FUNCTION GET_ACTUAL_CLASINESS(@EMPLOYEE_ID INT)
+RETURNS INT
+AS
+BEGIN
+RETURN(SELECT CLASINESS_LEVEL FROM CLASINESS WHERE EMPLOYEE_ID = @EMPLOYEE_ID AND 
+							CLASINESS_DATE = (SELECT MAX(CLASINESS_DATE)
+											  FROM CLASINESS C
+											  WHERE C.EMPLOYEE_ID = @EMPLOYEE_ID));
+END
+GO
+--ВОЗВРАЩАЕТ ДАННЫЕ ПО СЛУЖАЩИМ ДЛЯ ОТЧЕТА "ШТАТНАЯ РАССТАНОВКА"
+--@CLASINESS_STATUS: 0-ВСЕХ СЛУЖАЩИХ, 1-ТОЛЬКО ПОДТВЕРДИВШИХ КЛАССНОСТЬ, 2-ТОЛЬКО ТЕХ, КОМУ ЕЩЕ НЕ ПРИСВОЕНА КЛАССНОСТЬ 
+CREATE FUNCTION GET_EMPLOYEES_FOR_PLACEMENT_REPORT(@CLASINESS_STATUS INT = 0)
+RETURNS @RES TABLE(Должность varchar(30),
+				   Звание varchar(20),
+				   ФИО varchar(120),
+				   Личный_номер varchar(10),
+				   Дата_рождения datetime,
+				   Классность int,
+				   Телефон varchar(20))
+BEGIN
+	IF @CLASINESS_STATUS = 1
+		INSERT INTO @RES SELECT * FROM EmployeeInfo WHERE Классность is not null;
+	ELSE IF @CLASINESS_STATUS = 2
+		INSERT INTO @RES SELECT * FROM EmployeeInfo WHERE Классность is null;
+	ELSE
+		INSERT INTO @RES SELECT * FROM EmployeeInfo;
+	RETURN;
+END;
+GO
+-------------------------------------------------------------------------
+---VIEWS
+-------------------------------------------------------------------------
+CREATE VIEW EmployeeInfo
+AS
+select	POST_TITLE as Должность, 
+		RANK_TITLE as Звание, 
+		EMPLOYEE_LASTNAME + ' ' + EMPLOYEE_FIRSTNAME + ' ' + EMPLOYEE_MIDDLENAME as ФИО, 
+		PERSONAL_KEY as Личный_номер, 
+		BORN_DATE as Дата_Рождения, 
+		dbo.GET_ACTUAL_CLASINESS(EMPLOYEE.ID) AS Классность,
+		case
+			when Mobile_phone_number is not null then MOBILE_PHONE_NUMBER 
+			else HOME_PHONE_NUMBER 
+		END as Телефон
+from employee, post, rank 
+where EMPLOYEE.POST_ID = Post.ID and
+		EMPLOYEE.RANK_ID = Rank.ID
 GO
 -------------------------------------------------------------------------
 ---EOF
